@@ -1,2 +1,5 @@
 [functions]
   directory = "netlify/functions"
+
+[functions."scheduled_refresh"]
+  schedule = "0 7 * * *" # Runs daily at 7am UTC
