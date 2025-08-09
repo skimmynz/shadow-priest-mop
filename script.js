@@ -41,7 +41,7 @@ const talentTiers = {
 const talentIcons = {
   "Void Tendrils": "spell_priest_voidtendrils",
   "Psyfiend": "spell_priest_psyfiend",
-  "Dominate Mind": "spell_shadow_mindcontrol",
+  "Dominate Mind": "spell_shadow_shadowworddominate",
   "Body and Soul": "spell_holy_symbolofhope",
   "Angelic Feather": "ability_priest_angelicfeather",
   "Phantasm": "ability_priest_phantasm",
