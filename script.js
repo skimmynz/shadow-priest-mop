@@ -1,4 +1,16 @@
 
+const encounters = {
+  "The Stone Guard": 1395,
+  "Feng the Accursed": 1390,
+  "Gara'jal the Spiritbinder": 1434,
+  "The Spirit Kings": 1436,
+  "Elegon": 1500,
+  "Will of the Emperor": 1407
+};
+
+const bossButtonsDiv = document.getElementById('boss-buttons');
+const rankingsDiv = document.getElementById('rankings');
+
 function setBackgroundImage(bossName) {
   const backgrounds = {
     "The Stone Guard": "https://assets2.mythictrap.com/msv-hof-toes/background_finals/the-stone-guard-custom.png?v=9",
@@ -15,6 +27,7 @@ function setBackgroundImage(bossName) {
 }
 
 function createBossButtons() {
+  bossButtonsDiv.innerHTML = ""; // Ensure buttons are cleared before re-rendering
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
     button.innerHTML = `
@@ -22,21 +35,11 @@ function createBossButtons() {
       ${name}
     `;
     button.onclick = () => {
+      setBackgroundImage(name);
       fetchAndDisplayRankings(name, id);
     };
     bossButtonsDiv.appendChild(button);
   });
 }
 
-function fetchAndDisplayRankings(name, id) {
-  rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
-  const url = `/.netlify/functions/getLogs?encounterId=${id}`;
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      // ... existing logic for processing rankings and talents ...
-
-      // After updating the DOM, set the background image
-      setBackgroundImage(name);
-    });
-}
+createBossButtons();
