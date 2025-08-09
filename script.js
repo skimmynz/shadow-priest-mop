@@ -20,6 +20,10 @@ function setBackgroundImage(bossName) {
     "Will of the Emperor": "https://assets2.mythictrap.com/msv-hof-toes/background_finals/will-of-the-emperor-custom.png?v=9"
   };
   document.body.style.backgroundImage = `url(${backgrounds[bossName]})`;
+  document.body.style.backgroundSize = "auto";
+  document.body.style.backgroundPosition = "center";
+  document.body.style.backgroundRepeat = "no-repeat";
+
 }
 
 function createBossButtons() {
