@@ -10,15 +10,10 @@ const encounters = {
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
 
-function updateLastUpdatedDisplay(timestamp) {
-  document.getElementById('last-updated').textContent = `Last updated: ${timestamp}`;
-}
-
 function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
-    button.textContent = name;
-    button.className = 'boss-button';
+    button.innerHTML = `<img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}" style="height:20px; vertical-align:middle; margin-right:8px;"> ${name}`;
     button.onclick = () => fetchAndDisplayRankings(name, id);
     bossButtonsDiv.appendChild(button);
   });
@@ -26,22 +21,14 @@ function createBossButtons() {
 
 async function fetchAndDisplayRankings(name, id) {
   rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
-  const response = await fetch(`/.netlify/functions/getLogs?encounterId=${id}`);
+  const url = `/.netlify/functions/getLogs?encounterId=${id}`;
+  const response = await fetch(url);
   const data = await response.json();
-  updateLastUpdatedDisplay(data.lastUpdated);
-  renderRankings(name, data.rankings.slice(0, 100));
-}
 
-function renderRankings(name, rankings) {
-  const entries = rankings.map((r, i) => {
-    const percentile = r.percentile ? Math.floor(r.percentile) : 0;
-    let colorClass = "";
-    if (percentile >= 100) colorClass = "100";
-    else if (percentile >= 99) colorClass = "99";
-    else if (percentile >= 95) colorClass = "95";
-
-    return `<div class="rank-entry" data-percentile="${colorClass}">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
+  const entries = data.rankings.slice(0, 100).map((r, i) => {
+    return `<div class="rank-entry">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
   }).join('');
+
   rankingsDiv.innerHTML = `<h2>${name}</h2>${entries}`;
 }
 
