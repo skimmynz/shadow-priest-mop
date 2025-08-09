@@ -119,7 +119,6 @@ async function fetchAndDisplayRankings(name, id) {
 
   let talentSummary = `<div class='talent-summary'>`;
   Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
-    talentSummary += `<div class="talent-tier"><strong>Tier ${tier}</strong></div><div class="talent-row">`;
 
     talentTiers[tier].forEach(talent => {
       const count = tierCounts[tier][talent];
