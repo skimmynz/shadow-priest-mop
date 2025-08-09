@@ -4,9 +4,6 @@ body {
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 h1 {
@@ -40,8 +37,6 @@ h1 {
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  z-index: 1;
-  position: relative;
 }
 
 .rank-entry {
@@ -67,7 +62,6 @@ h1 {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  position: relative;
 }
 
 .talent-icon-img {
@@ -80,33 +74,4 @@ h1 {
 .talent-percent {
   font-size: 12px;
   margin-top: 4px;
-}
-
-.talent-link:hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: -20px;
-  background: #222;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 2;
-}
-
-#boss-background {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 200px;
-  height: auto;
-  z-index: 0;
-}
-
-#boss-background img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
