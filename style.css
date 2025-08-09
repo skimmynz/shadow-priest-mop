@@ -54,6 +54,9 @@ h1 {
   color: #9482C9;
   font-weight: bold;
   margin: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .talent-summary {
@@ -62,8 +65,7 @@ h1 {
 
 .talent-row {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
   gap: 10px;
   margin-bottom: 15px;
 }
