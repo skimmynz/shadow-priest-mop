@@ -1,3 +1,4 @@
+// ======= Constants & Data =======
 const encounters = {
   "The Stone Guard": 1395,
   "Feng the Accursed": 1390,
@@ -10,25 +11,14 @@ const encounters = {
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
 
-function createBossButtons() {
-  Object.entries(encounters).forEach(([name, id]) => {
-    const button = document.createElement('button');
-    const img = document.createElement('img');
-    const span = document.createElement('span');
+// Cache config (client-side)
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
 
-    img.src = `https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2`;
-    img.alt = name;
-    img.className = 'boss-icon';
+// API endpoint (Netlify function)
+const API_URL = (encounterId) => `/.netlify/functions/getLogs?encounterId=${encounterId}`;
 
-    span.textContent = name;
-
-    button.appendChild(img);
-    button.appendChild(span);
-    button.onclick = () => fetchAndDisplayRankings(name, id);
-    bossButtonsDiv.appendChild(button);
-  });
-}
-
+// Warcraft talents data
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -80,123 +70,317 @@ const talentSpellIds = {
   "Halo": 120517
 };
 
-// Map API talent names to talentTiers names
+// API → UI name normalization
 const talentNameMap = {
   "Surge of Light": "From Darkness, Comes Light",
   "Mind Control": "Dominate Mind"
 };
 
-function getSpellId(talentName) {
-  return talentSpellIds[talentName] || 0;
+// ======= Precomputed helpers for speed & safety =======
+const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
+const VALID_TALENT_SET = new Set(Object.values(talentTiers).flat());
+
+const TIER_BY_TALENT = (() => {
+  const m = new Map();
+  for (const [tier, talents] of Object.entries(talentTiers)) {
+    for (const t of talents) m.set(t, tier); // string tier keys like "15"
+  }
+  return m;
+})();
+
+const getSpellId = (name) => talentSpellIds[name] || 0;
+const getTalentDisplayName = (apiName) => talentNameMap[apiName] || apiName;
+
+const talentIconUrl = (name) => {
+  const iconKey = talentIcons[name] || "inv_misc_questionmark";
+  return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
+};
+
+// ======= Boss buttons =======
+function createBossButtons() {
+  for (const [name, id] of Object.entries(encounters)) {
+    const button = document.createElement('button');
+    button.dataset.encounterId = id;
+    button.dataset.bossName = name;
+
+    const img = document.createElement('img');
+    img.src = `https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2`;
+    img.alt = name;
+    img.className = 'boss-icon';
+    img.loading = 'lazy';
+
+    const span = document.createElement('span');
+    span.textContent = name;
+
+    button.appendChild(img);
+    button.appendChild(span);
+    button.addEventListener('click', () => {
+      selectActiveButton(id);
+      updateHash(id);
+      fetchAndDisplayRankings(name, id);
+    });
+
+    bossButtonsDiv.appendChild(button);
+  }
 }
 
-function fetchAndDisplayRankings(name, id) {
-  rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
-  const url = `/.netlify/functions/getLogs?encounterId=${id}`;
-  fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const tierCounts = {};
-      const totalPerTier = {};
+function selectActiveButton(encounterId) {
+  const buttons = bossButtonsDiv.querySelectorAll('button');
+  buttons.forEach(b => b.classList.remove('active'));
+  const active = bossButtonsDiv.querySelector(`button[data-encounter-id="${encounterId}"]`);
+  if (active) active.classList.add('active');
+}
 
-      // Initialize counts for each talent in each tier
-      Object.keys(talentTiers).forEach(tier => {
-        tierCounts[tier] = {};
-        totalPerTier[tier] = 0;
-        talentTiers[tier].forEach(talent => {
-          tierCounts[tier][talent] = 0;
-        });
-      });
+// ======= Cache helpers =======
+function readCache(encounterId) {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY(encounterId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    // expected shape: { data, cachedAt } where cachedAt is ISO string or epoch
+    return parsed;
+  } catch {
+    return null;
+  }
+}
 
-      // Count talents, ensuring one talent per tier per player and only valid talents
-      data.rankings.forEach(entry => {
-        const talentsSelected = new Set(); // Track tiers processed for this player
-        entry.talents.forEach(talent => {
-          let talentName = talent.name;
-          // Map API talent name to talentTiers name if applicable
-          talentName = talentNameMap[talentName] || talentName;
-          // Check if talent is in talentTiers
-          const tier = Object.entries(talentTiers).find(([_, talents]) => talents.includes(talentName))?.[0];
-          if (tier && !talentsSelected.has(tier)) {
-            tierCounts[tier][talentName]++;
-            totalPerTier[tier]++;
-            talentsSelected.add(tier); // Mark tier as processed
-          }
-        });
-      });
+function writeCache(encounterId, data, cachedAt = new Date().toISOString()) {
+  try {
+    localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt }));
+  } catch {
+    // storage full or disabled
+  }
+}
 
-      let talentSummary = `<div class='talent-summary'>`;
-      Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
-        talentSummary += `<div class="talent-row">`;
-        talentTiers[tier].forEach(talent => {
-          const count = tierCounts[tier][talent];
-          const total = totalPerTier[tier];
-          const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
-          const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
-          const iconKey = talentIcons[talent] || "inv_misc_questionmark";
-          const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
-          const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent)}`;
+function isFresh(cachedAt) {
+  try {
+    const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt);
+    return (Date.now() - ts) < CACHE_TTL_MS;
+  } catch {
+    return false;
+  }
+}
 
-          talentSummary += `
-            <a target="_blank" href="${wowheadUrl}" class="talent-link">
-              <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}">
-              <div class="talent-percent" style="color: ${color};">${percent}%</div>
-            </a>
-          `;
-        });
-        talentSummary += `</div>`;
-      });
-      talentSummary += `</div><br>`;
+function formatAgo(dateish) {
+  const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
+  if (ms < 60_000) return 'just now';
+  const mins = Math.floor(ms / 60_000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
 
-      const getColor = (rank) => {
-        if (rank === 1) return '#e5cc80';
-        if (rank >= 2 && rank <= 25) return '#e268a8';
-        return '#ff8000';
-      };
+// ======= Fetch + Render =======
+let currentController = null;
 
-      const entries = data.rankings.slice(0, 100).map((r, i) => {
-        const color = getColor(i + 1);
-        const talentIconsHTML = r.talents
-          .map(talent => {
-            // Map API talent name to talentTiers name for display
-            const displayName = talentNameMap[talent.name] || talent.name;
-            return { ...talent, name: displayName };
-          })
-          .filter(talent => {
-            // Only include valid talents in the rankings display
-            return Object.values(talentTiers).flat().includes(talent.name);
-          })
-          .map(talent => {
-            const iconKey = talentIcons[talent.name] || "inv_misc_questionmark";
-            const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
-            const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent.name)}`;
-            return `
-              <a target="_blank" href="${wowheadUrl}" class="talent-link">
-                <img src="${iconUrl}" class="talent-icon-img" alt="${talent.name}" title="${talent.name}">
-              </a>
-            `;
-          }).join('');
+function disableButtons(disabled) {
+  bossButtonsDiv.querySelectorAll('button').forEach(btn => {
+    btn.disabled = disabled;
+    btn.style.opacity = disabled ? '0.7' : '';
+    btn.style.cursor = disabled ? 'not-allowed' : '';
+  });
+}
 
-        const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
+function showLoading(name, cachedAtText) {
+  rankingsDiv.innerHTML = `
+    <h2>${name}</h2>
+    ${cachedAtText ? `<div style="margin-bottom:8px;color:#bbb;">Last updated: ${cachedAtText}</div>` : ''}
+    <p>Loading...</p>
+  `;
+}
 
+function render(name, data, cachedAtText) {
+  // Safety: ensure expected arrays exist
+  const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
+
+  // ===== Aggregate talent usage (one per tier per player) =====
+  const tierCounts = {};
+  const totalPerTier = {};
+  for (const tier of TIER_ORDER) {
+    tierCounts[tier] = {};
+    totalPerTier[tier] = 0;
+    for (const talent of talentTiers[tier]) {
+      tierCounts[tier][talent] = 0;
+    }
+  }
+
+  for (const entry of rankings) {
+    const seenTiers = new Set();
+    const talents = Array.isArray(entry?.talents) ? entry.talents : [];
+    for (const t of talents) {
+      const displayName = getTalentDisplayName(t.name);
+      if (!VALID_TALENT_SET.has(displayName)) continue;
+      const tier = TIER_BY_TALENT.get(displayName);
+      if (tier && !seenTiers.has(tier)) {
+        tierCounts[tier][displayName]++;
+        totalPerTier[tier]++;
+        seenTiers.add(tier);
+      }
+    }
+  }
+
+  // ===== Talent summary UI =====
+  let talentSummary = `<div class='talent-summary'>`;
+  for (const tier of TIER_ORDER) {
+    talentSummary += `<div class="talent-row">`;
+    for (const talent of talentTiers[tier]) {
+      const count = tierCounts[tier][talent] || 0;
+      const total = totalPerTier[tier] || 0;
+      const percentNum = total > 0 ? (count / total) * 100 : 0;
+      const percent = percentNum.toFixed(1);
+      const color = percentNum >= 75 ? 'limegreen' : percentNum <= 10 ? 'red' : 'orange';
+      const iconUrl = talentIconUrl(talent);
+      const spellId = getSpellId(talent);
+      const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
+
+      talentSummary += `
+        <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
+          <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}">
+          <div class="talent-percent" style="color:${color};">${percent}%</div>
+        </a>
+      `;
+    }
+    talentSummary += `</div>`;
+  }
+  talentSummary += `</div><br>`;
+
+  // ===== Rankings list =====
+  const getColor = (rank) => {
+    if (rank === 1) return '#e5cc80';
+    if (rank >= 2 && rank <= 25) return '#e268a8';
+    return '#ff8000';
+  };
+
+  const entries = rankings.slice(0, 100).map((r, i) => {
+    const color = getColor(i + 1);
+    const talents = Array.isArray(r?.talents) ? r.talents : [];
+    const talentIconsHTML = talents
+      .map(t => ({ ...t, name: getTalentDisplayName(t.name) }))
+      .filter(t => VALID_TALENT_SET.has(t.name))
+      .map(t => {
+        const iconUrl = talentIconUrl(t.name);
+        const spellId = getSpellId(t.name);
+        const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
         return `
-          <div class="rank-entry" style="color: ${color};">
-            <div class="name-wrapper">
-              <a target="_blank" href="${reportUrl}" class="player-link">
-                ${i + 1}. ${r.name} – ${Math.round(r.total)} DPS
-              </a>
-            </div>
-            <div class="talent-row">${talentIconsHTML}</div>
-          </div>
+          <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
+            <img src="${iconUrl}" class="talent-icon-img" alt="${t.name}" title="${t.name}">
+          </a>
         `;
       }).join('');
 
-      rankingsDiv.innerHTML = `<h2>${name}</h2>${talentSummary}${entries}`;
-    })
-    .catch(error => {
-      console.error("Error fetching logs:", error);
-      rankingsDiv.innerHTML = `<p style="color: red;">Failed to load logs.</p>`;
-    });
+    const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
+    const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
+    const name = r?.name ?? 'Unknown';
+
+    return `
+      <div class="rank-entry" style="color:${color};">
+        <div class="name-wrapper">
+          <a target="_blank" href="${reportUrl}" class="player-link" rel="noopener">
+            ${i + 1}. ${name} – ${dps} DPS
+          </a>
+        </div>
+        <div class="talent-row">${talentIconsHTML}</div>
+      </div>
+    `;
+  }).join('');
+
+  rankingsDiv.innerHTML = `
+    <h2>${name}</h2>
+    ${cachedAtText ? `<div style="margin-bottom:8px;color:#bbb;">Last updated: ${cachedAtText}</div>` : ''}
+    ${talentSummary}
+    ${entries}
+  `;
 }
 
+async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
+  // Abort any in-flight request
+  if (currentController) currentController.abort();
+  currentController = new AbortController();
+
+  // Check cache
+  const cached = readCache(encounterId);
+  const cachedAtServer = cached?.data?.cachedAt; // If your Netlify function includes this
+  const cachedAtLocal = cached?.cachedAt;
+  const cachedAtToShow = cachedAtServer || cachedAtLocal;
+  const freshEnough = cached && isFresh(cachedAtServer || cachedAtLocal);
+
+  // Optimistic render from cache if fresh
+  if (freshEnough && !force) {
+    render(name, cached.data, `${new Date(cachedAtToShow).toLocaleString()} (${formatAgo(cachedAtToShow)})`);
+    // Still try a background refresh if you want (optional)
+    return;
+  }
+
+  showLoading(name, cachedAtToShow ? `${new Date(cachedAtToShow).toLocaleString()} (${formatAgo(cachedAtToShow)})` : '');
+
+  disableButtons(true);
+  try {
+    const res = await fetch(API_URL(encounterId), { signal: currentController.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    // Prefer server time if provided, otherwise use now
+    const serverCachedAt = data?.cachedAt || res.headers.get('x-last-updated') || new Date().toISOString();
+    writeCache(encounterId, data, serverCachedAt);
+
+    render(name, data, `${new Date(serverCachedAt).toLocaleString()} (${formatAgo(serverCachedAt)})`);
+  } catch (err) {
+    if (err.name === 'AbortError') return; // user navigated away quickly
+    console.error('Error fetching logs:', err);
+    rankingsDiv.innerHTML = `<p style="color:red;">Failed to load logs. ${err.message || ''}</p>`;
+  } finally {
+    disableButtons(false);
+  }
+}
+
+// ======= URL hash sync (deep-linking) =======
+function updateHash(encounterId) {
+  history.replaceState(null, '', `#e-${encounterId}`);
+}
+
+function parseHash() {
+  const m = location.hash.match(/#e-(\d+)/);
+  return m ? parseInt(m[1], 10) : null;
+}
+
+function openFromHashOrDefault() {
+  const fromHash = parseHash();
+  const entries = Object.entries(encounters);
+
+  if (fromHash && entries.some(([, id]) => id === fromHash)) {
+    const [bossName] = entries.find(([, id]) => id === fromHash);
+    selectActiveButton(fromHash);
+    fetchAndDisplayRankings(bossName, fromHash);
+  } else {
+    // default: first boss
+    const [bossName, encounterId] = entries[0];
+    selectActiveButton(encounterId);
+    updateHash(encounterId);
+    fetchAndDisplayRankings(bossName, encounterId);
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  const id = parseHash();
+  if (!id) return;
+  const entry = Object.entries(encounters).find(([, eid]) => eid === id);
+  if (!entry) return;
+  const [name] = entry;
+  selectActiveButton(id);
+  fetchAndDisplayRankings(name, id);
+});
+
+// ======= Manual Refresh hook (optional UI) =======
+// If you add a refresh button somewhere: <button id="refresh">Refresh</button>
+// document.getElementById('refresh').addEventListener('click', () => {
+//   const id = parseHash();
+//   if (!id) return;
+//   const [name] = Object.entries(encounters).find(([, eid]) => eid === id);
+//   fetchAndDisplayRankings(name, id, { force: true });
+// });
+
+// ======= Init =======
 createBossButtons();
+openFromHashOrDefault();
