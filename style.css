@@ -18,10 +18,18 @@ h1 {
   margin: 5px;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 18px;
 }
 
 #boss-buttons button:hover {
   background-color: #444;
+}
+
+#boss-buttons img {
+  width: 64px;
+  height: 64px;
+  vertical-align: middle;
+  margin-right: 10px;
 }
 
 #rankings {
@@ -33,7 +41,18 @@ h1 {
 }
 
 .rank-entry {
-  color: #9482C9;
   font-weight: bold;
   margin: 5px 0;
+}
+
+.rank-entry[data-percentile="100"] {
+  color: #e6cc80;
+}
+
+.rank-entry[data-percentile="99"] {
+  color: #ff99cc;
+}
+
+.rank-entry[data-percentile="95"] {
+  color: #ff9966;
 }
