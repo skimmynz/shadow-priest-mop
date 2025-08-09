@@ -20,10 +20,9 @@ function setBackgroundImage(bossName) {
     "Elegon": "https://assets2.mythictrap.com/msv-hof-toes/background_finals/elegon-custom.png?v=9",
     "Will of the Emperor": "https://assets2.mythictrap.com/msv-hof-toes/background_finals/will-of-the-emperor-custom.png?v=9"
   };
-  document.body.style.backgroundImage = `url(${backgrounds[bossName]})`;
-  document.body.style.backgroundSize = "cover";
-  document.body.style.backgroundPosition = "center";
-  document.body.style.backgroundRepeat = "no-repeat";
+
+  const container = document.getElementById("boss-background");
+  container.innerHTML = `<img src="${backgrounds[bossName]}" alt="${bossName}">`;
 }
 
 function createBossButtons() {
@@ -96,74 +95,74 @@ function getSpellId(talentName) {
   return talentSpellIds[talentName] || 0;
 }
 
-async function fetchAndDisplayRankings(name, id) {
+function fetchAndDisplayRankings(name, id) {
   rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
-  try {
-    const url = `/.netlify/functions/getLogs?encounterId=${id}`;
-    const response = await fetch(url);
-    const data = await response.json();
+  const url = `/.netlify/functions/getLogs?encounterId=${id}`;
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const tierCounts = {};
+      const totalPerTier = {};
 
-    const tierCounts = {};
-    const totalPerTier = {};
-
-    Object.keys(talentTiers).forEach(tier => {
-      tierCounts[tier] = {};
-      totalPerTier[tier] = 0;
-      talentTiers[tier].forEach(talent => {
-        tierCounts[tier][talent] = 0;
+      Object.keys(talentTiers).forEach(tier => {
+        tierCounts[tier] = {};
+        totalPerTier[tier] = 0;
+        talentTiers[tier].forEach(talent => {
+          tierCounts[tier][talent] = 0;
+        });
       });
-    });
 
-    data.rankings.forEach(entry => {
-      entry.talents.forEach(talent => {
-        const name = talent.name;
-        const tier = Object.entries(talentTiers).find(([_, talents]) => talents.includes(name))?.[0];
-        if (tier) {
-          tierCounts[tier][name]++;
-          totalPerTier[tier]++;
-        }
+      data.rankings.forEach(entry => {
+        entry.talents.forEach(talent => {
+          const name = talent.name;
+          const tier = Object.entries(talentTiers).find(([_, talents]) => talents.includes(name))?.[0];
+          if (tier) {
+            tierCounts[tier][name]++;
+            totalPerTier[tier]++;
+          }
+        });
       });
-    });
 
-    let talentSummary = `<div class='talent-summary'>`;
-    Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
-      talentSummary += `<div class="talent-row">`;
-      talentTiers[tier].forEach(talent => {
-        const count = tierCounts[tier][talent];
-        const total = totalPerTier[tier];
-        const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
-        const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
-        const iconKey = talentIcons[talent] || "spell_priest_unknown";
-        const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
-        const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent)}`;
+      let talentSummary = `<div class='talent-summary'>`;
+      Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
+        talentSummary += `<div class="talent-row">`;
+        talentTiers[tier].forEach(talent => {
+          const count = tierCounts[tier][talent];
+          const total = totalPerTier[tier];
+          const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
+          const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
+          const iconKey = talentIcons[talent] || "spell_priest_unknown";
+          const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
+          const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent)}`;
 
-        talentSummary += `
-          <a target="_blank" href="${wowheadUrl}" class="talent-link">
-            <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}">
-            <div class="talent-percent" style="color: ${color};">${percent}%</div>
-          </a>
-        `;
+          talentSummary += `
+            <a target="_blank" href="${wowheadUrl}" class="talent-link">
+              <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}">
+              <div class="talent-percent" style="color: ${color};">${percent}%</div>
+            </a>
+          `;
+        });
+        talentSummary += `</div>`;
       });
-      talentSummary += `</div>`;
+      talentSummary += `</div><br>`;
+
+      const getColor = (rank) => {
+        if (rank === 1) return '#e5cc80';
+        if (rank >= 2 && rank <= 25) return '#e268a8';
+        return '#ff8000';
+      };
+
+      const entries = data.rankings.slice(0, 100).map((r, i) => {
+        const color = getColor(i + 1);
+        return `<div class="rank-entry" style="color: ${color};">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
+      }).join('');
+
+      rankingsDiv.innerHTML = `<h2>${name}</h2>${talentSummary}${entries}`;
+    })
+    .catch(error => {
+      console.error("Error fetching logs:", error);
+      rankingsDiv.innerHTML = `<p style="color: red;">Failed to load logs.</p>`;
     });
-    talentSummary += `</div><br>`;
-
-    const getColor = (rank) => {
-      if (rank === 1) return '#e5cc80';
-      if (rank >= 2 && rank <= 25) return '#e268a8';
-      return '#ff8000';
-    };
-
-    const entries = data.rankings.slice(0, 100).map((r, i) => {
-      const color = getColor(i + 1);
-      return `<div class="rank-entry" style="color: ${color};">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
-    }).join('');
-
-    rankingsDiv.innerHTML = `<h2>${name}</h2>${talentSummary}${entries}`;
-  } catch (error) {
-    console.error("Error fetching logs:", error);
-    rankingsDiv.innerHTML = `<p style="color: red;">Failed to load logs.</p>`;
-  }
 }
 
 createBossButtons();
