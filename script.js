@@ -286,7 +286,6 @@ function render(name, data, cachedAtText) {
   }).join('');
 
   rankingsDiv.innerHTML = `
-    <h2>${name}</h2>
     ${cachedAtText ? `<div style="margin-bottom:8px;color:#bbb;">Last updated: ${cachedAtText}</div>` : ''}
     ${talentSummary}
     ${entries}
