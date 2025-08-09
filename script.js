@@ -115,6 +115,42 @@ const talentIconUrl = (name) => {
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
+// ======= Slug + Hash helpers: #<boss-slug>-<id> with legacy support =======
+function slugify(str) {
+  return String(str)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove accents
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')     // non-alphanum -> hyphen
+    .replace(/^-+|-+$/g, '')         // trim hyphens
+    .replace(/--+/g, '-');           // collapse
+}
+
+function hashFor(name, encounterId) {
+  return `#${slugify(name)}-${encounterId}`;
+}
+
+// Update the URL hash to the new format
+function updateHash(name, encounterId) {
+  history.replaceState(null, '', hashFor(name, encounterId));
+}
+
+// Parse current hash. Supports both new (#slug-id) and legacy (#e-id)
+function parseHash() {
+  const h = location.hash || '';
+  // New format: #<slug>-<id>
+  const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
+  if (m) {
+    return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10), legacy: false };
+  }
+  // Legacy format: #e-<id>
+  const legacy = h.match(/^#e-(\d+)$/i);
+  if (legacy) {
+    return { slug: 'e', id: parseInt(legacy[1], 10), legacy: true };
+  }
+  return null;
+}
+
 // ======= Boss buttons =======
 function createBossButtons() {
   for (const [name, id] of Object.entries(encounters)) {
@@ -135,7 +171,7 @@ function createBossButtons() {
     button.appendChild(span);
     button.addEventListener('click', () => {
       selectActiveButton(id);
-      updateHash(id);
+      updateHash(name, id);          // ← new human-readable hash
       fetchAndDisplayRankings(name, id);
     });
 
@@ -359,40 +395,47 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 }
 
 // ======= URL hash sync (deep-linking) =======
-function updateHash(encounterId) {
-  history.replaceState(null, '', `#e-${encounterId}`);
-}
-
-function parseHash() {
-  const m = location.hash.match(/#e-(\d+)/);
-  return m ? parseInt(m[1], 10) : null;
-}
-
 function openFromHashOrDefault() {
-  const fromHash = parseHash();
+  const parsed = parseHash();
   const entries = Object.entries(encounters);
 
-  if (fromHash && entries.some(([, id]) => id === fromHash)) {
-    const [bossName] = entries.find(([, id]) => id === fromHash);
-    selectActiveButton(fromHash);
-    fetchAndDisplayRankings(bossName, fromHash);
+  if (parsed && entries.some(([, id]) => id === parsed.id)) {
+    const [bossName] = entries.find(([, id]) => id === parsed.id);
+    const desiredSlug = slugify(bossName);
+
+    // Auto-migrate legacy (#e-1234) or wrong slug to the new, correct slug
+    if (parsed.legacy || parsed.slug !== desiredSlug) {
+      updateHash(bossName, parsed.id);
+    }
+
+    selectActiveButton(parsed.id);
+    fetchAndDisplayRankings(bossName, parsed.id);
   } else {
     // default: first boss
     const [bossName, encounterId] = entries[0];
     selectActiveButton(encounterId);
-    updateHash(encounterId);
+    updateHash(bossName, encounterId);   // set a clean, shareable hash
     fetchAndDisplayRankings(bossName, encounterId);
   }
 }
 
 window.addEventListener('hashchange', () => {
-  const id = parseHash();
-  if (!id) return;
-  const entry = Object.entries(encounters).find(([, eid]) => eid === id);
+  const parsed = parseHash();
+  if (!parsed) return;
+
+  const entry = Object.entries(encounters).find(([, eid]) => eid === parsed.id);
   if (!entry) return;
-  const [name] = entry;
-  selectActiveButton(id);
-  fetchAndDisplayRankings(name, id);
+
+  const [bossName] = entry;
+  const desiredSlug = slugify(bossName);
+
+  // If slug doesn't match, silently fix it (user changed hash manually)
+  if (parsed.slug !== desiredSlug) {
+    updateHash(bossName, parsed.id);
+  }
+
+  selectActiveButton(parsed.id);
+  fetchAndDisplayRankings(bossName, parsed.id);
 });
 
 // ======= Init =======
