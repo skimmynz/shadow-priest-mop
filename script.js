@@ -181,9 +181,11 @@ function fetchAndDisplayRankings(name, id) {
 
         return `
           <div class="rank-entry" style="color: ${color};">
-            <a target="_blank" href="${reportUrl}" class="player-link">
-              ${i + 1}. ${r.name} – ${Math.round(r.total)} DPS
-            </a>
+            <div class="name-wrapper">
+              <a target="_blank" href="${reportUrl}" class="player-link">
+                ${i + 1}. ${r.name} – ${Math.round(r.total)} DPS
+              </a>
+            </div>
             <div class="talent-row">${talentIconsHTML}</div>
           </div>
         `;
