@@ -1,43 +1,16 @@
-
 body {
   background-color: #0e0e0e;
   color: #fff;
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
-  font-size: clamp(14px, 2vw, 18px);
-  position: relative;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 h1 {
   margin-bottom: 30px;
-  z-index: 1;
-  position: relative;
-}
-
-#boss-background {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 200px;
-  height: auto;
-  z-index: 1;
-}
-
-#boss-background img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 #boss-buttons button {
@@ -49,14 +22,10 @@ h1 {
   cursor: pointer;
   border-radius: 5px;
   font-size: 20px;
-  transition: transform 0.2s ease;
-  z-index: 1;
-  position: relative;
 }
 
 #boss-buttons button:hover {
   background-color: #444;
-  transform: scale(1.05);
 }
 
 #boss-buttons img {
@@ -98,8 +67,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  opacity: 0;
-  animation: fadeIn 0.5s ease forwards;
+  position: relative;
 }
 
 .talent-icon-img {
@@ -114,26 +82,31 @@ h1 {
   margin-top: 4px;
 }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+.talent-link:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -20px;
+  background: #222;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 2;
 }
 
-@media (max-width: 600px) {
-  .talent-row {
-    flex-direction: column;
-    align-items: center;
-  }
+#boss-background {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 200px;
+  height: auto;
+  z-index: 0;
+}
 
-  #boss-buttons button {
-    font-size: 16px;
-    padding: 10px;
-  }
-
-  #boss-background {
-    width: 120px;
-    top: 10px;
-    left: 10px;
-  }
+#boss-background img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
