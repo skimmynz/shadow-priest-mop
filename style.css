@@ -10,7 +10,17 @@ h1 {
   margin-bottom: 30px;
 }
 
+#boss-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 #boss-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   background-color: #222;
   color: #fff;
   border: 1px solid #444;
@@ -18,17 +28,18 @@ h1 {
   margin: 5px;
   cursor: pointer;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 #boss-buttons button:hover {
   background-color: #444;
 }
 
-#boss-buttons img {
-  height: 50px;
-  vertical-align: middle;
-  margin-right: 8px;
+.boss-icon {
+  height: 40px;
+  width: 40px;
+  border-radius: 4px;
+  border: 1px solid #444;
 }
 
 #rankings {
@@ -42,7 +53,7 @@ h1 {
 .rank-entry {
   color: #9482C9;
   font-weight: bold;
-  margin: 5px 0;
+  margin: 10px 0;
 }
 
 .talent-summary {

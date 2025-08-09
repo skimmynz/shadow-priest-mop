@@ -13,12 +13,18 @@ const rankingsDiv = document.getElementById('rankings');
 function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
-    button.innerHTML = `
-      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2"me}
-    `;
-    button.onclick = () => {
-      fetchAndDisplayRankings(name, id);
-    };
+    const img = document.createElement('img');
+    const span = document.createElement('span');
+
+    img.src = `https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2`;
+    img.alt = name;
+    img.className = 'boss-icon';
+
+    span.textContent = name;
+
+    button.appendChild(img);
+    button.appendChild(span);
+    button.onclick = () => fetchAndDisplayRankings(name, id);
     bossButtonsDiv.appendChild(button);
   });
 }
@@ -35,11 +41,11 @@ const talentTiers = {
 const talentIcons = {
   "Void Tendrils": "spell_priest_voidtendrils",
   "Psyfiend": "spell_priest_psyfiend",
-  "Dominate Mind": "spell_shadow_mindcontrol", // ✅ fixed
+  "Dominate Mind": "spell_shadow_mindcontrol",
   "Body and Soul": "spell_holy_symbolofhope",
   "Angelic Feather": "ability_priest_angelicfeather",
   "Phantasm": "ability_priest_phantasm",
-  "From Darkness, Comes Light": "spell_holy_surgeoflight", // ✅ confirmed
+  "From Darkness, Comes Light": "spell_holy_surgeoflight",
   "Mindbender": "spell_shadow_soulleech_3",
   "Solace and Insanity": "ability_priest_flashoflight",
   "Desperate Prayer": "spell_holy_testoffaith",
@@ -114,7 +120,7 @@ function fetchAndDisplayRankings(name, id) {
           const total = totalPerTier[tier];
           const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
           const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
-          const iconKey = talentIcons[talent] || "spell_priest_unknown";
+          const iconKey = talentIcons[talent] || "inv_misc_questionmark";
           const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
           const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent)}`;
 
@@ -138,7 +144,7 @@ function fetchAndDisplayRankings(name, id) {
       const entries = data.rankings.slice(0, 100).map((r, i) => {
         const color = getColor(i + 1);
         const talentIconsHTML = r.talents.map(talent => {
-          const iconKey = talentIcons[talent.name] || "spell_priest_unknown";
+          const iconKey = talentIcons[talent.name] || "inv_misc_questionmark";
           const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
           const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent.name)}`;
           return `
