@@ -219,16 +219,6 @@ h1 {
   max-width: 100%;           /* prevent overflow on small screens */
 }
 
-/* --- Center the player name text and let it size naturally --- */
-.name-wrapper {
-  width: auto !important;    /* override previous fixed width */
-  max-width: 420px;          /* keeps long names tidy; adjust as needed */
-  text-align: center;        /* center the name text itself */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 /* --- Keep per-player talents smaller (independent from big summary) --- */
 .rank-entry .talent-row .talent-icon-img {
   width: 28px;
