@@ -177,9 +177,13 @@ function fetchAndDisplayRankings(name, id) {
             `;
           }).join('');
 
+        const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
+
         return `
           <div class="rank-entry" style="color: ${color};">
-            ${i + 1}. ${r.name} – ${Math.round(r.total)} DPS
+            <a target="_blank" href="${reportUrl}" class="player-link">
+              ${i + 1}. ${r.name} – ${Math.round(r.total)} DPS
+            </a>
             <div class="talent-row">${talentIconsHTML}</div>
           </div>
         `;
