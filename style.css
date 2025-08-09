@@ -172,4 +172,14 @@ h1 {
     font-size: 14px;
   }
 }
+/* ---- Smaller talents next to player names ---- */
+.rank-entry .talent-row .talent-icon-img {
+  width: 28px;   /* smaller than the main summary (56px) */
+  height: 28px;
+  border-radius: 4px;
+}
+
+.rank-entry .talent-row .talent-link {
+  margin: 0 2px; /* tighter spacing for compact look */
+}
 
