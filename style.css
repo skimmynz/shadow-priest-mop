@@ -61,7 +61,7 @@ h1 {
 }
 
 .name-wrapper {
-  width: 250px; /* Fixed width instead of max-width */
+  width: 300px; /* Fixed width instead of max-width */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
