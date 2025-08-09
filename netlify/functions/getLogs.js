@@ -1,29 +1,54 @@
 const fetch = require('node-fetch');
+const fs = require('fs');
+const path = require('path');
 
-exports.handler = async function(event, context) {
-  const { encounterId } = event.queryStringParameters;
-  const apiKey = process.env.WCL_API_KEY;
+const CACHE_DIR = path.resolve(__dirname, '../../cache');
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 
-  if (!encounterId) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'Missing encounterId parameter' })
-    };
-  }
+exports.handler = async function(event) {
+  const encounterId = event.queryStringParameters.encounterId;
+  const cacheFile = path.join(CACHE_DIR, `${encounterId}.json`);
 
   try {
-    const url = `https://www.warcraftlogs.com/v1/rankings/encounter/${encounterId}?metric=dps&size=25&difficulty=4&class=7&spec=3&includeCombatantInfo=true&api_key=${apiKey}`;
-    const response = await fetch(url);
+    // Check cache
+    if (fs.existsSync(cacheFile)) {
+      const cached = JSON.parse(fs.readFileSync(cacheFile, 'utf-8'));
+      const now = Date.now();
+      if (now - cached.timestamp < CACHE_TTL) {
+        return {
+          statusCode: 200,
+          body: JSON.stringify(cached.data),
+        };
+      }
+    }
+
+    // Fetch fresh data
+    const response = await fetch(`https://www.warcraftlogs.com/api/v2/your-query`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.WCL_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `your GraphQL query here`,
+        variables: { encounterId: parseInt(encounterId) }
+      })
+    });
+
     const data = await response.json();
+
+    // Save to cache
+    fs.writeFileSync(cacheFile, JSON.stringify({ timestamp: Date.now(), data }));
 
     return {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
     };
-  } catch (error) {
+  } catch (err) {
+    console.error(err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({ error: err.message }),
     };
   }
 };
