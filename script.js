@@ -22,6 +22,7 @@ function createBossButtons() {
   });
 }
 
+
 async function fetchAndDisplayRankings(name, id) {
   rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
   const url = `/.netlify/functions/getLogs?encounterId=${id}`;
