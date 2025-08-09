@@ -35,6 +35,10 @@ h1 {
   background-color: #444;
 }
 
+#boss-buttons button.active {
+  outline: 2px solid #9482C9;
+}
+
 .boss-icon {
   height: 40px;
   width: 40px;
