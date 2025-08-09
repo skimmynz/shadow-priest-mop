@@ -31,6 +31,27 @@ const talentTiers = {
   90: ["Cascade", "Divine Star", "Halo"]
 };
 
+const talentSpellIds = {
+  "Void Tendrils": 108920,
+  "Psyfiend": 108921,
+  "Dominate Mind": 605,
+  "Body and Soul": 64129,
+  "Angelic Feather": 121536,
+  "Phantasm": 108942,
+  "From Darkness, Comes Light": 109186,
+  "Mindbender": 123040,
+  "Solace and Insanity": 129250,
+  "Desperate Prayer": 19236,
+  "Spectral Guise": 119898,
+  "Angelic Bulwark": 108945,
+  "Twist of Fate": 109142,
+  "Power Infusion": 10060,
+  "Divine Insight": 109175,
+  "Cascade": 121135,
+  "Divine Star": 110744,
+  "Halo": 120517
+};
+
 function getTalentTierMap() {
   const map = {};
   Object.entries(talentTiers).forEach(([tier, talents]) => {
@@ -39,6 +60,10 @@ function getTalentTierMap() {
     });
   });
   return map;
+}
+
+function getSpellId(talentName) {
+  return talentSpellIds[talentName] || 0;
 }
 
 async function fetchAndDisplayRankings(name, id) {
@@ -70,22 +95,38 @@ async function fetchAndDisplayRankings(name, id) {
     });
   });
 
-  let talentSummary = "<div class='talent-summary'>";
+  let talentSummary = `<div class='talent-summary'>`;
+
   Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
-    talentSummary += `<strong>Tier ${tier}:</strong><br>`;
+    talentSummary += `<div class="talent-tier"><strong>Tier ${tier}</strong></div><div class="talent-row">`;
+
     talentTiers[tier].forEach(talent => {
       const count = tierCounts[tier][talent];
       const total = totalPerTier[tier];
       const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
-      talentSummary += `- ${talent}: ${percent}%<br>`;
+
+      const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
+      const iconName = talent.toLowerCase().replace(/[^a-z0-9]/g, '').replace(/\s+/g, '');
+      const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_${iconName}.jpg`;
+      const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent)}`;
+
+      talentSummary += `
+        <a target="_blank" href="${wowheadUrl}" class="talent-link">
+          <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}">
+          <div class="talent-percent" style="color: ${color};">${percent}%</div>
+        </a>
+      `;
     });
+
+    talentSummary += `</div>`;
   });
-  talentSummary += "</div><br>";
+
+  talentSummary += `</div><br>`;
 
   const getColor = (rank) => {
-    if (rank === 1) return '#e5cc80';     // Gold
-    if (rank >= 2 && rank <= 25) return '#e268a8'; // Pink
-    return '#ff8000';                     // Orange
+    if (rank === 1) return '#e5cc80';
+    if (rank >= 2 && rank <= 25) return '#e268a8';
+    return '#ff8000';
   };
 
   const entries = data.rankings.slice(0, 100).map((r, i) => {
