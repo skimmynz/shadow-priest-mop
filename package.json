@@ -1,0 +1,13 @@
+{
+  "name": "shadow-priest-mop",
+  "version": "1.0.0",
+  "description": "Shadow Priest Rankings site using Netlify Functions",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  },
+  "license": "MIT"
+}
