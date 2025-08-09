@@ -28,8 +28,8 @@ async function fetchAndDisplayRankings(name, id) {
   const data = await response.json();
 
   const getColor = (rank) => {
-    if (rank <= 25) return '#e5cc80';     // Gold
-    if (rank <= 50) return '#e268a8';     // Pink
+    if (rank = 1) return '#e5cc80';     // Gold
+    if (rank <= 25) return '#e268a8';     // Pink
     return '#ff8000';                     // Orange
   };
 
