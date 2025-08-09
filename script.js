@@ -185,7 +185,6 @@ function disableButtons(disabled) {
 
 function showLoading(name, cachedAtText) {
   rankingsDiv.innerHTML = `
-    <h2>${name}</h2>
     ${cachedAtText ? `<div style="margin-bottom:8px;color:#bbb;">Last updated: ${cachedAtText}</div>` : ''}
     <p>Loading...</p>
   `;
