@@ -8,6 +8,21 @@ const encounters = {
   "Will of the Emperor": 1407
 };
 
+const bossButtonsDiv = document.getElementById('boss-buttons');
+const rankingsDiv = document.getElementById('rankings');
+
+function createBossButtons() {
+  Object.entries(encounters).forEach(([name, id]) => {
+    const button = document.createElement('button');
+    button.innerHTML = `
+      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}">
+      ${name}
+    `;
+    button.onclick = () => fetchAndDisplayRankings(name, id);
+    bossButtonsDiv.appendChild(button);
+  });
+}
+
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -59,33 +74,8 @@ const talentSpellIds = {
   "Halo": 120517
 };
 
-function getTalentTierMap() {
-  const map = {};
-  Object.entries(talentTiers).forEach(([tier, talents]) => {
-    talents.forEach(talent => {
-      map[talent] = tier;
-    });
-  });
-  return map;
-}
-
 function getSpellId(talentName) {
   return talentSpellIds[talentName] || 0;
-}
-
-const bossButtonsDiv = document.getElementById('boss-buttons');
-const rankingsDiv = document.getElementById('rankings');
-
-function createBossButtons() {
-  Object.entries(encounters).forEach(([name, id]) => {
-    const button = document.createElement('button');
-    button.innerHTML = `
-      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}">
-      ${name}
-    `;
-    button.onclick = () => fetchAndDisplayRankings(name, id);
-    bossButtonsDiv.appendChild(button);
-  });
 }
 
 async function fetchAndDisplayRankings(name, id) {
@@ -94,7 +84,6 @@ async function fetchAndDisplayRankings(name, id) {
   const response = await fetch(url);
   const data = await response.json();
 
-  const talentToTier = getTalentTierMap();
   const tierCounts = {};
   const totalPerTier = {};
 
@@ -109,7 +98,7 @@ async function fetchAndDisplayRankings(name, id) {
   data.rankings.forEach(entry => {
     entry.talents.forEach(talent => {
       const name = talent.name;
-      const tier = talentToTier[name];
+      const tier = Object.keys(talentTiers).find(t => talentTiers[t].includes(name));
       if (tier) {
         tierCounts[tier][name]++;
         totalPerTier[tier]++;
@@ -119,14 +108,11 @@ async function fetchAndDisplayRankings(name, id) {
 
   let talentSummary = `<div class='talent-summary'>`;
   Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
-    talentSummary += `<div class="talent-tier"><strong></strong></div>`;
-
-
+    talentSummary += `<div class="talent-row">`;
     talentTiers[tier].forEach(talent => {
       const count = tierCounts[tier][talent];
       const total = totalPerTier[tier];
       const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
-
       const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
       const iconKey = talentIcons[talent] || "spell_priest_unknown";
       const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
@@ -139,10 +125,8 @@ async function fetchAndDisplayRankings(name, id) {
         </a>
       `;
     });
-
     talentSummary += `</div>`;
   });
-
   talentSummary += `</div><br>`;
 
   const getColor = (rank) => {

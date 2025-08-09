@@ -46,10 +46,8 @@ h1 {
   margin: 5px 0;
 }
 
-.talent-tier {
-  font-size: 18px;
-  margin: 10px 0 5px;
-  color: #e5cc80;
+.talent-summary {
+  margin-bottom: 20px;
 }
 
 .talent-row {
@@ -65,6 +63,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
+  width: 60px;
 }
 
 .talent-icon-img {
