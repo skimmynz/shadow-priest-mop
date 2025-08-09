@@ -80,6 +80,12 @@ const talentSpellIds = {
   "Halo": 120517
 };
 
+// Map API talent names to talentTiers names
+const talentNameMap = {
+  "Surge of Light": "From Darkness, Comes Light",
+  "Mind Control": "Dominate Mind"
+};
+
 function getSpellId(talentName) {
   return talentSpellIds[talentName] || 0;
 }
@@ -106,7 +112,9 @@ function fetchAndDisplayRankings(name, id) {
       data.rankings.forEach(entry => {
         const talentsSelected = new Set(); // Track tiers processed for this player
         entry.talents.forEach(talent => {
-          const talentName = talent.name;
+          let talentName = talent.name;
+          // Map API talent name to talentTiers name if applicable
+          talentName = talentNameMap[talentName] || talentName;
           // Check if talent is in talentTiers
           const tier = Object.entries(talentTiers).find(([_, talents]) => talents.includes(talentName))?.[0];
           if (tier && !talentsSelected.has(tier)) {
@@ -149,6 +157,11 @@ function fetchAndDisplayRankings(name, id) {
       const entries = data.rankings.slice(0, 100).map((r, i) => {
         const color = getColor(i + 1);
         const talentIconsHTML = r.talents
+          .map(talent => {
+            // Map API talent name to talentTiers name for display
+            const displayName = talentNameMap[talent.name] || talent.name;
+            return { ...talent, name: displayName };
+          })
           .filter(talent => {
             // Only include valid talents in the rankings display
             return Object.values(talentTiers).flat().includes(talent.name);
