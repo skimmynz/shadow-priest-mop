@@ -86,3 +86,13 @@ h1 {
   font-size: 12px;
   margin-top: 4px;
 }
+
+.player-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.player-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
