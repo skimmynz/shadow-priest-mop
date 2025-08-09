@@ -10,59 +10,39 @@ const encounters = {
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
 
-function updateLastUpdatedDisplay() {
-  const lastUpdated = localStorage.getItem('lastUpdated');
-  if (lastUpdated) {
-    const date = new Date(lastUpdated);
-    document.getElementById('last-updated').textContent = `Last updated: ${date.toUTCString()}`;
-  }
-}
-
-function getPercentileColor(percentile) {
-  if (percentile >= 100) return "100";
-  if (percentile >= 99) return "99";
-  if (percentile >= 95) return "95";
-  return "";
-}
-
-function renderRankings(name, rankings) {
-  const entries = rankings.map((r, i) => {
-    const percentile = getPercentileColor(r.percentile || 0);
-    return `<div class="rank-entry" data-percentile="${percentile}">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
-  }).join('');
-  rankingsDiv.innerHTML = `<h2>${name}</h2>${entries}`;
-}
-
-async function fetchAndDisplayRankings(name, id) {
-  rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
-  const cache = JSON.parse(localStorage.getItem('rankingsCache') || '{}');
-  const lastUpdated = localStorage.getItem('lastUpdated');
-  const now = new Date();
-  const refreshTime = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 7, 0, 0);
-
-  if (!lastUpdated || new Date(lastUpdated) < refreshTime || !cache[name]) {
-    const response = await fetch(`/.netlify/functions/getLogs?encounterId=${id}`);
-    const data = await response.json();
-    cache[name] = data.rankings.slice(0, 100);
-    localStorage.setItem('rankingsCache', JSON.stringify(cache));
-    localStorage.setItem('lastUpdated', now.toISOString());
-    updateLastUpdatedDisplay();
-    renderRankings(name, cache[name]);
-  } else {
-    updateLastUpdatedDisplay();
-    renderRankings(name, cache[name]);
-  }
+function updateLastUpdatedDisplay(timestamp) {
+  document.getElementById('last-updated').textContent = `Last updated: ${timestamp}`;
 }
 
 function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
+    button.textContent = name;
     button.className = 'boss-button';
-    button.innerHTML = `<img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}" loading="lazy"/> ${name}`;
     button.onclick = () => fetchAndDisplayRankings(name, id);
     bossButtonsDiv.appendChild(button);
   });
 }
 
+async function fetchAndDisplayRankings(name, id) {
+  rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
+  const response = await fetch(`/.netlify/functions/getLogs?encounterId=${id}`);
+  const data = await response.json();
+  updateLastUpdatedDisplay(data.lastUpdated);
+  renderRankings(name, data.rankings.slice(0, 100));
+}
+
+function renderRankings(name, rankings) {
+  const entries = rankings.map((r, i) => {
+    const percentile = r.percentile ? Math.floor(r.percentile) : 0;
+    let colorClass = "";
+    if (percentile >= 100) colorClass = "100";
+    else if (percentile >= 99) colorClass = "99";
+    else if (percentile >= 95) colorClass = "95";
+
+    return `<div class="rank-entry" data-percentile="${colorClass}">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
+  }).join('');
+  rankingsDiv.innerHTML = `<h2>${name}</h2>${entries}`;
+}
+
 createBossButtons();
-updateLastUpdatedDisplay();

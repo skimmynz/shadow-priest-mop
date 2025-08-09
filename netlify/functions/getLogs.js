@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
@@ -9,9 +11,16 @@ exports.handler = async function(event, context) {
   try {
     const response = await fetch(url);
     const data = await response.json();
+
+    const cachePath = path.join(__dirname, '../../server_cache.txt');
+    let lastUpdated = "Unknown";
+    if (fs.existsSync(cachePath)) {
+      lastUpdated = fs.readFileSync(cachePath, 'utf8').trim();
+    }
+
     return {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify({ rankings: data.rankings, lastUpdated })
     };
   } catch (error) {
     return {

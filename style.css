@@ -25,13 +25,6 @@ h1 {
   background-color: #444;
 }
 
-#boss-buttons img {
-  width: 64px;
-  height: 64px;
-  vertical-align: middle;
-  margin-right: 10px;
-}
-
 #rankings {
   margin-top: 30px;
   text-align: left;
@@ -48,11 +41,18 @@ h1 {
 .rank-entry[data-percentile="100"] {
   color: #e6cc80;
 }
-
 .rank-entry[data-percentile="99"] {
   color: #ff99cc;
 }
-
 .rank-entry[data-percentile="95"] {
   color: #ff9966;
+}
+
+.boss-button {
+  font-size: 18px;
+}
+
+.boss-button img {
+  width: 64px;
+  height: 64px;
 }
