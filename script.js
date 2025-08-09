@@ -93,6 +93,7 @@ function fetchAndDisplayRankings(name, id) {
       const tierCounts = {};
       const totalPerTier = {};
 
+      // Initialize counts for each talent in each tier
       Object.keys(talentTiers).forEach(tier => {
         tierCounts[tier] = {};
         totalPerTier[tier] = 0;
@@ -101,13 +102,17 @@ function fetchAndDisplayRankings(name, id) {
         });
       });
 
+      // Count talents, ensuring one talent per tier per player and only valid talents
       data.rankings.forEach(entry => {
+        const talentsSelected = new Set(); // Track tiers processed for this player
         entry.talents.forEach(talent => {
-          const name = talent.name;
-          const tier = Object.entries(talentTiers).find(([_, talents]) => talents.includes(name))?.[0];
-          if (tier) {
-            tierCounts[tier][name]++;
+          const talentName = talent.name;
+          // Check if talent is in talentTiers
+          const tier = Object.entries(talentTiers).find(([_, talents]) => talents.includes(talentName))?.[0];
+          if (tier && !talentsSelected.has(tier)) {
+            tierCounts[tier][talentName]++;
             totalPerTier[tier]++;
+            talentsSelected.add(tier); // Mark tier as processed
           }
         });
       });
@@ -143,16 +148,21 @@ function fetchAndDisplayRankings(name, id) {
 
       const entries = data.rankings.slice(0, 100).map((r, i) => {
         const color = getColor(i + 1);
-        const talentIconsHTML = r.talents.map(talent => {
-          const iconKey = talentIcons[talent.name] || "inv_misc_questionmark";
-          const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
-          const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent.name)}`;
-          return `
-            <a target="_blank" href="${wowheadUrl}" class="talent-link">
-              <img src="${iconUrl}" class="talent-icon-img" alt="${talent.name}" title="${talent.name}">
-            </a>
-          `;
-        }).join('');
+        const talentIconsHTML = r.talents
+          .filter(talent => {
+            // Only include valid talents in the rankings display
+            return Object.values(talentTiers).flat().includes(talent.name);
+          })
+          .map(talent => {
+            const iconKey = talentIcons[talent.name] || "inv_misc_questionmark";
+            const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
+            const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent.name)}`;
+            return `
+              <a target="_blank" href="${wowheadUrl}" class="talent-link">
+                <img src="${iconUrl}" class="talent-icon-img" alt="${talent.name}" title="${talent.name}">
+              </a>
+            `;
+          }).join('');
 
         return `
           <div class="rank-entry" style="color: ${color};">
