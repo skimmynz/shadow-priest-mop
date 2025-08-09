@@ -11,6 +11,25 @@ const encounters = {
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
 
+// Ensure there is a centered "Last updated" element under the main H1.
+// If #last-updated isn't present in the HTML, create and insert it after the first <h1>.
+let lastUpdatedEl = document.getElementById('last-updated');
+(function ensureLastUpdatedSlot() {
+  if (!lastUpdatedEl) {
+    const h1 = document.querySelector('h1');
+    if (h1) {
+      lastUpdatedEl = document.createElement('div');
+      lastUpdatedEl.id = 'last-updated';
+      lastUpdatedEl.className = 'last-updated';
+      // Minimal inline fallback style in case CSS doesn't include .last-updated
+      lastUpdatedEl.style.textAlign = 'center';
+      lastUpdatedEl.style.color = '#bbb';
+      lastUpdatedEl.style.margin = '8px 0 16px';
+      h1.insertAdjacentElement('afterend', lastUpdatedEl);
+    }
+  }
+})();
+
 // Cache config (client-side)
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
@@ -83,7 +102,7 @@ const VALID_TALENT_SET = new Set(Object.values(talentTiers).flat());
 const TIER_BY_TALENT = (() => {
   const m = new Map();
   for (const [tier, talents] of Object.entries(talentTiers)) {
-    for (const t of talents) m.set(t, tier); // string tier keys like "15"
+    for (const t of talents) m.set(t, tier); // tier is "15", "30", etc.
   }
   return m;
 })();
@@ -100,7 +119,7 @@ const talentIconUrl = (name) => {
 function createBossButtons() {
   for (const [name, id] of Object.entries(encounters)) {
     const button = document.createElement('button');
-    button.dataset.encounterId = id;
+    button.dataset.encounterId = String(id);
     button.dataset.bossName = name;
 
     const img = document.createElement('img');
@@ -172,6 +191,17 @@ function formatAgo(dateish) {
   return `${days}d ago`;
 }
 
+function updateLastUpdated(isoOrEpoch) {
+  if (!lastUpdatedEl) return; // If no slot, silently skip
+  if (!isoOrEpoch) {
+    lastUpdatedEl.textContent = '';
+    return;
+  }
+  const when = new Date(isoOrEpoch).toLocaleString();
+  const ago = formatAgo(isoOrEpoch);
+  lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
+}
+
 // ======= Fetch + Render =======
 let currentController = null;
 
@@ -183,14 +213,7 @@ function disableButtons(disabled) {
   });
 }
 
-function showLoading(name, cachedAtText) {
-  rankingsDiv.innerHTML = `
-    ${cachedAtText ? `<div style="margin-bottom:8px;color:#bbb;">Last updated: ${cachedAtText}</div>` : ''}
-    <p>Loading...</p>
-  `;
-}
-
-function render(name, data, cachedAtText) {
+function render(name, data) {
   // Safety: ensure expected arrays exist
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
 
@@ -271,13 +294,13 @@ function render(name, data, cachedAtText) {
 
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
     const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
-    const name = r?.name ?? 'Unknown';
+    const playerName = r?.name ?? 'Unknown';
 
     return `
       <div class="rank-entry" style="color:${color};">
         <div class="name-wrapper">
           <a target="_blank" href="${reportUrl}" class="player-link" rel="noopener">
-            ${i + 1}. ${name} – ${dps} DPS
+            ${i + 1}. ${playerName} – ${dps} DPS
           </a>
         </div>
         <div class="talent-row">${talentIconsHTML}</div>
@@ -286,7 +309,6 @@ function render(name, data, cachedAtText) {
   }).join('');
 
   rankingsDiv.innerHTML = `
-    ${cachedAtText ? `<div style="margin-bottom:8px;color:#bbb;">Last updated: ${cachedAtText}</div>` : ''}
     ${talentSummary}
     ${entries}
   `;
@@ -302,16 +324,18 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
   const cachedAtServer = cached?.data?.cachedAt; // If your Netlify function includes this
   const cachedAtLocal = cached?.cachedAt;
   const cachedAtToShow = cachedAtServer || cachedAtLocal;
-  const freshEnough = cached && isFresh(cachedAtServer || cachedAtLocal);
+  const freshEnough = cached && isFresh(cachedAtToShow);
 
-  // Optimistic render from cache if fresh
+  // If fresh cache exists and we're not forcing a refresh, use it immediately
   if (freshEnough && !force) {
-    render(name, cached.data, `${new Date(cachedAtToShow).toLocaleString()} (${formatAgo(cachedAtToShow)})`);
-    // Still try a background refresh if you want (optional)
+    updateLastUpdated(cachedAtToShow);
+    render(name, cached.data);
     return;
   }
 
-  showLoading(name, cachedAtToShow ? `${new Date(cachedAtToShow).toLocaleString()} (${formatAgo(cachedAtToShow)})` : '');
+  // Show loading and (if available) keep showing the last known timestamp
+  updateLastUpdated(cachedAtToShow);
+  rankingsDiv.innerHTML = `<p>Loading...</p>`;
 
   disableButtons(true);
   try {
@@ -319,11 +343,12 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
-    // Prefer server time if provided, otherwise use now
+    // Prefer server time if provided, otherwise use header or now
     const serverCachedAt = data?.cachedAt || res.headers.get('x-last-updated') || new Date().toISOString();
     writeCache(encounterId, data, serverCachedAt);
 
-    render(name, data, `${new Date(serverCachedAt).toLocaleString()} (${formatAgo(serverCachedAt)})`);
+    updateLastUpdated(serverCachedAt);
+    render(name, data);
   } catch (err) {
     if (err.name === 'AbortError') return; // user navigated away quickly
     console.error('Error fetching logs:', err);
@@ -369,15 +394,6 @@ window.addEventListener('hashchange', () => {
   selectActiveButton(id);
   fetchAndDisplayRankings(name, id);
 });
-
-// ======= Manual Refresh hook (optional UI) =======
-// If you add a refresh button somewhere: <button id="refresh">Refresh</button>
-// document.getElementById('refresh').addEventListener('click', () => {
-//   const id = parseHash();
-//   if (!id) return;
-//   const [name] = Object.entries(encounters).find(([, eid]) => eid === id);
-//   fetchAndDisplayRankings(name, id, { force: true });
-// });
 
 // ======= Init =======
 createBossButtons();
