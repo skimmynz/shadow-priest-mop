@@ -106,3 +106,11 @@ h1 {
   text-decoration: none;
   color: inherit;
 }
+
+.last-updated {
+  color: #bbb;
+  text-align: center;    /* explicit centering */
+  margin: 8px 0 16px;    /* space under the H1 */
+  font-size: 0.95rem;
+}
+
