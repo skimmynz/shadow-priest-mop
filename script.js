@@ -14,8 +14,7 @@ function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
     button.innerHTML = `
-      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}">
-      ${name}
+      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg ${name}
     `;
     button.onclick = () => {
       fetchAndDisplayRankings(name, id);
@@ -138,7 +137,23 @@ function fetchAndDisplayRankings(name, id) {
 
       const entries = data.rankings.slice(0, 100).map((r, i) => {
         const color = getColor(i + 1);
-        return `<div class="rank-entry" style="color: ${color};">${i + 1}. ${r.name} – ${Math.round(r.total)} DPS</div>`;
+        const talentIconsHTML = r.talents.map(talent => {
+          const iconKey = talentIcons[talent.name] || "spell_priest_unknown";
+          const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
+          const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent.name)}`;
+          return `
+            <a target="_blank" href="${wowheadUrl}" class="talent-link">
+              <img src="${iconUrl}" class="talent-icon-img" alt="${talent.name}" title="${talent.name}">
+            </a>
+          `;
+        }).join('');
+
+        return `
+          <div class="rank-entry" style="color: ${color};">
+            ${i + 1}. ${r.name} – ${Math.round(r.total)} DPS
+            <div class="talent-row">${talentIconsHTML}</div>
+          </div>
+        `;
       }).join('');
 
       rankingsDiv.innerHTML = `<h2>${name}</h2>${talentSummary}${entries}`;
