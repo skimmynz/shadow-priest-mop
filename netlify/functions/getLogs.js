@@ -1,26 +1,33 @@
-const fs = require('fs');
-const path = require('path');
-const fetch = require('node-fetch');
+import { neon } from '@netlify/neon';
+const sql = neon();
 
 exports.handler = async function(event, context) {
   const { encounterId } = event.queryStringParameters;
-  const apiKey = process.env.WCL_API_KEY;
 
-  const url = `https://www.warcraftlogs.com/v1/rankings/encounter/${encounterId}?metric=dps&size=25&difficulty=4&class=7&spec=3&includeCombatantInfo=true&api_key=${apiKey}`;
+  if (!encounterId) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Missing encounterId parameter' })
+    };
+  }
 
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    const [cached] = await sql`
+      SELECT data 
+      FROM boss_logs 
+      WHERE encounter_id = ${encounterId}
+    `;
 
-    const cachePath = path.join(__dirname, '../../server_cache.txt');
-    let lastUpdated = "Unknown";
-    if (fs.existsSync(cachePath)) {
-      lastUpdated = fs.readFileSync(cachePath, 'utf8').trim();
+    if (!cached) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ error: 'No cached data found for this encounterId' })
+      };
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ rankings: data.rankings, lastUpdated })
+      body: JSON.stringify(cached.data)
     };
   } catch (error) {
     return {
