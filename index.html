@@ -1,36 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Shadow Priest Rankings - MoP</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Shadow Priest Rankings - Mists of Pandaria (Tier 14)</h1>
-
-  <!-- Raid tabs -->
-  <div id="raid-tabs" class="raid-tabs" role="tablist" aria-label="Raids"></div>
-
-  <!-- Last updated -->
+  <h1>Shadow Priest Rankings - Mogu'shan Vaults</h1>
   <div id="last-updated" class="last-updated" aria-live="polite"></div>
-
-  <!-- Controls -->
-  <div id="controls" class="controls" role="group" aria-label="Rankings controls">
-    <input id="search" class="control-input" type="search" placeholder="Search player…" aria-label="Search player" />
-    <select id="sort" class="control-select" aria-label="Sort rankings">
-      <option value="dps-desc" selected>DPS (high → low)</option>
-      <option value="dps-asc">DPS (low → high)</option>
-      <option value="name-az">Name (A → Z)</option>
-      <option value="name-za">Name (Z → A)</option>
-    </select>
-    <button id="refresh-btn" class="control-button" type="button" aria-label="Refresh data">Refresh</button>
-  </div>
-
-  <!-- Boss buttons + Rankings -->
   <div id="boss-buttons"></div>
   <div id="rankings"></div>
-
   <script src="script.js"></script>
 </body>
 </html>
