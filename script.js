@@ -14,7 +14,7 @@ function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
     button.innerHTML = `
-      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg ${name}
+      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2"me}
     `;
     button.onclick = () => {
       fetchAndDisplayRankings(name, id);
@@ -35,11 +35,11 @@ const talentTiers = {
 const talentIcons = {
   "Void Tendrils": "spell_priest_voidtendrils",
   "Psyfiend": "spell_priest_psyfiend",
-  "Dominate Mind": "spell_shadow_shadowworddominate",
+  "Dominate Mind": "spell_shadow_mindcontrol", // ✅ fixed
   "Body and Soul": "spell_holy_symbolofhope",
   "Angelic Feather": "ability_priest_angelicfeather",
   "Phantasm": "ability_priest_phantasm",
-  "From Darkness, Comes Light": "spell_holy_surgeoflight",
+  "From Darkness, Comes Light": "spell_holy_surgeoflight", // ✅ confirmed
   "Mindbender": "spell_shadow_soulleech_3",
   "Solace and Insanity": "ability_priest_flashoflight",
   "Desperate Prayer": "spell_holy_testoffaith",
