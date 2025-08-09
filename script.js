@@ -14,7 +14,8 @@ function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
     button.innerHTML = `
-      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon     ${name}
+      https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2
+      ${name}
     `;
     button.onclick = () => fetchAndDisplayRankings(name, id);
     bossButtonsDiv.appendChild(button);
@@ -28,8 +29,8 @@ async function fetchAndDisplayRankings(name, id) {
   const data = await response.json();
 
   const getColor = (rank) => {
-    if (rank = 1) return '#e5cc80';     // Gold
-    if (rank <= 25) return '#e268a8';     // Pink
+    if (rank === 1) return '#e5cc80';     // Gold
+    if (rank >= 2 && rank <= 25) return '#e268a8'; // Pink
     return '#ff8000';                     // Orange
   };
 
