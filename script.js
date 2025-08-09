@@ -1,3 +1,4 @@
+
 const encounters = {
   "The Stone Guard": 1395,
   "Feng the Accursed": 1390,
@@ -14,7 +15,7 @@ function createBossButtons() {
   Object.entries(encounters).forEach(([name, id]) => {
     const button = document.createElement('button');
     button.innerHTML = `
-      <ttps://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2
+      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}">
       ${name}
     `;
     button.onclick = () => fetchAndDisplayRankings(name, id);
