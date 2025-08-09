@@ -1,3 +1,4 @@
+
 body {
   background-color: #0e0e0e;
   color: #fff;
@@ -43,10 +44,6 @@ h1 {
   color: #9482C9;
   font-weight: bold;
   margin: 5px 0;
-}
-
-.talent-summary {
-  margin-bottom: 20px;
 }
 
 .talent-tier {

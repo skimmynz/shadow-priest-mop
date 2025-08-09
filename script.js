@@ -1,3 +1,4 @@
+
 const encounters = {
   "The Stone Guard": 1395,
   "Feng the Accursed": 1390,
@@ -7,21 +8,6 @@ const encounters = {
   "Will of the Emperor": 1407
 };
 
-const bossButtonsDiv = document.getElementById('boss-buttons');
-const rankingsDiv = document.getElementById('rankings');
-
-function createBossButtons() {
-  Object.entries(encounters).forEach(([name, id]) => {
-    const button = document.createElement('button');
-    button.innerHTML = `
-      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}">
-      ${name}
-    `;
-    button.onclick = () => fetchAndDisplayRankings(name, id);
-    bossButtonsDiv.appendChild(button);
-  });
-}
-
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -29,6 +15,27 @@ const talentTiers = {
   60: ["Desperate Prayer", "Spectral Guise", "Angelic Bulwark"],
   75: ["Twist of Fate", "Power Infusion", "Divine Insight"],
   90: ["Cascade", "Divine Star", "Halo"]
+};
+
+const talentIcons = {
+  "Void Tendrils": "spell_priest_voidtendrils",
+  "Psyfiend": "spell_priest_psyfiend",
+  "Dominate Mind": "spell_shadow_shadowworddominate",
+  "Body and Soul": "spell_holy_symbolofhope",
+  "Angelic Feather": "ability_priest_angelicfeather",
+  "Phantasm": "ability_priest_phantasm",
+  "From Darkness, Comes Light": "spell_holy_surgeoflight",
+  "Mindbender": "spell_shadow_soulleech_3",
+  "Solace and Insanity": "ability_priest_flashoflight",
+  "Desperate Prayer": "spell_holy_testoffaith",
+  "Spectral Guise": "spell_priest_spectralguise",
+  "Angelic Bulwark": "ability_priest_angelicbulwark",
+  "Twist of Fate": "spell_shadow_mindtwisting",
+  "Power Infusion": "spell_holy_powerinfusion",
+  "Divine Insight": "spell_priest_burningwill",
+  "Cascade": "ability_priest_cascade",
+  "Divine Star": "spell_priest_divinestar",
+  "Halo": "ability_priest_halo"
 };
 
 const talentSpellIds = {
@@ -66,6 +73,21 @@ function getSpellId(talentName) {
   return talentSpellIds[talentName] || 0;
 }
 
+const bossButtonsDiv = document.getElementById('boss-buttons');
+const rankingsDiv = document.getElementById('rankings');
+
+function createBossButtons() {
+  Object.entries(encounters).forEach(([name, id]) => {
+    const button = document.createElement('button');
+    button.innerHTML = `
+      <img src="https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2" alt="${name}">
+      ${name}
+    `;
+    button.onclick = () => fetchAndDisplayRankings(name, id);
+    bossButtonsDiv.appendChild(button);
+  });
+}
+
 async function fetchAndDisplayRankings(name, id) {
   rankingsDiv.innerHTML = `<h2>${name}</h2><p>Loading...</p>`;
   const url = `/.netlify/functions/getLogs?encounterId=${id}`;
@@ -96,7 +118,6 @@ async function fetchAndDisplayRankings(name, id) {
   });
 
   let talentSummary = `<div class='talent-summary'>`;
-
   Object.keys(talentTiers).sort((a, b) => a - b).forEach(tier => {
     talentSummary += `<div class="talent-tier"><strong>Tier ${tier}</strong></div><div class="talent-row">`;
 
@@ -106,8 +127,8 @@ async function fetchAndDisplayRankings(name, id) {
       const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
 
       const color = percent >= 75 ? 'limegreen' : percent <= 10 ? 'red' : 'orange';
-      const iconName = talent.toLowerCase().replace(/[^a-z0-9]/g, '').replace(/\s+/g, '');
-      const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_${iconName}.jpg`;
+      const iconKey = talentIcons[talent] || "spell_priest_unknown";
+      const iconUrl = `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
       const wowheadUrl = `https://www.wowhead.com/mop-classic/spell=${getSpellId(talent)}`;
 
       talentSummary += `
