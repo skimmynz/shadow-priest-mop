@@ -1,3 +1,4 @@
+/* -------- Base -------- */
 body {
   background-color: #0e0e0e;
   color: #fff;
@@ -5,18 +6,23 @@ body {
   padding: 20px;
   text-align: center;
 }
+h1 { margin-bottom: 12px; }
 
-h1 {
-  margin-bottom: 30px;
+.last-updated {
+  color: #bbb;
+  text-align: center;
+  margin: 8px 0 16px;
+  font-size: 0.95rem;
 }
 
+/* -------- Boss buttons -------- */
 #boss-buttons {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
+  margin-bottom: 12px;
 }
-
 #boss-buttons button {
   display: flex;
   align-items: center;
@@ -25,19 +31,12 @@ h1 {
   color: #fff;
   border: 1px solid #444;
   padding: 12px 24px;
-  margin: 5px;
   cursor: pointer;
   border-radius: 5px;
   font-size: 18px;
 }
-
-#boss-buttons button:hover {
-  background-color: #444;
-}
-
-#boss-buttons button.active {
-  outline: 2px solid #9482C9;
-}
+#boss-buttons button:hover { background-color: #444; }
+#boss-buttons button.active { outline: 2px solid #9482C9; }
 
 .boss-icon {
   height: 40px;
@@ -46,221 +45,123 @@ h1 {
   border: 1px solid #444;
 }
 
+/* -------- Rankings container -------- */
 #rankings {
-  margin-top: 30px;
-  text-align: left;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.rank-entry {
-  color: #9482C9;
-  font-weight: bold;
-  margin: 10px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%; /* Ensure full width to control layout */
   max-width: 760px;
   margin: 0 auto;
+  display: grid;
+  grid-auto-rows: auto;
+  row-gap: 12px;
+  text-align: left;
 }
 
-.name-wrapper {
-  width: 300px; /* Fixed width instead of max-width */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* -------- Talent summary (big icons, centered) -------- */
+.talent-summary {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 20px;
 }
-
-.talent-row {
+.talent-summary .talent-row {
   display: flex;
   align-items: center;
-  margin-left: 30px; /* Increased indent for clearer separation */
-  gap: 5px;
+  justify-content: center;
+  gap: 10px;
 }
-
 .talent-link {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
 }
-
 .talent-icon-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  border: 1px solid #444;
-}
-
-.talent-percent {
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-.player-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.player-link:hover {
-  text-decoration: none;
-  color: inherit;
-}
-
-.last-updated {
-  color: #bbb;
-  text-align: center;    /* explicit centering */
-  margin: 8px 0 16px;    /* space under the H1 */
-  font-size: 0.95rem;
-}
-
-/* ---- Center the talent summary and enlarge icons/text ---- */
-
-.talent-summary {
-  /* center the whole block under the "Last updated" line */
-  display: flex;
-  flex-direction: column;
-  align-items: center;       /* center rows horizontally */
-  gap: 10px;                 /* space between each tier row */
-  margin: 12px auto 20px;    /* center within the rankings column */
-}
-
-.talent-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;   /* center icons inside each row */
-  gap: 10px;
-  margin-left: 0 !important; /* override previous indent */
-}
-
-/* Bigger icon + text */
-.talent-icon-img {
-  width: 56px;               /* was 40px */
-  height: 56px;              /* was 40px */
+  width: 56px;
+  height: 56px;
   border-radius: 6px;
   border: 1px solid #444;
-  /* subtle pop on hover */
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
-
 .talent-link:hover .talent-icon-img {
   transform: translateY(-1px);
   box-shadow: 0 2px 10px rgba(0,0,0,0.35);
 }
-
 .talent-percent {
-  font-size: 15px;           /* was 12px */
+  font-size: 15px;
   font-weight: 600;
-  margin-top: 6px;           /* a touch more space under the icon */
+  margin-top: 6px;
   text-align: center;
 }
 
-/* Optional: slightly widen the rankings column so centered grid breathes */
-@media (min-width: 768px) {
-  #rankings {
-    max-width: 720px;        /* was 600px; adjust to taste */
-  }
-}
-
-/* Mobile-friendly scaling so it doesn’t overcrowd small screens */
-@media (max-width: 480px) {
-  .talent-icon-img {
-    width: 48px;
-    height: 48px;
-  }
-  .talent-percent {
-    font-size: 14px;
-  }
-}
-/* ---- Smaller talents next to player names ---- */
-.rank-entry .talent-row .talent-icon-img {
-  width: 28px;   /* smaller than the main summary (56px) */
-  height: 28px;
-  border-radius: 4px;
-}
-
-.rank-entry .talent-row .talent-link {
-  margin: 0 2px; /* tighter spacing for compact look */
-}
-/* --- Center the entire rankings section --- */
-#rankings {
-  max-width: 760px;          /* adjust to taste */
-  margin: 0 auto;            /* center the container */
-  display: grid;             /* lets us center children precisely */
-  grid-auto-rows: auto;
-  row-gap: 12px;
-  text-align: left;          /* default; we’ll center specific parts below */
-}
-
-/* --- Center the large talent summary block --- */
-.talent-summary {
-  justify-self: center;      /* true center within the grid */
-  width: max-content;        /* shrink-wrap so center is visually exact */
-  margin: 12px 0 20px;
-}
-
-/* Center each tier row within the summary */
-.talent-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-left: 0 !important; /* override any previous indent */
-}
-
-/* --- Center each ranking row as a unit --- */
+/* -------- Each ranking row = deterministic two-column grid -------- */
+/* Column 1: fixed 300px for name  |  Column 2: fixed 200px for talents */
 .rank-entry {
-  justify-self: center;      /* center the row within the grid */
-  display: flex;
+  display: grid;
+  grid-template-columns: 300px 200px;
   align-items: center;
-  justify-content: center;   /* center name + talents as a group */
-  gap: 16px;
-  width: max-content;        /* shrink-wrap so centering is exact */
-  max-width: 100%;           /* prevent overflow on small screens */
+  justify-content: center;  /* center the 2-col block inside #rankings */
+  column-gap: 16px;
+  width: max-content;       /* shrink-wrap so centering is visually exact */
+  max-width: 100%;
 }
 
-/* --- Keep per-player talents smaller (independent from big summary) --- */
+/* Name column */
+.name-wrapper {
+  width: 300px;             /* must match the grid’s first column */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.player-link { text-decoration: none; color: inherit; }
+.player-link:hover { text-decoration: none; color: inherit; }
+
+/* Talents column (compact icons) */
+.rank-entry .talent-row {
+  width: 200px;             /* must match the grid’s second column */
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-start;
+}
 .rank-entry .talent-row .talent-icon-img {
   width: 28px;
   height: 28px;
   border-radius: 4px;
 }
-.rank-entry .talent-row .talent-link {
-  margin: 0 2px;
-}
+.rank-entry .talent-row .talent-link { margin: 0 2px; }
 
-/* Optional hover nicety (kept) */
-.talent-link:hover .talent-icon-img {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.35);
-}
-
-/* --- Responsive: stack rows neatly on narrow screens --- */
-@media (max-width: 600px) {
-  #rankings { max-width: 100%; }
-  .rank-entry {
-    flex-direction: column;  /* name above talents */
-    gap: 8px;
-  }
-  .name-wrapper {
-    max-width: 90vw;         /* safer ellipsis width on small screens */
-  }
-}
-
-/* --- Talent row always occupies space even if empty --- */
-.rank-entry .talent-row {
-  min-width: 180px;
-  display: flex;
-  justify-content: flex-start;
-  gap: 5px;
-}
-
-/* --- Fallback styling for empty talent rows --- */
+/* Fallback dash when no talents */
 .rank-entry .talent-row:empty::before {
   content: "—";
   color: #666;
   font-size: 0.9rem;
   font-style: italic;
+}
+
+/* -------- Responsive tweaks -------- */
+@media (min-width: 768px) {
+  #rankings { max-width: 760px; }
+}
+@media (max-width: 600px) {
+  /* Stack name above talents on narrow screens */
+  .rank-entry {
+    grid-template-columns: 1fr;
+    row-gap: 8px;
+    justify-items: center;
+  }
+  .name-wrapper {
+    width: 90vw;
+  }
+  .rank-entry .talent-row {
+    width: auto;
+    min-width: 0;
+    justify-content: center;
+  }
+}
+/* Slightly smaller big-summary icons on very small phones */
+@media (max-width: 480px) {
+  .talent-summary .talent-icon-img { width: 48px; height: 48px; }
+  .talent-summary .talent-percent { font-size: 14px; }
 }
