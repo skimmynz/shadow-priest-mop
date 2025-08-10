@@ -1,5 +1,6 @@
-// ======= Constants & Data =======
-const encounters = {
+// ======= Raids & Encounters =======
+// MSV encounters (existing)
+const MSV_ENCOUNTERS = {
   "The Stone Guard": 1395,
   "Feng the Accursed": 1390,
   "Gara'jal the Spiritbinder": 1434,
@@ -8,11 +9,19 @@ const encounters = {
   "Will of the Emperor": 1407
 };
 
-const bossButtonsDiv = document.getElementById('boss-buttons');
-const rankingsDiv = document.getElementById('rankings');
+// Registry of raids (only MSV has data for now)
+const RAIDS = {
+  msv: { key: 'msv', name: "Mogu'shan Vaults", encounters: MSV_ENCOUNTERS },
+  hof: { key: 'hof', name: "Heart of Fear", encounters: null },
+  toes:{ key: 'toes',name: "Terrace of Endless Spring", encounters: null }
+};
 
-// Ensure there is a centered "Last updated" element under the main H1.
-// If #last-updated isn't present in the HTML, create and insert it after the first <h1>.
+// ======= DOM Handles =======
+const raidTabsDiv    = document.getElementById('raid-tabs');
+const bossButtonsDiv = document.getElementById('boss-buttons');
+const rankingsDiv    = document.getElementById('rankings');
+
+// Ensure there is a centered "Last updated" line under the H1.
 let lastUpdatedEl = document.getElementById('last-updated');
 (function ensureLastUpdatedSlot() {
   if (!lastUpdatedEl) {
@@ -21,7 +30,6 @@ let lastUpdatedEl = document.getElementById('last-updated');
       lastUpdatedEl = document.createElement('div');
       lastUpdatedEl.id = 'last-updated';
       lastUpdatedEl.className = 'last-updated';
-      // Minimal inline fallback style in case CSS doesn't include .last-updated
       lastUpdatedEl.style.textAlign = 'center';
       lastUpdatedEl.style.color = '#bbb';
       lastUpdatedEl.style.margin = '8px 0 16px';
@@ -30,14 +38,12 @@ let lastUpdatedEl = document.getElementById('last-updated');
   }
 })();
 
-// Cache config (client-side)
+// ======= Cache config =======
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
-
-// API endpoint (Netlify function)
 const API_URL = (encounterId) => `/.netlify/functions/getLogs?encounterId=${encounterId}`;
 
-// Warcraft talents data
+// ======= Talents (unchanged data) =======
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -46,7 +52,6 @@ const talentTiers = {
   75: ["Twist of Fate", "Power Infusion", "Divine Insight"],
   90: ["Cascade", "Divine Star", "Halo"]
 };
-
 const talentIcons = {
   "Void Tendrils": "spell_priest_voidtendrils",
   "Psyfiend": "spell_priest_psyfiend",
@@ -67,7 +72,6 @@ const talentIcons = {
   "Divine Star": "spell_priest_divinestar",
   "Halo": "ability_priest_halo"
 };
-
 const talentSpellIds = {
   "Void Tendrils": 108920,
   "Psyfiend": 108921,
@@ -88,67 +92,78 @@ const talentSpellIds = {
   "Divine Star": 110744,
   "Halo": 120517
 };
-
-// API → UI name normalization
 const talentNameMap = {
   "Surge of Light": "From Darkness, Comes Light",
   "Mind Control": "Dominate Mind"
 };
 
-// ======= Precomputed helpers for speed & safety =======
-const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
+const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a,b)=>a-b);
 const VALID_TALENT_SET = new Set(Object.values(talentTiers).flat());
-
 const TIER_BY_TALENT = (() => {
   const m = new Map();
   for (const [tier, talents] of Object.entries(talentTiers)) {
-    for (const t of talents) m.set(t, tier); // tier is "15", "30", etc.
+    for (const t of talents) m.set(t, tier);
   }
   return m;
 })();
 
 const getSpellId = (name) => talentSpellIds[name] || 0;
 const getTalentDisplayName = (apiName) => talentNameMap[apiName] || apiName;
-
 const talentIconUrl = (name) => {
   const iconKey = talentIcons[name] || "inv_misc_questionmark";
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
-// ======= Slug + Hash helpers (#- with legacy support) =======
+// ======= Slug/hash helpers (for MSV deep-links) =======
 function slugify(str) {
   return String(str)
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')         // remove accents
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')             // non-alphanum -> hyphen
-    .replace(/^-+|-+$/g, '')                 // trim hyphens
-    .replace(/--+/g, '-');                   // collapse
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-')
+    .replace(/^-+|-+$/g,'').replace(/--+/g,'-');
 }
-function hashFor(name, encounterId) {
-  return `#${slugify(name)}-${encounterId}`;
-}
-function updateHash(name, encounterId) {
-  history.replaceState(null, '', hashFor(name, encounterId));
-}
+function hashFor(name, encounterId) { return `#${slugify(name)}-${encounterId}`; }
+function updateHash(name, encounterId) { history.replaceState(null, '', hashFor(name, encounterId)); }
 function parseHash() {
   const h = location.hash || '';
-  // New format: #slug-id
   const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
-  if (m) {
-    return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10), legacy: false };
-  }
-  // Legacy format: #e-id
+  if (m) return { slug: m[1].toLowerCase(), id: parseInt(m[2],10), legacy: false };
   const legacy = h.match(/^#e-(\d+)$/i);
-  if (legacy) {
-    return { slug: 'e', id: parseInt(legacy[1], 10), legacy: true };
-  }
+  if (legacy) return { slug: 'e', id: parseInt(legacy[1],10), legacy: true };
   return null;
 }
 
+// ======= State =======
+let currentController = null;
+let encounters = MSV_ENCOUNTERS;    // points at the currently active raid’s encounters
+let currentRaidKey = 'msv';
+
+// ======= UI: Raid Tabs (NEW) =======
+function createRaidTabs() {
+  raidTabsDiv.innerHTML = ''; // clear
+  Object.values(RAIDS).forEach(raid => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'raid-tab';
+    btn.setAttribute('role','tab');
+    btn.setAttribute('aria-selected', raid.key === currentRaidKey ? 'true' : 'false');
+    btn.textContent = raid.name;
+    btn.addEventListener('click', () => setCurrentRaid(raid.key));
+    if (raid.key === currentRaidKey) btn.classList.add('active');
+    raidTabsDiv.appendChild(btn);
+  });
+}
+function markActiveRaidTab() {
+  raidTabsDiv.querySelectorAll('.raid-tab').forEach(btn => {
+    const selected = btn.textContent === RAIDS[currentRaidKey].name;
+    btn.classList.toggle('active', selected);
+    btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+  });
+}
+
 // ======= Boss buttons =======
-function createBossButtons() {
-  for (const [name, id] of Object.entries(encounters)) {
+function createBossButtons(encountersMap) {
+  bossButtonsDiv.innerHTML = ''; // clear to avoid duplicates
+  for (const [name, id] of Object.entries(encountersMap)) {
     const button = document.createElement('button');
     button.dataset.encounterId = String(id);
     button.dataset.bossName = name;
@@ -168,7 +183,7 @@ function createBossButtons() {
     button.appendChild(span);
     button.addEventListener('click', () => {
       selectActiveButton(id);
-      updateHash(name, id);      // human-readable hash
+      updateHash(name, id);            // enable deep-link for MSV only
       fetchAndDisplayRankings(name, id);
     });
 
@@ -176,36 +191,24 @@ function createBossButtons() {
   }
 }
 function selectActiveButton(encounterId) {
-  const buttons = bossButtonsDiv.querySelectorAll('button');
-  buttons.forEach(b => b.classList.remove('active'));
+  bossButtonsDiv.querySelectorAll('button').forEach(b => b.classList.remove('active'));
   const active = bossButtonsDiv.querySelector(`button[data-encounter-id="${encounterId}"]`);
   if (active) active.classList.add('active');
 }
 
 // ======= Cache helpers =======
 function readCache(encounterId) {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY(encounterId));
-    if (!raw) return null;
-    return JSON.parse(raw); // { data, cachedAt }
-  } catch {
-    return null;
-  }
+  try { const raw = localStorage.getItem(CACHE_KEY(encounterId)); return raw ? JSON.parse(raw) : null; }
+  catch { return null; }
 }
 function writeCache(encounterId, data, cachedAt = new Date().toISOString()) {
-  try {
-    localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt }));
-  } catch {
-    // storage full or disabled; ignore
-  }
+  try { localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt })); } catch {}
 }
 function isFresh(cachedAt) {
   try {
     const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt);
     return (Date.now() - ts) < CACHE_TTL_MS;
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }
 function formatAgo(dateish) {
   const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
@@ -225,32 +228,17 @@ function updateLastUpdated(isoOrEpoch) {
   lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
 }
 
-// ======= Fetch + Render =======
-let currentController = null;
-
-function disableButtons(disabled) {
-  bossButtonsDiv.querySelectorAll('button').forEach(btn => {
-    btn.disabled = disabled;
-    btn.style.opacity = disabled ? '0.7' : '';
-    btn.style.cursor = disabled ? 'not-allowed' : '';
-  });
-}
-
+// ======= Fetch + Render (unchanged behavior) =======
 function render(name, data) {
-  // Safety: ensure expected arrays exist
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
 
-  // ===== Aggregate talent usage (one per tier per player) =====
-  const tierCounts = {};
-  const totalPerTier = {};
+  // Aggregate talents
+  const tierCounts = {}, totalPerTier = {};
   for (const tier of TIER_ORDER) {
     tierCounts[tier] = {};
     totalPerTier[tier] = 0;
-    for (const talent of talentTiers[tier]) {
-      tierCounts[tier][talent] = 0;
-    }
+    for (const talent of talentTiers[tier]) tierCounts[tier][talent] = 0;
   }
-
   for (const entry of rankings) {
     const seenTiers = new Set();
     const talents = Array.isArray(entry?.talents) ? entry.talents : [];
@@ -259,14 +247,12 @@ function render(name, data) {
       if (!VALID_TALENT_SET.has(displayName)) continue;
       const tier = TIER_BY_TALENT.get(displayName);
       if (tier && !seenTiers.has(tier)) {
-        tierCounts[tier][displayName]++;
-        totalPerTier[tier]++;
-        seenTiers.add(tier);
+        tierCounts[tier][displayName]++; totalPerTier[tier]++; seenTiers.add(tier);
       }
     }
   }
 
-  // ===== Talent summary UI =====
+  // Talent summary
   let talentSummary = `<div class='talent-summary'>`;
   for (const tier of TIER_ORDER) {
     talentSummary += `<div class="talent-row">`;
@@ -282,29 +268,17 @@ function render(name, data) {
 
       talentSummary += `
         <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
-          <img
-            src="${iconUrl}"
-            class="talent-icon-img"
-            alt="${talent}"
-            title="${talent}"
-            loading="lazy"
-            decoding="async"
-            width="56" height="56"
-          >
+          <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}"
+               loading="lazy" decoding="async" width="56" height="56">
           <div class="talent-percent" style="color:${color};">${percent}%</div>
         </a>
       `;
     }
     talentSummary += `</div>`;
   }
-  talentSummary += `</div>`; // no <br>; spacing handled by CSS
+  talentSummary += `</div>`;
 
-  // ===== Rankings list =====
-  const getColor = (rank) => {
-    if (rank === 1) return '#e5cc80';
-    if (rank >= 2 && rank <= 25) return '#e268a8';
-    return '#ff8000';
-  };
+  const getColor = (rank) => rank === 1 ? '#e5cc80' : (rank <= 25 ? '#e268a8' : '#ff8000');
 
   const entries = rankings.slice(0, 100).map((r, i) => {
     const color = getColor(i + 1);
@@ -318,15 +292,8 @@ function render(name, data) {
         const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
         return `
           <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
-            <img
-              src="${iconUrl}"
-              class="talent-icon-img"
-              alt="${t.name}"
-              title="${t.name}"
-              loading="lazy"
-              decoding="async"
-              width="28" height="28"
-            >
+            <img src="${iconUrl}" class="talent-icon-img" alt="${t.name}" title="${t.name}"
+                 loading="lazy" decoding="async" width="28" height="28">
           </a>
         `;
       }).join('');
@@ -347,70 +314,79 @@ function render(name, data) {
     `;
   }).join('');
 
-  rankingsDiv.innerHTML = `
-    ${talentSummary}
-    ${entries}
-  `;
+  rankingsDiv.innerHTML = `${talentSummary}${entries}`;
 }
 
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
-  // Abort any in-flight request
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
-  // Check cache
   const cached = readCache(encounterId);
-  const cachedAtServer = cached?.data?.cachedAt; // If your Netlify function includes this
+  const cachedAtServer = cached?.data?.cachedAt;
   const cachedAtLocal = cached?.cachedAt;
   const cachedAtToShow = cachedAtServer || cachedAtLocal;
   const freshEnough = cached && isFresh(cachedAtToShow);
 
-  // If fresh cache exists and we're not forcing a refresh, use it immediately
   if (freshEnough && !force) {
     updateLastUpdated(cachedAtToShow);
     render(name, cached.data);
     return;
   }
 
-  // Show loading and (if available) keep showing the last known timestamp
   updateLastUpdated(cachedAtToShow);
-  rankingsDiv.innerHTML = `
-    <div style="text-align:center;color:#bbb;padding:12px">Loading...</div>
-  `;
+  rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;padding:12px">Loading...</div>`;
   disableButtons(true);
 
   try {
     const res = await fetch(API_URL(encounterId), { signal: currentController.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-
-    // Prefer server time if provided, otherwise use header or now
-    const serverCachedAt =
-      data?.cachedAt ||
-      res.headers.get('x-last-updated') ||
-      new Date().toISOString();
-
+    const serverCachedAt = data?.cachedAt || res.headers.get('x-last-updated') || new Date().toISOString();
     writeCache(encounterId, data, serverCachedAt);
     updateLastUpdated(serverCachedAt);
     render(name, data);
   } catch (err) {
-    if (err.name === 'AbortError') return; // user navigated away quickly
+    if (err.name === 'AbortError') return;
     console.error('Error fetching logs:', err);
-    rankingsDiv.innerHTML = `
-      <div style="text-align:center;color:#f88;padding:12px">
-        Failed to load logs. ${err.message || ''}
-      </div>
-    `;
+    rankingsDiv.innerHTML = `<div style="text-align:center;color:#f88;padding:12px">Failed to load logs. ${err.message || ''}</div>`;
   } finally {
     disableButtons(false);
   }
 }
+function disableButtons(disabled) {
+  bossButtonsDiv.querySelectorAll('button').forEach(btn => {
+    btn.disabled = disabled;
+    btn.style.opacity = disabled ? '0.7' : '';
+    btn.style.cursor = disabled ? 'not-allowed' : '';
+  });
+}
 
-// ======= URL hash sync (deep-linking) =======
+// ======= Raid switching (NEW) =======
+function setCurrentRaid(raidKey) {
+  currentRaidKey = raidKey;
+  markActiveRaidTab();
+
+  if (RAIDS[raidKey].encounters) {
+    // MSV: show bosses and keep hash-based deep-links
+    encounters = RAIDS[raidKey].encounters;
+    createBossButtons(encounters);
+
+    // Open from hash or default (MSV only)
+    openFromHashOrDefault();
+  } else {
+    // Coming soon raids: clear hash, boss buttons, timestamp and show placeholder
+    encounters = {};
+    bossButtonsDiv.innerHTML = '';
+    updateLastUpdated('');
+    rankingsDiv.innerHTML = `<div class="coming-soon">Coming soon…</div>`;
+    history.replaceState(null, '', '#'); // clear deep-link
+  }
+}
+
+// ======= Deep-linking (MSV only) =======
 function openFromHashOrDefault() {
   const parsed = parseHash();
   const entries = Object.entries(encounters);
-
   if (parsed && entries.some(([, id]) => id === parsed.id)) {
     const [bossName] = entries.find(([, id]) => id === parsed.id);
     const desiredSlug = slugify(bossName);
@@ -420,28 +396,26 @@ function openFromHashOrDefault() {
     selectActiveButton(parsed.id);
     fetchAndDisplayRankings(bossName, parsed.id);
   } else {
-    // default: first boss
     const [bossName, encounterId] = entries[0];
     selectActiveButton(encounterId);
     updateHash(bossName, encounterId);
     fetchAndDisplayRankings(bossName, encounterId);
   }
 }
-
 window.addEventListener('hashchange', () => {
+  // Only respond to hash changes when MSV is selected (others show "Coming soon…")
+  if (currentRaidKey !== 'msv') return;
   const parsed = parseHash();
   if (!parsed) return;
   const entry = Object.entries(encounters).find(([, eid]) => eid === parsed.id);
   if (!entry) return;
   const [bossName] = entry;
   const desiredSlug = slugify(bossName);
-  if (parsed.slug !== desiredSlug) {
-    updateHash(bossName, parsed.id);
-  }
+  if (parsed.slug !== desiredSlug) updateHash(bossName, parsed.id);
   selectActiveButton(parsed.id);
   fetchAndDisplayRankings(bossName, parsed.id);
 });
 
 // ======= Init =======
-createBossButtons();
-openFromHashOrDefault();
+createRaidTabs();
+setCurrentRaid('msv');  // default to MSV on load
