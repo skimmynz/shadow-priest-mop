@@ -1,3 +1,8 @@
+// =======================
+// script.js
+// Shadow Priest Rankings - MoP Classic
+// =======================
+
 // ======= Raids, Encounters & Talent Data =======
 
 // Group encounters by raid (fill in HoF/ToES IDs when ready)
@@ -18,7 +23,7 @@ const RAIDS = {
     short: 'HoF',
     name: 'Heart of Fear',
     encounters: {
-      // TODO: add IDs when you’re ready, for example:
+      // TODO: add IDs when you’re ready, e.g.:
       // "Imperial Vizier Zor'lok":  /* id */,
       // "Blade Lord Ta'yak":        /* id */,
       // "Garalon":                   /* id */,
@@ -31,7 +36,7 @@ const RAIDS = {
     short: 'ToES',
     name: 'Terrace of Endless Spring',
     encounters: {
-      // TODO: add IDs when you’re ready, for example:
+      // TODO: add IDs when you’re ready, e.g.:
       // "Protectors of the Endless": /* id */,
       // "Tsulong":                    /* id */,
       // "Lei Shi":                    /* id */,
@@ -49,7 +54,6 @@ const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
 
 // Ensure there is a centered "Last updated" element under the main H1.
-// (Your original script already added/fell back if missing.)  [SOURCE] citeturn1search1
 let lastUpdatedEl = document.getElementById('last-updated');
 (function ensureLastUpdatedSlot() {
   if (!lastUpdatedEl) {
@@ -58,6 +62,7 @@ let lastUpdatedEl = document.getElementById('last-updated');
       lastUpdatedEl = document.createElement('div');
       lastUpdatedEl.id = 'last-updated';
       lastUpdatedEl.className = 'last-updated';
+      // Minimal inline fallback in case CSS fails to load
       lastUpdatedEl.style.textAlign = 'center';
       lastUpdatedEl.style.color = '#bbb';
       lastUpdatedEl.style.margin = '8px 0 16px';
@@ -66,7 +71,7 @@ let lastUpdatedEl = document.getElementById('last-updated');
   }
 })();
 
-// Cache config (client-side)
+// ======= Cache config (client-side) =======
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
 
@@ -74,7 +79,7 @@ const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
 const API_URL = (encounterId) =>
   `/.netlify/functions/getLogs?encounterId=${encounterId}`;
 
-// Warcraft talents data
+// ======= Warcraft talents (MoP Classic) =======
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -86,13 +91,13 @@ const talentTiers = {
 
 const talentIcons = {
   "Void Tendrils": "spell_priest_voidtendrils",
-  Psyfiend: "spell_priest_psyfiend",
+  "Psyfiend": "spell_priest_psyfiend",
   "Dominate Mind": "spell_shadow_shadowworddominate",
   "Body and Soul": "spell_holy_symbolofhope",
   "Angelic Feather": "ability_priest_angelicfeather",
-  Phantasm: "ability_priest_phantasm",
+  "Phantasm": "ability_priest_phantasm",
   "From Darkness, Comes Light": "spell_holy_surgeoflight",
-  Mindbender: "spell_shadow_soulleech_3",
+  "Mindbender": "spell_shadow_soulleech_3",
   "Solace and Insanity": "ability_priest_flashoflight",
   "Desperate Prayer": "spell_holy_testoffaith",
   "Spectral Guise": "spell_priest_spectralguise",
@@ -100,20 +105,20 @@ const talentIcons = {
   "Twist of Fate": "spell_shadow_mindtwisting",
   "Power Infusion": "spell_holy_powerinfusion",
   "Divine Insight": "spell_priest_burningwill",
-  Cascade: "ability_priest_cascade",
+  "Cascade": "ability_priest_cascade",
   "Divine Star": "spell_priest_divinestar",
-  Halo: "ability_priest_halo",
+  "Halo": "ability_priest_halo",
 };
 
 const talentSpellIds = {
   "Void Tendrils": 108920,
-  Psyfiend: 108921,
+  "Psyfiend": 108921,
   "Dominate Mind": 605,
   "Body and Soul": 64129,
   "Angelic Feather": 121536,
-  Phantasm: 108942,
+  "Phantasm": 108942,
   "From Darkness, Comes Light": 109186,
-  Mindbender: 123040,
+  "Mindbender": 123040,
   "Solace and Insanity": 129250,
   "Desperate Prayer": 19236,
   "Spectral Guise": 119898,
@@ -121,9 +126,9 @@ const talentSpellIds = {
   "Twist of Fate": 109142,
   "Power Infusion": 10060,
   "Divine Insight": 109175,
-  Cascade: 121135,
+  "Cascade": 121135,
   "Divine Star": 110744,
-  Halo: 120517,
+  "Halo": 120517,
 };
 
 // API → UI name normalization
@@ -132,7 +137,7 @@ const talentNameMap = {
   "Mind Control": "Dominate Mind",
 };
 
-// ======= Precomputed helpers for speed & safety =======
+// ======= Precomputed helpers =======
 const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
 const VALID_TALENT_SET = new Set(Object.values(talentTiers).flat());
 const TIER_BY_TALENT = (() => {
@@ -146,13 +151,13 @@ const TIER_BY_TALENT = (() => {
 const getSpellId = (name) => talentSpellIds[name] ?? 0;
 const getTalentDisplayName = (apiName) => talentNameMap[apiName] ?? apiName;
 
-// NOTE: Your original function already used a question-mark fallback.  [SOURCE] citeturn1search1
+// Icon helper: falls back to the "?" icon if name is null/unknown
 const talentIconUrl = (name) => {
   const iconKey = talentIcons[name] ?? "inv_misc_questionmark";
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
-// ======= URL hash helpers (unchanged behavior) =======
+// ======= Slug & Hash helpers =======
 function slugify(str) {
   return String(str)
     .normalize('NFD')
@@ -162,16 +167,21 @@ function slugify(str) {
     .replace(/^-+|-+$/g, '')
     .replace(/--+/g, '-');
 }
+
 function hashFor(name, encounterId) {
   return `#${slugify(name)}-${encounterId}`;
 }
+
 function updateHash(name, encounterId) {
   history.replaceState(null, '', hashFor(name, encounterId));
 }
+
 function parseHash() {
   const h = location.hash ?? '';
+  // New format: #slug-id
   const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
   if (m) return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10) };
+  // Legacy format: #e-id
   const legacy = h.match(/^#e-(\d+)$/i);
   if (legacy) return { slug: 'e', id: parseInt(legacy[1], 10), legacy: true };
   return null;
@@ -191,7 +201,6 @@ function createRaidMenu() {
       selectActiveRaid(key);
       buildBossButtonsForRaid(key);
 
-      // Choose first boss in this raid (or keep current if shared id)
       const entries = Object.entries(RAIDS[key].encounters);
       if (entries.length > 0) {
         const [bossName, encounterId] = entries[0];
@@ -264,7 +273,7 @@ function findRaidKeyByEncounterId(encounterId) {
   return null;
 }
 
-// ======= Cache helpers (same behavior as before) =======
+// ======= Cache helpers =======
 function readCache(encounterId) {
   try {
     const raw = localStorage.getItem(CACHE_KEY(encounterId));
@@ -318,37 +327,50 @@ function disableButtons(disabled) {
   });
 }
 
-// NEW: Build a 6-icon row for a player's talents, with '?' for missing tiers.
-function buildPlayerTalentIcons(playerTalentsRaw) {
-  const chosenByTier = new Map(); // tier -> talentName
+// Build a 6-icon row for a player's talents, with '?' for missing;
+// also add a green "meta" check (✔) when the pick matches the global winner for that tier.
+function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
+  const chosenByTier = new Map();  // tier -> talentName
   const talents = Array.isArray(playerTalentsRaw) ? playerTalentsRaw : [];
 
   for (const t of talents) {
     const displayName = getTalentDisplayName(t.name);
     if (!VALID_TALENT_SET.has(displayName)) continue;
     const tier = TIER_BY_TALENT.get(displayName);
-    // Keep the first seen per tier (or you could decide on a priority)
     if (tier && !chosenByTier.has(tier)) chosenByTier.set(tier, displayName);
   }
 
   const cells = TIER_ORDER.map((tier) => {
-    const name = chosenByTier.get(tier) || null; // null -> '?'
+    const name = chosenByTier.get(tier) || null;              // null -> '?'
     const iconUrl = talentIconUrl(name);
     const spellId = name ? getSpellId(name) : 0;
     const href = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : null;
     const title = name || 'Unknown (no data)';
 
+    // meta match? (player pick equals the global winner for this tier)
+    const metaInfo = topByTier?.get(tier);
+    const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
+    const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
+
     const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
+    const classes = `talent-link${isMeta ? ' is-meta' : ''}${href ? ' wowhead' : ''}`;
+    const fullTitle = isMeta ? `${title} — Meta pick (${metaPct}%)` : title;
+
     if (href) {
-      return `<a class="talent-link" href="${href}" target="_blank" rel="noopener">${img}<div class="talent-percent" aria-hidden="true"></div></a>`;
+      return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">
+                ${img}<div class="talent-percent" aria-hidden="true"></div>
+              </a>`;
     }
-    return `<span class="talent-link" title="${title}">${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
+    return `<span class="${classes}" title="${fullTitle}">
+              ${img}<div class="talent-percent" aria-hidden="true"></div>
+            </span>`;
   });
 
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
 function render(name, data) {
+  // Safety: ensure expected arrays exist
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
 
   // ===== Aggregate talent usage (summary) =====
@@ -375,26 +397,46 @@ function render(name, data) {
     }
   }
 
-  // ===== Talent summary UI =====
+  // ===== Talent summary UI (also compute winners for 'meta' checks) =====
+  const TOP_BY_TIER = new Map(); // tier -> { winners:Set<string>, percent:number }
+
   let talentSummary = `<div class="talent-summary">`;
   for (const tier of TIER_ORDER) {
-    talentSummary += `<div class="talent-row">`;
-    for (const talent of talentTiers[tier]) {
+    // Build stats for this tier first
+    const total = totalPerTier[tier] ?? 0;
+    const rowStats = talentTiers[tier].map((talent) => {
       const count = tierCounts[tier][talent] ?? 0;
-      const total = totalPerTier[tier] ?? 0;
       const percentNum = total > 0 ? (count / total) * 100 : 0;
       const percent = percentNum.toFixed(1);
-      const color =
-        percentNum >= 75 ? 'limegreen' : percentNum <= 10 ? 'red' : 'orange';
       const iconUrl = talentIconUrl(talent);
       const spellId = getSpellId(talent);
       const wowheadUrl = spellId
         ? `https://www.wowhead.com/mop-classic/spell=${spellId}`
         : `https://www.wowhead.com/`;
+      return { talent, percentNum, percent, iconUrl, wowheadUrl };
+    });
+
+    // Identify winners (ties within epsilon)
+    const maxPct = Math.max(...rowStats.map(s => s.percentNum), 0);
+    const EPS = 0.05;
+    const winners = rowStats
+      .filter(s => s.percentNum >= maxPct - EPS && maxPct > 0)
+      .map(s => s.talent);
+    TOP_BY_TIER.set(tier, { winners: new Set(winners), percent: maxPct });
+
+    // Render the row with highlight on top pick(s)
+    talentSummary += `<div class="talent-row">`;
+    for (const stat of rowStats) {
+      const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
+      const color =
+        stat.percentNum >= 75 ? 'limegreen' :
+        stat.percentNum <= 10 ? 'red' : 'orange';
+
       talentSummary += `
-        <a class="talent-link" href="${wowheadUrl}" target="_blank" rel="noopener" title="${talent}">
-          <img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${talent}" />
-          <div class="talent-percent" style="color:${color}">${percent}%</div>
+        <a class="talent-link wowhead ${isTop ? 'is-top' : ''}" 
+           href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent}">
+          <img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" />
+          <div class="talent-percent" style="color:${color}">${stat.percent}%</div>
         </a>`;
     }
     talentSummary += `</div>`;
@@ -414,8 +456,8 @@ function render(name, data) {
     const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
     const playerName = r?.name ?? 'Unknown';
 
-    // Build a fixed 6-slot talent row for each player
-    const perPlayerTalents = buildPlayerTalentIcons(r?.talents);
+    // Build a fixed 6-slot talent row for each player, with meta checks
+    const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
 
     return `
       <div class="rank-entry">
@@ -432,127 +474,19 @@ function render(name, data) {
     ${talentSummary}
     ${entries}
   `;
+
+  // Re-scan for dynamically inserted links so Wowhead binds tooltips
+  if (window.$WowheadPower && typeof window.$WowheadPower.refreshLinks === 'function') {
+    window.$WowheadPower.refreshLinks();
+  }
 }
 
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
+  // Abort any in-flight request
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
   // Check cache
   const cached = readCache(encounterId);
   const cachedAtServer = cached?.data?.cachedAt;   // if your function adds this
-  const cachedAtLocal  = cached?.cachedAt;
-  const cachedAtToShow = cachedAtServer ?? cachedAtLocal;
-  const freshEnough = cached && isFresh(cachedAtToShow);
-
-  if (freshEnough && !force) {
-    updateLastUpdated(cachedAtToShow);
-    render(name, cached.data);
-    return;
-  }
-
-  updateLastUpdated(cachedAtToShow);
-  rankingsDiv.innerHTML = `
-    <div style="text-align:center;margin-top:16px;">Loading...</div>
-  `;
-  disableButtons(true);
-
-  try {
-    const res = await fetch(API_URL(encounterId), { signal: currentController.signal });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    // Prefer server time if provided; else header; else now
-    const serverCachedAt =
-      data?.cachedAt ?? res.headers.get('x-last-updated') ?? new Date().toISOString();
-
-    writeCache(encounterId, data, serverCachedAt);
-    updateLastUpdated(serverCachedAt);
-    render(name, data);
-  } catch (err) {
-    if (err.name === 'AbortError') return;
-    console.error('Error fetching logs:', err);
-    rankingsDiv.innerHTML = `
-      <div style="text-align:center;color:#ff9c9c;margin-top:16px;">
-        Failed to load logs. ${err.message ?? ''}
-      </div>
-    `;
-  } finally {
-    disableButtons(false);
-  }
-}
-
-// ======= Init & deep-link handling =======
-function openFromHashOrDefault() {
-  const parsed = parseHash();
-  // Build raid menu first (so tab highlighting works)
-  createRaidMenu();
-
-  if (parsed) {
-    const raidKey = findRaidKeyByEncounterId(parsed.id) ?? 'msv';
-    currentRaidKey = raidKey;
-    selectActiveRaid(raidKey);
-    buildBossButtonsForRaid(raidKey);
-
-    const raid = RAIDS[raidKey];
-    const entry = Object.entries(raid.encounters).find(([, id]) => id === parsed.id);
-    if (entry) {
-      const [bossName, encounterId] = entry;
-      const desiredSlug = slugify(bossName);
-      if (parsed.legacy ?? parsed.slug !== desiredSlug) updateHash(bossName, encounterId);
-      selectActiveButton(encounterId);
-      fetchAndDisplayRankings(bossName, encounterId);
-      return;
-    }
-  }
-
-  // Default = first raid with at least one boss
-  for (const [key, raid] of Object.entries(RAIDS)) {
-    const entries = Object.entries(raid.encounters);
-    if (entries.length) {
-      currentRaidKey = key;
-      selectActiveRaid(key);
-      buildBossButtonsForRaid(key);
-
-      const [bossName, encounterId] = entries[0];
-      selectActiveButton(encounterId);
-      updateHash(bossName, encounterId);
-      fetchAndDisplayRankings(bossName, encounterId);
-      return;
-    }
-  }
-
-  // If no raids have bosses yet
-  buildBossButtonsForRaid(currentRaidKey);
-  rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">
-    No bosses configured yet.
-  </div>`;
-  updateLastUpdated(null);
-}
-
-window.addEventListener('hashchange', () => {
-  const parsed = parseHash();
-  if (!parsed) return;
-
-  // If hash changed to a boss in another raid, switch tabs
-  const raidKey = findRaidKeyByEncounterId(parsed.id);
-  if (raidKey && raidKey !== currentRaidKey) {
-    currentRaidKey = raidKey;
-    selectActiveRaid(raidKey);
-    buildBossButtonsForRaid(raidKey);
-  }
-
-  const raid = RAIDS[currentRaidKey];
-  const entry = Object.entries(raid.encounters).find(([, eid]) => eid === parsed.id);
-  if (!entry) return;
-
-  const [bossName] = entry;
-  const desiredSlug = slugify(bossName);
-  if (parsed.slug !== desiredSlug) updateHash(bossName, parsed.id);
-
-  selectActiveButton(parsed.id);
-  fetchAndDisplayRankings(bossName, parsed.id);
-});
-
-// Boot up
-openFromHashOrDefault();
+  const cachedAtLocal  =
