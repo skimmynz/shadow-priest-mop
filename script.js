@@ -302,8 +302,9 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
     const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
     const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
-    const classes = `talent-link${isMeta ? ' is-meta' : ''}${href ? ' wowhead' : ''}`;
-    const fullTitle = isMeta ? `${title} — Meta pick (${metaPct}%)` : title;
+    const classes = `talent-link${href ? ' wowhead' : ''}`; // no per-player meta styling
+    const fullTitle = title; // no "Meta pick" text
+
     if (href) {
       return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">\
 ${img}<div class="talent-percent" aria-hidden="true"></div></a>`;
