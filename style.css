@@ -1,3 +1,9 @@
+/* Global font override */
+* {
+  font-family: 'Fira Sans', sans-serif;
+  font-weight: 900;
+}
+
 /* -------- Design tokens -------- */
 :root{
   --name-col: 300px;
@@ -15,7 +21,6 @@
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
 }
@@ -28,7 +33,7 @@ h1 { margin-bottom: 12px; }
   font-size: 0.95rem;
 }
 
-/* -------- Raid tabs (NEW) -------- */
+/* -------- Raid tabs -------- */
 .raid-tabs {
   display: flex;
   justify-content: center;
@@ -93,7 +98,7 @@ h1 { margin-bottom: 12px; }
   text-align: left;
 }
 
-/* -------- Talent summary (big icons, centered) -------- */
+/* -------- Talent summary -------- */
 .talent-summary {
   justify-self: center;
   display: flex;
@@ -134,7 +139,7 @@ h1 { margin-bottom: 12px; }
   text-align: center;
 }
 
-/* -------- Each ranking row = deterministic two-column grid -------- */
+/* -------- Ranking rows -------- */
 .rank-entry {
   display: grid;
   grid-template-columns: var(--name-col) var(--talent-col);
@@ -145,7 +150,6 @@ h1 { margin-bottom: 12px; }
   max-width: 100%;
 }
 
-/* Name column */
 .name-wrapper {
   width: var(--name-col);
   overflow: hidden;
@@ -155,7 +159,6 @@ h1 { margin-bottom: 12px; }
 .player-link { text-decoration: none; color: inherit; }
 .player-link:hover { text-decoration: none; color: inherit; }
 
-/* Talents column (compact icons) */
 .rank-entry .talent-row {
   width: var(--talent-col);
   min-width: var(--talent-col);
@@ -171,7 +174,6 @@ h1 { margin-bottom: 12px; }
 }
 .rank-entry .talent-row .talent-link { margin: 0 2px; }
 
-/* Fallback dash when no talents */
 .rank-entry .talent-row:empty::before {
   content: "—";
   color: #666;
@@ -179,7 +181,7 @@ h1 { margin-bottom: 12px; }
   font-style: italic;
 }
 
-/* -------- Coming soon (NEW) -------- */
+/* -------- Coming soon -------- */
 .coming-soon {
   justify-self: center;
   color: var(--muted);
