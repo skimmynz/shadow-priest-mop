@@ -1,7 +1,20 @@
+/* -------- Design tokens for easy maintenance -------- */
+:root{
+  --name-col: 300px;   /* width of the player name column */
+  --talent-col: 200px; /* width of the talent icons column */
+  --gap: 16px;
+  --bg: #0e0e0e;
+  --text: #fff;
+  --muted: #bbb;
+  --panel: #222;
+  --border: #444;
+  --accent: #9482C9;
+}
+
 /* -------- Base -------- */
 body {
-  background-color: #0e0e0e;
-  color: #fff;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
   text-align: center;
@@ -9,7 +22,7 @@ body {
 h1 { margin-bottom: 12px; }
 
 .last-updated {
-  color: #bbb;
+  color: var(--muted);
   text-align: center;
   margin: 8px 0 16px;
   font-size: 0.95rem;
@@ -27,22 +40,22 @@ h1 { margin-bottom: 12px; }
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: #222;
-  color: #fff;
-  border: 1px solid #444;
+  background-color: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
   padding: 12px 24px;
   cursor: pointer;
   border-radius: 5px;
   font-size: 18px;
 }
 #boss-buttons button:hover { background-color: #444; }
-#boss-buttons button.active { outline: 2px solid #9482C9; }
+#boss-buttons button.active { outline: 2px solid var(--accent); }
 
 .boss-icon {
   height: 40px;
   width: 40px;
   border-radius: 4px;
-  border: 1px solid #444;
+  border: 1px solid var(--border);
 }
 
 /* -------- Rankings container -------- */
@@ -70,17 +83,19 @@ h1 { margin-bottom: 12px; }
   justify-content: center;
   gap: 10px;
 }
+
 .talent-link {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
 }
+
 .talent-icon-img {
   width: 56px;
   height: 56px;
   border-radius: 6px;
-  border: 1px solid #444;
+  border: 1px solid var(--border);
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 .talent-link:hover .talent-icon-img {
@@ -95,20 +110,20 @@ h1 { margin-bottom: 12px; }
 }
 
 /* -------- Each ranking row = deterministic two-column grid -------- */
-/* Column 1: fixed 300px for name  |  Column 2: fixed 200px for talents */
+/* Column 1: fixed name | Column 2: fixed talents */
 .rank-entry {
   display: grid;
-  grid-template-columns: 300px 200px;
+  grid-template-columns: var(--name-col) var(--talent-col);
   align-items: center;
-  justify-content: center;  /* center the 2-col block inside #rankings */
-  column-gap: 16px;
-  width: max-content;       /* shrink-wrap so centering is visually exact */
+  justify-content: center; /* center the 2-col block inside #rankings */
+  column-gap: var(--gap);
+  width: max-content;      /* shrink-wrap so centering is visually exact */
   max-width: 100%;
 }
 
 /* Name column */
 .name-wrapper {
-  width: 300px;             /* must match the grid’s first column */
+  width: var(--name-col);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -118,8 +133,8 @@ h1 { margin-bottom: 12px; }
 
 /* Talents column (compact icons) */
 .rank-entry .talent-row {
-  width: 200px;             /* must match the grid’s second column */
-  min-width: 200px;
+  width: var(--talent-col);
+  min-width: var(--talent-col);
   display: flex;
   align-items: center;
   gap: 5px;
@@ -151,9 +166,7 @@ h1 { margin-bottom: 12px; }
     row-gap: 8px;
     justify-items: center;
   }
-  .name-wrapper {
-    width: 90vw;
-  }
+  .name-wrapper { width: 90vw; }
   .rank-entry .talent-row {
     width: auto;
     min-width: 0;
