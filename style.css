@@ -60,12 +60,12 @@ h1 {
   margin: 10px 0;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 100%; 
+  justify-content: flex-start; /* Anchor content to the left */
+  width: 100%; /* Ensure full width to control layout */
 }
 
 .name-wrapper {
-  width: 300px;
+  width: 300px; /* Fixed width instead of max-width */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,7 +74,7 @@ h1 {
 .talent-row {
   display: flex;
   align-items: center;
-  margin-left: 30px;
+  margin-left: 30px; /* Increased indent for clearer separation */
   gap: 5px;
 }
 
@@ -109,33 +109,34 @@ h1 {
 
 .last-updated {
   color: #bbb;
-  text-align: center;   
-  margin: 8px 0 16px;    
+  text-align: center;    /* explicit centering */
+  margin: 8px 0 16px;    /* space under the H1 */
   font-size: 0.95rem;
 }
 
-
+/* ---- Center the talent summary and enlarge icons/text ---- */
 
 .talent-summary {
-
+  /* center the whole block under the "Last updated" line */
   display: flex;
   flex-direction: column;
-  align-items: center;       
-  gap: 10px;                 
-  margin: 12px auto 20px;    
+  align-items: center;       /* center rows horizontally */
+  gap: 10px;                 /* space between each tier row */
+  margin: 12px auto 20px;    /* center within the rankings column */
 }
 
 .talent-row {
   display: flex;
   align-items: center;
-  justify-content: center;  
+  justify-content: center;   /* center icons inside each row */
   gap: 10px;
-  margin-left: 0 !important; 
+  margin-left: 0 !important; /* override previous indent */
 }
 
+/* Bigger icon + text */
 .talent-icon-img {
-  width: 56px;             
-  height: 56px;             
+  width: 56px;               /* was 40px */
+  height: 56px;              /* was 40px */
   border-radius: 6px;
   border: 1px solid #444;
   /* subtle pop on hover */
@@ -148,19 +149,20 @@ h1 {
 }
 
 .talent-percent {
-  font-size: 15px;          
+  font-size: 15px;           /* was 12px */
   font-weight: 600;
-  margin-top: 6px;          
+  margin-top: 6px;           /* a touch more space under the icon */
   text-align: center;
 }
 
-
+/* Optional: slightly widen the rankings column so centered grid breathes */
 @media (min-width: 768px) {
   #rankings {
-    max-width: 720px;       
+    max-width: 720px;        /* was 600px; adjust to taste */
   }
 }
 
+/* Mobile-friendly scaling so it doesn’t overcrowd small screens */
 @media (max-width: 480px) {
   .talent-icon-img {
     width: 48px;
@@ -170,50 +172,54 @@ h1 {
     font-size: 14px;
   }
 }
-
+/* ---- Smaller talents next to player names ---- */
 .rank-entry .talent-row .talent-icon-img {
-  width: 28px;  
+  width: 28px;   /* smaller than the main summary (56px) */
   height: 28px;
   border-radius: 4px;
 }
 
 .rank-entry .talent-row .talent-link {
-  margin: 0 2px; 
+  margin: 0 2px; /* tighter spacing for compact look */
 }
-
+/* --- Center the entire rankings section --- */
 #rankings {
-  max-width: 760px;       
-  margin: 0 auto;            
-  display: grid;             
+  max-width: 760px;          /* adjust to taste */
+  margin: 0 auto;            /* center the container */
+  display: grid;             /* lets us center children precisely */
   grid-auto-rows: auto;
   row-gap: 12px;
-  text-align: left;          
+  text-align: left;          /* default; we’ll center specific parts below */
 }
 
-
+/* --- Center the large talent summary block --- */
 .talent-summary {
-  justify-self: center; 
-  width: max-content;       
+  justify-self: center;      /* true center within the grid */
+  width: max-content;        /* shrink-wrap so center is visually exact */
   margin: 12px 0 20px;
 }
 
+/* Center each tier row within the summary */
 .talent-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-left: 0 !important;
-
-.rank-entry {
-  justify-self: center;      
-  display: flex;
-  align-items: center;
-  justify-content: center;   
-  gap: 16px;
-  width: max-content;        
-  max-width: 100%;           
+  margin-left: 0 !important; /* override any previous indent */
 }
 
+/* --- Center each ranking row as a unit --- */
+.rank-entry {
+  justify-self: center;      /* center the row within the grid */
+  display: flex;
+  align-items: center;
+  justify-content: center;   /* center name + talents as a group */
+  gap: 16px;
+  width: max-content;        /* shrink-wrap so centering is exact */
+  max-width: 100%;           /* prevent overflow on small screens */
+}
+
+/* --- Keep per-player talents smaller (independent from big summary) --- */
 .rank-entry .talent-row .talent-icon-img {
   width: 28px;
   height: 28px;
@@ -223,22 +229,24 @@ h1 {
   margin: 0 2px;
 }
 
+/* Optional hover nicety (kept) */
 .talent-link:hover .talent-icon-img {
   transform: translateY(-1px);
   box-shadow: 0 2px 10px rgba(0,0,0,0.35);
 }
 
+/* --- Responsive: stack rows neatly on narrow screens --- */
 @media (max-width: 600px) {
   #rankings { max-width: 100%; }
   .rank-entry {
-    flex-direction: column;  
+    flex-direction: column;  /* name above talents */
     gap: 8px;
   }
   .name-wrapper {
-    max-width: 90vw;         
+    max-width: 90vw;         /* safer ellipsis width on small screens */
   }
 }
-  
+/* --- Raid menu tabs --- */
 #raid-menu {
   display: flex;
   justify-content: center;
@@ -259,7 +267,8 @@ h1 {
 #raid-menu button:hover { background: #444; }
 #raid-menu button.active { outline: 2px solid #9482C9; }
 
-.talent-link { position: relative; } 
+/* --- Highlight the top pick in each tier (summary only) --- */
+.talent-link { position: relative; } /* anchor pseudo-badges */
 .talent-link.is-top .talent-icon-img {
   transform: translateY(-1px) scale(1.08);
   box-shadow: 0 0 0 2px #9482C9, 0 8px 22px rgba(148,130,201,.45);
@@ -284,6 +293,7 @@ h1 {
   font-weight: 800;
 }
 
+/* --- Green 'meta pick' checkmark for per-player rows --- */
 .rank-entry .talent-link { position: relative; } /* anchor check badge */
 .rank-entry .talent-link.is-meta .talent-icon-img {
   box-shadow: 0 0 0 2px rgba(46, 204, 113, .95), 0 6px 16px rgba(46,204,113,.35);
@@ -303,7 +313,9 @@ h1 {
   box-shadow: 0 0 0 1px #1d1d1d, 0 4px 10px rgba(0,0,0,.45);
 }
 
+/* === Move the glow + checkmark to the SUMMARY, not player rows === */
 
+/* Replace the old gold-star highlight for summary "top picks" with a green meta style */
 .talent-summary .talent-link.is-top .talent-icon-img {
   transform: translateY(-1px) scale(1.08);
   box-shadow: 0 0 0 2px rgba(46, 204, 113, .95), 0 8px 22px rgba(46, 204, 113, .35);
@@ -322,12 +334,14 @@ h1 {
   padding: 2px 4px;
   box-shadow: 0 0 0 1px #1d1d1d, 0 4px 10px rgba(0,0,0,.45);
 }
+/* Make the percentage for the top pick pop a bit and align with the green theme */
 .talent-summary .talent-link.is-top .talent-percent {
   color: #2ecc71 !important;
   text-shadow: 0 1px 2px rgba(0,0,0,.6);
   font-weight: 800;
 }
 
+/* Turn OFF the green meta tick/glow on per-player rows (safety override) */
 .rank-entry .talent-link.is-meta .talent-icon-img { 
   box-shadow: none !important; 
   border-color: #444 !important; 
@@ -336,14 +350,16 @@ h1 {
   display: none !important; 
 }
 
+/* === Remove the green tick/star badge entirely (summary + player rows) === */
 
+/* Kill any ::after badge for top picks (covers both the old gold star and the new green tick) */
 .talent-link.is-top::after {
   display: none !important;
   content: none !important;
 }
 
+/* Extra safety for the per-player meta badge (✔) */
 .rank-entry .talent-link.is-meta::after {
   display: none !important;
   content: none !important;
 }
-
