@@ -350,11 +350,17 @@ h1 {
   display: none !important; 
 }
 
-/* (Optional) If you want to completely retire the old gold-star style everywhere else, 
-   you can neutralize the generic rules too. Keep this ONLY if needed. */
-/*
-.talent-link.is-top .talent-icon-img { box-shadow: none; border-color: #444; transform: none; }
-.talent-link.is-top::after { display: none; }
-.talent-link.is-top .talent-percent { color: inherit !important; text-shadow: none; font-weight: 600; }
-*/
+/* === Remove the green tick/star badge entirely (summary + player rows) === */
+
+/* Kill any ::after badge for top picks (covers both the old gold star and the new green tick) */
+.talent-link.is-top::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Extra safety for the per-player meta badge (✔) */
+.rank-entry .talent-link.is-meta::after {
+  display: none !important;
+  content: none !important;
+}
 
