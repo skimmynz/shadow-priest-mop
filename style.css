@@ -1,7 +1,7 @@
-/* -------- Design tokens for easy maintenance -------- */
+/* -------- Design tokens -------- */
 :root{
-  --name-col: 300px;   /* width of the player name column */
-  --talent-col: 200px; /* width of the talent icons column */
+  --name-col: 300px;
+  --talent-col: 200px;
   --gap: 16px;
   --bg: #0e0e0e;
   --text: #fff;
@@ -27,6 +27,31 @@ h1 { margin-bottom: 12px; }
   margin: 8px 0 16px;
   font-size: 0.95rem;
 }
+
+/* -------- Raid tabs (NEW) -------- */
+.raid-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px auto 12px;
+  flex-wrap: wrap;
+}
+.raid-tab {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 16px;
+}
+.raid-tab[aria-selected="true"],
+.raid-tab.active {
+  outline: 2px solid var(--accent);
+  background: #2b2b2b;
+}
+.raid-tab:hover { background: #444; }
 
 /* -------- Boss buttons -------- */
 #boss-buttons {
@@ -110,14 +135,13 @@ h1 { margin-bottom: 12px; }
 }
 
 /* -------- Each ranking row = deterministic two-column grid -------- */
-/* Column 1: fixed name | Column 2: fixed talents */
 .rank-entry {
   display: grid;
   grid-template-columns: var(--name-col) var(--talent-col);
   align-items: center;
-  justify-content: center; /* center the 2-col block inside #rankings */
+  justify-content: center;
   column-gap: var(--gap);
-  width: max-content;      /* shrink-wrap so centering is visually exact */
+  width: max-content;
   max-width: 100%;
 }
 
@@ -155,12 +179,19 @@ h1 { margin-bottom: 12px; }
   font-style: italic;
 }
 
-/* -------- Responsive tweaks -------- */
+/* -------- Coming soon (NEW) -------- */
+.coming-soon {
+  justify-self: center;
+  color: var(--muted);
+  font-size: 1.05rem;
+  padding: 16px;
+}
+
+/* -------- Responsive -------- */
 @media (min-width: 768px) {
   #rankings { max-width: 760px; }
 }
 @media (max-width: 600px) {
-  /* Stack name above talents on narrow screens */
   .rank-entry {
     grid-template-columns: 1fr;
     row-gap: 8px;
@@ -173,7 +204,6 @@ h1 { margin-bottom: 12px; }
     justify-content: center;
   }
 }
-/* Slightly smaller big-summary icons on very small phones */
 @media (max-width: 480px) {
   .talent-summary .talent-icon-img { width: 48px; height: 48px; }
   .talent-summary .talent-percent { font-size: 14px; }
