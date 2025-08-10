@@ -321,12 +321,12 @@ function render(name, data) {
         const iconUrl = talentIconUrl(t.name);
         const spellId = getSpellId(t.name);
         const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
-        return `
-          <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
-            <img src="${iconUrl}" class="talent-icon-img" alt="${t.name}" title="${t.name}">
-          </a>
-        `;
-      }).join('');
+        return `<a class="talent-link" href="${wowheadUrl}" target="_blank" rel="noopener">
+              <img class="talent-icon-img" src="${iconUrl}" alt="${t.name}">
+            </a>`;
+  })
+  .join('');
+
 
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
     const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
