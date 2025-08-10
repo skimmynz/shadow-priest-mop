@@ -115,35 +115,30 @@ const talentIconUrl = (name) => {
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
-// ======= Slug + Hash helpers: #<boss-slug>-<id> with legacy support =======
+// ======= Slug + Hash helpers (#- with legacy support) =======
 function slugify(str) {
   return String(str)
     .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // remove accents
+    .replace(/[\u0300-\u036f]/g, '')         // remove accents
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')     // non-alphanum -> hyphen
-    .replace(/^-+|-+$/g, '')         // trim hyphens
-    .replace(/--+/g, '-');           // collapse
+    .replace(/[^a-z0-9]+/g, '-')             // non-alphanum -> hyphen
+    .replace(/^-+|-+$/g, '')                 // trim hyphens
+    .replace(/--+/g, '-');                   // collapse
 }
-
 function hashFor(name, encounterId) {
   return `#${slugify(name)}-${encounterId}`;
 }
-
-// Update the URL hash to the new format
 function updateHash(name, encounterId) {
   history.replaceState(null, '', hashFor(name, encounterId));
 }
-
-// Parse current hash. Supports both new (#slug-id) and legacy (#e-id)
 function parseHash() {
   const h = location.hash || '';
-  // New format: #<slug>-<id>
+  // New format: #slug-id
   const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
   if (m) {
     return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10), legacy: false };
   }
-  // Legacy format: #e-<id>
+  // Legacy format: #e-id
   const legacy = h.match(/^#e-(\d+)$/i);
   if (legacy) {
     return { slug: 'e', id: parseInt(legacy[1], 10), legacy: true };
@@ -163,6 +158,8 @@ function createBossButtons() {
     img.alt = name;
     img.className = 'boss-icon';
     img.loading = 'lazy';
+    img.decoding = 'async';
+    img.width = 40; img.height = 40;
 
     const span = document.createElement('span');
     span.textContent = name;
@@ -171,14 +168,13 @@ function createBossButtons() {
     button.appendChild(span);
     button.addEventListener('click', () => {
       selectActiveButton(id);
-      updateHash(name, id);          // ← new human-readable hash
+      updateHash(name, id);      // human-readable hash
       fetchAndDisplayRankings(name, id);
     });
 
     bossButtonsDiv.appendChild(button);
   }
 }
-
 function selectActiveButton(encounterId) {
   const buttons = bossButtonsDiv.querySelectorAll('button');
   buttons.forEach(b => b.classList.remove('active'));
@@ -191,22 +187,18 @@ function readCache(encounterId) {
   try {
     const raw = localStorage.getItem(CACHE_KEY(encounterId));
     if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    // expected shape: { data, cachedAt } where cachedAt is ISO string or epoch
-    return parsed;
+    return JSON.parse(raw); // { data, cachedAt }
   } catch {
     return null;
   }
 }
-
 function writeCache(encounterId, data, cachedAt = new Date().toISOString()) {
   try {
     localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt }));
   } catch {
-    // storage full or disabled
+    // storage full or disabled; ignore
   }
 }
-
 function isFresh(cachedAt) {
   try {
     const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt);
@@ -215,7 +207,6 @@ function isFresh(cachedAt) {
     return false;
   }
 }
-
 function formatAgo(dateish) {
   const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
   if (ms < 60_000) return 'just now';
@@ -226,13 +217,9 @@ function formatAgo(dateish) {
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
 }
-
 function updateLastUpdated(isoOrEpoch) {
-  if (!lastUpdatedEl) return; // If no slot, silently skip
-  if (!isoOrEpoch) {
-    lastUpdatedEl.textContent = '';
-    return;
-  }
+  if (!lastUpdatedEl) return;
+  if (!isoOrEpoch) { lastUpdatedEl.textContent = ''; return; }
   const when = new Date(isoOrEpoch).toLocaleString();
   const ago = formatAgo(isoOrEpoch);
   lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
@@ -295,14 +282,22 @@ function render(name, data) {
 
       talentSummary += `
         <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
-          <img src="${iconUrl}" class="talent-icon-img" alt="${talent}" title="${talent}">
+          <img
+            src="${iconUrl}"
+            class="talent-icon-img"
+            alt="${talent}"
+            title="${talent}"
+            loading="lazy"
+            decoding="async"
+            width="56" height="56"
+          >
           <div class="talent-percent" style="color:${color};">${percent}%</div>
         </a>
       `;
     }
     talentSummary += `</div>`;
   }
-  talentSummary += `</div><br>`;
+  talentSummary += `</div>`; // no <br>; spacing handled by CSS
 
   // ===== Rankings list =====
   const getColor = (rank) => {
@@ -323,7 +318,15 @@ function render(name, data) {
         const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
         return `
           <a target="_blank" href="${wowheadUrl}" class="talent-link" rel="noopener">
-            <img src="${iconUrl}" class="talent-icon-img" alt="${t.name}" title="${t.name}">
+            <img
+              src="${iconUrl}"
+              class="talent-icon-img"
+              alt="${t.name}"
+              title="${t.name}"
+              loading="lazy"
+              decoding="async"
+              width="28" height="28"
+            >
           </a>
         `;
       }).join('');
@@ -371,24 +374,33 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 
   // Show loading and (if available) keep showing the last known timestamp
   updateLastUpdated(cachedAtToShow);
-  rankingsDiv.innerHTML = `<p>Loading...</p>`;
-
+  rankingsDiv.innerHTML = `
+    <div style="text-align:center;color:#bbb;padding:12px">Loading...</div>
+  `;
   disableButtons(true);
+
   try {
     const res = await fetch(API_URL(encounterId), { signal: currentController.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
     // Prefer server time if provided, otherwise use header or now
-    const serverCachedAt = data?.cachedAt || res.headers.get('x-last-updated') || new Date().toISOString();
-    writeCache(encounterId, data, serverCachedAt);
+    const serverCachedAt =
+      data?.cachedAt ||
+      res.headers.get('x-last-updated') ||
+      new Date().toISOString();
 
+    writeCache(encounterId, data, serverCachedAt);
     updateLastUpdated(serverCachedAt);
     render(name, data);
   } catch (err) {
     if (err.name === 'AbortError') return; // user navigated away quickly
     console.error('Error fetching logs:', err);
-    rankingsDiv.innerHTML = `<p style="color:red;">Failed to load logs. ${err.message || ''}</p>`;
+    rankingsDiv.innerHTML = `
+      <div style="text-align:center;color:#f88;padding:12px">
+        Failed to load logs. ${err.message || ''}
+      </div>
+    `;
   } finally {
     disableButtons(false);
   }
@@ -402,19 +414,16 @@ function openFromHashOrDefault() {
   if (parsed && entries.some(([, id]) => id === parsed.id)) {
     const [bossName] = entries.find(([, id]) => id === parsed.id);
     const desiredSlug = slugify(bossName);
-
-    // Auto-migrate legacy (#e-1234) or wrong slug to the new, correct slug
     if (parsed.legacy || parsed.slug !== desiredSlug) {
       updateHash(bossName, parsed.id);
     }
-
     selectActiveButton(parsed.id);
     fetchAndDisplayRankings(bossName, parsed.id);
   } else {
     // default: first boss
     const [bossName, encounterId] = entries[0];
     selectActiveButton(encounterId);
-    updateHash(bossName, encounterId);   // set a clean, shareable hash
+    updateHash(bossName, encounterId);
     fetchAndDisplayRankings(bossName, encounterId);
   }
 }
@@ -422,18 +431,13 @@ function openFromHashOrDefault() {
 window.addEventListener('hashchange', () => {
   const parsed = parseHash();
   if (!parsed) return;
-
   const entry = Object.entries(encounters).find(([, eid]) => eid === parsed.id);
   if (!entry) return;
-
   const [bossName] = entry;
   const desiredSlug = slugify(bossName);
-
-  // If slug doesn't match, silently fix it (user changed hash manually)
   if (parsed.slug !== desiredSlug) {
     updateHash(bossName, parsed.id);
   }
-
   selectActiveButton(parsed.id);
   fetchAndDisplayRankings(bossName, parsed.id);
 });
