@@ -246,4 +246,24 @@ h1 {
     max-width: 90vw;         /* safer ellipsis width on small screens */
   }
 }
+/* --- Raid menu tabs --- */
+#raid-menu {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 8px 0 14px;
+}
+
+#raid-menu button {
+  background: #222;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#raid-menu button:hover { background: #444; }
+#raid-menu button.active { outline: 2px solid #9482C9; }
 
