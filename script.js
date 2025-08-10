@@ -1,7 +1,3 @@
-"use strict";
-
-// =======================
-// script 7.js (fixed)
 // Shadow Priest Rankings – MoP Classic
 // =======================
 
