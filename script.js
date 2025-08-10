@@ -1,6 +1,4 @@
 // Shadow Priest Rankings – MoP Classic
-// =======================
-
 // ======= Raids, Encounters & Talent Data =======
 const RAIDS = {
   msv: {
