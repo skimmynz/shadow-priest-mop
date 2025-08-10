@@ -95,7 +95,7 @@ const talentSpellIds = {
   "Mindbender": 123040,
   "Solace and Insanity": 129250,
   "Desperate Prayer": 19236,
-  "Spectral Guise": 119898,
+  "Spectral Guise": 112833,
   "Angelic Bulwark": 108945,
   "Twist of Fate": 109142,
   "Power Infusion": 10060,
