@@ -264,8 +264,6 @@ h1 {
   font-size: 16px;
 }
 
-
-
 #raid-menu button:hover { background: #444; }
 #raid-menu button.active { outline: 2px solid #9482C9; }
 
@@ -314,5 +312,3 @@ h1 {
   padding: 2px 4px;
   box-shadow: 0 0 0 1px #1d1d1d, 0 4px 10px rgba(0,0,0,.45);
 }
-
-

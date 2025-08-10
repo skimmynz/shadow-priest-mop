@@ -1,37 +1,35 @@
-<!-- index.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Shadow Priest Top 100 - MoP Classic</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Wowhead tooltips -->
-  <script>
-  // Optional config; tweak to taste
-    const whTooltips = {
-      colorLinks: false,
-      iconizeLinks: false,
-      renameLinks: false
-    // You can also set domain/locale explicitly:
-    // domain: 'www.wowhead.com', locale: 'en_us'
-    };
-  </script>
-  https://wow.zamimg.com/widgets/power.js
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow Priest Top 100 – MoP Classic</title>
 
+  <!-- Main styles -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Wowhead/ZAM tooltips -->
+  <script>
+    window.whTooltips = { colorLinks: true, iconizeLinks: true, renameLinks: true };
+  </script>
+  <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
 </head>
 <body>
-  <h1>Shadow Priest Top 100 - MoP Classic</h1>
+  <h1>Shadow Priest Top 100 – MoP Classic</h1>
 
-  <!-- New: raid menu -->
-  <nav id="raid-menu" aria-label="Raid selection">
-    <!-- JS will populate buttons for MSV / HoF / ToES -->
-  </nav>
+  <!-- Tabs for raid selection -->
+  <nav id="raid-menu" aria-label="Raid selection"></nav>
 
-  <div id="last-updated" class="last-updated" aria-live="polite"></div>
-  <div id="boss-buttons"></div>
-  <div id="rankings"></div>
+  <!-- Boss buttons for the active raid -->
+  <div id="boss-buttons" role="group" aria-label="Bosses"></div>
 
-  <!-- Make sure this file name matches your deployed bundle -->
-  <script src="script.js"></script>
+  <!-- Rankings column (centered by your CSS) -->
+  <section id="rankings">
+    <div class="last-updated" id="last-updated">Loading last updated…</div>
+    <div class="talent-summary" aria-label="Popular talents by tier"></div>
+  </section>
+
+  <!-- Your app logic (kept the original filename with space) -->
+  <script src="script 6.js" defer></script>
 </body>
 </html>
