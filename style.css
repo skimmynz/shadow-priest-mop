@@ -363,3 +363,38 @@ h1 {
   display: none !important;
   content: none !important;
 }
+
+/* 1) Never underline or recolor the whole link on hover */
+.talent-link,
+.talent-link:hover,
+.talent-link:focus {
+  text-decoration: none;
+  color: inherit; /* don’t let :hover recolor descendants */
+}
+
+/* 2) Keep hover effects limited to the icon only (not the % text) */
+.talent-link:hover .talent-icon-img {
+  filter: brightness(1.06) saturate(1.05);
+}
+.talent-link:hover .talent-percent {
+  filter: none;          /* ensure no filters on the text */
+  opacity: 1;            /* guard against any inherited hover opacity */
+}
+
+/* 3) Put the % text on its own layer to avoid repaint flicker */
+.talent-percent {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  transition: none;       /* disable any unwanted color/opacity transitions */
+  pointer-events: none;   /* the link still gets the hover for the tooltip */
+}
+
+/* 4) Wowhead sometimes injects <ins>/<del> wrappers—make them neutral */
+a.wowhead ins,
+a.wowhead del {
+  text-decoration: none !important;
+  border: 0 !important;
+}
+
