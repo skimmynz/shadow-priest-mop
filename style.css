@@ -312,3 +312,49 @@ h1 {
   padding: 2px 4px;
   box-shadow: 0 0 0 1px #1d1d1d, 0 4px 10px rgba(0,0,0,.45);
 }
+
+/* === Move the glow + checkmark to the SUMMARY, not player rows === */
+
+/* Replace the old gold-star highlight for summary "top picks" with a green meta style */
+.talent-summary .talent-link.is-top .talent-icon-img {
+  transform: translateY(-1px) scale(1.08);
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, .95), 0 8px 22px rgba(46, 204, 113, .35);
+  border-color: #2ecc71;
+}
+.talent-summary .talent-link.is-top::after {
+  content: "✔";
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  font-size: 12px;
+  line-height: 1;
+  color: #0f2a14;
+  background: #2ecc71;
+  border-radius: 999px;
+  padding: 2px 4px;
+  box-shadow: 0 0 0 1px #1d1d1d, 0 4px 10px rgba(0,0,0,.45);
+}
+/* Make the percentage for the top pick pop a bit and align with the green theme */
+.talent-summary .talent-link.is-top .talent-percent {
+  color: #2ecc71 !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+  font-weight: 800;
+}
+
+/* Turn OFF the green meta tick/glow on per-player rows (safety override) */
+.rank-entry .talent-link.is-meta .talent-icon-img { 
+  box-shadow: none !important; 
+  border-color: #444 !important; 
+}
+.rank-entry .talent-link.is-meta::after { 
+  display: none !important; 
+}
+
+/* (Optional) If you want to completely retire the old gold-star style everywhere else, 
+   you can neutralize the generic rules too. Keep this ONLY if needed. */
+/*
+.talent-link.is-top .talent-icon-img { box-shadow: none; border-color: #444; transform: none; }
+.talent-link.is-top::after { display: none; }
+.talent-link.is-top .talent-percent { color: inherit !important; text-shadow: none; font-weight: 600; }
+*/
+
