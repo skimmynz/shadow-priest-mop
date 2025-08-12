@@ -38,6 +38,19 @@ a.wowhead del {
   border: 0 !important;
 }
 
+.raid-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+#raid-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
 /* =================================================================
    Navigation (Raids & Bosses)
    ================================================================= */
