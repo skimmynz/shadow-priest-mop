@@ -1,271 +1,238 @@
 /* =================================================================
-   Theme
+   Theme Variables
    ================================================================= */
 :root {
-  --bg: #0e0e0e;
-  --surface: #141414;
-  --surface-2: #1b1b1b;
-  --text: #ffffff;
-  --muted: #bcbcbc;
-  --border: #2a2a2a;
-  --border-strong: #3a3a3a;
-
-  --accent: #9482c9;   /* Shadow purple */
-  --accent-2: #6c5aa9;
-  --success: #2ecc71;  /* top pick */
-  --warning: #f1c40f;  /* rank 1 gold */
-  --silver:  #cfcfcf;  /* rank 2 */
-  --bronze:  #cd7f32;  /* rank 3 */
-
-  --ring-track: rgba(255,255,255,0.08);
-  --ring-thickness: 6px;
-
-  --radius: 12px;
-  --radius-sm: 8px;
-  --shadow-1: 0 6px 24px rgba(0,0,0,0.35);
-  --shadow-2: 0 10px 28px rgba(0,0,0,0.45);
+  --bg-color: #0e0e0e;
+  --text-color: #fff;
+  --secondary-text: #bbb;
+  --border-color: #444;
+  --highlight: #9482C9;
+  --success: #2ecc71;
 }
 
-* { box-sizing: border-box; }
-html, body { height: 100%; }
+/* =================================================================
+   Base & General Styles
+   ================================================================= */
 body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, Arial, "Noto Sans", sans-serif;
-  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  text-align: center;
 }
 
-/* Containers & header */
-.container { width: min(1120px, 92vw); margin: 0 auto; }
-.site-header { text-align: center; padding: 28px 0 8px; }
-h1 { margin: 0 0 8px; font-weight: 800; letter-spacing: .2px; }
-.last-updated { color: var(--muted); font-size: .95rem; }
-
-/* Two-column main layout */
-.layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 20px;
-  margin-top: 22px;
+h1 {
+  margin-bottom: 30px;
 }
-@media (max-width: 980px) {
-  .layout { grid-template-columns: 1fr; }
+
+.last-updated {
+  color: var(--secondary-text);
+  margin: 8px 0 16px;
+  font-size: 0.95rem;
+}
+
+/* Neutralize Wowhead's injected styles */
+a.wowhead ins,
+a.wowhead del {
+  text-decoration: none !important;
+  border: 0 !important;
 }
 
 /* =================================================================
-   Sidebar (raids + bosses)
+   Navigation (Raids & Bosses)
    ================================================================= */
-.sidebar {
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
-  box-shadow: var(--shadow-1);
-  position: sticky;
-  top: 8px;
-  height: fit-content;
-}
-
-.section-title {
-  margin: 14px 0 10px;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  color: var(--muted);
-}
-
-/* Segmented raid control: works with your existing #raid-menu */
-#raid-menu.segmented {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--border-strong);
-  border-radius: 999px;
-  background: #0f0f0f;
-}
-#raid-menu.segmented button {
-  appearance: none;
-  border: 0;
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--text);
-  background: transparent;
-  cursor: pointer;
-  transition: background 150ms ease, color 150ms ease, transform 120ms ease;
-}
-#raid-menu.segmented button:hover { transform: translateY(-1px); }
-#raid-menu.segmented button.active {
-  background: linear-gradient(180deg, var(--accent), var(--accent-2));
-  color: #0f0f16;
-}
-
-/* Boss list uses your existing #boss-buttons */
-.boss-panel { margin-top: 12px; }
+#raid-menu,
 #boss-buttons {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  max-height: 420px;
-  overflow: auto;
-  padding-right: 4px; /* space for scrollbar */
-}
-#boss-buttons button {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  align-items: center;
-  gap: 10px;
-  text-align: left;
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: #121212;
-  color: var(--text);
-  cursor: pointer;
-  transition: transform 120ms ease, border-color 120ms ease, background 200ms ease;
-}
-#boss-buttons button:hover { transform: translateY(-1px); border-color: var(--border-strong); }
-#boss-buttons button.active {
-  outline: 2px solid var(--accent);
-  box-shadow: 0 0 0 3px rgba(148,130,201,.2), var(--shadow-1);
-  background: #15121a;
-}
-.boss-icon {
-  height: 40px; width: 40px;
-  border-radius: 8px;
-  border: 1px solid var(--border-strong);
-}
-
-/* =================================================================
-   Content area (talent summary + rankings)
-   ================================================================= */
-.content { display: grid; gap: 18px; }
-
-/* Talent Summary container matches your existing .talent-summary node */
-.talent-summary {
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px 10px;
-  box-shadow: var(--shadow-1);
-}
-.talent-summary .talent-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin: 6px 0;
+  justify-content: center;
+  gap: 10px;
 }
-.talent-link {
-  position: relative;
-  display: inline-flex;
-  flex-direction: column;
+
+#raid-menu {
+  margin: 8px 0 14px;
+}
+
+/* Shared button styles */
+#raid-menu button,
+#boss-buttons button {
+  background-color: #222;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+#raid-menu button {
+  padding: 8px 14px;
+  font-size: 16px;
+}
+
+#boss-buttons button {
+  display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+  padding: 12px 24px;
+  font-size: 18px;
+}
+
+#raid-menu button:hover,
+#boss-buttons button:hover {
+  background-color: #444;
+}
+
+/* Active state */
+#raid-menu button.active,
+#boss-buttons button.active {
+  outline: 2px solid var(--highlight);
+  box-shadow: 0 0 10px rgba(148, 130, 201, 0.3);
+}
+
+.boss-icon {
+  height: 40px;
+  width: 40px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+/* =================================================================
+   Rankings & Talent Display
+   ================================================================= */
+#rankings {
+  max-width: 760px;
+  margin: 30px auto 0;
+  text-align: left;
+}
+
+/* Player Rank Row */
+.rank-entry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: 12px 0;
+  width: 100%;
+}
+
+.rank-entry .name-wrapper {
+  color: var(--highlight);
+  font-weight: bold;
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rank-entry .player-link {
   text-decoration: none;
   color: inherit;
 }
+
+/* Talent Summary (Top Icons) */
+.talent-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.talent-summary .talent-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.talent-summary .talent-icon-img {
+  width: 56px;
+  height: 56px;
+}
+
+.talent-summary .talent-percent {
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* Per-Player Talents */
+.rank-entry .talent-row {
+  display: flex;
+  gap: 5px;
+}
+
+.rank-entry .talent-icon-img {
+  width: 28px;
+  height: 28px;
+}
+
+/* General Talent Styling */
+.talent-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
 .talent-icon-img {
-  width: 56px; height: 56px;
-  border-radius: 10px;
-  border: 1px solid var(--border-strong);
-  background: #0e0e0e;
-  transition: transform 120ms ease, filter 120ms ease, box-shadow 120ms ease;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, filter 120ms ease;
   will-change: transform, filter;
 }
-.talent-icon-img.sm { width: 28px; height: 28px; border-radius: 6px; }
-.talent-link:hover .talent-icon-img { transform: translateY(-2px); filter: brightness(1.08); }
-.talent-percent { font-size: 14px; font-weight: 700; color: #e5e5e5; }
 
-/* Optional percentage ring (requires you to render a <span class="talent-ring" style="--pct:0.83"></span>) */
-.talent-link .talent-ring {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
-  width: calc(56px + var(--ring-thickness)*2);
-  height: calc(56px + var(--ring-thickness)*2);
-  background:
-    radial-gradient(farthest-side, transparent calc(100% - var(--ring-thickness)), var(--ring-track) 0),
-    conic-gradient(var(--success) calc(var(--pct) * 1turn), transparent 0);
-  filter: drop-shadow(0 4px 14px rgba(46,204,113,.18));
+.talent-percent {
+  text-align: center;
+  will-change: transform;
+  transform: translateZ(0);
 }
+
+/* Hover & Highlight */
+.talent-link:hover .talent-icon-img {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
 .talent-summary .talent-link.is-top .talent-icon-img {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 0 0 2px var(--success), 0 8px 22px rgba(46, 204, 113, 0.25);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 0 0 2px var(--success), 0 8px 22px rgba(46, 204, 113, 0.35);
   border-color: var(--success);
 }
+
 .talent-summary .talent-link.is-top .talent-percent {
   color: var(--success);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   font-weight: 800;
 }
 
-/* Rankings list (uses your existing #rankings section) */
-#rankings {
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-1);
-  padding: 12px 10px 6px;
+/* =================================================================
+   Responsive Design
+   ================================================================= */
+@media (max-width: 768px) {
+  .rank-entry .name-wrapper {
+    width: 200px;
+  }
 }
 
-/* Each rank entry your JS generates can use these classes */
-.rank-entry.rank-card {
-  display: grid;
-  grid-template-columns: 44px 1fr 140px;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  margin: 8px 0;
-  background: #101010;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  transition: transform 120ms ease, border-color 120ms ease, background 200ms ease;
-}
-.rank-entry.rank-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--border-strong);
-  background: #131313;
-}
-.rank-number {
-  width: 36px; height: 36px; display: grid; place-items: center;
-  border-radius: 10px; font-weight: 800; background: #0f0f0f; border: 1px solid var(--border-strong);
-}
-.rank-1 .rank-number { background: linear-gradient(180deg, #3a2d00, #110); color: #ffd44d; border-color: #6f5a00; box-shadow: 0 0 0 2px rgba(241,196,15,.25); }
-.rank-2 .rank-number { background: linear-gradient(180deg, #2e2e2e, #111); color: var(--silver); border-color: #6b6b6b; }
-.rank-3 .rank-number { background: linear-gradient(180deg, #3a200e, #120); color: #ffbb80; border-color: #8a4f24; }
-
-.player-cell { min-width: 0; }
-.name-wrapper {
-  display: inline-block;
-  color: var(--accent);
-  font-weight: 800;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-decoration: none;
+@media (max-width: 600px) {
+  .rank-entry {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rank-entry .name-wrapper {
+    width: auto;
+    max-width: 90vw;
+  }
 }
 
-.dps-cell {
-  justify-self: end;
-  text-align: right;
-  display: grid;
-  gap: 2px;
-}
-.dps-value { font-weight: 900; font-size: 20px; letter-spacing: .3px; }
-.dps-label { font-size: 12px; color: var(--muted); }
-
-@media (max-width: 680px) {
-  .rank-entry.rank-card { grid-template-columns: 40px 1fr; }
-  .dps-cell { grid-column: 1 / -1; justify-self: start; text-align: left; }
-}
-
-/* Neutralize Wowhead injected styles */
-a.wowhead ins,
-a.wowhead del {
-  text-decoration: none !important;
-  border: 0 !important;
+@media (max-width: 480px) {
+  .talent-summary .talent-icon-img {
+    width: 48px;
+    height: 48px;
+  }
+  .talent-summary .talent-percent {
+    font-size: 14px;
+  }
 }
