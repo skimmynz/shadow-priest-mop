@@ -216,12 +216,12 @@ a.wowhead del {
   height: 56px;
 }
 
+/* Talent Summary (Top Icons) */
 .talent-summary .talent-percent {
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700; /* Changed from 600 to 700 for native bold */
   margin-top: 6px;
 }
-
 /* Per-Player Talents */
 .rank-entry .talent-row {
   display: flex;
@@ -268,10 +268,11 @@ a.wowhead del {
   border-color: var(--success);
 }
 
+/* Hover & Highlight */
 .talent-summary .talent-link.is-top .talent-percent {
   color: var(--success);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-  font-weight: 800;
+  font-weight: 900; /* Changed from 800 to 900 for native black/extra-bold */
 }
 
 .loader {
