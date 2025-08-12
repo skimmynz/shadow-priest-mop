@@ -410,7 +410,12 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 
   try {
     disableButtons(true);
-    rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">Loading ${name}…</div>`;
+    rankingsDiv.innerHTML = `
+      <div style="text-align:center;color:#bbb;margin-top:16px;">
+        <div class="loader"></div>
+        <p>Loading ${name}…</p>
+      </div>`;
+
 
     // Use fresh cache immediately
     const cached = readCache(encounterId);
