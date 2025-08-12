@@ -282,3 +282,55 @@ a.wowhead del {
     font-size: 14px;
   }
 }
+/* In your responsive media query */
+@media (max-width: 600px) {
+  #raid-menu {
+    /* Keep them in a row but allow scrolling */
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start; /* Align to the left */
+    padding-bottom: 10px; /* Add space for scrollbar */
+  }
+
+  #raid-menu button {
+    flex-shrink: 0; /* Prevent buttons from shrinking */
+  }
+}
+
+/* Add to your CSS */
+.rankings-container {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Example of a skeleton loader for a rank entry */
+.skeleton-entry {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 12px 0;
+  background-color: #222;
+  border-radius: 6px;
+  padding: 10px;
+  opacity: 0.5;
+}
+.skeleton-text {
+  height: 20px;
+  width: 200px;
+  background-color: #444;
+  border-radius: 4px;
+}
+.skeleton-icons {
+  display: flex;
+  gap: 5px;
+}
+.skeleton-icon {
+  width: 28px;
+  height: 28px;
+  background-color: #444;
+  border-radius: 6px;
+}
