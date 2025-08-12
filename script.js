@@ -287,33 +287,34 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const tier = TIER_BY_TALENT.get(displayName);
     if (tier && !chosenByTier.has(tier)) chosenByTier.set(tier, displayName);
   }
+
   const cells = TIER_ORDER.map((tier) => {
     const name = chosenByTier.get(tier) ?? null;
     const iconUrl = talentIconUrl(name);
     const spellId = name ? getSpellId(name) : 0;
     const href = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : null;
     const title = name ?? 'Unknown (no data)';
+    // meta awareness retained if you ever want to style these
     const metaInfo = topByTier?.get(tier);
     const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
-    const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
-    const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
-    const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-meta' : ''}`;
-    const fullTitle = `${title}${isMeta ? ` (Meta pick, used by ${metaPct}% of top players)` : ''}`;
+
+    const img = `<img class="talent-icon-img sm" loading="lazy" src="${iconUrl}" alt="${title}" />`;
+    const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-top' : ''}`;
 
     if (href) {
-      return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">
-${img}<div class="talent-percent" aria-hidden="true"></div></a>`;
+      return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${title}">${img}</a>`;
     }
-    return `<span class="${classes}" title="${fullTitle}">
-${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
+    return `<span class="${classes}" title="${title}">${img}</span>`;
   });
+
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
+
 
 function render(name, data) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
 
-  // Aggregate talent usage (summary)
+  // ---------- Aggregate talent usage (summary) ----------
   const tierCounts = {};
   const totalPerTier = {};
   for (const tier of TIER_ORDER) {
@@ -321,6 +322,7 @@ function render(name, data) {
     totalPerTier[tier] = 0;
     for (const talent of talentTiers[tier]) tierCounts[tier][talent] = 0;
   }
+
   for (const entry of rankings) {
     const seenTiers = new Set();
     const talents = Array.isArray(entry?.talents) ? entry.talents : [];
@@ -336,9 +338,10 @@ function render(name, data) {
     }
   }
 
-  // Summary UI + winners
+  // Build per-tier winners map for per-player highlights
   const TOP_BY_TIER = new Map(); // tier -> { winners:Set<string>, percent:number }
-  let talentSummary = `<div class="talent-summary">`;
+
+  let talentSummary = `<div class="talent-summary"><h2 class="section-title">Top Talent Picks</h2>`;
   for (const tier of TIER_ORDER) {
     const total = totalPerTier[tier] ?? 0;
     const rowStats = talentTiers[tier].map((talent) => {
@@ -352,6 +355,7 @@ function render(name, data) {
         : `https://www.wowhead.com/`;
       return { talent, percentNum, percent, iconUrl, wowheadUrl };
     });
+
     const maxPct = Math.max(...rowStats.map((s) => s.percentNum), 0);
     const EPS = 0.05;
     const winners = rowStats
@@ -359,41 +363,50 @@ function render(name, data) {
       .map((s) => s.talent);
     TOP_BY_TIER.set(tier, { winners: new Set(winners), percent: maxPct });
 
+    // summary row with % rings
     talentSummary += `<div class="talent-row">`;
     for (const stat of rowStats) {
       const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
-      const color = stat.percentNum >= 75 ? 'limegreen' : stat.percentNum <= 10 ? 'red' : 'orange';
+      // Note: --pct expects 0..1
+      const pct01 = (stat.percentNum / 100).toFixed(4);
       talentSummary += `
-<a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent} (${stat.percent}%)">
-  <img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" />
-  <div class="talent-percent" style="color:${color}">${stat.percent}%</div>
-</a>`;
+        <a class="talent-link wowhead ${isTop ? 'is-top' : ''}"
+           href="${stat.wowheadUrl}" target="_blank" rel="noopener"
+           title="${stat.talent} (${stat.percent}%)">
+          <span class="talent-ring" style="--pct:${pct01}"></span>
+          <img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" />
+          <div class="talent-percent">${stat.percent}%</div>
+        </a>`;
     }
     talentSummary += `</div>`;
   }
   talentSummary += `</div>`;
 
-  // Rankings list
-  const getColor = (rank) => {
-    if (rank === 1) return '#e5cc80';
-    if (rank >= 2 && rank <= 25) return '#e268a8';
-    return '#ff8000';
-  };
+  // ---------- Rankings list (card layout) ----------
+  const formatDps = (n) => (typeof n === 'number' ? Math.round(n).toLocaleString() : '—');
+
   const entries = rankings.slice(0, 100).map((r, i) => {
-    const color = getColor(i + 1);
+    const rank = i + 1;
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
-    const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
+    const dps = formatDps(r?.total);
     const playerName = r?.name ?? 'Unknown';
     const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
+    const topClass = rank <= 3 ? ` rank-${rank}` : '';
+
     return `
-<div class="rank-entry">
-  <div class="name-wrapper">
-    <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
-      ${i + 1}. ${playerName} – ${dps} DPS
-    </a>
-  </div>
-  ${perPlayerTalents}
-</div>`;
+      <article class="rank-entry rank-card${topClass}">
+        <div class="rank-number">${rank}</div>
+        <div class="player-cell">
+          <a class="player-link name-wrapper" href="${reportUrl}" target="_blank" rel="noopener">
+            ${playerName}
+          </a>
+          ${perPlayerTalents}
+        </div>
+        <div class="dps-cell">
+          <span class="dps-value">${dps}</span>
+          <span class="dps-label">DPS</span>
+        </div>
+      </article>`;
   }).join('');
 
   rankingsDiv.innerHTML = `${talentSummary}${entries}`;
@@ -402,6 +415,7 @@ function render(name, data) {
     window.$WowheadPower.refreshLinks();
   }
 }
+
 
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
   // Abort any in-flight request
