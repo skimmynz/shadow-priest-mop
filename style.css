@@ -16,7 +16,7 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Roboto', sans-serif; /* Changed from 'Segoe UI' */
   padding: 20px;
 }
 
