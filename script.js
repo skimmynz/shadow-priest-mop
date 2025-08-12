@@ -155,7 +155,21 @@ function createRaidMenu() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.raidKey = key;
-    btn.textContent = raid.short;
+
+    // Add .webp image for the raid
+    const img = document.createElement('img');
+    img.src = `/images/${key}.webp`; // e.g., /images/msv.webp
+    img.alt = raid.short;
+    img.className = 'raid-icon';
+    img.loading = 'lazy';
+
+    // Add text label
+    const span = document.createElement('span');
+    span.textContent = raid.short;
+
+    // Combine image and label
+    btn.append(img, span);
+
     btn.addEventListener('click', () => {
       if (currentRaidKey === key) return;
       currentRaidKey = key;
@@ -169,16 +183,18 @@ function createRaidMenu() {
         fetchAndDisplayRankings(bossName, encounterId);
       } else {
         rankingsDiv.innerHTML = `
-<div style="text-align:center;color:#bbb;margin-top:16px;">
-No bosses added for ${raid.name} yet.
-</div>`;
+          <div style="text-align:center;color:#bbb;margin-top:16px;">
+            No bosses added for ${raid.name} yet.
+          </div>`;
         updateLastUpdated(null);
       }
     });
+
     raidMenu.appendChild(btn);
   }
   selectActiveRaid(currentRaidKey);
 }
+
 function selectActiveRaid(raidKey) {
   raidMenu?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
   const active = raidMenu?.querySelector(`button[data-raid-key="${raidKey}"]`);
