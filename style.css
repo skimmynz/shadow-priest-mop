@@ -96,6 +96,15 @@ a.wowhead del {
   border: 1px solid var(--border-color);
 }
 
+#raid-menu {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-color);
+  padding: 10px 0;
+  z-index: 10;
+}
+
+
 /* =================================================================
    Rankings & Talent Display
    ================================================================= */
