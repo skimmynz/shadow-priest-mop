@@ -20,17 +20,10 @@ const RAIDS = {
 // Current raid selection (default to MSV)
 let currentRaidKey = 'msv';
 
-// --- FIX: State Management for Search ---
-// This will store the full list of rankings for the current boss.
-let allRankings = [];
-// This will store the name of the currently selected boss for rendering.
-let currentBossName = '';
-
 // DOM refs
 const raidMenu = document.getElementById('raid-menu');
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
-const searchInput = document.getElementById('search-input');
 const copyBtn = document.getElementById('copy-link-btn');
 
 // Ensure there is a centered "Last updated" element under the main H1.
@@ -42,9 +35,6 @@ let lastUpdatedEl = document.getElementById('last-updated');
       lastUpdatedEl = document.createElement('div');
       lastUpdatedEl.id = 'last-updated';
       lastUpdatedEl.className = 'last-updated';
-      lastUpdatedEl.style.textAlign = 'center';
-      lastUpdatedEl.style.color = '#bbb';
-      lastUpdatedEl.style.margin = '8px 0 16px';
       h1.insertAdjacentElement('afterend', lastUpdatedEl);
     }
   }
@@ -70,11 +60,7 @@ const talentIcons = {
 const talentSpellIds = {
   "Void Tendrils": 108920, "Psyfiend": 108921, "Dominate Mind": 605, "Body and Soul": 64129, "Angelic Feather": 121536, "Phantasm": 108942, "From Darkness, Comes Light": 109186, "Mindbender": 123040, "Solace and Insanity": 129250, "Desperate Prayer": 19236, "Spectral Guise": 112833, "Angelic Bulwark": 108945, "Twist of Fate": 109142, "Power Infusion": 10060, "Divine Insight": 109175, "Cascade": 121135, "Divine Star": 110744, "Halo": 120517,
 };
-
-// API → UI name normalization
-const talentNameMap = {
-  "Surge of Light": "From Darkness, Comes Light", "Mind Control": "Dominate Mind",
-};
+const talentNameMap = { "Surge of Light": "From Darkness, Comes Light", "Mind Control": "Dominate Mind" };
 
 // ======= Precomputed helpers =======
 const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
@@ -130,8 +116,6 @@ function createRaidMenu() {
       const entries = Object.entries(RAIDS[key].encounters);
       if (entries.length > 0) {
         const [bossName, encounterId] = entries[0];
-        selectActiveButton(encounterId);
-        updateHash(bossName, encounterId);
         fetchAndDisplayRankings(bossName, encounterId);
       } else {
         rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
@@ -166,8 +150,6 @@ function buildBossButtonsForRaid(raidKey) {
     span.textContent = name;
     button.append(img, span);
     button.addEventListener('click', () => {
-      selectActiveButton(id);
-      updateHash(name, id);
       fetchAndDisplayRankings(name, id);
     });
     bossButtonsDiv.appendChild(button);
@@ -247,22 +229,20 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
-// --- FIX: Separated the player list rendering from the main render function ---
-// This function just builds the HTML for the player rows.
-// This allows us to re-render only the list when searching, without re-calculating talent stats.
-function renderPlayerList(rankingsToDisplay, topByTier) {
+function render(data, TOP_BY_TIER) {
+  const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
+
   const getColor = (rank) => {
     if (rank === 1) return '#e5cc80';
     if (rank >= 2 && rank <= 25) return '#e268a8';
     return '#ff8000';
   };
-  
-  const entries = rankingsToDisplay.slice(0, 100).map((r, i) => {
+  const entries = rankings.slice(0, 100).map((r, i) => {
     const color = getColor(i + 1);
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
     const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
     const playerName = r?.name ?? 'Unknown';
-    const perPlayerTalents = buildPlayerTalentIcons(r?.talents, topByTier);
+    const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
     return `
       <div class="rank-entry">
         <div class="name-wrapper">
@@ -273,19 +253,12 @@ function renderPlayerList(rankingsToDisplay, topByTier) {
         ${perPlayerTalents}
       </div>`;
   }).join('');
-  
-  // Find the container for the player list and update it
-  const playerListContainer = rankingsDiv.querySelector('.player-list-container');
-  if (playerListContainer) {
-    playerListContainer.innerHTML = entries;
-  }
+
+  return entries;
 }
 
-
-function render(name, data) {
+function renderTalentSummary(data) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
-
-  // Aggregate talent usage (summary) - This part remains the same
   const tierCounts = {};
   const totalPerTier = {};
   for (const tier of TIER_ORDER) {
@@ -308,8 +281,7 @@ function render(name, data) {
     }
   }
 
-  // Summary UI + winners
-  const TOP_BY_TIER = new Map(); // tier -> { winners:Set<string>, percent:number }
+  const TOP_BY_TIER = new Map();
   let talentSummaryHTML = `<div class="talent-summary">`;
   for (const tier of TIER_ORDER) {
     const total = totalPerTier[tier] ?? 0;
@@ -330,76 +302,60 @@ function render(name, data) {
     for (const stat of rowStats) {
       const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
       const color = stat.percentNum >= 75 ? 'limegreen' : stat.percentNum <= 10 ? 'red' : 'orange';
-      talentSummaryHTML += `
-        <a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent} (${stat.percent}%)">
-          <img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" />
-          <div class="talent-percent" style="color:${color}">${stat.percent}%</div>
-        </a>`;
+      talentSummaryHTML += `<a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent} (${stat.percent}%)"><img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" /><div class="talent-percent" style="color:${color}">${stat.percent}%</div></a>`;
     }
     talentSummaryHTML += `</div>`;
   }
   talentSummaryHTML += `</div>`;
 
-  // --- FIX: The main render function now sets up the structure and calls the player list renderer ---
-  // We add a container for the player list so we can target it easily later.
-  rankingsDiv.innerHTML = `
-    <div class="rankings-container">
-      ${talentSummaryHTML}
-      <div class="player-list-container"></div>
-    </div>
-  `;
-  
-  // Initial render of the full player list
-  renderPlayerList(rankings, TOP_BY_TIER);
-
-  if (window.$WowheadPower && typeof window.$WowheadPower.refreshLinks === 'function') {
-    window.$WowheadPower.refreshLinks();
-  }
+  return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
 }
 
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
-  // Abort any in-flight request
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
   try {
     disableButtons(true);
-    // --- FIX: Clear search input when loading a new boss ---
-    searchInput.value = ''; 
-    currentBossName = name; // Store the current boss name
+    selectActiveButton(encounterId);
+    updateHash(name, encounterId);
     rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ${name}…</p></div>`;
 
     const cached = readCache(encounterId);
     const cachedAt = cached?.cachedAt || cached?.data?.cachedAt;
     if (cached && isFresh(cachedAt) && !force) {
       updateLastUpdated(cachedAt);
-      // --- FIX: Populate allRankings from cache ---
-      allRankings = cached.data.rankings || [];
-      render(name, cached.data);
-      return; 
+      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
+      const playerListHTML = render(cached.data, topByTier);
+      rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
+      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+      return;
     }
 
-    // Fetch latest from server
-    const res = await fetch(API_URL(encounterId), { signal: currentController.signal, headers: { 'accept': 'application/json' }, });
+    const res = await fetch(API_URL(encounterId), { signal: currentController.signal, headers: { 'accept': 'application/json' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const serverTs = data.cachedAt || new Date().toISOString();
     writeCache(encounterId, data, serverTs);
     updateLastUpdated(serverTs);
-    // --- FIX: Populate allRankings from fetch ---
-    allRankings = data.rankings || [];
-    render(name, data);
+
+    const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
+    const playerListHTML = render(data, topByTier);
+    rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
+    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+
   } catch (err) {
     if (err?.name === 'AbortError') return;
     console.error('Failed to fetch rankings:', err);
     const cached = readCache(encounterId);
     if (cached) {
-      const cachedAt = cached.cachedAt || cached.data?.cachedAt;
-      updateLastUpdated(cachedAt);
-      allRankings = cached.data.rankings || [];
-      render(name, cached.data);
+      updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
+      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
+      const playerListHTML = render(cached.data, topByTier);
+      rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
+      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
     } else {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">Couldn’t load data for ${name}. Please try again later.</div>`;
+      rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn’t load data for ${name}. Please try again later.</div>`;
       updateLastUpdated(null);
     }
   } finally {
@@ -410,26 +366,6 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 
 // ======= Boot =======
 document.addEventListener('DOMContentLoaded', () => {
-  // --- FIX: All event listeners are now safely inside DOMContentLoaded ---
-  
-  // Setup Search Input Listener
-  searchInput.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredRankings = allRankings.filter(r =>
-      r.name.toLowerCase().includes(searchTerm)
-    );
-    // Re-render just the player list with the filtered results
-    // We need to find TOP_BY_TIER again or pass it, but for simplicity, we'll re-render all
-    const rankingsContainer = rankingsDiv.querySelector('.rankings-container');
-    if (rankingsContainer) {
-       // A simplified re-render for search. We need to pass the TOP_BY_TIER map again.
-       // This is a bit complex, so we'll re-run the full render on the filtered data.
-       // This will unfortunately update the talent summary, but it's the simplest fix.
-       render(currentBossName, { rankings: filteredRankings });
-    }
-  });
-
-  // Setup Copy Link Listener
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       copyBtn.textContent = 'Copied!';
@@ -437,7 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Initial Page Load Logic
   createRaidMenu();
   buildBossButtonsForRaid(currentRaidKey);
 
@@ -448,7 +383,6 @@ document.addEventListener('DOMContentLoaded', () => {
       currentRaidKey = rk;
       selectActiveRaid(rk);
       buildBossButtonsForRaid(rk);
-      selectActiveButton(ph.id);
       const bossName = Object.entries(RAIDS[rk].encounters).find(([, id]) => id === ph.id)?.[0] ?? 'Encounter';
       fetchAndDisplayRankings(bossName, ph.id);
       return;
@@ -458,8 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const entries = Object.entries(RAIDS[currentRaidKey].encounters);
   if (entries.length) {
     const [bossName, encounterId] = entries[0];
-    selectActiveButton(encounterId);
-    updateHash(bossName, encounterId);
     fetchAndDisplayRankings(bossName, encounterId);
   } else {
     rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${RAIDS[currentRaidKey].name} yet.</div>`;
