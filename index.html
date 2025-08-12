@@ -13,15 +13,24 @@
   <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
 </head>
 <body>
-  <h1>Shadow Priest Top 100 – MoP Classic</h1>
-  <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-  Loading last updated…
+  <div class="main-container">
+    <aside class="sidebar">
+      <nav id="raid-menu" aria-label="Raid selection"></nav>
+      <div id="boss-buttons" role="group" aria-label="Bosses"></div>
+    </aside>
+
+    <main class="content-area">
+      <h1>Shadow Priest Top 100 – MoP Classic</h1>
+      <div class="header-controls">
+        <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+          Loading last updated…
+        </div>
+        <button id="copy-link-btn">Copy Link</button>
+      </div>
+      <section id="rankings">
+        </section>
+    </main>
   </div>
-  <nav id="raid-menu" aria-label="Raid selection"></nav>
-  <div id="boss-buttons" role="group" aria-label="Bosses"></div>
-  <section id="rankings">
-    <div class="talent-summary" aria-label="Popular talents by tier"></div>
-  </section>
 
   <script src="script.js" defer></script>
 </body>
