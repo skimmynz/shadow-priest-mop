@@ -7,36 +7,22 @@
 
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Google Fonts: Roboto -->
-  https://fonts.googleapis.com
-  https://fonts.gstatic.com
-  https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap
-
   <script>
     window.whTooltips = { colorLinks: true, iconizeLinks: false, renameLinks: false };
   </script>
-  https://wow.zamimg.com/widgets/power.js
+  <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
 </head>
 <body>
-  <div class="main-container">
-    <aside class="sidebar">
-      <nav id="raid-menu" aria-label="Raid selection"></nav>
-      <div id="boss-buttons" role="group" aria-label="Bosses"></div>
-    </aside>
-
-    <main class="content-area">
-      <h1>Shadow Priest Top 100 – MoP Classic</h1>
-      <div class="header-controls">
-        <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-          Loading last updated…
-        </div>
-        <button id="copy-link-btn">Copy Link</button>
-      </div>
-      <section id="rankings"></section>
-    </main>
+  <h1>Shadow Priest Top 100 – MoP Classic</h1>
+  <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+  Loading last updated…
   </div>
+  <nav id="raid-menu" aria-label="Raid selection"></nav>
+  <div id="boss-buttons" role="group" aria-label="Bosses"></div>
+  <section id="rankings">
+    <div class="talent-summary" aria-label="Popular talents by tier"></div>
+  </section>
 
-  <!-- Keep defer so DOM is parsed before the script executes -->
   <script src="script.js" defer></script>
 </body>
 </html>
