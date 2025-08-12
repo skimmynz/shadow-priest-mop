@@ -523,3 +523,14 @@ No bosses added for ${RAIDS[currentRaidKey].name} yet.
     updateLastUpdated(null);
   }
 });
+
+
+
+const copyBtn = document.getElementById('copy-link-btn');
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    // Give feedback to the user
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
+  });
+});
