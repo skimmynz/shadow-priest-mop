@@ -158,7 +158,7 @@ function createRaidMenu() {
 
     // Add .webp image for the raid
     const img = document.createElement('img');
-    img.src = `/images/${key}.webp`; // e.g., /images/msv.webp
+    img.src = `public/images/${key}.webp`; // e.g., /images/msv.webp
     img.alt = raid.short;
     img.className = 'raid-icon';
     img.loading = 'lazy';
