@@ -294,6 +294,22 @@ function disableButtons(disabled) {
   });
 }
 
+// In your render function or a new filtering function
+const searchInput = document.getElementById('search-input');
+let allRankings = []; // Store the full list here
+
+// When you fetch data, populate allRankings
+allRankings = data.rankings;
+
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const filteredRankings = allRankings.filter(r => 
+        r.name.toLowerCase().includes(searchTerm)
+    );
+    // Now, render the 'filteredRankings' instead of the full list.
+    // You'll need to adapt your render function to accept a list of players.
+});
+
 function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
   const chosenByTier = new Map();
   const talents = Array.isArray(playerTalentsRaw) ? playerTalentsRaw : [];
