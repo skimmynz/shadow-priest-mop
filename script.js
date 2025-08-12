@@ -118,7 +118,8 @@ function createRaidMenu() {
         const [bossName, encounterId] = entries[0];
         fetchAndDisplayRankings(bossName, encounterId);
       } else {
-        rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
+        // MODIFIED: Clear rankings and update text
+        rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses available for ${raid.name} yet.</div>`;
         updateLastUpdated(null);
       }
     });
@@ -135,8 +136,21 @@ function selectActiveRaid(raidKey) {
 
 function buildBossButtonsForRaid(raidKey) {
   if (!bossButtonsDiv) return;
-  bossButtonsDiv.innerHTML = '';
+  bossButtonsDiv.innerHTML = ''; // Clear previous buttons
   const encounters = RAIDS[raidKey].encounters;
+  
+  // NEW: Check if there are any encounters before trying to build buttons
+  if (Object.keys(encounters).length === 0) {
+    const placeholder = document.createElement('div');
+    placeholder.textContent = 'No bosses to show.';
+    placeholder.style.color = '#777';
+    placeholder.style.textAlign = 'center';
+    placeholder.style.padding = '20px';
+    placeholder.style.fontStyle = 'italic';
+    bossButtonsDiv.appendChild(placeholder);
+    return;
+  }
+
   for (const [name, id] of Object.entries(encounters)) {
     const button = document.createElement('button');
     button.dataset.encounterId = String(id);
@@ -392,9 +406,4 @@ document.addEventListener('DOMContentLoaded', () => {
   const entries = Object.entries(RAIDS[currentRaidKey].encounters);
   if (entries.length) {
     const [bossName, encounterId] = entries[0];
-    fetchAndDisplayRankings(bossName, encounterId);
-  } else {
-    rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${RAIDS[currentRaidKey].name} yet.</div>`;
-    updateLastUpdated(null);
-  }
-});
+    fetchAndD
