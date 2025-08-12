@@ -38,16 +38,24 @@ a.wowhead del {
   border: 0 !important;
 }
 
+
+/* Tidy the icon for vertical layout */
 .raid-icon {
   width: 100px;
   height: 100px;
-  margin-right: 8px;
-  vertical-align: middle;
+  display: block;       /* removes inline gap */
+  margin: 0;            /* no right margin in column layout */
+  object-fit: cover;    /* optional: keeps aspect nicely */
+  border-radius: 8px;   /* optional: matches your style */
 }
+
 #raid-menu button {
   display: flex;
+  flex-direction: column;  /* image on top, text below */
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  text-align: center;
 }
 
 
