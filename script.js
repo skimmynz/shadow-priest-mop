@@ -168,9 +168,9 @@ function createRaidMenu() {
         updateHash(bossName, encounterId);
         fetchAndDisplayRankings(bossName, encounterId);
       } else {
-        rankingsDiv.innerHTML = `\
-<div style="text-align:center;color:#bbb;margin-top:16px;">\
-No bosses added for ${raid.name} yet.\
+        rankingsDiv.innerHTML = `
+<div style="text-align:center;color:#bbb;margin-top:16px;">
+No bosses added for ${raid.name} yet.
 </div>`;
         updateLastUpdated(null);
       }
@@ -182,7 +182,7 @@ No bosses added for ${raid.name} yet.\
 function selectActiveRaid(raidKey) {
   raidMenu?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
   const active = raidMenu?.querySelector(`button[data-raid-key="${raidKey}"]`);
-  if (active) active.classList.add('active');
+  active?.classList.add('active');
 }
 function buildBossButtonsForRaid(raidKey) {
   if (!bossButtonsDiv) return;
@@ -209,16 +209,13 @@ function buildBossButtonsForRaid(raidKey) {
   }
 }
 function selectActiveButton(encounterId) {
-  const buttons = bossButtonsDiv?.querySelectorAll('button') ?? [];
-  buttons.forEach((b) => b.classList.remove('active'));
+  bossButtonsDiv?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
   const active = bossButtonsDiv?.querySelector(`button[data-encounter-id="${encounterId}"]`);
-  if (active) active.classList.add('active');
+  active?.classList.add('active');
 }
 function findRaidKeyByEncounterId(encounterId) {
   for (const [key, raid] of Object.entries(RAIDS)) {
-    for (const id of Object.values(raid.encounters)) {
-      if (id === encounterId) return key;
-    }
+    if (Object.values(raid.encounters).includes(encounterId)) return key;
   }
   return null;
 }
@@ -251,6 +248,7 @@ function isFresh(cachedAt) {
 }
 function formatAgo(dateish) {
   const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
+  if (isNaN(ms)) return 'unknown';
   if (ms < 60_000) return 'just now';
   const mins = Math.floor(ms / 60_000);
   if (mins < 60) return `${mins}m ago`;
@@ -261,7 +259,10 @@ function formatAgo(dateish) {
 }
 function updateLastUpdated(isoOrEpoch) {
   if (!lastUpdatedEl) return;
-  if (!isoOrEpoch) { lastUpdatedEl.textContent = ''; return; }
+  if (!isoOrEpoch) { 
+    lastUpdatedEl.textContent = ''; 
+    return; 
+  }
   const when = new Date(isoOrEpoch).toLocaleString();
   const ago = formatAgo(isoOrEpoch);
   lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
@@ -296,14 +297,14 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
     const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
     const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
-    const classes = `talent-link${href ? ' wowhead' : ''}`; // no per-player meta styling
-    const fullTitle = title; // no "Meta pick" text
+    const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-meta' : ''}`;
+    const fullTitle = `${title}${isMeta ? ` (Meta pick, used by ${metaPct}% of top players)` : ''}`;
 
     if (href) {
-      return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">\
+      return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">
 ${img}<div class="talent-percent" aria-hidden="true"></div></a>`;
     }
-    return `<span class="${classes}" title="${fullTitle}">\
+    return `<span class="${classes}" title="${fullTitle}">
 ${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
   });
   return `<div class="talent-row">${cells.join('')}</div>`;
@@ -363,7 +364,7 @@ function render(name, data) {
       const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
       const color = stat.percentNum >= 75 ? 'limegreen' : stat.percentNum <= 10 ? 'red' : 'orange';
       talentSummary += `
-<a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent}">
+<a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent} (${stat.percent}%)">
   <img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" />
   <div class="talent-percent" style="color:${color}">${stat.percent}%</div>
 </a>`;
@@ -413,10 +414,11 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 
     // Use fresh cache immediately
     const cached = readCache(encounterId);
-    const cachedAtServer = cached?.data?.cachedAt; // if your function adds this
+    const cachedAtServer = cached?.data?.cachedAt;
     const cachedAtLocal = cached?.cachedAt;
-    if (cached && isFresh(cachedAtLocal || cachedAtServer)) {
-      updateLastUpdated(cachedAtLocal || cachedAtServer);
+    const cachedAt = cachedAtLocal || cachedAtServer;
+    if (cached && isFresh(cachedAt)) {
+      updateLastUpdated(cachedAt);
       render(name, cached.data);
       if (!force) return; // skip network if not forced
     }
@@ -437,16 +439,18 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     console.error('Failed to fetch rankings:', err);
     const cached = readCache(encounterId);
     if (cached) {
-      updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
+      const cachedAt = cached.cachedAt || cached.data?.cachedAt;
+      updateLastUpdated(cachedAt);
       render(name, cached.data);
     } else {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">\
-Couldn’t load data for ${name}. Please try again later.\
+      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">
+Couldn’t load data for ${name}. Please try again later.
 </div>`;
       updateLastUpdated(null);
     }
   } finally {
     disableButtons(false);
+    currentController = null;
   }
 }
 
@@ -476,8 +480,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateHash(bossName, encounterId);
     fetchAndDisplayRankings(bossName, encounterId);
   } else {
-    rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">\
-No bosses added for ${RAIDS[currentRaidKey].name} yet.\
+    rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">
+No bosses added for ${RAIDS[currentRaidKey].name} yet.
 </div>`;
     updateLastUpdated(null);
   }
