@@ -21,15 +21,15 @@ body {
   text-align: center;
 }
 
+
 h1 {
-  margin-bottom: 30px;
+  margin-bottom: 0; 
 }
 
 .last-updated {
-  color: var(--secondary-text);
-  margin: 8px 0 16px;
-  font-size: 0.95rem;
+  margin: 0; 
 }
+
 
 /* Neutralize Wowhead's injected styles */
 a.wowhead ins,
