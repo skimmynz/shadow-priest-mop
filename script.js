@@ -1,4 +1,5 @@
 // Shadow Priest Rankings – MoP Classic
+
 // ======= Raids, Encounters & Talent Data =======
 const RAIDS = {
   msv: {
@@ -20,7 +21,7 @@ const RAIDS = {
 // Current raid selection (default to MSV)
 let currentRaidKey = 'msv';
 
-// DOM refs
+// DOM refs (safe to query early because <script> is loaded with `defer`)
 const raidMenu = document.getElementById('raid-menu');
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
@@ -54,13 +55,53 @@ const talentTiers = {
   75: ["Twist of Fate", "Power Infusion", "Divine Insight"],
   90: ["Cascade", "Divine Star", "Halo"],
 };
+
 const talentIcons = {
-  "Void Tendrils": "spell_priest_voidtendrils", "Psyfiend": "spell_priest_psyfiend", "Dominate Mind": "spell_shadow_shadowworddominate", "Body and Soul": "spell_holy_symbolofhope", "Angelic Feather": "ability_priest_angelicfeather", "Phantasm": "ability_priest_phantasm", "From Darkness, Comes Light": "spell_holy_surgeoflight", "Mindbender": "spell_shadow_soulleech_3", "Solace and Insanity": "ability_priest_flashoflight", "Desperate Prayer": "spell_holy_testoffaith", "Spectral Guise": "spell_priest_spectralguise", "Angelic Bulwark": "ability_priest_angelicbulwark", "Twist of Fate": "spell_shadow_mindtwisting", "Power Infusion": "spell_holy_powerinfusion", "Divine Insight": "spell_priest_burningwill", "Cascade": "ability_priest_cascade", "Divine Star": "spell_priest_divinestar", "Halo": "ability_priest_halo",
+  "Void Tendrils": "spell_priest_voidtendrils",
+  "Psyfiend": "spell_priest_psyfiend",
+  "Dominate Mind": "spell_shadow_shadowworddominate",
+  "Body and Soul": "spell_holy_symbolofhope",
+  "Angelic Feather": "ability_priest_angelicfeather",
+  "Phantasm": "ability_priest_phantasm",
+  "From Darkness, Comes Light": "spell_holy_surgeoflight",
+  "Mindbender": "spell_shadow_soulleech_3",
+  "Solace and Insanity": "ability_priest_flashoflight",
+  "Desperate Prayer": "spell_holy_testoffaith",
+  "Spectral Guise": "spell_priest_spectralguise",
+  "Angelic Bulwark": "ability_priest_angelicbulwark",
+  "Twist of Fate": "spell_shadow_mindtwisting",
+  "Power Infusion": "spell_holy_powerinfusion",
+  "Divine Insight": "spell_priest_burningwill",
+  "Cascade": "ability_priest_cascade",
+  "Divine Star": "spell_priest_divinestar",
+  "Halo": "ability_priest_halo",
 };
+
 const talentSpellIds = {
-  "Void Tendrils": 108920, "Psyfiend": 108921, "Dominate Mind": 605, "Body and Soul": 64129, "Angelic Feather": 121536, "Phantasm": 108942, "From Darkness, Comes Light": 109186, "Mindbender": 123040, "Solace and Insanity": 129250, "Desperate Prayer": 19236, "Spectral Guise": 112833, "Angelic Bulwark": 108945, "Twist of Fate": 109142, "Power Infusion": 10060, "Divine Insight": 109175, "Cascade": 121135, "Divine Star": 110744, "Halo": 120517,
+  "Void Tendrils": 108920,
+  "Psyfiend": 108921,
+  "Dominate Mind": 605,
+  "Body and Soul": 64129,
+  "Angelic Feather": 121536,
+  "Phantasm": 108942,
+  "From Darkness, Comes Light": 109186,
+  "Mindbender": 123040,
+  "Solace and Insanity": 129250,
+  "Desperate Prayer": 19236,
+  "Spectral Guise": 112833,
+  "Angelic Bulwark": 108945,
+  "Twist of Fate": 109142,
+  "Power Infusion": 10060,
+  "Divine Insight": 109175,
+  "Cascade": 121135,
+  "Divine Star": 110744,
+  "Halo": 120517,
 };
-const talentNameMap = { "Surge of Light": "From Darkness, Comes Light", "Mind Control": "Dominate Mind" };
+
+const talentNameMap = {
+  "Surge of Light": "From Darkness, Comes Light",
+  "Mind Control": "Dominate Mind"
+};
 
 // ======= Precomputed helpers =======
 const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
@@ -72,17 +113,29 @@ const TIER_BY_TALENT = (() => {
   }
   return m;
 })();
-const getSpellId = (name) => talentSpellIds[name] ?? 0;
+const getSpellId = (name) => (name ? (talentSpellIds[name] ?? 0) : 0);
 const getTalentDisplayName = (apiName) => talentNameMap[apiName] ?? apiName;
 const talentIconUrl = (name) => {
-  const iconKey = talentIcons[name] ?? "inv_misc_questionmark";
+  const iconKey = (name && talentIcons[name]) ? talentIcons[name] : "inv_misc_questionmark";
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
 // ======= Slug & Hash helpers (fixed regexes) =======
-function slugify(str) { return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-'); }
-function hashFor(name, encounterId) { return `#${slugify(name)}-${encounterId}`; }
-function updateHash(name, encounterId) { try { history.replaceState(null, '', hashFor(name, encounterId)); } catch {} }
+function slugify(str) {
+  return String(str)
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/--+/g, '-');
+}
+function hashFor(name, encounterId) {
+  return `#${slugify(name)}-${encounterId}`;
+}
+function updateHash(name, encounterId) {
+  try { history.replaceState(null, '', hashFor(name, encounterId)); } catch { /* noop */ }
+}
 function parseHash() {
   const h = location.hash ?? '';
   const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
@@ -100,29 +153,34 @@ function createRaidMenu() {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.raidKey = key;
+
     const img = document.createElement('img');
     img.src = `public/images/${key}.webp`;
     img.alt = raid.short;
     img.className = 'raid-icon';
     img.loading = 'lazy';
+
     const span = document.createElement('span');
     span.textContent = raid.short;
+
     btn.append(img, span);
+
     btn.addEventListener('click', () => {
       if (currentRaidKey === key) return;
       currentRaidKey = key;
       selectActiveRaid(key);
       buildBossButtonsForRaid(key);
+
       const entries = Object.entries(RAIDS[key].encounters);
       if (entries.length > 0) {
         const [bossName, encounterId] = entries[0];
         fetchAndDisplayRankings(bossName, encounterId);
       } else {
-        // MODIFIED: Clear rankings and update text
         rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses available for ${raid.name} yet.</div>`;
         updateLastUpdated(null);
       }
     });
+
     raidMenu.appendChild(btn);
   }
   selectActiveRaid(currentRaidKey);
@@ -137,9 +195,9 @@ function selectActiveRaid(raidKey) {
 function buildBossButtonsForRaid(raidKey) {
   if (!bossButtonsDiv) return;
   bossButtonsDiv.innerHTML = ''; // Clear previous buttons
+
   const encounters = RAIDS[raidKey].encounters;
-  
-  // NEW: Check if there are any encounters before trying to build buttons
+
   if (Object.keys(encounters).length === 0) {
     const placeholder = document.createElement('div');
     placeholder.textContent = 'No bosses to show.';
@@ -155,17 +213,22 @@ function buildBossButtonsForRaid(raidKey) {
     const button = document.createElement('button');
     button.dataset.encounterId = String(id);
     button.dataset.bossName = name;
+
     const img = document.createElement('img');
     img.src = `https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2`;
     img.alt = name;
     img.className = 'boss-icon';
     img.loading = 'lazy';
+
     const span = document.createElement('span');
     span.textContent = name;
+
     button.append(img, span);
+
     button.addEventListener('click', () => {
       fetchAndDisplayRankings(name, id);
     });
+
     bossButtonsDiv.appendChild(button);
   }
 }
@@ -184,9 +247,28 @@ function findRaidKeyByEncounterId(encounterId) {
 }
 
 // ======= Cache helpers =======
-function readCache(encounterId) { try { const raw = localStorage.getItem(CACHE_KEY(encounterId)); if (!raw) return null; return JSON.parse(raw); } catch { return null; } }
-function writeCache(encounterId, data, cachedAt = new Date().toISOString()) { try { localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt })); } catch {} }
-function isFresh(cachedAt) { try { const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt); return Date.now() - ts < CACHE_TTL_MS; } catch { return false; } }
+function readCache(encounterId) {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY(encounterId));
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+function writeCache(encounterId, data, cachedAt = new Date().toISOString()) {
+  try {
+    localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt }));
+  } catch {}
+}
+function isFresh(cachedAt) {
+  try {
+    const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt);
+    return Date.now() - ts < CACHE_TTL_MS;
+  } catch {
+    return false;
+  }
+}
 function formatAgo(dateish) {
   const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
   if (isNaN(ms)) return 'unknown';
@@ -208,6 +290,7 @@ function updateLastUpdated(isoOrEpoch) {
 
 // ======= Fetch + Render =======
 let currentController = null;
+
 function disableButtons(disabled) {
   bossButtonsDiv?.querySelectorAll('button').forEach((btn) => {
     btn.disabled = disabled;
@@ -219,12 +302,14 @@ function disableButtons(disabled) {
 function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
   const chosenByTier = new Map();
   const talents = Array.isArray(playerTalentsRaw) ? playerTalentsRaw : [];
+
   for (const t of talents) {
     const displayName = getTalentDisplayName(t.name);
     if (!VALID_TALENT_SET.has(displayName)) continue;
     const tier = TIER_BY_TALENT.get(displayName);
     if (tier && !chosenByTier.has(tier)) chosenByTier.set(tier, displayName);
   }
+
   const cells = TIER_ORDER.map((tier) => {
     const name = chosenByTier.get(tier) ?? null;
     const iconUrl = talentIconUrl(name);
@@ -235,11 +320,14 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
     const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
     const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
-    const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-meta' : ''}`;
+    const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-top' : ''}`;
     const fullTitle = `${title}${isMeta ? ` (Meta pick, used by ${metaPct}% of top players)` : ''}`;
-    if (href) { return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">${img}<div class="talent-percent" aria-hidden="true"></div></a>`; }
+    if (href) {
+      return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">${img}<div class="talent-percent" aria-hidden="true"></div></a>`;
+    }
     return `<span class="${classes}" title="${fullTitle}">${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
   });
+
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
@@ -251,6 +339,7 @@ function render(data, TOP_BY_TIER) {
     if (rank >= 2 && rank <= 25) return '#e268a8';
     return '#ff8000';
   };
+
   const entries = rankings.slice(0, 100).map((r, i) => {
     const color = getColor(i + 1);
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
@@ -267,12 +356,12 @@ function render(data, TOP_BY_TIER) {
         ${perPlayerTalents}
       </div>`;
   }).join('');
-
   return entries;
 }
 
 function renderTalentSummary(data) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
+
   const tierCounts = {};
   const totalPerTier = {};
   for (const tier of TIER_ORDER) {
@@ -280,6 +369,7 @@ function renderTalentSummary(data) {
     totalPerTier[tier] = 0;
     for (const talent of talentTiers[tier]) tierCounts[tier][talent] = 0;
   }
+
   for (const entry of rankings) {
     const seenTiers = new Set();
     const talents = Array.isArray(entry?.talents) ? entry.talents : [];
@@ -297,6 +387,7 @@ function renderTalentSummary(data) {
 
   const TOP_BY_TIER = new Map();
   let talentSummaryHTML = `<div class="talent-summary">`;
+
   for (const tier of TIER_ORDER) {
     const total = totalPerTier[tier] ?? 0;
     const rowStats = talentTiers[tier].map((talent) => {
@@ -308,10 +399,15 @@ function renderTalentSummary(data) {
       const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
       return { talent, percentNum, percent, iconUrl, wowheadUrl };
     });
+
     const maxPct = Math.max(...rowStats.map((s) => s.percentNum), 0);
     const EPS = 0.05;
-    const winners = rowStats.filter((s) => s.percentNum >= maxPct - EPS && maxPct > 0).map((s) => s.talent);
+    const winners = rowStats
+      .filter((s) => s.percentNum >= maxPct - EPS && maxPct > 0)
+      .map((s) => s.talent);
+
     TOP_BY_TIER.set(tier, { winners: new Set(winners), percent: maxPct });
+
     talentSummaryHTML += `<div class="talent-row">`;
     for (const stat of rowStats) {
       const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
@@ -320,8 +416,8 @@ function renderTalentSummary(data) {
     }
     talentSummaryHTML += `</div>`;
   }
-  talentSummaryHTML += `</div>`;
 
+  talentSummaryHTML += `</div>`;
   return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
 }
 
@@ -333,10 +429,12 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     disableButtons(true);
     selectActiveButton(encounterId);
     updateHash(name, encounterId);
+
     rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ${name}…</p></div>`;
 
     const cached = readCache(encounterId);
-    const cachedAt = cached?.cachedAt || cached?.data?.cachedAt;
+    const cachedAt = cached?.cachedAt ?? cached?.data?.cachedAt;
+
     if (cached && isFresh(cachedAt) && !force) {
       updateLastUpdated(cachedAt);
       const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
@@ -346,10 +444,15 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
       return;
     }
 
-    const res = await fetch(API_URL(encounterId), { signal: currentController.signal, headers: { 'accept': 'application/json' } });
+    const res = await fetch(API_URL(encounterId), {
+      signal: currentController.signal,
+      headers: { 'accept': 'application/json' }
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
     const data = await res.json();
-    const serverTs = data.cachedAt || new Date().toISOString();
+    const serverTs = data.cachedAt ?? new Date().toISOString();
+
     writeCache(encounterId, data, serverTs);
     updateLastUpdated(serverTs);
 
@@ -361,9 +464,10 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
   } catch (err) {
     if (err?.name === 'AbortError') return;
     console.error('Failed to fetch rankings:', err);
+
     const cached = readCache(encounterId);
     if (cached) {
-      updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
+      updateLastUpdated(cached?.cachedAt ?? cached?.data?.cachedAt);
       const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
       const playerListHTML = render(cached.data, topByTier);
       rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
@@ -380,16 +484,21 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 
 // ======= Boot =======
 document.addEventListener('DOMContentLoaded', () => {
-  copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      copyBtn.textContent = 'Copied!';
-      setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
+  // Copy link button
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
+      });
     });
-  });
+  }
 
+  // Build UI
   createRaidMenu();
   buildBossButtonsForRaid(currentRaidKey);
 
+  // Deep link via hash
   const ph = parseHash();
   if (ph && ph.id) {
     const rk = findRaidKeyByEncounterId(ph.id);
@@ -397,13 +506,21 @@ document.addEventListener('DOMContentLoaded', () => {
       currentRaidKey = rk;
       selectActiveRaid(rk);
       buildBossButtonsForRaid(rk);
-      const bossName = Object.entries(RAIDS[rk].encounters).find(([, id]) => id === ph.id)?.[0] ?? 'Encounter';
+      const bossName = Object
+        .entries(RAIDS[rk].encounters)
+        .find(([, id]) => id === ph.id)?.[0] ?? 'Encounter';
       fetchAndDisplayRankings(bossName, ph.id);
       return;
     }
   }
 
+  // Default load
   const entries = Object.entries(RAIDS[currentRaidKey].encounters);
   if (entries.length) {
     const [bossName, encounterId] = entries[0];
-    fetchAndD
+    fetchAndDisplayRankings(bossName, encounterId);
+  } else {
+    rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses available for this raid yet.</div>';
+    updateLastUpdated(null);
+  }
+});
