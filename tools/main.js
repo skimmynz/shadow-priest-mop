@@ -1,6 +1,5 @@
-// Data sources (static copies served by your site)
-const DB_URL = '/data/db.json';
-const REFORGE_URL = '/data/wowhead_reforge_stats.json';
+const DB_URL = '/.netlify/functions/get-db?file=db';
+const REFORGE_URL = '/.netlify/functions/get-db?file=reforges';
 
 // Level 90 MoP: 425 haste rating = 1% (0.01)
 const RATING_PER_1PCT_HASTE = 425; // Warcraft Tavern MoP stat guide confirms 425/1% @90 [2](https://www.warcrafttavern.com/mop/guides/pve-shadow-priest-stat-priority-reforging/)
@@ -115,3 +114,4 @@ document.getElementById('checkBtn').addEventListener('click', async () => {
     <div class="${meets30 ? 'ok':'warn'}">${meets30 ? '✔':'✘'} 30.01% (7‑tick VT)</div>
   `;
 });
+
