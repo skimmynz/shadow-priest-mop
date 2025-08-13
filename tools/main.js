@@ -1,6 +1,5 @@
-// --- Remote DBs (proxied through Netlify to avoid CORS and to pin versions) ---
-const DB_URL       = '/.netlify/functions/get-db?file=db';
-const REFORGE_URL  = '/.netlify/functions/get-db?file=reforges';
+const DB_URL      = '/.netlify/functions/get-db';
+const REFORGE_URL = '/.netlify/functions/get-reforges'
 
 // MoP L90 conversion: 425 haste rating = 1% haste (0.01 fraction). Guides for MoP Classic confirm. 
 // Haste sources (rating, raid/spec auras, racials) multiply, not add. 
@@ -152,3 +151,4 @@ document.getElementById('checkBtn').addEventListener('click', async () => {
     <div style="margin-top:.5rem">${toNextText}</div>
   `;
 });
+
