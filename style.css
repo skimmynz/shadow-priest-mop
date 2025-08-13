@@ -93,6 +93,7 @@ a.wowhead del {
 }
 
 #raid-menu button {
+  /* Keep all your existing styles */
   background-color: #222;
   color: var(--text-color);
   border: 1px solid var(--border-color);
@@ -101,10 +102,17 @@ a.wowhead del {
   transition: background-color 120ms ease;
   padding: 6px;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* This needs to change to get the text over the image */
   align-items: center;
   gap: 4px;
   font-size: 12px;
+
+  /* ADD THESE NEW STYLES */
+  position: relative; /* This is the key */
+  padding: 0; /* Remove padding to make the image fill the button */
+  overflow: hidden; /* Ensures nothing spills out */
+  flex-direction: row; /* Change this back to row */
+  justify-content: center; /* Center the content */
 }
 
 #raid-menu .raid-icon {
@@ -134,6 +142,16 @@ a.wowhead del {
   align-items: center;
   gap: 12px;
   text-align: left;
+}
+
+#raid-menu button span {
+  position: absolute;
+  top: 50%; /* Position the text vertically in the center */
+  left: 50%; /* Position the text horizontally in the center */
+  transform: translate(-50%, -50%); /* This centers it perfectly */
+  color: white; /* Make sure the text is visible */
+  z-index: 1; /* Make sure the text appears on top of the image */
+  font-weight: bold; /* Optional: make the text stand out */
 }
 
 .boss-icon {
