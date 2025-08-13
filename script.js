@@ -222,9 +222,8 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
     const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
     const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-meta' : ''}`;
-    const fullTitle = `${title}${isMeta ? ` (Meta pick, used by ${metaPct}% of top players)` : ''}`;
-    if (href) { return `<a class="${classes}" href="${href}" target="_blank" rel="noopener" title="${fullTitle}">${img}<div class="talent-percent" aria-hidden="true"></div></a>`; }
-    return `<span class="${classes}" title="${fullTitle}">${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
+    if (href) { return `<a class="${classes}" href="${href}" target="_blank" rel="noopener">${img}<div class="talent-percent" aria-hidden="true"></div></a>`; }
+    return `<span class="${classes}">${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
   });
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
