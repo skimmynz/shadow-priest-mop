@@ -302,7 +302,7 @@ function renderTalentSummary(data) {
     for (const stat of rowStats) {
       const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
       const color = stat.percentNum >= 75 ? 'limegreen' : stat.percentNum <= 10 ? 'red' : 'orange';
-      talentSummaryHTML += `<a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener" title="${stat.talent} (${stat.percent}%)"><img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" /><div class="talent-percent" style="color:${color}">${stat.percent}%</div></a>`;
+      talentSummaryHTML += `<a class="talent-link wowhead ${isTop ? 'is-top' : ''}" href="${stat.wowheadUrl}" target="_blank" rel="noopener"><img class="talent-icon-img" loading="lazy" src="${stat.iconUrl}" alt="${stat.talent}" /><div class="talent-percent" style="color:${color}">${stat.percent}%</div></a>`;
     }
     talentSummaryHTML += `</div>`;
   }
