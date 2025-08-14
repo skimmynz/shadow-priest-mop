@@ -48,6 +48,7 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   align-items: flex-start;
+  min-height: 100vh; /* Ensure consistent container height */
 }
 
 .sidebar {
@@ -59,6 +60,7 @@ body {
   border: 1px solid var(--border-primary);
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px var(--shadow-card);
+  width: 280px; /* Fixed width to prevent flex changes */
 }
 
 .content-area {
@@ -68,6 +70,8 @@ body {
   border: 1px solid var(--border-primary);
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px var(--shadow-card);
+  width: 100%; /* Ensure it takes full available space */
+  min-width: 0; /* Prevent flex overflow */
 }
 
 h1 {
@@ -298,7 +302,7 @@ a.wowhead del {
   ================================================================= */
 #rankings {
   margin-top: 24px;
-  min-height: 600px; /* Prevents layout shift when content is minimal */
+  min-height: 800px; /* Increased to better match full content height */
 }
 
 /* Talent Summary (Top Icons) */
