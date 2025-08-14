@@ -252,12 +252,54 @@
       margin-left: auto;
     }
 
-    .progress-bar {
-      height: 100%;
-      background: var(--gradient);
-      width: 0%;
-      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 3px;
+    .race-selection {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .race-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.75rem 1.25rem;
+      background: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .race-label:hover {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: var(--accent-color);
+    }
+
+    .race-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-color);
+    }
+
+    .race-text {
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .race-label:hover .race-text {
+      color: var(--text-primary);
+    }
+
+    .gcd-warning {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #1f2937;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
     }
 
     .footer {
@@ -314,14 +356,22 @@
             id="hasteRating" 
             class="haste-input"
             min="0" 
+            max="20000"
             placeholder="Enter your haste rating" 
           />
+        </div>
+        <div class="race-selection">
+          <label class="race-label">
+            <input type="checkbox" id="goblinRacial" class="race-checkbox">
+            <span class="race-text">Goblin (Time is Money: +1% haste)</span>
+          </label>
         </div>
       </div>
 
       <div class="result-display">
         <div class="result-label">Effective Haste</div>
         <div class="result-value" id="hasteResult">0.00%</div>
+        <div id="gcdWarning"></div>
       </div>
 
       <div class="spells-table">
@@ -394,7 +444,12 @@
         spellsHTML += `
           <div class="spell-row">
             <div class="spell-info">
-              <img src="${data.icon}" alt="${spell}" class="spell-icon">
+              <a href="https://www.wowhead.com/spell=${data.id}" 
+                 target="_blank" 
+                 class="spell-name"
+                 data-wowhead="spell=${data.id}">
+                <img src="${data.icon}" alt="${spell}" class="spell-icon">
+              </a>
               <a href="https://www.wowhead.com/spell=${data.id}" 
                  target="_blank" 
                  class="spell-name"
@@ -427,15 +482,19 @@
     }
 
     // Calculate the rating needed to reach a given haste percent (before buffs)
-    function calculateRating(targetPercent) {
-      const buff = 0.05;
+    function calculateRating(targetPercent, isGoblin = false) {
+      const shadowformBuff = 0.05;
+      const goblinBuff = isGoblin ? 0.01 : 0;
+      const totalBuffs = shadowformBuff + goblinBuff;
+      
       const targetHasteWithBuffs = 1 + targetPercent / 100;
-      const targetHasteWithoutBuffs = targetHasteWithBuffs / (1 + buff);
+      const targetHasteWithoutBuffs = targetHasteWithBuffs / (1 + totalBuffs);
       return Math.round((targetHasteWithoutBuffs - 1) * 42500);
     }
 
     // Event listeners
     document.getElementById('hasteRating').addEventListener('input', calculateHaste);
+    document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
     document.getElementById('hasteRating').addEventListener('focus', function() {
       this.select();
     });
