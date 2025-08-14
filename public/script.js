@@ -99,7 +99,6 @@ function formatServerInfo(serverName, regionName) {
   return regionName ? `${serverName} (${regionName})` : serverName;
 }
 
-// Replace the entire 'buildGearDisplay' function in script.js with this corrected version.
 function buildGearDisplay(gear) {
   if (!Array.isArray(gear) || gear.length === 0) {
     return '<div class="no-gear">No gear data available</div>';
@@ -174,6 +173,7 @@ function buildGearDisplay(gear) {
     `;
   }).filter(Boolean).join('');
 }
+
 // Add toggle function for dropdowns
 function toggleDropdown(entryId) {
   const dropdown = document.getElementById(entryId);
@@ -347,8 +347,6 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
-// Enhanced render function with expandable dropdowns
-// Replace the entire 'render' function in script.js
 function render(data, TOP_BY_TIER) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
 
@@ -373,97 +371,6 @@ function render(data, TOP_BY_TIER) {
     const guildName = r.guildName || 'No Guild';
     const raidSize = r.size || 'N/A';
     
-    const entryId = `entry-${i}-${r.reportID}-${r.fightID}`;
-    
-    return `
-      <div class="rank-entry">
-        <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
-          <div class="name-wrapper">
-            <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
-              ${i + 1}. ${playerName} – ${dps.toLocaleString()} DPS
-            </a>
-          </div>
-          <div class="header-right">
-            ${perPlayerTalents}
-            <span class="expand-icon">▼</span>
-          </div>
-        </div>
-        
-        <div class="dropdown-content" id="${entryId}">
-          <div class="info-grid">
-            <div class="info-section">
-              <h4>Fight Details</h4>
-              <div class="info-row">
-                <span class="info-label">Duration:</span>
-                <span class="info-value">${duration}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Fight ID:</span>
-                <span class="info-value">${r.fightID || 'N/A'}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Report:</span>
-                <span class="info-value">
-                  <a href="${reportUrl}" target="_blank" rel="noopener">${r.reportID || 'N/A'}</a>
-                </span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Raid Size:</span>
-                <span class="info-value">${raidSize}</span>
-              </div>
-            </div>
-            
-            <div class="info-section">
-              <h4>Player Info</h4>
-              <div class="info-row">
-                <span class="info-label">Server:</span>
-                <span class="info-value">${serverInfo}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Guild:</span>
-                <span class="info-value">${guildName}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Faction:</span>
-                <span class="info-value">${faction}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Item Level:</span>
-                <span class="info-value">${itemLevel}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="info-section">
-            <h4>Gear & Equipment</h4>
-            <div class="gear-grid">
-              ${buildGearDisplay(r.gear)}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  return entries;
-}
-
-  const entries = rankings.slice(0, 100).map((r, i) => {
-    const color = getColor(i + 1);
-    const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
-    const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
-    const playerName = r?.name ?? 'Unknown';
-    const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
-    
-    // Format additional data
-    const duration = formatDuration(r.duration);
-    const itemLevel = r.itemLevel || 'N/A';
-    const serverInfo = formatServerInfo(r.serverName, r.regionName);
-    const faction = formatFaction(r.faction);
-    const guildName = r.guildName || 'No Guild';
-    const raidSize = r.size || 'N/A';
-    
-    // Generate unique ID for this entry
     const entryId = `entry-${i}-${r.reportID}-${r.fightID}`;
     
     return `
@@ -593,7 +500,6 @@ function renderTalentSummary(data) {
   return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
 }
 
-// Replace the entire 'fetchAndDisplayRankings' function in script.js
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
   if (currentController) currentController.abort();
   currentController = new AbortController();
@@ -658,55 +564,6 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     if (cached) {
       updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
       renderContentAndAttachListeners(cached.data);
-    } else {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
-      updateLastUpdated(null);
-    }
-  } finally {
-    disableButtons(false);
-    currentController = null;
-  }
-}
-
-  try {
-    disableButtons(true);
-    selectActiveButton(encounterId);
-    updateHash(name, encounterId);
-    rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ${name}…</p></div>`;
-
-    const cached = readCache(encounterId);
-    const cachedAt = cached?.cachedAt || cached?.data?.cachedAt;
-    if (cached && isFresh(cachedAt) && !force) {
-      updateLastUpdated(cachedAt);
-      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
-      const playerListHTML = render(cached.data, topByTier);
-      rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
-      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
-      return;
-    }
-
-    const res = await fetch(API_URL(encounterId), { signal: currentController.signal, headers: { 'accept': 'application/json' } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const serverTs = data.cachedAt || new Date().toISOString();
-    writeCache(encounterId, data, serverTs);
-    updateLastUpdated(serverTs);
-
-    const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
-    const playerListHTML = render(data, topByTier);
-    rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
-    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
-
-  } catch (err) {
-    if (err?.name === 'AbortError') return;
-    console.error('Failed to fetch rankings:', err);
-    const cached = readCache(encounterId);
-    if (cached) {
-      updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
-      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
-      const playerListHTML = render(cached.data, topByTier);
-      rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
-      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
     } else {
       rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
       updateLastUpdated(null);
