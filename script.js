@@ -236,24 +236,184 @@ function render(data, TOP_BY_TIER) {
     if (rank >= 2 && rank <= 25) return '#e268a8';
     return '#ff8000';
   };
+
   const entries = rankings.slice(0, 100).map((r, i) => {
     const color = getColor(i + 1);
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
     const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
     const playerName = r?.name ?? 'Unknown';
     const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
+    
+    // Format additional data
+    const duration = formatDuration(r.duration);
+    const itemLevel = r.itemLevel || 'N/A';
+    const serverInfo = formatServerInfo(r.serverName, r.regionName);
+    const faction = formatFaction(r.faction);
+    const guildName = r.guildName || 'No Guild';
+    const raidSize = r.size || 'N/A';
+    
+    // Generate unique ID for this entry
+    const entryId = `entry-${i}-${r.reportID}-${r.fightID}`;
+    
     return `
       <div class="rank-entry">
-        <div class="name-wrapper">
-          <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
-            ${i + 1}. ${playerName} – ${dps} DPS
-          </a>
+        <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
+          <div class="name-wrapper">
+            <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
+              ${i + 1}. ${playerName} – ${dps.toLocaleString()} DPS • iLvl: ${itemLevel} • ${duration}
+            </a>
+          </div>
+          <div class="header-right">
+            ${perPlayerTalents}
+            <span class="expand-icon">▼</span>
+          </div>
         </div>
-        ${perPlayerTalents}
-      </div>`;
+        
+        <div class="dropdown-content" id="${entryId}">
+          <div class="info-grid">
+            <div class="info-section">
+              <h4>Fight Details</h4>
+              <div class="info-row">
+                <span class="info-label">Duration:</span>
+                <span class="info-value">${duration}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Fight ID:</span>
+                <span class="info-value">${r.fightID || 'N/A'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Report:</span>
+                <span class="info-value">
+                  <a href="${reportUrl}" target="_blank" rel="noopener">${r.reportID || 'N/A'}</a>
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Raid Size:</span>
+                <span class="info-value">${raidSize}</span>
+              </div>
+            </div>
+            
+            <div class="info-section">
+              <h4>Player Info</h4>
+              <div class="info-row">
+                <span class="info-label">Server:</span>
+                <span class="info-value">${serverInfo}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Guild:</span>
+                <span class="info-value">${guildName}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Faction:</span>
+                <span class="info-value">${faction}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Item Level:</span>
+                <span class="info-value">${itemLevel}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h4>Gear & Equipment</h4>
+            <div class="gear-grid">
+              ${buildGearDisplay(r.gear)}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }).join('');
 
   return entries;
+}
+
+// Add toggle function for dropdowns
+function toggleDropdown(entryId) {
+  const dropdown = document.getElementById(entryId);
+  const header = dropdown?.previousElementSibling;
+  const expandIcon = header?.querySelector('.expand-icon');
+  
+  if (dropdown && expandIcon) {
+    const isActive = dropdown.classList.contains('active');
+    
+    // Close all other dropdowns
+    document.querySelectorAll('.dropdown-content.active').forEach(el => {
+      if (el.id !== entryId) {
+        el.classList.remove('active');
+        const otherIcon = el.previousElementSibling?.querySelector('.expand-icon');
+        if (otherIcon) otherIcon.classList.remove('rotated');
+      }
+    });
+    
+    // Toggle current dropdown
+    dropdown.classList.toggle('active', !isActive);
+    expandIcon.classList.toggle('rotated', !isActive);
+  }
+}
+
+// Format duration from milliseconds to readable format
+function formatDuration(ms) {
+  if (!ms || ms === 0) return 'N/A';
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
+  return `${minutes}m ${seconds}s`;
+}
+
+// Format faction
+function formatFaction(faction) {
+  return faction === 1 ? 'Alliance' : faction === 0 ? 'Horde' : 'Unknown';
+}
+
+// Format server info
+function formatServerInfo(serverName, regionName) {
+  if (!serverName) return 'Unknown Server';
+  return regionName ? `${serverName} (${regionName})` : serverName;
+}
+
+// Build gear display
+function buildGearDisplay(gear) {
+  if (!Array.isArray(gear)) return '<div class="no-gear">No gear data available</div>';
+  
+  const gearSlots = {
+    0: 'Head', 1: 'Neck', 2: 'Shoulder', 3: 'Shirt', 4: 'Chest',
+    5: 'Belt', 6: 'Legs', 7: 'Feet', 8: 'Wrist', 9: 'Hands',
+    10: 'Ring 1', 11: 'Ring 2', 12: 'Trinket 1', 13: 'Trinket 2',
+    14: 'Back', 15: 'Main Hand', 16: 'Off Hand', 17: 'Ranged'
+  };
+  
+  return gear.map((item, index) => {
+    if (!item || item.id === 0) return ''; // Skip empty slots
+    
+    const slotName = gearSlots[index] || `Slot ${index}`;
+    const gems = Array.isArray(item.gems) ? item.gems : [];
+    const enchants = [];
+    
+    if (item.permanentEnchant) enchants.push(`Enchant: ${item.permanentEnchant}`);
+    if (item.onUseEnchant) enchants.push(`Use Enchant: ${item.onUseEnchant}`);
+    
+    const qualityClass = item.quality || 'common';
+    
+    return `
+      <div class="gear-item">
+        <div class="gear-header">
+          <img src="https://assets.rpglogs.com/img/warcraft/items/${item.icon || 'inv_misc_questionmark.jpg'}" 
+               alt="${item.name}" class="gear-icon" loading="lazy">
+          <div class="gear-info">
+            <div class="gear-name ${qualityClass}">${item.name || 'Unknown Item'}</div>
+            <div class="gear-slot">${slotName}</div>
+          </div>
+          <div class="gear-ilvl">iLvl ${item.itemLevel || '0'}</div>
+        </div>
+        ${gems.length || enchants.length ? `
+          <div class="gem-enchant">
+            ${gems.map(gem => `<span class="gem">Gem: ${gem.id}</span>`).join('')}
+            ${enchants.map(ench => `<span class="enchant">${ench}</span>`).join('')}
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).filter(Boolean).join('');
 }
 
 function renderTalentSummary(data) {
