@@ -259,54 +259,12 @@
       margin-left: auto;
     }
 
-    .race-selection {
-      margin-top: 1.5rem;
-      text-align: center;
-    }
-
-    .race-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      cursor: pointer;
-      padding: 0.75rem 1.25rem;
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      transition: all 0.3s ease;
-      user-select: none;
-    }
-
-    .race-label:hover {
-      background: rgba(139, 92, 246, 0.1);
-      border-color: var(--accent-color);
-    }
-
-    .race-checkbox {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--accent-color);
-    }
-
-    .race-text {
-      color: var(--text-secondary);
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .race-label:hover .race-text {
-      color: var(--text-primary);
-    }
-
-    .gcd-warning {
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      color: #1f2937;
-      padding: 1rem;
-      border-radius: 12px;
-      margin-bottom: 1rem;
-      font-weight: 600;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+    .progress-bar {
+      height: 100%;
+      background: var(--gradient);
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 3px;
     }
 
     .footer {
@@ -356,6 +314,7 @@
 
     <div class="calculator-card">
       <div class="input-section">
+        <label class="input-label" for="hasteRating">Haste Rating</label>
         <div class="input-wrapper">
           <input 
             type="number" 
@@ -413,12 +372,32 @@
     };
 
     function calculateHaste() {
-      const rating = Number(document.getElementById('hasteRating').value) || 0;
+      const rating = Math.min(Number(document.getElementById('hasteRating').value) || 0, 20000);
+      const isGoblin = document.getElementById('goblinRacial').checked;
       
-      const buff = 0.05; // Shadowform
-      const effectiveHaste = ((1 + rating / 42500) * (1 + buff) - 1) * 100;
+      let effectiveHaste;
+      
+      if (isGoblin) {
+        // Goblin formula: (1 + Rating/42500) × (1 + Buffs + 0.01) - 1
+        // Where Buffs = Shadowform (0.05), so total = 0.06
+        effectiveHaste = ((1 + rating / 42500) * (1 + 0.05 + 0.01) - 1) * 100;
+      } else {
+        // Regular formula: (1 + Rating/42500) × (1 + Buffs) - 1
+        // Where Buffs = Shadowform (0.05)
+        effectiveHaste = ((1 + rating / 42500) * (1 + 0.05) - 1) * 100;
+      }
 
       document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
+
+      // GCD Cap warning
+      const gcdCap = isGoblin ? 17614 : 18215;
+      const warningElement = document.getElementById('gcdWarning');
+      
+      if (rating >= gcdCap) {
+        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating) - No further GCD reduction possible</div>`;
+      } else {
+        warningElement.innerHTML = '';
+      }
 
       let spellsHTML = '';
       for (const [spell, data] of Object.entries(breakpoints)) {
@@ -431,7 +410,7 @@
             extraTicks++;
           } else {
             nextBPValue = data.points[i];
-            nextBP = `${nextBPValue}% (${calculateRating(nextBPValue)} rating)`;
+            nextBP = `${nextBPValue}% (${calculateRating(nextBPValue, isGoblin)} rating)`;
             break;
           }
         }
@@ -487,18 +466,18 @@
       }
     }
 
-    // Calculate the rating needed to reach a given haste percent (before buffs)
+    // Calculate the rating needed to reach a given haste percent using the correct Blizzard formula
     function calculateRating(targetPercent, isGoblin = false) {
       const targetHasteDecimal = targetPercent / 100;
       
       if (isGoblin) {
-        // Goblin: ((1 + Rating/42500) × 1.06) - 1 = targetHaste
-        // Solve for Rating: Rating = ((targetHaste + 1) / 1.06 - 1) × 42500
-        return Math.round(((targetHasteDecimal + 1) / 1.06 - 1) * 42500);
+        // Goblin: Rating = 42500 × ((1 + Target Haste) / (1 + Buffs + 0.01) - 1)
+        // Where Buffs = 0.05 (Shadowform), so denominator = 1.06
+        return Math.round(42500 * ((1 + targetHasteDecimal) / 1.06 - 1));
       } else {
-        // Regular: ((1 + Rating/42500) × 1.05) - 1 = targetHaste
-        // Solve for Rating: Rating = ((targetHaste + 1) / 1.05 - 1) × 42500
-        return Math.round(((targetHasteDecimal + 1) / 1.05 - 1) * 42500);
+        // Regular: Rating = 42500 × ((1 + Target Haste) / (1 + Buffs) - 1)
+        // Where Buffs = 0.05 (Shadowform), so denominator = 1.05
+        return Math.round(42500 * ((1 + targetHasteDecimal) / 1.05 - 1));
       }
     }
 
