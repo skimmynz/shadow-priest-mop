@@ -4,20 +4,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shadow Priest Haste Calculator</title>
+https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap
 <style>
-    body { font-family: Arial, sans-serif; background: #1e1e2f; color: #fff; text-align: center; padding: 20px; }
-    .container { max-width: 600px; margin: auto; background: #2c2c3e; padding: 20px; border-radius: 10px; }
-    input { width: 100%; padding: 10px; margin: 10px 0; font-size: 16px; }
-    .result { margin-top: 20px; font-size: 18px; }
-    table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-    th, td { border: 1px solid #444; padding: 8px; }
-    th { background: #333; }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: #121212;
+        color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 700px;
+        margin: 50px auto;
+        background: #1e1e2f;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 20px;
+        color: #ffcc00;
+    }
+    .input-group {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    input {
+        width: 60%;
+        padding: 12px;
+        font-size: 18px;
+        border: 2px solid #ffcc00;
+        border-radius: 8px;
+        outline: none;
+        background: #2c2c3e;
+        color: #fff;
+        text-align: center;
+        transition: 0.3s;
+    }
+    input:focus {
+        border-color: #ffd633;
+        box-shadow: 0 0 10px #ffcc00;
+    }
+    .result {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #333;
+        text-align: center;
+    }
+    th {
+        background: #29293d;
+        color: #ffcc00;
+    }
+    td img {
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
 </style>
+<script src="https.com/widgets/power.js
 </head>
 <body>
 <div class="container">
     <h1>Shadow Priest Haste Calculator</h1>
-    <input type="number" id="hasteRating" placeholder="Enter your Haste Rating" oninput="calculateHaste()">
+    <div class="input-group">
+        <input type="number" id="hasteRating" placeholder="Enter your Haste Rating" oninput="calculateHaste()">
+    </div>
     <div class="result" id="hasteResult"></div>
     <table>
         <thead>
@@ -33,9 +96,9 @@
 
 <script>
 const breakpoints = {
-    "Shadow Word: Pain": [8.32, 24.97, 41.68],
-    "Vampiric Touch": [9.99, 30.01, 49.95],
-    "Devouring Plague": [8.28, 24.92, 41.74]
+    "Shadow Word: Pain": {id: 589, points: [8.32, 24.97, 41.68], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg"},
+    "Vampiric Touch": {id: 34914, points: [9.99, 30.01, 49.95], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg"},
+    "Devouring Plague": {id: 2944, points: [8.28, 24.92, 41.74], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg"}
 };
 
 function calculateHaste() {
@@ -49,17 +112,23 @@ function calculateHaste() {
 
     let tableHTML = '';
     for (const spell in breakpoints) {
+        const data = breakpoints[spell];
         let extraTicks = 0;
         let nextBP = 'Maxed';
-        for (let i = 0; i < breakpoints[spell].length; i++) {
-            if (effectiveHaste >= breakpoints[spell][i]) {
+        for (let i = 0; i < data.points.length; i++) {
+            if (effectiveHaste >= data.points[i]) {
                 extraTicks++;
             } else {
-                nextBP = `${breakpoints[spell][i]}% (${calculateRating(breakpoints[spell][i])} rating)`;
+                nextBP = `${data.points[i]}% (${calculateRating(data.points[i])} rating)`;
                 break;
             }
         }
-        tableHTML += `<tr><td>${spell}</td><td>${extraTicks}</td><td>${nextBP}</td></tr>`;
+        tableHTML += `
+            <tr>
+                <td><img src="${data.icon}" alt="${spell}"> https://www.wowhead.com/spell=${data.id}</td>
+                <td>${extraTicks}</td>
+                <td>${nextBP}</td>
+            </tr>`;
     }
     document.getElementById('tickTable').innerHTML = tableHTML;
 }
