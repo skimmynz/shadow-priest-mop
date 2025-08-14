@@ -4,170 +4,174 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shadow Priest Haste Calculator</title>
-https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap
-https://wow.zamimg.com/widgets/power.js
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+<script src="https://wow.zamimg.com/widgets/power.js"></script>
 <style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        background: #121212;
-        color: #f5f5f5;
-        margin: 0;
-        {
-        max-width: 700px;
-        margin: 50px auto;
-        background: #1e1e2f;
-        padding: 30px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        text-align: center;
-    }
-    h1 {
-        margin-bottom: 20px;
-        color: #ffcc00;
-    }
-    .input-group {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-    input {
-        width: 60%;
-        padding: 12px;
-        font-size: 18px;
-        border: 2px solid #ffcc00;
-        border-radius: 8px;
-        outline: none;
-        background: #2c2c3e;
-        color: #fff;
-        text-align: center;
-        transition: 0.3s;
-    }
-    input:focus {
-        border-color: #ffd633;
-        box-shadow: 0 0 10px #ffcc00;
-    }
-    .result {
-        font-size: 20px;
-        margin-bottom: 20px;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    th, td {
-        padding: 12px;
-        border-bottom: 1px solid #333;
-        text-align: center;
-    }
-    th {
-        background: #29293d;
-        color: #ffcc00;
-    }
-    td img {
-        width: 24px;
-        height: 24px;
-        vertical-align: middle;
-        margin-right: 8px;
-    }
-    .progress-bar {
-        width: 100%;
-        background: #333;
-        border-radius: 6px;
-        overflow: hidden;
-        height: 10px;
-        margin-top: 6px;
-    }
-    .progress {
-        height: 10px;
-        background: #ffcc00;
-        width: 0%;
-        transition: width 0.4s ease;
-    }
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: #121212;
+        color: #f5f5f5;
+        margin: 0;
+    }
+    .container {
+        max-width: 700px;
+        margin: 50px auto;
+        background: #1e1e2f;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        text-align: center;
+    }
+    h1 {
+        margin-bottom: 20px;
+        color: #ffcc00;
+    }
+    .input-group {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    input {
+        width: 60%;
+        padding: 12px;
+        font-size: 18px;
+        border: 2px solid #ffcc00;
+        border-radius: 8px;
+        outline: none;
+        background: #2c2c3e;
+        color: #fff;
+        text-align: center;
+        transition: 0.3s;
+    }
+    input:focus {
+        border-color: #ffd633;
+        box-shadow: 0 0 10px #ffcc00;
+    }
+    .result {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #333;
+        text-align: center;
+    }
+    th {
+        background: #29293d;
+        color: #ffcc00;
+    }
+    td img {
+        width: 24px;
+        height: 24px;
+        vertical-align: middle;
+        margin-right: 8px;
+    }
+    .progress-bar {
+        width: 100%;
+        background: #333;
+        border-radius: 6px;
+        overflow: hidden;
+        height: 10px;
+        margin-top: 6px;
+    }
+    .progress {
+        height: 10px;
+        background: #ffcc00;
+        width: 0%;
+        transition: width 0.4s ease;
+    }
 </style>
 </head>
 <body>
 <div class="container">
-    <h1>Shadow Priest Haste Calculator</h1>
-    <div class="input-group">
-        <input type="number" id="hasteRating" placeholder="Enter your Haste Rating" oninput="calculateHaste()">
-    </div>
-    <div class="result" id="hasteResult"></div>
-    <table>
-        <thead>
-            <tr>
-                <th>Spell</th>
-                <th>Extra Ticks</th>
-                <th>Next Breakpoint</th>
-            </tr>
-        </thead>
-        <tbody id="tickTable"></tbody>
-    </table>
+    <h1>Shadow Priest Haste Calculator</h1>
+    <div class="input-group">
+        <input type="number" id="hasteRating" placeholder="Enter your Haste Rating" oninput="calculateHaste()">
+    </div>
+    <div class="result" id="hasteResult"></div>
+    <table>
+        <thead>
+            <tr>
+                <th>Spell</th>
+                <th>Extra Ticks</th>
+                <th>Next Breakpoint</th>
+            </tr>
+        </thead>
+        <tbody id="tickTable"></tbody>
+    </table>
 </div>
 
 <script>
 const breakpoints = {
-    "Shadow Word: Pain": {id: 589, points: [8.32, 24.97, 41.68], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg"},
-    "Vampiric Touch": {id: 34914, points: [9.99, 30.01, 49.95], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg"},
-    "Devouring Plague": {id: 2944, points: [8.28, 24.92, 41.74], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg"}
+    "Shadow Word: Pain": {id: 589, points: [8.32, 24.97, 41.68], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg"},
+    "Vampiric Touch": {id: 34914, points: [9.99, 30.01, 49.95], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg"},
+    "Devouring Plague": {id: 2944, points: [8.28, 24.92, 41.74], icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg"}
 };
 
 function calculateHaste() {
-    const rating = parseFloat(document.getElementById('hasteRating').value);
-    if (isNaN(rating) || rating < 0) return;
+    const rating = parseFloat(document.getElementById('hasteRating').value);
+    if (isNaN(rating) || rating < 0) return;
 
-    const buff = 0.05; // Shadowform
-    const effectiveHaste = ((1 + rating / 42500) * (1 + buff) - 1) * 100;
+    const buff = 0.05; // Shadowform
+    const effectiveHaste = ((1 + rating / 42500) * (1 + buff) - 1) * 100;
 
-    document.getElementById('hasteResult').innerHTML = `Effective Haste: <b>${effectiveHaste.toFixed(2)}%</b>`;
+    document.getElementById('hasteResult').innerHTML = `Effective Haste: <b>${effectiveHaste.toFixed(2)}%</b>`;
 
-    let tableHTML = '';
-    for (const spell in breakpoints) {
-        const data = breakpoints[spell];
-        let extraTicks = 0;
-        let nextBP = 'Maxed';
-        let nextBPValue = null;
+    let tableHTML = '';
+    for (const spell in breakpoints) {
+        const data = breakpoints[spell];
+        let extraTicks = 0;
+        let nextBP = 'Maxed';
+        let nextBPValue = null;
 
-        for (let i = 0; i < data.points.length; i++) {
-            if (effectiveHaste >= data.points[i]) {
-                extraTicks++;
-            } else {
-                nextBP = `${data.points[i]}% (${calculateRating(data.points[i])} rating)`;
-                nextBPValue = data.points[i];
-                break;
-            }
-        }
+        for (let i = 0; i < data.points.length; i++) {
+            if (effectiveHaste >= data.points[i]) {
+                extraTicks++;
+            } else {
+                nextBP = `${data.points[i]}% (${calculateRating(data.points[i])} rating)`;
+                nextBPValue = data.points[i];
+                break;
+            }
+        }
 
-        // Progress bar calculation
-        let progressPercent = 100;
-        if (nextBPValue !== null) {
-            const prevBP = data.points[extraTicks - 1] || 0;
-            progressPercent = ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100;
-            if (progressPercent < 0) progressPercent = 0;
-            if (progressPercent > 100) progressPercent = 100;
-        }
+        // Progress bar calculation
+        let progressPercent = 100;
+        if (nextBPValue !== null) {
+            const prevBP = data.points[extraTicks - 1] || 0;
+            progressPercent = ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100;
+            if (progressPercent < 0) progressPercent = 0;
+            if (progressPercent > 100) progressPercent = 100;
+        }
 
-        tableHTML += `
-            <tr>
-                <td><img src="${data.icon}" alt="${spell}"> https://www.wowhead.com/spell=${data.id}</td>
-                <td>${extraTicks}</td>
-                <td>
-                    ${nextBP}
-                    <div class="progress-bar"><div class="progress" style="width:${progressPercent}%;"></div></div>
-                </td>
-            </tr>`;
-    }
-    document.getElementById('tickTable').innerHTML = tableHTML;
+        tableHTML += `
+            <tr>
+                <td><img src="${data.icon}" alt="${spell}"> <a href="https://www.wowhead.com/spell=${data.id}" target="_blank" data-wowhead="spell=${data.id}">${spell}</a></td>
+                <td>${extraTicks}</td>
+                <td>
+                    ${nextBP}
+                    <div class="progress-bar"><div class="progress" style="width:${progressPercent}%;"></div></div>
+                </td>
+            </tr>`;
+    }
+    document.getElementById('tickTable').innerHTML = tableHTML;
 
-    // Re-initialize Wowhead tooltips
-    if (typeof $WowheadPower !== 'undefined') {
-        $WowheadPower.refreshLinks();
-    }
+    // Re-initialize Wowhead tooltips
+    if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+    }
 }
 
+// Corrected function to calculate required haste rating for a given percentage
 function calculateRating(targetPercent) {
-    const buff = 0.05;
-    return Math.round(42500 * ((1 + targetPercent / 100) / (1 + buff) - 1));
+    const buff = 0.05;
+    const targetHasteWithBuffs = (1 + targetPercent / 100);
+    const targetHasteWithoutBuffs = targetHasteWithBuffs / (1 + buff);
+    return Math.round((targetHasteWithoutBuffs - 1) * 42500);
 }
 </script>
 </body>
