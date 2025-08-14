@@ -12,9 +12,7 @@ https://wow.zamimg.com/widgets/power.js
         background: #121212;
         color: #f5f5f5;
         margin: 0;
-        padding: 0;
-    }
-    .container {
+        {
         max-width: 700px;
         margin: 50px auto;
         background: #1e1e2f;
@@ -151,7 +149,8 @@ function calculateHaste() {
 
         tableHTML += `
             <tr>
-                <td><img src="${data.icon}" alt="${spell}"> <a href="https://www.wowhead.com/spell=${data.id}" class="wowhead">${spellicks}</td>
+                <td><img src="${data.icon}" alt="${spell}"> https://www.wowhead.com/spell=${data.id}</td>
+                <td>${extraTicks}</td>
                 <td>
                     ${nextBP}
                     <div class="progress-bar"><div class="progress" style="width:${progressPercent}%;"></div></div>
