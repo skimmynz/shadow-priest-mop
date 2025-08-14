@@ -378,7 +378,7 @@ function render(data, TOP_BY_TIER) {
         <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
           <div class="name-wrapper">
             <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
-              ${i + 1}. ${playerName} – ${dps.toLocaleString()} DPS • iLvl: ${itemLevel} • ${duration}
+              ${i + 1}. ${playerName} – ${dps.toLocaleString()} DPS
             </a>
           </div>
           <div class="header-right">
