@@ -151,7 +151,7 @@ function calculateHaste() {
 
         tableHTML += `
             <tr>
-                <td><img src="${data.icon}" alt="${spell}"> <a href="https://www.wowhead.com/spell=${data.id}" class="wowhead>${extraTicks}</td>
+                <td><img src="${data.icon}" alt="${spell}"> <a href="https://www.wowhead.com/spell=${data.id}" class="wowhead">${spellicks}</td>
                 <td>
                     ${nextBP}
                     <div class="progress-bar"><div class="progress" style="width:${progressPercent}%;"></div></div>
@@ -159,6 +159,11 @@ function calculateHaste() {
             </tr>`;
     }
     document.getElementById('tickTable').innerHTML = tableHTML;
+
+    // Re-initialize Wowhead tooltips
+    if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+    }
 }
 
 function calculateRating(targetPercent) {
