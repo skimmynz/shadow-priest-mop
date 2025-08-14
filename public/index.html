@@ -656,62 +656,19 @@
 <body>
   <div class="main-container">
     <aside class="sidebar">
-      <nav id="raid-menu" aria-label="Raid selection">
-        <!-- Raid buttons will be populated by JavaScript -->
-        <button type="button" data-raid-key="msv" class="active">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23667eea'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='12' font-weight='bold'%3EMSV%3C/text%3E%3C/svg%3E" alt="MSV" class="raid-icon" loading="lazy">
-          <span>MSV</span>
-        </button>
-        <button type="button" data-raid-key="hof">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23764ba2'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='12' font-weight='bold'%3EHoF%3C/text%3E%3C/svg%3E" alt="HoF" class="raid-icon" loading="lazy">
-          <span>HoF</span>
-        </button>
-        <button type="button" data-raid-key="toes">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f093fb'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='11' font-weight='bold'%3EToES%3C/text%3E%3C/svg%3E" alt="ToES" class="raid-icon" loading="lazy">
-          <span>ToES</span>
-        </button>
-      </nav>
-      <div id="boss-buttons" role="group" aria-label="Bosses">
-        <!-- Boss buttons will be populated by JavaScript -->
-        <button data-encounter-id="1395" data-boss-name="The Stone Guard">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='10'%3ESG%3C/text%3E%3C/svg%3E" alt="The Stone Guard" class="boss-icon" loading="lazy">
-          <span>The Stone Guard</span>
-        </button>
-        <button data-encounter-id="1390" data-boss-name="Feng the Accursed">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23374151'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='8'%3EFeng%3C/text%3E%3C/svg%3E" alt="Feng the Accursed" class="boss-icon" loading="lazy">
-          <span>Feng the Accursed</span>
-        </button>
-      </div>
+      <nav id="raid-menu" aria-label="Raid selection"></nav>
+      <div id="boss-buttons" role="group" aria-label="Bosses"></div>
     </aside>
     <main class="content-area">
       <h1>Shadow Priest Top 100 – MoP Classic</h1>
       <div class="header-controls">
         <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-          Last updated: Loading...
+          Loading last updated…
         </div>
         <button id="copy-link-btn">Copy Link</button>
       </div>
       <section id="rankings">
-        <!-- Talent Summary Example -->
-        <div class="talent-summary">
-          <div class="talent-row">
-            <a class="talent-link wowhead is-top" href="https://www.wowhead.com/mop-classic/spell=108920" target="_blank" rel="noopener">
-              <img class="talent-icon-img" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%236b46c1' rx='12'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='10'%3EVT%3C/text%3E%3C/svg%3E" alt="Void Tendrils" />
-              <div class="talent-percent" style="color:limegreen">85.2%</div>
-            </a>
-            <a class="talent-link wowhead" href="https://www.wowhead.com/mop-classic/spell=108921" target="_blank" rel="noopener">
-              <img class="talent-icon-img" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23374151' rx='12'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='10'%3EPF%3C/text%3E%3C/svg%3E" alt="Psyfiend" />
-              <div class="talent-percent" style="color:red">12.1%</div>
-            </a>
-            <a class="talent-link wowhead" href="https://www.wowhead.com/mop-classic/spell=605" target="_blank" rel="noopener">
-              <img class="talent-icon-img" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23374151' rx='12'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='9'%3EDM%3C/text%3E%3C/svg%3E" alt="Dominate Mind" />
-              <div class="talent-percent" style="color:red">2.7%</div>
-            </a>
-          </div>
-          <div class="talent-row">
-            <a class="talent-link wowhead is-top" href="https://www.wowhead.com/mop-classic/spell=64129" target="_blank" rel="noopener">
-              <img class="talent-icon-img" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%236b46c1' rx='12'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='Arial' font-size='9'%3EBAS%3C/text%3E%3C/svg%3E" alt="Body and Soul" />
-              <div class="talent-percent" style="color:limegreen">78.9%</div>
-            </a>
-            <a class="talent-link wowhead" href="https://www.wowhead.com/mop-classic/spell=121536" target="_blank" rel="noopener">
-              <img class="talent-icon-img" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23374151' rx='12'/%3E%3Ctext x='50%25' y='50%25
+        </section>
+    </main>
+  </div>
+  <script src="script.js" defer></script>
