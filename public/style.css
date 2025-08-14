@@ -298,6 +298,7 @@ a.wowhead del {
   ================================================================= */
 #rankings {
   margin-top: 24px;
+  min-height: 600px; /* Prevents layout shift when content is minimal */
 }
 
 /* Talent Summary (Top Icons) */
@@ -506,8 +507,13 @@ a.wowhead del {
 .empty-message {
   text-align: center;
   color: var(--text-muted);
-  margin-top: 32px;
+  margin-top: 64px;
   font-style: italic;
+  padding: 48px 24px;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  font-size: 1.1rem;
 }
 
 /* =================================================================
