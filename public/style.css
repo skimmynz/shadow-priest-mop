@@ -307,12 +307,12 @@ a.wowhead del {
 
 /* Talent Summary (Top Icons) */
 .talent-summary {
-  background: var(--gradient-card);
-  border-radius: 16px;
-  padding: 32px;
-  margin-bottom: 32px;
-  border: 1px solid var(--border-accent);
-  box-shadow: 0 8px 32px var(--shadow-card);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 0;
+  border: none;
+  box-shadow: none;
 }
 
 .talent-summary .talent-row {
@@ -340,6 +340,55 @@ a.wowhead del {
   font-weight: 700;
   margin-top: 8px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* --- Add these new styles for the collapsible container --- */
+
+.talent-summary-container {
+  margin-bottom: 24px;
+  border: 1px solid var(--border-primary);
+  border-radius: 16px;
+  background: var(--bg-secondary);
+  overflow: hidden; /* Ensures border-radius is respected */
+  transition: all 0.3s ease;
+}
+
+.collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 16px 24px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: left;
+}
+
+.collapsible-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+}
+
+.collapsible-header:hover {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* The padding will be applied when the 'active' class is present */
+}
+
+.collapsible-content.active {
+  max-height: 1000px; /* Adjust if your content is taller */
+  padding: 0 32px 32px 32px;
 }
 
 /* =================================================================
