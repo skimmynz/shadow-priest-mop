@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Shadow Priest Haste & DoT Breakpoints</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive haste and DoT breakpoint calculator. Edit spell durations and tick intervals, toggle haste sources, and see real-time breakpoints and GCD." />
+  <meta property="og:title" content="Shadow Priest Haste & DoT Breakpoints" />
+  <meta property="og:description" content="Interactive haste and DoT breakpoint calculator with editable spells and real-time breakpoints." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root{
+      --bg: #0b0b10; --panel:#13131b; --text:#e6e6f0; --muted:#a5a7b2; --acc:#8a9cff;
+      --ok:#2ecc71; --warn:#f1c40f; --err:#e74c3c; --bd:#26283a;
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f6f7fb; --panel:#ffffff; --text:#1b1e28; --muted:#53586d; --acc:#3b5bdb; --bd:#e7e9f2; }
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0; font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text); background: radial-gradient(1200px 600px at 10% -10%, rgba(138,156,255,.15), transparent),
+                           radial-gradient(1200px 600px at 90% -10%, rgba(138,156,255,.12), transparent),
+                           var(--bg);
+    }
+    header{
+      padding: 2.5rem 1rem 1rem; text-align:center;
+    }
+    h1{ margin:0 0 .25rem; font-size: clamp(1.6rem, 2vw + 1rem, 2.25rem); }
+    .sub{ color:var(--muted); }
+    main{ padding: 1rem; max-width: 1100px; margin: 0 auto; }
+    .grid{
+      display:grid; gap:1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 960px){
+      .grid{ grid-template-columns: 360px 1fr; }
+    }
+    .card{
+      background: var(--panel); border:1px solid var(--bd); border-radius: 12px; padding: 1rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    fieldset{ border: none; padding: 0; margin: 0 0 1rem; }
+    legend{ font-weight:600; margin-bottom:.5rem; }
+    label{ display:block; font-weight:500; margin:.5rem 0 .25rem; }
+    input[type="number"], input[type="text"]{
+      width:100%; padding:.6rem .7rem; border:1px solid var(--bd); border-radius:10px; background:transparent; color:var(--text);
+    }
+    input[type="checkbox"]{ transform: translateY(1px); }
+    .row{ display:flex; gap:.75rem; align-items:center; }
+    .row > *{ flex:1; }
+    .muted{ color:var(--muted); font-size:.9rem; }
+    .pill{ display:inline-block; padding:.15rem .5rem; border-radius:999px; border:1px solid var(--bd); color:var(--muted); font-size:.8rem; }
+    .out{
+      display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:.75rem; margin-top:.5rem;
+    }
+    .stat{ background:linear-gradient(180deg, rgba(138,156,255,.08), transparent 55%); border:1px solid var(--bd); border-radius:12px; padding:.8rem; }
+    .stat b{ display:block; font-size:1.2rem; margin-top:.25rem; }
+    table{ width:100%; border-collapse: collapse; }
+    th, td{ text-align:left; padding:.6rem .5rem; border-bottom:1px solid var(--bd); }
+    th{ font-weight:600; }
+    .actions{ display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.75rem; }
+    button{
+      appearance: none; border:1px solid var(--bd); background: transparent; color:var(--text);
+      padding:.55rem .8rem; border-radius:10px; cursor:pointer;
+    }
+    button.accent{ background: var(--acc); color: white; border-color: transparent; }
+    .fine{ font-variant-numeric: tabular-nums; }
+    footer{ color:var(--muted); text-align:center; padding:2rem 1rem; font-size:.9rem; }
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; }
+    }
+    .help{ font-size:.85rem; color:var(--muted); margin:.25rem 0 .5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Shadow Priest Haste & DoT Breakpoints</h1>
+    <p class="sub">Optimize your DoT tick counts and know the next breakpoint. Mechanics differ by expansion, so the spell numbers are editable.</p>
+    <div class="muted" role="note">Tip: Share your setup — the calculator encodes your inputs in the URL.</div>
+  </header>
+
+  <main class="grid">
+    <!-- Left: Controls -->
+    <section class="card" aria-labelledby="calc-settings">
+      <h2 id="calc-settings" style="margin-top:0">Calculator Settings</h2>
+
+      <fieldset>
+        <legend>Haste Inputs</legend>
+        <label for="totalHaste">Total haste (%)</label>
+        <input id="totalHaste" type="number" step="0.01" min="0" inputmode="decimal" value="0" aria-describedby="hasteHelp">
+        <div id="hasteHelp" class="help">Enter your total haste from all sources. You can add quick toggles below.</div>
+
+        <div class="row" style="align-items:flex-start; gap:1rem; margin-top:.25rem">
+          <div>
+            <label class="muted"><input type="checkbox" id="goblinChk"> Goblin racial (+1%)</label>
+            <label class="muted"><input type="checkbox" id="misc5"> Misc buff (+5%)</label>
+          </div>
+          <div>
+            <label for="addHaste">Custom haste source (%)</label>
+            <div class="row">
+              <input id="addHaste" type="number" step="0.01" value="0" />
+              <button id="addHasteBtn" type="button">Add</button>
+            </div>
+            <div id="tags" class="actions" aria-live="polite"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Global Cooldown</legend>
+        <div class="row">
+          <div>
+            <label for="gcdBase">Base GCD (s)</label>
+            <input id="gcdBase" type="number" step="0.05" value="1.5">
+          </div>
+          <div>
+            <label for="gcdFloor">GCD floor (s)</label>
+            <input id="gcdFloor" type="number" step="0.05" value="1.0">
+          </div>
+        </div>
+        <div class="muted help">Effective GCD = max(floor, base / (1 + totalHaste%)).</div>
+      </fieldset>
+
+      <div class="out" aria-live="polite">
+        <div class="stat">
+          <span class="muted">Effective haste</span>
+          <b class="fine" id="effHaste">0.00%</b>
+        </div>
+        <div class="stat">
+          <span class="muted">Effective GCD</span>
+          <b class="fine" id="effGcd">1.50s</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Spells / Breakpoints -->
+    <section class="card" aria-labelledby="spells">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2 id="spells" style="margin:0">Spells & Breakpoints</h2>
+        <span class="pill">Edit rows as needed</span>
+      </div>
+
+      <div class="help">Default examples shown; you can modify or add new rows. Calculations: ticks = floor((baseDuration × (1 + haste%)) / baseTickInterval).</div>
+
+      <table aria-describedby="tblHelp">
+        <thead>
+          <tr>
+            <th style="min-width:180px">Spell</th>
+            <th>Base duration (s)</th>
+            <th>Tick interval (s)</th>
+            <th>Ticks @ current</th>
+            <th>Next 3 breakpoints (haste %)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="spellBody">
+          <!-- Example rows -->
+          <tr>
+            <td><input type="text" value="Shadow Word: Pain" aria-label="Spell name"></td>
+            <td><input type="number" step="0.1" value="18" aria-label="Base duration (s)"></td>
+            <td><input type="number" step="0.1" value="3" aria-label="Tick interval (s)"></td>
+            <td class="fine" data-col="ticks">—</td>
+            <td class="fine" data-col="bps">—</td>
+            <td><button type="button" class="danger" data-action="remove">✕</button></td>
+          </tr>
+          <tr>
+            <td><input type="text" value="Vampiric Touch" aria-label="Spell name"></td>
+            <td><input type="number" step="0.1" value="15" aria-label="Base duration (s)"></td>
+            <td><input type="number" step="0.1" value="3" aria-label="Tick interval (s)"></td>
+            <td class="fine" data-col="ticks">—</td>
+            <td class="fine" data-col="bps">—</td>
+            <td><button type="button" class="danger" data-action="remove">✕</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <button id="addRow" type="button">+ Add spell</button>
+        <button id="share" type="button" class="accent">Share current setup</button>
+      </div>
+
+      <div id="tblHelp" class="help">
+        Breakpoint to gain one extra tick occurs when: <code>(baseDuration × (1 + haste%)) / tickInterval</code> crosses the next integer.
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Built as a mechanics‑agnostic tool. If you want expansion‑accurate presets (e.g., rating → % at specific levels), tell me which expansion and level and I’ll wire them in.
+  </footer>
+
+  <script defer>
+    (function(){
+      const $ = (sel, el=document) => el.querySelector(sel);
+      const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+
+      const state = {
+        baseHastePct: 0,
+        toggles: { goblin: false, misc5: false },
+        extras: [], // array of {id, pct}
+        gcdBase: 1.5, gcdFloor: 1.0
+      };
+
+      const els = {
+        totalHaste: $('#totalHaste'),
+        goblin: $('#goblinChk'),
+        misc5: $('#misc5'),
+        addHaste: $('#addHaste'),
+        addHasteBtn: $('#addHasteBtn'),
+        tags: $('#tags'),
+        gcdBase: $('#gcdBase'),
+        gcdFloor: $('#gcdFloor'),
+        effHaste: $('#effHaste'),
+        effGcd: $('#effGcd'),
+        tbody: $('#spellBody'),
+        addRow: $('#addRow'),
+        share: $('#share')
+      };
+
+      // --- URL state (load) ---
+      function loadFromURL(){
+        const p = new URLSearchParams(location.search);
+        if(p.has('h')) els.totalHaste.value = +p.get('h') || 0;
+        if(p.has('gb')) els.goblin.checked = p.get('gb') === '1';
+        if(p.has('m5')) els.misc5.checked = p.get('m5') === '1';
+        if(p.has('x')){
+          try {
+            state.extras = JSON.parse(decodeURIComponent(p.get('x')));
+          } catch {}
+        }
+        if(p.has('gcdB')) els.gcdBase.value = +p.get('gcdB') || 1.5;
+        if(p.has('gcdF')) els.gcdFloor.value = +p.get('gcdF') || 1.0;
+        if(p.has('sp')){
+          try {
+            const rows = JSON.parse(decodeURIComponent(p.get('sp')));
+            els.tbody.innerHTML = '';
+            rows.forEach(r => addRow(r.name, r.dur, r.tick));
+          } catch {}
+        }
+        renderExtras();
+        compute();
+      }
+
+      // --- helpers ---
+      const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+      const pct = v => (v*100).toFixed(2) + '%';
+      const round2 = v => (Math.round(v*100)/100).toFixed(2);
+
+      function totalHasteMultiplier(){
+        const base = parseFloat(els.totalHaste.value || 0)/100;
+        const goblin = els.goblin.checked ? 0.01 : 0;
+        const misc5 = els.misc5.checked ? 0.05 : 0;
+        const extras = state.extras.reduce((s,e)=> s + (parseFloat(e.pct)||0)/100, 0);
+        return 1 + base + goblin + misc5 + extras;
+      }
+
+      function computeGCD(mult){
+        const base = parseFloat(els.gcdBase.value || 1.5);
+        const floor = parseFloat(els.gcdFloor.value || 1.0);
+        return Math.max(floor, base / mult);
+      }
+
+      function breakpoints(dur, tick, mult, count=3){
+        // Current ticks:
+        const currTicks = Math.floor((dur * mult) / tick + 1e-9);
+        const list = [];
+        for(let i=1;i<=count;i++){
+          const target = currTicks + i;
+          const neededMult = (target * tick) / dur;
+          const neededHastePct = (neededMult - 1) * 100;
+          list.push(neededHastePct);
+        }
+        return { currTicks, list };
+      }
+
+      function compute(){
+        const mult = totalHasteMultiplier();
+        els.effHaste.textContent = pct(mult - 1);
+        els.effGcd.textContent = round2(computeGCD(mult)) + 's';
+
+        // Update rows
+        $$('#spellBody tr').forEach(tr=>{
+          const name = $('input[type="text"]', tr)?.value || '';
+          const dur = parseFloat($('input[type="number"]:nth-of-type(1)', tr)?.value || 0);
+          const tick = parseFloat($('input[type="number"]:nth-of-type(2)', tr)?.value || 0);
+          const tCell = tr.querySelector('[data-col="ticks"]');
+          const bCell = tr.querySelector('[data-col="bps"]');
+          if(dur>0 && tick>0){
+            const { currTicks, list } = breakpoints(dur, tick, mult, 3);
+            tCell.textContent = String(currTicks);
+            // Next breakpoints relative to "total haste", not delta:
+            bCell.textContent = list.map(v => (v<=0? '0.00%': round2(v)+'%')).join('  •  ');
+            bCell.title = 'Required total haste to gain +1, +2, +3 ticks (not additional %).';
+          } else {
+            tCell.textContent = '—';
+            bCell.textContent = '—';
+          }
+        });
+      }
+
+      // --- Extras tags ---
+      function renderExtras(){
+        els.tags.innerHTML = '';
+        state.extras.forEach(e=>{
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'pill';
+          btn.textContent = `+${round2(e.pct)}% ✕`;
+          btn.title = 'Click to remove';
+          btn.onclick = () => {
+            state.extras = state.extras.filter(x=>x.id!==e.id);
+            renderExtras(); compute();
+          };
+          els.tags.appendChild(btn);
+        });
+      }
+
+      // --- Rows ---
+      function addRow(name='New DoT', dur=12, tick=3){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input type="text" value="${name}"></td>
+          <td><input type="number" step="0.1" value="${dur}"></td>
+          <td><input type="number" step="0.1" value="${tick}"></td>
+          <td class="fine" data-col="ticks">—</td>
+          <td class="fine" data-col="bps">—</td>
+          <td><button type="button" class="danger" data-action="remove">✕</button></td>
+        `;
+        els.tbody.appendChild(tr);
+        // Recompute on any input change
+        $$('input', tr).forEach(i=> i.addEventListener('input', compute));
+      }
+
+      // --- Share URL ---
+      function toURL(){
+        const mult = totalHasteMultiplier(); // for side-effect guard
+        const rows = $$('#spellBody tr').map(tr=>{
+          return {
+            name: $('input[type="text"]', tr).value,
+            dur: parseFloat($('input[type="number"]:nth-of-type(1)', tr).value||0),
+            tick: parseFloat($('input[type="number"]:nth-of-type(2)', tr).value||0),
+          }
+        });
+        const p = new URLSearchParams();
+        p.set('h', els.totalHaste.value || '0');
+        p.set('gb', els.goblin.checked ? '1':'0');
+        p.set('m5', els.misc5.checked ? '1':'0');
+        if(state.extras.length) p.set('x', encodeURIComponent(JSON.stringify(state.extras)));
+        p.set('gcdB', els.gcdBase.value);
+        p.set('gcdF', els.gcdFloor.value);
+        p.set('sp', encodeURIComponent(JSON.stringify(rows)));
+        return `${location.origin}${location.pathname}?${p.toString()}`;
+      }
+
+      // --- Events wiring ---
+      [els.totalHaste, els.gcdBase, els.gcdFloor].forEach(el => el.addEventListener('input', compute));
+      [els.goblin, els.misc5].forEach(el => el.addEventListener('change', compute));
+      els.addHasteBtn.addEventListener('click', ()=>{
+        const v = parseFloat(els.addHaste.value || 0);
+        if(!isNaN(v) && v!==0){
+          state.extras.push({ id: crypto.randomUUID(), pct: v });
+          els.addHaste.value = '0';
+          renderExtras(); compute();
+        }
+      });
+      els.addRow.addEventListener('click', ()=> { addRow(); compute(); });
+      els.tbody.addEventListener('click', (e)=>{
+        const btn = e.target.closest('button[data-action="remove"]');
+        if(!btn) return;
+        btn.closest('tr').remove();
+        compute();
+      });
+      els.share.addEventListener('click', ()=>{
+        const url = toURL();
+        navigator.clipboard?.writeText(url).then(()=>{
+          els.share.textContent = 'Copied!';
+          setTimeout(()=> els.share.textContent = 'Share current setup', 1200);
+        }).catch(()=>{
+          prompt('Copy URL:', url);
+        });
+      });
+
+      // Initial compute
+      loadFromURL();
+      // Also recompute on any input edits inside table:
+      $$('#spellBody input').forEach(i=> i.addEventListener('input', compute));
+    })();
+  </script>
+</body>
+</html>
