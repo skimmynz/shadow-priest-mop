@@ -160,38 +160,33 @@ a.wowhead del {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0;
+  padding: 8px;
   position: relative;
   overflow: hidden;
-  aspect-ratio: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
+  gap: 8px;
+  min-height: 100px;
 }
 
 #raid-menu .raid-icon {
-  width: 100%;
-  height: 100%;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
-  border-radius: 11px;
+  border-radius: 8px;
   transition: transform 0.3s ease;
 }
 
 #raid-menu button span {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
   color: white;
   font-weight: 700;
   font-size: 0.85rem;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-  background: rgba(0, 0, 0, 0.6);
-  padding: 4px 8px;
-  border-radius: 6px;
-  backdrop-filter: blur(4px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 #raid-menu button:hover {
@@ -205,8 +200,7 @@ a.wowhead del {
 }
 
 #raid-menu button:hover span {
-  background: var(--accent-purple);
-  color: white;
+  color: var(--accent-purple-hover);
 }
 
 #raid-menu button.active {
@@ -216,8 +210,7 @@ a.wowhead del {
 }
 
 #raid-menu button.active span {
-  background: var(--accent-purple);
-  color: white;
+  color: var(--accent-purple);
 }
 
 /* Boss Selection Menu */
