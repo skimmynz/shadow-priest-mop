@@ -99,44 +99,69 @@ function formatServerInfo(serverName, regionName) {
   return regionName ? `${serverName} (${regionName})` : serverName;
 }
 
-// Build gear display
 function buildGearDisplay(gear) {
-  if (!Array.isArray(gear)) return '<div class="no-gear">No gear data available</div>';
-  
+  if (!Array.isArray(gear) || gear.length === 0) {
+    return '<div class="no-gear">No gear data available</div>';
+  }
+
   const gearSlots = {
     0: 'Head', 1: 'Neck', 2: 'Shoulder', 3: 'Shirt', 4: 'Chest',
     5: 'Belt', 6: 'Legs', 7: 'Feet', 8: 'Wrist', 9: 'Hands',
     10: 'Ring 1', 11: 'Ring 2', 12: 'Trinket 1', 13: 'Trinket 2',
     14: 'Back', 15: 'Main Hand', 16: 'Off Hand', 17: 'Ranged'
   };
-  
+
   return gear.map((item, index) => {
     if (!item || item.id === 0) return ''; // Skip empty slots
-    
+
     const slotName = gearSlots[index] || `Slot ${index}`;
-    const gems = Array.isArray(item.gems) ? item.gems : [];
-    const enchants = [];
-    
-    if (item.permanentEnchant) enchants.push(`Enchant: ${item.permanentEnchant}`);
-    if (item.onUseEnchant) enchants.push(`Use Enchant: ${item.onUseEnchant}`);
-    
     const qualityClass = item.quality || 'common';
+
+    const iconSrc = `https://assets.rpglogs.com/img/warcraft/abilities/${item.icon || 'inv_misc_questionmark.jpg'}`;
     
+    const itemUrl = `https://www.wowhead.com/mop-classic/item=${item.id}`;
+
+    const gemsHtml = (Array.isArray(item.gems) ? item.gems : [])
+      .map(gem => {
+        if (!gem || !gem.id) return '';
+        const gemUrl = `https://www.wowhead.com/mop-classic/item=${gem.id}`;
+        return `<a href="${gemUrl}" class="gem wowhead" target="_blank" rel="noopener">Gem: ${gem.id}</a>`;
+      }).join('');
+
+    let enchantHtml = '';
+    if (item.permanentEnchant) {
+      const enchantUrl = `https://www.wowhead.com/mop-classic/spell=${item.permanentEnchant}`;
+      enchantHtml = `<a href="${enchantUrl}" class="enchant wowhead" target="_blank" rel="noopener">Enchant: ${item.permanentEnchant}</a>`;
+    }
+    
+    // Use the new '.rankings-gear-name' class to create a single link for the item's icon and name.
+    const itemLinkHtml = `
+      <a href="${itemUrl}"
+         class="rankings-gear-name ${qualityClass} wowhead"
+         target="_blank" rel="noopener">
+        <img src="${iconSrc}" 
+             alt="${item.name || 'Unknown Item'}" 
+             class="rankings-gear-image" 
+             loading="lazy">
+        ${item.name || 'Unknown Item'}
+      </a>
+    `;
+
+    // This structure places the new all-in-one link within the existing layout,
+    // preserving the position of the slot name and item level.
     return `
       <div class="gear-item">
         <div class="gear-header">
-          <img src="https://assets.rpglogs.com/img/warcraft/items/${item.icon || 'inv_misc_questionmark.jpg'}" 
-               alt="${item.name}" class="gear-icon" loading="lazy">
           <div class="gear-info">
-            <div class="gear-name ${qualityClass}">${item.name || 'Unknown Item'}</div>
+            ${itemLinkHtml}
             <div class="gear-slot">${slotName}</div>
           </div>
           <div class="gear-ilvl">iLvl ${item.itemLevel || '0'}</div>
         </div>
-        ${gems.length || enchants.length ? `
+        ${gemsHtml || enchantHtml ? `
           <div class="gem-enchant">
-            ${gems.map(gem => `<span class="gem">Gem: ${gem.id}</span>`).join('')}
-            ${enchants.map(ench => `<span class="enchant">${ench}</span>`).join('')}
+            ${gemsHtml}
+            ${enchantHtml}
           </div>
         ` : ''}
       </div>
