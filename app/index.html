@@ -115,6 +115,13 @@
       text-align: center;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
+      -moz-appearance: textfield;
+    }
+
+    .haste-input::-webkit-outer-spin-button,
+    .haste-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
 
     .haste-input:focus {
@@ -349,7 +356,6 @@
 
     <div class="calculator-card">
       <div class="input-section">
-        <label class="input-label" for="hasteRating">Haste Rating</label>
         <div class="input-wrapper">
           <input 
             type="number" 
@@ -483,13 +489,17 @@
 
     // Calculate the rating needed to reach a given haste percent (before buffs)
     function calculateRating(targetPercent, isGoblin = false) {
-      const shadowformBuff = 0.05;
-      const goblinBuff = isGoblin ? 0.01 : 0;
-      const totalBuffs = shadowformBuff + goblinBuff;
+      const targetHasteDecimal = targetPercent / 100;
       
-      const targetHasteWithBuffs = 1 + targetPercent / 100;
-      const targetHasteWithoutBuffs = targetHasteWithBuffs / (1 + totalBuffs);
-      return Math.round((targetHasteWithoutBuffs - 1) * 42500);
+      if (isGoblin) {
+        // Goblin: ((1 + Rating/42500) × 1.06) - 1 = targetHaste
+        // Solve for Rating: Rating = ((targetHaste + 1) / 1.06 - 1) × 42500
+        return Math.round(((targetHasteDecimal + 1) / 1.06 - 1) * 42500);
+      } else {
+        // Regular: ((1 + Rating/42500) × 1.05) - 1 = targetHaste
+        // Solve for Rating: Rating = ((targetHaste + 1) / 1.05 - 1) × 42500
+        return Math.round(((targetHasteDecimal + 1) / 1.05 - 1) * 42500);
+      }
     }
 
     // Event listeners
