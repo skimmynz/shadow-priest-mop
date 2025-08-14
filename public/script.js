@@ -99,6 +99,7 @@ function formatServerInfo(serverName, regionName) {
   return regionName ? `${serverName} (${regionName})` : serverName;
 }
 
+// Replace the entire 'buildGearDisplay' function in script.js with this corrected version.
 function buildGearDisplay(gear) {
   if (!Array.isArray(gear) || gear.length === 0) {
     return '<div class="no-gear">No gear data available</div>';
@@ -111,8 +112,6 @@ function buildGearDisplay(gear) {
     14: 'Back', 15: 'Main Hand', 16: 'Off Hand', 17: 'Ranged'
   };
 
-  // Pre-calculate the 'pcs' (piece set) string. This tells Wowhead what other
-  // items are equipped to correctly calculate set bonuses in the tooltip.
   const allItemIds = gear
     .map(item => item ? item.id : 0)
     .filter(Boolean)
@@ -125,20 +124,16 @@ function buildGearDisplay(gear) {
     const qualityClass = item.quality || 'common';
     const iconSrc = `https://assets.rpglogs.com/img/warcraft/abilities/${item.icon || 'inv_misc_questionmark.jpg'}`;
     
-    // Build a query string with item-specific details for the Wowhead tooltip.
     const params = new URLSearchParams();
     
-    // Add item level
     if (item.itemLevel) {
       params.append('ilvl', item.itemLevel);
     }
     
-    // Add the full piece set for set bonus calculations
     if (allItemIds) {
       params.append('pcs', allItemIds);
     }
 
-    // Add gem IDs as a colon-separated list
     const gemIds = (Array.isArray(item.gems) ? item.gems : [])
       .map(gem => gem.id)
       .filter(Boolean);
@@ -146,27 +141,12 @@ function buildGearDisplay(gear) {
       params.append('gems', gemIds.join(':'));
     }
 
-    // Add enchant ID
     if (item.permanentEnchant) {
       params.append('ench', item.permanentEnchant);
     }
     
     const queryString = params.toString();
     const itemUrl = `https://www.wowhead.com/mop-classic/item=${item.id}${queryString ? `?${queryString}` : ''}`;
-
-    // The rest of the HTML generation remains the same, it just uses the new, more detailed itemUrl.
-    const gemsHtml = (Array.isArray(item.gems) ? item.gems : [])
-      .map(gem => {
-        if (!gem || !gem.id) return '';
-        const gemUrl = `https://www.wowhead.com/mop-classic/item=${gem.id}`;
-        return `<a href="${gemUrl}" class="gem wowhead" target="_blank" rel="noopener">Gem: ${gem.id}</a>`;
-      }).join('');
-
-    let enchantHtml = '';
-    if (item.permanentEnchant) {
-      const enchantUrl = `https://www.wowhead.com/mop-classic/spell=${item.permanentEnchant}`;
-      enchantHtml = `<a href="${enchantUrl}" class="enchant wowhead" target="_blank" rel="noopener">Enchant: ${item.permanentEnchant}</a>`;
-    }
     
     const itemLinkHtml = `
       <a href="${itemUrl}"
@@ -180,6 +160,7 @@ function buildGearDisplay(gear) {
       </a>
     `;
 
+    // The .gem-enchant div has been removed from the returned HTML below.
     return `
       <div class="gear-item">
         <div class="gear-header">
@@ -189,17 +170,10 @@ function buildGearDisplay(gear) {
           </div>
           <div class="gear-ilvl">iLvl ${item.itemLevel || '0'}</div>
         </div>
-        ${gemsHtml || enchantHtml ? `
-          <div class="gem-enchant">
-            ${gemsHtml}
-            ${enchantHtml}
-          </div>
-        ` : ''}
       </div>
     `;
   }).filter(Boolean).join('');
 }
-
 // Add toggle function for dropdowns
 function toggleDropdown(entryId) {
   const dropdown = document.getElementById(entryId);
