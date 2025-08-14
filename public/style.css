@@ -48,7 +48,7 @@ body {
   max-width: 1400px;
   margin: 0 auto;
   align-items: flex-start;
-  min-height: 100vh; /* Ensure consistent container height */
+  min-height: 100vh;
 }
 
 .sidebar {
@@ -60,7 +60,7 @@ body {
   border: 1px solid var(--border-primary);
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px var(--shadow-card);
-  width: 280px; /* Fixed width to prevent flex changes */
+  width: 280px;
 }
 
 .content-area {
@@ -70,8 +70,8 @@ body {
   border: 1px solid var(--border-primary);
   backdrop-filter: blur(10px);
   box-shadow: 0 8px 32px var(--shadow-card);
-  width: 100%; /* Ensure it takes full available space */
-  min-width: 0; /* Prevent flex overflow */
+  width: 100%;
+  min-width: 0;
 }
 
 h1 {
@@ -302,7 +302,7 @@ a.wowhead del {
   ================================================================= */
 #rankings {
   margin-top: 24px;
-  min-height: 800px; /* Increased to better match full content height */
+  min-height: 800px;
 }
 
 /* Talent Summary (Top Icons) */
@@ -342,14 +342,13 @@ a.wowhead del {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Player Rank Row */
+/* =================================================================
+  DROPDOWN FUNCTIONALITY - Missing from original CSS
+  ================================================================= */
+
+/* Player Rank Entry - Now with dropdown support */
 .rank-entry {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
   margin: 16px 0;
-  padding: 20px 24px;
   background: var(--bg-secondary);
   border-radius: 12px;
   border: 1px solid var(--border-primary);
@@ -381,7 +380,22 @@ a.wowhead del {
   transform: scaleY(1);
 }
 
-.rank-entry .name-wrapper {
+/* Ranking Header - Clickable area */
+.ranking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ranking-header:hover {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.ranking-header .name-wrapper {
   color: var(--accent-purple);
   font-weight: 700;
   flex-grow: 1;
@@ -391,23 +405,219 @@ a.wowhead del {
   font-size: 1.1rem;
 }
 
-.rank-entry .player-link {
+.ranking-header .player-link {
   text-decoration: none;
   color: inherit;
   transition: color 0.2s ease;
 }
 
-.rank-entry .player-link:hover {
+.ranking-header .player-link:hover {
   color: var(--accent-purple-hover);
 }
 
-/* Per-Player Talents */
-.rank-entry .talent-row {
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Expand Icon */
+.expand-icon {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.expand-icon.rotated {
+  transform: rotate(180deg);
+  color: var(--accent-purple);
+}
+
+/* Dropdown Content */
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-primary);
+  opacity: 0;
+}
+
+.dropdown-content.active {
+  max-height: 2000px;
+  opacity: 1;
+  padding: 24px;
+}
+
+/* Info Grid Layout */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.info-section {
+  background: var(--bg-secondary);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+}
+
+.info-section h4 {
+  margin: 0 0 16px 0;
+  color: var(--accent-purple);
+  font-size: 1.1rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border-accent);
+  padding-bottom: 8px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-row:last-child {
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  min-width: 100px;
+}
+
+.info-value {
+  color: var(--text-primary);
+  text-align: right;
+  font-weight: 500;
+}
+
+.info-value a {
+  color: var(--accent-purple);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.info-value a:hover {
+  color: var(--accent-purple-hover);
+}
+
+/* Gear Display */
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.gear-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 0.2s ease;
+}
+
+.gear-item:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.gear-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.gear-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border-accent);
+  flex-shrink: 0;
+}
+
+.gear-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gear-name {
+  font-weight: 600;
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gear-name.poor { color: #9d9d9d; }
+.gear-name.common { color: #ffffff; }
+.gear-name.uncommon { color: #1eff00; }
+.gear-name.rare { color: #0070dd; }
+.gear-name.epic { color: #a335ee; }
+.gear-name.legendary { color: #ff8000; }
+
+.gear-slot {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.gear-ilvl {
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 0.9rem;
+}
+
+.gem-enchant {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.gem,
+.enchant {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border-accent);
+}
+
+.gem {
+  color: var(--accent-success);
+}
+
+.enchant {
+  color: var(--accent-purple);
+}
+
+.no-gear {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 32px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+}
+
+/* Per-Player Talents in Header */
+.ranking-header .talent-row {
   display: flex;
   gap: 8px;
 }
 
-.rank-entry .talent-icon-img {
+.ranking-header .talent-icon-img {
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -415,7 +625,7 @@ a.wowhead del {
   transition: all 0.2s ease;
 }
 
-.rank-entry:hover .talent-icon-img {
+.ranking-header:hover .talent-icon-img {
   border-color: var(--accent-purple);
   transform: scale(1.1);
 }
@@ -465,6 +675,11 @@ a.wowhead del {
   color: var(--accent-success);
   text-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
   font-weight: 800;
+}
+
+.talent-link.is-meta .talent-icon-img {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 2px var(--accent-gold), 0 8px 20px rgba(251, 191, 36, 0.3);
 }
 
 .loader {
@@ -536,6 +751,14 @@ a.wowhead del {
   .content-area {
     padding: 24px;
   }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gear-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -578,16 +801,24 @@ a.wowhead del {
     height: 48px;
   }
   
-  .rank-entry {
+  .ranking-header {
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: 16px;
     text-align: center;
   }
+
+  .header-right {
+    justify-content: center;
+  }
   
-  .rank-entry .name-wrapper {
-    width: 100%;
+  .ranking-header .name-wrapper {
     text-align: center;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 }
 
@@ -619,10 +850,26 @@ a.wowhead del {
   .talent-summary .talent-percent {
     font-size: 0.9rem;
   }
+
+  .ranking-header {
+    padding: 16px;
+  }
+
+  .dropdown-content.active {
+    padding: 16px;
+  }
+
+  .gear-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gear-item {
+    padding: 12px;
+  }
 }
 
 /* =================================================================
-  Accessibility improvements
+  Focus and Accessibility improvements
   ================================================================= */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -636,4 +883,22 @@ a.wowhead del {
 }
 
 /* Focus styles for keyboard navigation */
-button
+button:focus,
+.talent-link:focus,
+.ranking-header:focus {
+  outline: 2px solid var(--accent-purple);
+  outline-offset: 2px;
+}
+
+/* Ensure proper contrast for accessibility */
+.info-value,
+.gear-name {
+  color: var(--text-primary);
+}
+
+/* Hide expand icon on very small screens */
+@media (max-width: 360px) {
+  .expand-icon {
+    display: none;
+  }
+}
