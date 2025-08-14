@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow Priest Haste Calculator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://wow.zamimg.com/widgets/power.js"></script>
+
+  <style>
+    :root {
+      --primary-bg: #0a0a0f;
+      --secondary-bg: #1a1a2e;
+      --card-bg: #16213e;
+      --accent-color: #8b5cf6;
+      --accent-hover: #a78bfa;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --border-color: #334155;
+      --shadow-color: rgba(139, 92, 246, 0.2);
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .calculator-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.3),
+        0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .input-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .input-label {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .haste-input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      background: var(--secondary-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-primary);
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+      -moz-appearance: textfield;
+    }
+
+    .haste-input::-webkit-outer-spin-button,
+    .haste-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .haste-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--shadow-color);
+      transform: translateY(-1px);
+    }
+
+    .haste-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .result-display {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .result-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .result-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .spells-table {
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .table-header {
+      background: var(--card-gradient);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .table-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .spell-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.2s ease;
+    }
+
+    .spell-row:last-child {
+      border-bottom: none;
+    }
+
+    .spell-row:hover {
+      background: rgba(139, 92, 246, 0.05);
+    }
+
+    .spell-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .spell-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      object-fit: cover;
+    }
+
+    .spell-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .spell-name:hover {
+      color: var(--accent-color);
+    }
+
+    .ticks-badge {
+      background: var(--accent-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .breakpoint-info {
+      text-align: right;
+    }
+
+    .breakpoint-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .breakpoint-maxed {
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    .progress-container {
+      width: 120px;
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-left: auto;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--gradient);
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 3px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* New CSS for the Centered Toggle Switch */
+    .race-selection {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1.5rem;
+    }
+    
+    .race-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .race-checkbox {
+        display: none;
+    }
+    
+    .race-switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+    }
+    
+    .race-switch::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--border-color);
+        border-radius: 12px;
+        transition: background-color 0.2s ease;
+    }
+    
+    .race-switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background-color: #f8fafc;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+    }
+    
+    .race-checkbox:checked + .race-switch::before {
+        background-color: var(--accent-color);
+    }
+    
+    .race-checkbox:checked + .race-switch::after {
+        transform: translateX(20px);
+    }
+    
+    .race-text {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    
+    .race-checkbox:checked ~ .race-text {
+        color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .calculator-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+      }
+
+      .spell-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .breakpoint-info {
+        text-align: center;
+      }
+
+      .progress-container {
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Shadow Priest Haste Calculator</h1>
+      <p>Optimize your DoT breakpoints and maximize your damage potential</p>
+    </div>
+
+    <div class="calculator-card">
+      <div class="input-section">
+        <div class="input-wrapper">
+          <input
+            type="number"
+            id="hasteRating"
+            class="haste-input"
+            min="0"
+            max="20000"
+            placeholder="Enter your haste rating"
+          />
+        </div>
+        <div class="race-selection">
+          <label class="race-toggle">
+            <input type="checkbox" id="goblinRacial" class="race-checkbox">
+            <span class="race-switch"></span>
+            <span class="race-text">Goblin (Time is Money: +1% haste)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="result-display">
+        <div class="result-label">Effective Haste</div>
+        <div class="result-value" id="hasteResult">0.00%</div>
+        <div id="gcdWarning"></div>
+      </div>
+
+      <div class="spells-table">
+        <div class="table-header">
+          <h2 class="table-title">DoT Breakpoint Analysis</h2>
+        </div>
+        <div id="spellsContainer"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Includes 5% haste from Shadowform • Data based on WoW Classic mechanics</p>
+    </div>
+  </div>
+
+  <script>
+    const breakpoints = {
+      "Shadow Word: Pain": {
+        id: 589,
+        points: [8.32, 24.97, 41.68],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg"
+      },
+      "Vampiric Touch": {
+        id: 34914,
+        points: [9.99, 30.01, 49.95],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg"
+      },
+      "Devouring Plague": {
+        id: 2944,
+        points: [8.28, 24.92, 41.74],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg"
+      }
+    };
+
+    function calculateHaste() {
+      const rating = Math.min(Number(document.getElementById('hasteRating').value) || 0, 20000);
+      const isGoblin = document.getElementById('goblinRacial').checked;
+      
+      let effectiveHaste;
+      
+      if (isGoblin) {
+        // Goblin formula: (1 + Rating/42500) × (1 + Buffs + 0.01) - 1
+        // Where Buffs = Shadowform (0.05), so total = 0.06
+        effectiveHaste = ((1 + rating / 42500) * (1 + 0.05 + 0.01) - 1) * 100;
+      } else {
+        // Regular formula: (1 + Rating/42500) × (1 + Buffs) - 1
+        // Where Buffs = Shadowform (0.05)
+        effectiveHaste = ((1 + rating / 42500) * (1 + 0.05) - 1) * 100;
+      }
+
+      document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
+
+      // GCD Cap warning
+      const gcdCap = isGoblin ? 17614 : 18215;
+      const warningElement = document.getElementById('gcdWarning');
+      
+      if (rating >= gcdCap) {
+        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating) - No further GCD reduction possible</div>`;
+      } else {
+        warningElement.innerHTML = '';
+      }
+
+      let spellsHTML = '';
+      for (const [spell, data] of Object.entries(breakpoints)) {
+        let extraTicks = 0;
+        let nextBP = 'Maxed';
+        let nextBPValue = null;
+
+        for (let i = 0; i < data.points.length; i++) {
+          if (effectiveHaste >= data.points[i]) {
+            extraTicks++;
+          } else {
+            nextBPValue = data.points[i];
+            nextBP = `${nextBPValue}% (${calculateRating(nextBPValue, isGoblin)} rating)`;
+            break;
+          }
+        }
+
+        let progressPercent = 100;
+        if (nextBPValue !== null) {
+          const prevBP = data.points[extraTicks - 1] ?? 0;
+          progressPercent = Math.min(
+            100,
+            Math.max(0, ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100)
+          );
+        }
+
+        const isMaxed = nextBP === 'Maxed';
+
+        spellsHTML += `
+          <div class="spell-row">
+            <div class="spell-info">
+              <a href="https://www.wowhead.com/spell=${data.id}"
+                 target="_blank"
+                 class="spell-name"
+                 data-wowhead="spell=${data.id}">
+                <img src="${data.icon}" alt="${spell}" class="spell-icon">
+              </a>
+              <a href="https://www.wowhead.com/spell=${data.id}"
+                 target="_blank"
+                 class="spell-name"
+                 data-wowhead="spell=${data.id}">
+                ${spell}
+              </a>
+            </div>
+            
+            <div class="ticks-badge">+${extraTicks} ticks</div>
+            
+            <div class="breakpoint-info">
+              <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
+                ${nextBP}
+              </div>
+              ${!isMaxed ? `
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                </div>
+              ` : ''}
+            </div>
+          </div>`;
+      }
+      
+      document.getElementById('spellsContainer').innerHTML = spellsHTML;
+
+      // Refresh Wowhead tooltips
+      if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+      }
+    }
+
+    // Calculate the rating needed to reach a given haste percent using the correct Blizzard formula
+    function calculateRating(targetPercent, isGoblin = false) {
+      const targetHasteDecimal = targetPercent / 100;
+      
+      if (isGoblin) {
+        // Goblin: Rating = 42500 × ((1 + Target Haste) / (1 + Buffs + 0.01) - 1)
+        // Where Buffs = 0.05 (Shadowform), so denominator = 1.06
+        return Math.round(42500 * ((1 + targetHasteDecimal) / 1.06 - 1));
+      } else {
+        // Regular: Rating = 42500 × ((1 + Target Haste) / (1 + Buffs) - 1)
+        // Where Buffs = 0.05 (Shadowform), so denominator = 1.05
+        return Math.round(42500 * ((1 + targetHasteDecimal) / 1.05 - 1));
+      }
+    }
+
+    // Event listeners
+    document.getElementById('hasteRating').addEventListener('input', calculateHaste);
+    document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
+    document.getElementById('hasteRating').addEventListener('focus', function() {
+      this.select();
+    });
+
+    // Initialize on load
+    calculateHaste();
+  </script>
+</body>
+</html>
