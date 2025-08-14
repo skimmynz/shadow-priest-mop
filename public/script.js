@@ -111,16 +111,50 @@ function buildGearDisplay(gear) {
     14: 'Back', 15: 'Main Hand', 16: 'Off Hand', 17: 'Ranged'
   };
 
+  // Pre-calculate the 'pcs' (piece set) string. This tells Wowhead what other
+  // items are equipped to correctly calculate set bonuses in the tooltip.
+  const allItemIds = gear
+    .map(item => item ? item.id : 0)
+    .filter(Boolean)
+    .join(':');
+
   return gear.map((item, index) => {
     if (!item || item.id === 0) return ''; // Skip empty slots
 
     const slotName = gearSlots[index] || `Slot ${index}`;
     const qualityClass = item.quality || 'common';
-
     const iconSrc = `https://assets.rpglogs.com/img/warcraft/abilities/${item.icon || 'inv_misc_questionmark.jpg'}`;
     
-    const itemUrl = `https://www.wowhead.com/mop-classic/item=${item.id}`;
+    // Build a query string with item-specific details for the Wowhead tooltip.
+    const params = new URLSearchParams();
+    
+    // Add item level
+    if (item.itemLevel) {
+      params.append('ilvl', item.itemLevel);
+    }
+    
+    // Add the full piece set for set bonus calculations
+    if (allItemIds) {
+      params.append('pcs', allItemIds);
+    }
 
+    // Add gem IDs as a colon-separated list
+    const gemIds = (Array.isArray(item.gems) ? item.gems : [])
+      .map(gem => gem.id)
+      .filter(Boolean);
+    if (gemIds.length > 0) {
+      params.append('gems', gemIds.join(':'));
+    }
+
+    // Add enchant ID
+    if (item.permanentEnchant) {
+      params.append('ench', item.permanentEnchant);
+    }
+    
+    const queryString = params.toString();
+    const itemUrl = `https://www.wowhead.com/mop-classic/item=${item.id}${queryString ? `?${queryString}` : ''}`;
+
+    // The rest of the HTML generation remains the same, it just uses the new, more detailed itemUrl.
     const gemsHtml = (Array.isArray(item.gems) ? item.gems : [])
       .map(gem => {
         if (!gem || !gem.id) return '';
@@ -134,7 +168,6 @@ function buildGearDisplay(gear) {
       enchantHtml = `<a href="${enchantUrl}" class="enchant wowhead" target="_blank" rel="noopener">Enchant: ${item.permanentEnchant}</a>`;
     }
     
-    // Use the new '.rankings-gear-name' class to create a single link for the item's icon and name.
     const itemLinkHtml = `
       <a href="${itemUrl}"
          class="rankings-gear-name ${qualityClass} wowhead"
@@ -147,8 +180,6 @@ function buildGearDisplay(gear) {
       </a>
     `;
 
-    // This structure places the new all-in-one link within the existing layout,
-    // preserving the position of the slot name and item level.
     return `
       <div class="gear-item">
         <div class="gear-header">
