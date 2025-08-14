@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Shadow Priest Haste Calculator</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Wowhead power tooltips -->
   <script src="https://wow.zamimg.com/widgets/power.js"></script>
 
   <style>
@@ -40,7 +38,7 @@
       color: var(--text-primary);
       line-height: 1.6;
       min-height: 100vh;
-      background-image: 
+      background-image:
         radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
         radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
     }
@@ -77,7 +75,7 @@
       background: var(--card-bg);
       border-radius: 20px;
       padding: 2.5rem;
-      box-shadow: 
+      box-shadow:
         0 20px 25px -5px rgba(0, 0, 0, 0.3),
         0 10px 10px -5px rgba(0, 0, 0, 0.2);
       border: 1px solid var(--border-color);
@@ -274,6 +272,76 @@
       font-size: 0.9rem;
     }
 
+    /* New CSS for the Centered Toggle Switch */
+    .race-selection {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 1.5rem;
+    }
+    
+    .race-toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .race-checkbox {
+        display: none;
+    }
+    
+    .race-switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 24px;
+    }
+    
+    .race-switch::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--border-color);
+        border-radius: 12px;
+        transition: background-color 0.2s ease;
+    }
+    
+    .race-switch::after {
+        content: '';
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background-color: #f8fafc;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+    }
+    
+    .race-checkbox:checked + .race-switch::before {
+        background-color: var(--accent-color);
+    }
+    
+    .race-checkbox:checked + .race-switch::after {
+        transform: translateX(20px);
+    }
+    
+    .race-text {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    
+    .race-checkbox:checked ~ .race-text {
+        color: var(--text-primary);
+    }
+
     @media (max-width: 768px) {
       .container {
         margin: 1rem auto;
@@ -299,10 +367,6 @@
         text-align: center;
       }
 
-      
-
-
-
       .progress-container {
         margin: 0 auto;
       }
@@ -319,18 +383,19 @@
     <div class="calculator-card">
       <div class="input-section">
         <div class="input-wrapper">
-          <input 
-            type="number" 
-            id="hasteRating" 
+          <input
+            type="number"
+            id="hasteRating"
             class="haste-input"
-            min="0" 
+            min="0"
             max="20000"
-            placeholder="Enter your haste rating" 
+            placeholder="Enter your haste rating"
           />
         </div>
         <div class="race-selection">
-          <label class="race-label">
+          <label class="race-toggle">
             <input type="checkbox" id="goblinRacial" class="race-checkbox">
+            <span class="race-switch"></span>
             <span class="race-text">Goblin (Time is Money: +1% haste)</span>
           </label>
         </div>
@@ -350,9 +415,7 @@
       </div>
     </div>
 
-    <div class="footer">
-      <p>Includes 5% haste from Shadowform • Data based on WoW Classic mechanics</p>
-    </div>
+
   </div>
 
   <script>
@@ -432,14 +495,14 @@
         spellsHTML += `
           <div class="spell-row">
             <div class="spell-info">
-              <a href="https://www.wowhead.com/spell=${data.id}" 
-                 target="_blank" 
+              <a href="https://www.wowhead.com/spell=${data.id}"
+                 target="_blank"
                  class="spell-name"
                  data-wowhead="spell=${data.id}">
                 <img src="${data.icon}" alt="${spell}" class="spell-icon">
               </a>
-              <a href="https://www.wowhead.com/spell=${data.id}" 
-                 target="_blank" 
+              <a href="https://www.wowhead.com/spell=${data.id}"
+                 target="_blank"
                  class="spell-name"
                  data-wowhead="spell=${data.id}">
                 ${spell}
@@ -496,5 +559,3 @@
   </script>
 </body>
 </html>
-
-
