@@ -6,114 +6,335 @@
   <title>Shadow Priest Haste Calculator</title>
 
   <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis href="https://fonts.gstatic.com"m/css2?family=Roboto:wght@400;700&display=swap
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- Wowhead power tooltips -->
-  https://wow.zamimg.com/widgets/power.js
+  <script src="https://wow.zamimg.com/widgets/power.js"></script>
 
   <style>
-    :root { color-scheme: dark; }
+    :root {
+      --primary-bg: #0a0a0f;
+      --secondary-bg: #1a1a2e;
+      --card-bg: #16213e;
+      --accent-color: #8b5cf6;
+      --accent-hover: #a78bfa;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --border-color: #334155;
+      --shadow-color: rgba(139, 92, 246, 0.2);
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --card-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      font-family: 'Roboto', sans-serif;
-      background: #121212;
-      color: #f5f5f5;
-      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
     }
+
     .container {
-      max-width: 700px;
-      margin: 50px auto;
-      background: #1e1e2f;
-      padding: 30px;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .calculator-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.3),
+        0 10px 10px -5px rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .input-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .input-label {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .haste-input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      font-size: 1.2rem;
+      font-weight: 500;
+      background: var(--secondary-bg);
+      border: 2px solid var(--border-color);
       border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      color: var(--text-primary);
       text-align: center;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #ffcc00;
-    }
-    .input-group {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    input {
-      width: 60%;
-      padding: 12px;
-      font-size: 18px;
-      border: 2px solid #ffcc00;
-      border-radius: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
-      background: #2c2c3e;
-      color: #fff;
+    }
+
+    .haste-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--shadow-color);
+      transform: translateY(-1px);
+    }
+
+    .haste-input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .result-display {
       text-align: center;
-      transition: 0.3s;
+      margin-bottom: 2.5rem;
+      padding: 1.5rem;
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
     }
-    input:focus {
-      border-color: #ffd633;
-      box-shadow: 0 0 10px #ffcc00;
+
+    .result-label {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .result {
-      font-size: 20px;
-      margin-bottom: 20px;
+
+    .result-value {
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #333;
-      text-align: center;
-    }
-    th {
-      background: #29293d;
-      color: #ffcc00;
-    }
-    td img {
-      width: 24px;
-      height: 24px;
-      vertical-align: middle;
-      margin-right: 8px;
-    }
-    .progress-bar {
-      width: 100%;
-      background: #333;
-      border-radius: 6px;
+
+    .spells-table {
+      background: var(--secondary-bg);
+      border-radius: 16px;
       overflow: hidden;
-      height: 10px;
-      margin-top: 6px;
+      border: 1px solid var(--border-color);
     }
-    .progress {
-      height: 10px;
-      background: #ffcc00;
+
+    .table-header {
+      background: var(--card-gradient);
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .table-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .spell-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.2s ease;
+    }
+
+    .spell-row:last-child {
+      border-bottom: none;
+    }
+
+    .spell-row:hover {
+      background: rgba(139, 92, 246, 0.05);
+    }
+
+    .spell-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .spell-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid var(--border-color);
+      object-fit: cover;
+    }
+
+    .spell-name {
+      font-weight: 600;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .spell-name:hover {
+      color: var(--accent-color);
+    }
+
+    .ticks-badge {
+      background: var(--accent-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .breakpoint-info {
+      text-align: right;
+    }
+
+    .breakpoint-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .breakpoint-maxed {
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    .progress-container {
+      width: 120px;
+      height: 6px;
+      background: var(--border-color);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-left: auto;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--gradient);
       width: 0%;
-      transition: width 0.4s ease;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 3px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem auto;
+        padding: 0 0.5rem;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .calculator-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+      }
+
+      .spell-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .breakpoint-info {
+        text-align: center;
+      }
+
+      .progress-container {
+        margin: 0 auto;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Shadow Priest Haste Calculator</h1>
-
-    <div class="input-group">
-      <input type="number" id="hasteRating" min="0" placeholder="Enter your Haste Rating" />
+    <div class="header">
+      <h1>Shadow Priest Haste Calculator</h1>
+      <p>Optimize your DoT breakpoints and maximize your damage potential</p>
     </div>
 
-    <div class="result" id="hasteResult">Effective Haste: <b>0.00%</b></div>
+    <div class="calculator-card">
+      <div class="input-section">
+        <label class="input-label" for="hasteRating">Haste Rating</label>
+        <div class="input-wrapper">
+          <input 
+            type="number" 
+            id="hasteRating" 
+            class="haste-input"
+            min="0" 
+            placeholder="Enter your haste rating" 
+          />
+        </div>
+      </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Spell</th>
-          <th>Extra Ticks</th>
-          <th>Next Breakpoint</th>
-        </tr>
-      </thead>
-      <tbody id="tickTable"></tbody>
-    </table>
+      <div class="result-display">
+        <div class="result-label">Effective Haste</div>
+        <div class="result-value" id="hasteResult">0.00%</div>
+      </div>
+
+      <div class="spells-table">
+        <div class="table-header">
+          <h2 class="table-title">DoT Breakpoint Analysis</h2>
+        </div>
+        <div id="spellsContainer"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Includes 5% haste from Shadowform • Data based on WoW Classic mechanics</p>
+    </div>
   </div>
 
   <script>
@@ -136,16 +357,14 @@
     };
 
     function calculateHaste() {
-      const rating = Number(document.getElementById('hasteRating').value);
-      if (Number.isNaN(rating) || rating < 0) return;
-
+      const rating = Number(document.getElementById('hasteRating').value) || 0;
+      
       const buff = 0.05; // Shadowform
       const effectiveHaste = ((1 + rating / 42500) * (1 + buff) - 1) * 100;
 
-      document.getElementById('hasteResult').innerHTML =
-        `Effective Haste: <b>${effectiveHaste.toFixed(2)}%</b>`;
+      document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
 
-      let tableHTML = '';
+      let spellsHTML = '';
       for (const [spell, data] of Object.entries(breakpoints)) {
         let extraTicks = 0;
         let nextBP = 'Maxed';
@@ -170,18 +389,36 @@
           );
         }
 
-        tableHTML += `
-          <tr>
-            <td>
-              <img src="${data.icon}" alt="${spell}">
-              <a href="https://www.wowhead.com/spell=${data.id}" target="_blank" data-wowhead="aTicks}</td>
-            <td>
-              ${nextBP}
-              <div class="progress-bar"><div class="progress" style="width:${progressPercent}%"></div></div>
-            </td>
-          </tr>`;
+        const isMaxed = nextBP === 'Maxed';
+
+        spellsHTML += `
+          <div class="spell-row">
+            <div class="spell-info">
+              <img src="${data.icon}" alt="${spell}" class="spell-icon">
+              <a href="https://www.wowhead.com/spell=${data.id}" 
+                 target="_blank" 
+                 class="spell-name"
+                 data-wowhead="spell=${data.id}">
+                ${spell}
+              </a>
+            </div>
+            
+            <div class="ticks-badge">+${extraTicks} ticks</div>
+            
+            <div class="breakpoint-info">
+              <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
+                ${nextBP}
+              </div>
+              ${!isMaxed ? `
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                </div>
+              ` : ''}
+            </div>
+          </div>`;
       }
-      document.getElementById('tickTable').innerHTML = tableHTML;
+      
+      document.getElementById('spellsContainer').innerHTML = spellsHTML;
 
       // Refresh Wowhead tooltips
       if (typeof $WowheadPower !== 'undefined') {
@@ -197,8 +434,14 @@
       return Math.round((targetHasteWithoutBuffs - 1) * 42500);
     }
 
+    // Event listeners
     document.getElementById('hasteRating').addEventListener('input', calculateHaste);
-    calculateHaste(); // initialize on load
+    document.getElementById('hasteRating').addEventListener('focus', function() {
+      this.select();
+    });
+
+    // Initialize on load
+    calculateHaste();
   </script>
 </body>
 </html>
