@@ -790,14 +790,16 @@
         if (inputMode === 'rating') {
           hasteInput.placeholder = '0';
           hasteInput.setAttribute('max', '38450');
+          hasteInput.setAttribute('maxlength', '5');  // <-- NEW LINE
           hasteInput.setAttribute('step', '1');
           hasteInput.type = 'number';
           label.textContent = 'Enter your haste rating';
         } else {
           hasteInput.placeholder = '0.00%';
-          hasteInput.removeAttribute('max'); // Remove max to allow formatting
+          hasteInput.removeAttribute('max');
           hasteInput.removeAttribute('step');
-          hasteInput.type = 'text'; // Change to text for custom formatting
+          hasteInput.removeAttribute('maxlength');  // <-- NEW LINE
+          hasteInput.type = 'text';
           hasteInput.inputMode = 'decimal';
           label.textContent = 'Enter your haste percentage';
         }
@@ -948,6 +950,21 @@
 
     // Event listeners
     hasteInput.addEventListener('input', handleInput);
+    hasteInput.addEventListener('paste', handleInput);
+    hasteInput.addEventListener('keydown', function(e) {
+      // For rating mode, prevent non-numeric keys (except allowed keys)
+      if (inputMode === 'rating') {
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        if (!allowedKeys.includes(e.key) && (e.key < '0' || e.key > '9') && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+        }
+        
+        // Prevent input if already at 5 digits and not deleting
+        if (this.value.length >= 5 && !allowedKeys.includes(e.key) && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+        }
+      }
+    });
     document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
     hasteInput.addEventListener('focus', function() {
       this.select();
