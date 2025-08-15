@@ -483,27 +483,6 @@
       width: 0%;
       transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 8px;
-      position: relative;
-    }
-
-    .progress-bar::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-      animation: shimmer 2.5s infinite;
-    }
-
-    @keyframes shimmer {
-      0% {
-        transform: translateX(-100%);
-      }
-      100% {
-        transform: translateX(100%);
-      }
     }
 
     .footer {
@@ -862,7 +841,7 @@
           input.step = '1';
           label.textContent = 'Enter your haste rating';
         } else {
-          input.placeholder = '0.00';
+          input.placeholder = '0.00%';
           input.max = '100';
           input.step = '0.01';
           label.textContent = 'Enter your haste percentage';
@@ -1011,4 +990,3 @@
   </script>
 </body>
 </html>
-
