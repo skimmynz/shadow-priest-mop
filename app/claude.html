@@ -70,11 +70,11 @@
 
     .header {
       text-align: center;
-      margin-bottom: 0.5rem;
+      flex-shrink: 0;
     }
 
     .header h1 {
-      font-size: 2rem;
+      font-size: 1.8rem;
       font-weight: 900;
       background: var(--gradient-primary);
       -webkit-background-clip: text;
@@ -87,17 +87,15 @@
 
     .header p {
       color: var(--text-secondary);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 400;
-      max-width: 600px;
-      margin: 0 auto;
       opacity: 0.9;
     }
 
     .main-content {
       flex: 1;
       display: grid;
-      grid-template-columns: 350px 1fr;
+      grid-template-columns: 380px 1fr;
       gap: 1.5rem;
       min-height: 0;
     }
@@ -106,6 +104,7 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      flex-shrink: 0;
     }
 
     .input-card {
@@ -138,7 +137,7 @@
     .input-row {
       display: flex;
       gap: 0.5rem;
-      align-items: center;
+      align-items: stretch;
     }
 
     .toggle-buttons {
@@ -373,7 +372,7 @@
 
     .table-header {
       background: linear-gradient(135deg, var(--surface-bg) 0%, var(--card-bg) 100%);
-      padding: 1rem;
+      padding: 1rem 1.5rem;
       border-bottom: 1px solid var(--border-color);
       flex-shrink: 0;
     }
@@ -396,7 +395,7 @@
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      padding: 1rem;
+      padding: 1rem 1.5rem;
       border-bottom: 1px solid var(--border-color);
       transition: all 0.3s ease;
       position: relative;
@@ -523,6 +522,7 @@
       .main-content {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
+        gap: 1rem;
       }
       
       .left-panel {
@@ -567,6 +567,7 @@
         grid-template-columns: 1fr;
         gap: 1rem;
         text-align: center;
+        padding: 1rem;
       }
       
       .spell-info {
@@ -624,8 +625,8 @@
 
         <div class="result-card">
           <div class="result-label">Effective Haste</div>
-          <div class="result-value" id="hasteResult">0.00%</div>
-          <div class="conversion-text" id="conversionText"></div>
+          <div class="result-value" id="hasteResult">5.00%</div>
+          <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
           <div id="gcdWarning"></div>
         </div>
       </div>
@@ -720,7 +721,13 @@
       // Show conversion
       const conversionText = document.getElementById('conversionText');
       if (inputMode === 'rating') {
-        conversionText.textContent = rating > 0 ? `${Math.round(rating).toLocaleString()} haste rating` : '';
+        if (rating > 0) {
+          const base = isGoblin ? 6 : 5;
+          conversionText.textContent = `${Math.round(rating).toLocaleString()} rating + ${base}% base`;
+        } else {
+          const base = isGoblin ? 6 : 5;
+          conversionText.textContent = `Base: ${base}% ${isGoblin ? '(5% Shadowform + 1% Goblin)' : 'Shadowform'}`;
+        }
       } else {
         conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
       }
@@ -730,7 +737,7 @@
       const warningElement = document.getElementById('gcdWarning');
       
       if (rating >= gcdCap) {
-        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating) - No further GCD reduction possible</div>`;
+        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating)</div>`;
       } else {
         warningElement.innerHTML = '';
       }
@@ -843,3 +850,21 @@
         const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
         if (!allowedKeys.includes(e.key) && (e.key < '0' || e.key > '9') && !e.ctrlKey && !e.metaKey) {
           e.preventDefault();
+        }
+        
+        // Prevent input if already at 5 digits and not deleting
+        if (this.value.length >= 5 && !allowedKeys.includes(e.key) && !e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+        }
+      }
+    });
+    document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
+    hasteInput.addEventListener('focus', function() {
+      this.select();
+    });
+
+    // Initialize on load
+    calculateHaste();
+  </script>
+</body>
+</html>
