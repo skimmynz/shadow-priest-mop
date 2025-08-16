@@ -94,16 +94,43 @@
 
     .main-content {
       flex: 1;
-      display: grid;
-      grid-template-columns: 380px 380px;
-      grid-template-rows: 600px;
-      gap: 1.5rem;
-      min-height: 0;
-      max-height: 600px;
+      display: flex;
       justify-content: center;
+      align-items: flex-start;
       max-width: 100%;
       width: fit-content;
       margin: 0 auto;
+    }
+
+    .unified-container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-xl);
+      position: relative;
+      overflow: hidden;
+      width: 780px;
+      height: 600px;
+      max-height: 600px;
+    }
+
+    .unified-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-accent);
+    }
+
+    .unified-content {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.5rem;
+      height: 100%;
+      padding: 1.5rem;
     }
 
     .left-panel {
@@ -111,17 +138,16 @@
       flex-direction: column;
       gap: 1rem;
       flex-shrink: 0;
-      height: 600px;
-      max-height: 600px;
+      height: 100%;
+      max-height: 100%;
     }
 
     .input-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow-xl);
-      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       position: relative;
       overflow: hidden;
     }
@@ -132,8 +158,9 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 2px;
+      height: 1px;
       background: var(--gradient-accent);
+      opacity: 0.6;
     }
 
     .input-section {
@@ -315,12 +342,11 @@
     }
 
     .result-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow-xl);
-      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      padding: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       flex: 1;
       position: relative;
@@ -367,28 +393,28 @@
     .right-panel {
       min-height: 0;
       overflow: hidden;
-      width: 380px;
-      height: 600px;
-      max-height: 600px;
+      height: 100%;
+      max-height: 100%;
     }
 
     .spells-table {
-      background: var(--glass-bg);
-      backdrop-filter: blur(24px);
-      border-radius: 16px;
+      background: transparent;
+      border-radius: 0;
       overflow: hidden;
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--shadow-xl);
+      border: none;
+      box-shadow: none;
       height: 100%;
       display: flex;
       flex-direction: column;
     }
 
     .table-header {
-      background: linear-gradient(135deg, var(--surface-bg) 0%, var(--card-bg) 100%);
+      background: rgba(255, 255, 255, 0.05);
       padding: 1rem 1.5rem;
       border-bottom: 1px solid var(--border-color);
       flex-shrink: 0;
+      border-radius: 12px 12px 0 0;
+      margin-bottom: 0.5rem;
     }
 
     .table-title {
@@ -614,50 +640,54 @@
     </div>
 
     <div class="main-content">
-      <div class="left-panel">
-        <div class="input-card">
-          <div class="input-section">
-            <div class="input-row">
-              <div class="toggle-buttons">
-                <button class="toggle-btn active" data-mode="rating">Haste Rating</button>
-                <button class="toggle-btn" data-mode="percentage">Haste %</button>
+      <div class="unified-container">
+        <div class="unified-content">
+          <div class="left-panel">
+            <div class="input-card">
+              <div class="input-section">
+                <div class="input-row">
+                  <div class="toggle-buttons">
+                    <button class="toggle-btn active" data-mode="rating">Haste Rating</button>
+                    <button class="toggle-btn" data-mode="percentage">Haste %</button>
+                  </div>
+                  <input
+                    type="number"
+                    id="hasteInput"
+                    class="haste-input"
+                    min="0"
+                    max="20000"
+                    step="1"
+                    placeholder="0"
+                  />
+                </div>
+                
+                <div class="race-selection">
+                  <label class="race-toggle">
+                    <input type="checkbox" id="goblinRacial" class="race-checkbox">
+                    <span class="race-switch"></span>
+                    <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
+                    <span class="race-text">Goblin (+1% haste)</span>
+                  </label>
+                </div>
               </div>
-              <input
-                type="number"
-                id="hasteInput"
-                class="haste-input"
-                min="0"
-                max="20000"
-                step="1"
-                placeholder="0"
-              />
             </div>
-            
-            <div class="race-selection">
-              <label class="race-toggle">
-                <input type="checkbox" id="goblinRacial" class="race-checkbox">
-                <span class="race-switch"></span>
-                <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
-                <span class="race-text">Goblin (+1% haste)</span>
-              </label>
+
+            <div class="result-card">
+              <div class="result-label">Effective Haste</div>
+              <div class="result-value" id="hasteResult">5.00%</div>
+              <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
+              <div id="gcdWarning"></div>
             </div>
           </div>
-        </div>
 
-        <div class="result-card">
-          <div class="result-label">Effective Haste</div>
-          <div class="result-value" id="hasteResult">5.00%</div>
-          <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
-          <div id="gcdWarning"></div>
-        </div>
-      </div>
-
-      <div class="right-panel">
-        <div class="spells-table">
-          <div class="table-header">
-            <h2 class="table-title">DoT Breakpoint Analysis</h2>
+          <div class="right-panel">
+            <div class="spells-table">
+              <div class="table-header">
+                <h2 class="table-title">DoT Breakpoint Analysis</h2>
+              </div>
+              <div class="spells-container" id="spellsContainer"></div>
+            </div>
           </div>
-          <div class="spells-container" id="spellsContainer"></div>
         </div>
       </div>
     </div>
@@ -834,8 +864,10 @@
             </div>
             
             <div class="breakpoint-info">
-              <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
-                ${nextBP}
+              <div class="breakpoint-text-container">
+                <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
+                  ${nextBP}
+                </div>
               </div>
               ${!isMaxed ? `
                 <div class="progress-container">
