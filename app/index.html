@@ -684,6 +684,17 @@
       
       .spell-info {
         justify-content: center;
+        flex-wrap: nowrap;
+      }
+
+      .spell-name {
+        font-size: 0.9rem;
+      }
+
+      .ticks-badge {
+        min-width: 70px;
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
       }
       
       .breakpoint-info {
@@ -980,12 +991,25 @@
       // For rating mode, prevent non-numeric keys (except allowed keys)
       if (inputMode === 'rating') {
         const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-        if (!allowedKeys.includes(e.key) && (e.key < '0' || e.key > '9') && !e.ctrlKey && !e.metaKey) {
-          e.preventDefault();
+        const isNumericKey = e.key >= '0' && e.key <= '9';
+        const isControlKey = e.ctrlKey || e.metaKey;
+        
+        // Allow control keys and allowed keys
+        if (allowedKeys.includes(e.key) || isControlKey) {
+          return;
         }
         
-        // Prevent input if already at 5 digits and not deleting
-        if (this.value.length >= 5 && !allowedKeys.includes(e.key) && !e.ctrlKey && !e.metaKey) {
+        // Prevent non-numeric keys
+        if (!isNumericKey) {
+          e.preventDefault();
+          return;
+        }
+        
+        // Check if text is selected
+        const hasSelection = this.selectionStart !== this.selectionEnd;
+        
+        // Prevent input if already at 5 digits and no text is selected
+        if (this.value.length >= 5 && !hasSelection) {
           e.preventDefault();
         }
       }
