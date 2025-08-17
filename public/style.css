@@ -36,7 +36,7 @@
 }
 
 /* =================================================================
-  Base & Layout Styles - Modern enhancements
+  Base & Layout Styles - Optimized for desktop
   ================================================================= */
 * {
   box-sizing: border-box;
@@ -53,16 +53,16 @@ body {
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   line-height: 1.6;
   margin: 0;
-  padding: 2rem;
+  padding: 2.5rem 2rem;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 .main-container {
   display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 2rem;
-  max-width: 1400px;
+  grid-template-columns: 280px 1fr;
+  gap: 2.5rem;
+  max-width: 1600px;
   margin: 0 auto;
   align-items: flex-start;
   min-height: 100vh;
@@ -70,14 +70,14 @@ body {
 
 .sidebar {
   position: sticky;
-  top: 2rem;
+  top: 2.5rem;
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 1.75rem;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-xl);
-  width: 320px;
+  width: 280px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -104,7 +104,7 @@ body {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 2.5rem;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-xl);
   width: 100%;
@@ -132,8 +132,8 @@ body {
 }
 
 h1 {
-  margin: 0 0 2rem 0;
-  font-size: clamp(2rem, 4vw, 3rem);
+  margin: 0 0 1.5rem 0;
+  font-size: clamp(2.25rem, 3vw, 2.75rem);
   font-weight: 900;
   background: var(--gradient-shadow);
   -webkit-background-clip: text;
@@ -149,11 +149,11 @@ h1 {
 h1::before {
   content: '';
   position: absolute;
-  top: -20px;
+  top: -15px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100px;
-  height: 4px;
+  width: 80px;
+  height: 3px;
   background: var(--gradient-shadow);
   border-radius: 2px;
   box-shadow: 0 0 20px var(--shadow-glow);
@@ -163,16 +163,16 @@ h1::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
+  gap: 2rem;
   flex-wrap: wrap;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .last-updated {
   color: var(--text-muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 500;
 }
 
@@ -181,10 +181,11 @@ h1::before {
   color: var(--text-primary);
   border: 1px solid var(--border-hover);
   padding: 0.75rem 1.5rem;
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
   font-family: inherit;
+  font-size: 0.9rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -221,25 +222,25 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Navigation (Sidebar) - Modern card-based design with FIXED HEIGHTS
+  Navigation (Sidebar) - Optimized spacing and proportions
   ================================================================= */
 
-/* Raid Selection Menu - FIXED: Equal heights for all buttons */
+/* Raid Selection Menu */
 #raid-menu {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 #raid-menu button {
   background: var(--secondary-bg);
   color: var(--text-primary);
   border: 1px solid var(--border-hover);
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0.75rem;
+  padding: 0.75rem 0.5rem;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -247,32 +248,29 @@ a.wowhead del {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  /* FIXED: Set consistent height for all raid buttons */
-  height: 120px;
+  height: 90px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 #raid-menu .raid-icon {
-  width: 64px;
-  height: 64px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: 8px;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  /* FIXED: Prevent icon from growing and maintain aspect ratio */
   flex-shrink: 0;
 }
 
 #raid-menu button span {
   color: var(--text-primary);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
   text-align: center;
-  /* FIXED: Prevent text from expanding the button */
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -293,7 +291,7 @@ a.wowhead del {
 }
 
 #raid-menu button:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 16px 40px var(--shadow-glow);
   border-color: var(--accent-color);
 }
@@ -314,7 +312,7 @@ a.wowhead del {
 #raid-menu button.active {
   border-color: var(--accent-color);
   box-shadow: 0 0 30px var(--shadow-glow);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 #raid-menu button.active::before {
@@ -325,27 +323,27 @@ a.wowhead del {
   color: var(--text-accent);
 }
 
-/* Boss Selection Menu */
+/* Boss Selection Menu - Better spacing and visual hierarchy */
 #boss-buttons {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 #boss-buttons button {
   background: var(--secondary-bg);
   color: var(--text-primary);
   border: 1px solid var(--border-hover);
-  border-radius: 16px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 1rem 1.25rem;
-  font-size: 1rem;
+  padding: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   font-family: inherit;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   text-align: left;
   position: relative;
   overflow: hidden;
@@ -375,9 +373,9 @@ a.wowhead del {
 }
 
 .boss-icon {
-  height: 48px;
-  width: 48px;
-  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  border-radius: 8px;
   border: 2px solid var(--border-hover);
   flex-shrink: 0;
   transition: all 0.3s ease;
@@ -387,7 +385,7 @@ a.wowhead del {
 #boss-buttons button:hover {
   background: var(--hover-bg);
   border-color: var(--accent-color);
-  transform: translateX(8px);
+  transform: translateX(4px);
   box-shadow: 0 8px 32px var(--shadow-glow);
 }
 
@@ -401,7 +399,7 @@ a.wowhead del {
   background: var(--gradient-shadow);
   border-color: var(--accent-color);
   color: var(--text-primary);
-  transform: translateX(6px);
+  transform: translateX(3px);
   box-shadow: 0 8px 32px var(--shadow-glow);
 }
 
@@ -411,14 +409,14 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Rankings & Talent Display - Enhanced visual hierarchy
+  Rankings & Talent Display - Better spacing and alignment
   ================================================================= */
 #rankings {
-  margin-top: 1.5rem;
-  min-height: 800px;
+  margin-top: 0;
+  min-height: 600px;
 }
 
-/* Talent Summary (Top Icons) */
+/* Talent Summary - Improved spacing */
 .talent-summary {
   background: transparent;
   border-radius: 0;
@@ -431,8 +429,8 @@ a.wowhead del {
 .talent-summary .talent-row {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .talent-summary .talent-row:last-child {
@@ -440,26 +438,26 @@ a.wowhead del {
 }
 
 .talent-summary .talent-icon-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 16px;
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
   border: 3px solid var(--border-hover);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .talent-summary .talent-percent {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Collapsible container enhancements */
+/* Collapsible container - Better proportions */
 .talent-summary-container {
   margin-bottom: 2rem;
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
+  border-radius: 16px;
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   overflow: hidden;
@@ -490,12 +488,12 @@ a.wowhead del {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 2rem;
   background: transparent;
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   font-weight: 800;
   font-family: inherit;
   text-align: left;
@@ -504,7 +502,7 @@ a.wowhead del {
 
 .collapsible-header h3 {
   margin: 0;
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   font-weight: 800;
   background: var(--gradient-shadow);
   -webkit-background-clip: text;
@@ -526,19 +524,19 @@ a.wowhead del {
 .collapsible-content.active {
   max-height: 1000px;
   opacity: 1;
-  padding: 2rem;
+  padding: 1.5rem 2rem;
 }
 
 /* =================================================================
-  DROPDOWN FUNCTIONALITY - Enhanced design with MOBILE FIX
+  DROPDOWN FUNCTIONALITY - Professional spacing and alignment
   ================================================================= */
 
 /* Player Rank Entry */
 .rank-entry {
-  margin: 1rem 0;
+  margin: 0 0 1rem 0;
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid var(--glass-border);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -552,7 +550,7 @@ a.wowhead del {
   top: 0;
   left: 0;
   height: 100%;
-  width: 4px;
+  width: 3px;
   background: var(--gradient-shadow);
   transform: scaleY(0);
   transition: transform 0.3s ease;
@@ -561,7 +559,7 @@ a.wowhead del {
 .rank-entry:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
 }
 
@@ -569,19 +567,19 @@ a.wowhead del {
   transform: scaleY(1);
 }
 
-/* Ranking Header - Clickable area */
+/* Ranking Header - Better proportions */
 .ranking-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1.5rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .ranking-header:hover {
-  background: rgba(107, 70, 193, 0.08);
+  background: rgba(107, 70, 193, 0.06);
 }
 
 .ranking-header .name-wrapper {
@@ -591,7 +589,8 @@ a.wowhead del {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  min-width: 0;
 }
 
 .ranking-header .player-link {
@@ -609,14 +608,16 @@ a.wowhead del {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 /* Expand Icon */
 .expand-icon {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
+  flex-shrink: 0;
 }
 
 .expand-icon.rotated {
@@ -624,52 +625,48 @@ a.wowhead del {
   color: var(--accent-color);
 }
 
-/* Dropdown Content - FIXED for mobile */
+/* Dropdown Content - Professional spacing */
 .dropdown-content {
   max-height: 0;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: rgba(255, 255, 255, 0.02);
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   opacity: 0;
-  /* FIXED: Ensure content doesn't overflow on mobile */
   overflow-x: auto;
 }
 
 .dropdown-content.active {
   max-height: 2000px;
   opacity: 1;
-  padding: 2rem;
-  /* FIXED: Allow horizontal scrolling on very narrow screens */
+  padding: 1.5rem;
   overflow: auto;
 }
 
-/* Info Grid Layout - FIXED for mobile */
+/* Info Grid Layout - Better desktop proportions */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
   margin-bottom: 1.5rem;
-  /* FIXED: Ensure grid doesn't break layout on narrow screens */
   width: 100%;
   min-width: 0;
 }
 
 .info-section {
   background: var(--secondary-bg);
-  padding: 1.5rem;
-  border-radius: 16px;
+  padding: 1.25rem;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  /* FIXED: Prevent overflow */
   min-width: 0;
   overflow: hidden;
 }
 
 .info-section:hover {
   border-color: var(--border-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
@@ -679,7 +676,7 @@ a.wowhead del {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   font-weight: 700;
   border-bottom: 2px solid var(--border-hover);
   padding-bottom: 0.5rem;
@@ -689,10 +686,9 @@ a.wowhead del {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
-  padding: 0.5rem 0;
+  margin-bottom: 0.6rem;
+  padding: 0.4rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  /* FIXED: Handle long content on narrow screens */
   flex-wrap: wrap;
   gap: 0.5rem;
 }
@@ -705,18 +701,18 @@ a.wowhead del {
 .info-label {
   font-weight: 600;
   color: var(--text-secondary);
-  min-width: 100px;
-  /* FIXED: Prevent label from shrinking too much */
+  min-width: 80px;
   flex-shrink: 0;
+  font-size: 0.9rem;
 }
 
 .info-value {
   color: var(--text-primary);
   text-align: right;
   font-weight: 500;
-  /* FIXED: Allow value to wrap if needed */
   word-break: break-word;
   min-width: 0;
+  font-size: 0.9rem;
 }
 
 .info-value a {
@@ -731,12 +727,11 @@ a.wowhead del {
   text-shadow: 0 0 10px var(--shadow-glow);
 }
 
-/* Gear Display - FIXED for mobile */
+/* Gear Display - Desktop optimized grid */
 .gear-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1rem;
-  /* FIXED: Better mobile handling */
   width: 100%;
   min-width: 0;
 }
@@ -744,18 +739,17 @@ a.wowhead del {
 .gear-item {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 1rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  /* FIXED: Prevent gear items from overflowing */
   min-width: 0;
   overflow: hidden;
 }
 
 .gear-item:hover {
   border-color: var(--border-hover);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
@@ -767,9 +761,9 @@ a.wowhead del {
 }
 
 .gear-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   border: 2px solid var(--border-hover);
   flex-shrink: 0;
   transition: all 0.3s ease;
@@ -792,6 +786,7 @@ a.wowhead del {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-size: 0.9rem;
 }
 
 .gear-name.poor { color: #9d9d9d; }
@@ -802,14 +797,15 @@ a.wowhead del {
 .gear-name.legendary { color: #ff8000; }
 
 .gear-slot {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
 
 .gear-ilvl {
   font-weight: 700;
   color: var(--gold-color);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  flex-shrink: 0;
 }
 
 .gem-enchant {
@@ -821,9 +817,9 @@ a.wowhead del {
 
 .gem,
 .enchant {
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 8px;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
   background: var(--hover-bg);
   border: 1px solid var(--border-hover);
 }
@@ -846,16 +842,16 @@ a.wowhead del {
   border: 1px solid var(--border-color);
 }
 
-/* Per-Player Talents in Header */
+/* Per-Player Talents in Header - Better alignment */
 .ranking-header .talent-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .ranking-header .talent-icon-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   border: 2px solid var(--border-hover);
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -891,7 +887,7 @@ a.wowhead del {
 
 /* Hover & Highlight */
 .talent-link:hover .talent-icon-img {
-  transform: translateY(-6px) scale(1.15);
+  transform: translateY(-4px) scale(1.1);
   filter: brightness(1.2) saturate(1.2);
   box-shadow: 0 16px 32px rgba(107, 70, 193, 0.4);
 }
@@ -905,8 +901,8 @@ a.wowhead del {
   border: 4px solid var(--border-color);
   border-top: 4px solid var(--accent-color);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
   margin: 2rem auto 1rem;
 }
@@ -921,7 +917,7 @@ a.wowhead del {
   text-align: center;
   color: var(--text-secondary);
   margin-top: 2rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -937,7 +933,7 @@ a.wowhead del {
   padding: 1.5rem;
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 16px;
+  border-radius: 12px;
   font-weight: 600;
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
 }
@@ -946,13 +942,13 @@ a.wowhead del {
 .empty-message {
   text-align: center;
   color: var(--text-muted);
-  margin-top: 4rem;
+  margin-top: 3rem;
   font-style: italic;
-  padding: 3rem 1.5rem;
+  padding: 2.5rem 1.5rem;
   background: var(--secondary-bg);
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid var(--border-color);
-  font-size: 1.1rem;
+  font-size: 1rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
@@ -965,6 +961,7 @@ a.wowhead del {
   color: var(--text-primary);
   font-weight: 700;
   transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .rankings-gear-name:hover {
@@ -973,9 +970,9 @@ a.wowhead del {
 }
 
 .rankings-gear-image {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
   border: 1px solid var(--border-hover);
   flex-shrink: 0;
   transition: all 0.3s ease;
@@ -996,16 +993,114 @@ a.wowhead del {
 .rankings-gear-name.legendary { color: #ff8000; }
 
 /* =================================================================
-  Responsive Design - Mobile-first improvements with ENHANCED MOBILE FIXES
+  Large Desktop Optimizations (1400px+)
   ================================================================= */
-@media (max-width: 1024px) {
+@media (min-width: 1400px) {
   .main-container {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 300px 1fr;
+    gap: 3rem;
+    max-width: 1800px;
+  }
+  
+  .sidebar {
+    width: 300px;
+    padding: 2rem;
+  }
+  
+  .content-area {
+    padding: 3rem;
+  }
+  
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+  
+  .header-controls {
+    margin-bottom: 2.5rem;
+  }
+  
+  #boss-buttons button {
+    padding: 1.25rem;
+    font-size: 1rem;
+  }
+  
+  .boss-icon {
+    height: 44px;
+    width: 44px;
+  }
+  
+  .talent-summary .talent-icon-img {
+    width: 72px;
+    height: 72px;
+  }
+  
+  .ranking-header {
+    padding: 1.5rem 2rem;
+  }
+  
+  .ranking-header .name-wrapper {
+    font-size: 1.1rem;
+  }
+  
+  .dropdown-content.active {
+    padding: 2rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .gear-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* =================================================================
+  Medium Desktop Optimizations (1024px - 1400px)  
+  ================================================================= */
+@media (min-width: 1024px) and (max-width: 1399px) {
+  .main-container {
+    max-width: 1400px;
+    gap: 2rem;
+  }
+  
+  .content-area {
+    padding: 2rem;
+  }
+  
+  .sidebar {
+    padding: 1.5rem;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  .talent-summary .talent-icon-img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .gear-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+}
+
+/* =================================================================
+  Responsive Design - Mobile optimizations (unchanged for mobile)
+  ================================================================= */
+@media (max-width: 1023px) {
+  .main-container {
+    grid-template-columns: 260px 1fr;
     gap: 1.5rem;
   }
   
   .sidebar {
     padding: 1.5rem;
+    width: 260px;
   }
   
   .content-area {
@@ -1021,15 +1116,14 @@ a.wowhead del {
   }
 
   .talent-summary .talent-icon-img {
-    width: 64px;
-    height: 64px;
+    width: 56px;
+    height: 56px;
   }
 }
 
 @media (max-width: 768px) {
   body {
     padding: 1rem;
-    /* FIXED: Prevent horizontal overflow */
     overflow-x: hidden;
   }
 
@@ -1037,7 +1131,6 @@ a.wowhead del {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    /* FIXED: Ensure container doesn't exceed viewport width */
     width: 100%;
     max-width: 100vw;
   }
@@ -1046,7 +1139,6 @@ a.wowhead del {
     position: static;
     order: -1;
     width: 100%;
-    /* FIXED: Remove fixed width on mobile */
     max-width: none;
   }
   
@@ -1065,7 +1157,6 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    /* FIXED: Smaller consistent height for mobile */
     height: 100px;
   }
 
@@ -1084,7 +1175,6 @@ a.wowhead del {
   
   .talent-summary .talent-row {
     gap: 1rem;
-    /* FIXED: Allow wrapping on very small screens */
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -1099,7 +1189,6 @@ a.wowhead del {
     align-items: stretch;
     gap: 1rem;
     text-align: center;
-    /* FIXED: Better mobile padding */
     padding: 1.25rem 1rem;
   }
 
@@ -1109,7 +1198,6 @@ a.wowhead del {
   
   .ranking-header .name-wrapper {
     text-align: center;
-    /* FIXED: Allow text to wrap if needed */
     white-space: normal;
     word-break: break-word;
   }
@@ -1117,29 +1205,24 @@ a.wowhead del {
   .info-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
-    /* FIXED: Reduce minimum width for mobile */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
   .dropdown-content.active {
     padding: 1.5rem;
-    /* FIXED: Better mobile padding */
     padding: 1rem;
   }
 
   .gear-grid {
     grid-template-columns: 1fr;
-    /* FIXED: Better mobile grid */
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
-  /* FIXED: Better mobile info sections */
   .info-section {
     padding: 1.25rem;
   }
 
   .info-row {
-    /* FIXED: Stack items vertically on very narrow screens */
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
@@ -1203,7 +1286,6 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    /* FIXED: Even smaller for very narrow screens */
     height: 90px;
     padding: 0.5rem;
   }
@@ -1227,7 +1309,6 @@ a.wowhead del {
     width: 36px;
   }
 
-  /* FIXED: Better mobile info handling */
   .info-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -1246,7 +1327,6 @@ a.wowhead del {
     padding: 0.875rem;
   }
 
-  /* FIXED: Ensure talent icons don't get too small on mobile */
   .ranking-header .talent-icon-img {
     width: 32px;
     height: 32px;
@@ -1255,7 +1335,6 @@ a.wowhead del {
   }
 }
 
-/* FIXED: Extra small screens (< 360px) */
 @media (max-width: 360px) {
   .expand-icon {
     display: none;
@@ -1401,7 +1480,7 @@ button:active {
 
 /* Top talent highlighting */
 .talent-summary .talent-link.is-top .talent-icon-img {
-  transform: translateY(-4px) scale(1.1);
+  transform: translateY(-3px) scale(1.08);
   box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
   border-color: var(--success-color);
   animation: pulse-glow 3s infinite;
@@ -1410,11 +1489,11 @@ button:active {
 @keyframes pulse-glow {
   0%, 100% { 
     box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-    transform: translateY(-4px) scale(1.1);
+    transform: translateY(-3px) scale(1.08);
   }
   50% { 
     box-shadow: 0 0 0 3px var(--success-color), 0 20px 50px rgba(16, 185, 129, 0.7);
-    transform: translateY(-6px) scale(1.12);
+    transform: translateY(-4px) scale(1.1);
   }
 }
 
