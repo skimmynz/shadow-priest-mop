@@ -221,10 +221,10 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Navigation (Sidebar) - Modern card-based design
+  Navigation (Sidebar) - Modern card-based design with FIXED HEIGHTS
   ================================================================= */
 
-/* Raid Selection Menu */
+/* Raid Selection Menu - FIXED: Equal heights for all buttons */
 #raid-menu {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
@@ -247,7 +247,8 @@ a.wowhead del {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 120px;
+  /* FIXED: Set consistent height for all raid buttons */
+  height: 120px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
@@ -258,6 +259,8 @@ a.wowhead del {
   border-radius: 12px;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  /* FIXED: Prevent icon from growing and maintain aspect ratio */
+  flex-shrink: 0;
 }
 
 #raid-menu button span {
@@ -269,6 +272,12 @@ a.wowhead del {
   position: relative;
   z-index: 1;
   text-align: center;
+  /* FIXED: Prevent text from expanding the button */
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 #raid-menu button::before {
@@ -521,7 +530,7 @@ a.wowhead del {
 }
 
 /* =================================================================
-  DROPDOWN FUNCTIONALITY - Enhanced design
+  DROPDOWN FUNCTIONALITY - Enhanced design with MOBILE FIX
   ================================================================= */
 
 /* Player Rank Entry */
@@ -615,7 +624,7 @@ a.wowhead del {
   color: var(--accent-color);
 }
 
-/* Dropdown Content */
+/* Dropdown Content - FIXED for mobile */
 .dropdown-content {
   max-height: 0;
   overflow: hidden;
@@ -623,20 +632,27 @@ a.wowhead del {
   background: rgba(255, 255, 255, 0.02);
   border-top: 1px solid var(--border-color);
   opacity: 0;
+  /* FIXED: Ensure content doesn't overflow on mobile */
+  overflow-x: auto;
 }
 
 .dropdown-content.active {
   max-height: 2000px;
   opacity: 1;
   padding: 2rem;
+  /* FIXED: Allow horizontal scrolling on very narrow screens */
+  overflow: auto;
 }
 
-/* Info Grid Layout */
+/* Info Grid Layout - FIXED for mobile */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   margin-bottom: 1.5rem;
+  /* FIXED: Ensure grid doesn't break layout on narrow screens */
+  width: 100%;
+  min-width: 0;
 }
 
 .info-section {
@@ -646,6 +662,9 @@ a.wowhead del {
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  /* FIXED: Prevent overflow */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .info-section:hover {
@@ -673,6 +692,9 @@ a.wowhead del {
   margin-bottom: 0.75rem;
   padding: 0.5rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  /* FIXED: Handle long content on narrow screens */
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .info-row:last-child {
@@ -684,18 +706,24 @@ a.wowhead del {
   font-weight: 600;
   color: var(--text-secondary);
   min-width: 100px;
+  /* FIXED: Prevent label from shrinking too much */
+  flex-shrink: 0;
 }
 
 .info-value {
   color: var(--text-primary);
   text-align: right;
   font-weight: 500;
+  /* FIXED: Allow value to wrap if needed */
+  word-break: break-word;
+  min-width: 0;
 }
 
 .info-value a {
   color: var(--text-accent);
   text-decoration: none;
   transition: color 0.3s ease;
+  word-break: break-all;
 }
 
 .info-value a:hover {
@@ -703,11 +731,14 @@ a.wowhead del {
   text-shadow: 0 0 10px var(--shadow-glow);
 }
 
-/* Gear Display */
+/* Gear Display - FIXED for mobile */
 .gear-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
+  /* FIXED: Better mobile handling */
+  width: 100%;
+  min-width: 0;
 }
 
 .gear-item {
@@ -717,6 +748,9 @@ a.wowhead del {
   padding: 1rem;
   transition: all 0.3s ease;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  /* FIXED: Prevent gear items from overflowing */
+  min-width: 0;
+  overflow: hidden;
 }
 
 .gear-item:hover {
@@ -962,7 +996,7 @@ a.wowhead del {
 .rankings-gear-name.legendary { color: #ff8000; }
 
 /* =================================================================
-  Responsive Design - Mobile-first improvements
+  Responsive Design - Mobile-first improvements with ENHANCED MOBILE FIXES
   ================================================================= */
 @media (max-width: 1024px) {
   .main-container {
@@ -995,18 +1029,25 @@ a.wowhead del {
 @media (max-width: 768px) {
   body {
     padding: 1rem;
+    /* FIXED: Prevent horizontal overflow */
+    overflow-x: hidden;
   }
 
   .main-container {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    /* FIXED: Ensure container doesn't exceed viewport width */
+    width: 100%;
+    max-width: 100vw;
   }
   
   .sidebar {
     position: static;
     order: -1;
     width: 100%;
+    /* FIXED: Remove fixed width on mobile */
+    max-width: none;
   }
   
   #raid-menu {
@@ -1024,7 +1065,8 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    min-height: 100px;
+    /* FIXED: Smaller consistent height for mobile */
+    height: 100px;
   }
 
   #raid-menu .raid-icon {
@@ -1042,6 +1084,9 @@ a.wowhead del {
   
   .talent-summary .talent-row {
     gap: 1rem;
+    /* FIXED: Allow wrapping on very small screens */
+    flex-wrap: wrap;
+    justify-content: center;
   }
   
   .talent-summary .talent-icon-img {
@@ -1054,6 +1099,8 @@ a.wowhead del {
     align-items: stretch;
     gap: 1rem;
     text-align: center;
+    /* FIXED: Better mobile padding */
+    padding: 1.25rem 1rem;
   }
 
   .header-right {
@@ -1062,19 +1109,46 @@ a.wowhead del {
   
   .ranking-header .name-wrapper {
     text-align: center;
+    /* FIXED: Allow text to wrap if needed */
+    white-space: normal;
+    word-break: break-word;
   }
 
   .info-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+    /* FIXED: Reduce minimum width for mobile */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
   .dropdown-content.active {
     padding: 1.5rem;
+    /* FIXED: Better mobile padding */
+    padding: 1rem;
   }
 
   .gear-grid {
     grid-template-columns: 1fr;
+    /* FIXED: Better mobile grid */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  /* FIXED: Better mobile info sections */
+  .info-section {
+    padding: 1.25rem;
+  }
+
+  .info-row {
+    /* FIXED: Stack items vertically on very narrow screens */
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .info-value {
+    text-align: left;
+    width: 100%;
+    margin-top: 0.25rem;
   }
 }
 
@@ -1108,11 +1182,11 @@ a.wowhead del {
   }
 
   .ranking-header {
-    padding: 1.25rem 1.5rem;
+    padding: 1.25rem 1rem;
   }
 
   .dropdown-content.active {
-    padding: 1.25rem;
+    padding: 1rem;
   }
 
   .gear-grid {
@@ -1129,7 +1203,8 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    min-height: 90px;
+    /* FIXED: Even smaller for very narrow screens */
+    height: 90px;
     padding: 0.5rem;
   }
 
@@ -1150,6 +1225,97 @@ a.wowhead del {
   .boss-icon {
     height: 36px;
     width: 36px;
+  }
+
+  /* FIXED: Better mobile info handling */
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .info-section {
+    padding: 1rem;
+  }
+
+  .gear-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .gear-item {
+    padding: 0.875rem;
+  }
+
+  /* FIXED: Ensure talent icons don't get too small on mobile */
+  .ranking-header .talent-icon-img {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+
+/* FIXED: Extra small screens (< 360px) */
+@media (max-width: 360px) {
+  .expand-icon {
+    display: none;
+  }
+
+  .talent-summary .talent-row {
+    gap: 0.75rem;
+  }
+
+  .talent-summary .talent-icon-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  #raid-menu {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  #raid-menu button {
+    height: 80px;
+    padding: 0.5rem 0.25rem;
+  }
+
+  #raid-menu .raid-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  #raid-menu button span {
+    font-size: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .ranking-header .talent-row {
+    gap: 0.25rem;
+  }
+
+  .ranking-header .talent-icon-img {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+
+  .info-section h4 {
+    font-size: 1rem;
+  }
+
+  .info-row {
+    padding: 0.25rem 0;
+  }
+
+  .gear-header {
+    gap: 0.5rem;
+  }
+
+  .gear-icon {
+    width: 36px;
+    height: 36px;
   }
 }
 
@@ -1181,13 +1347,6 @@ button:focus,
 .info-value,
 .gear-name {
   color: var(--text-primary);
-}
-
-/* Hide expand icon on very small screens */
-@media (max-width: 360px) {
-  .expand-icon {
-    display: none;
-  }
 }
 
 /* Custom scrollbar styling */
@@ -1238,7 +1397,10 @@ button:active {
 
 [data-loading] * {
   cursor: wait !important;
-}is-top .talent-icon-img {
+}
+
+/* Top talent highlighting */
+.talent-summary .talent-link.is-top .talent-icon-img {
   transform: translateY(-4px) scale(1.1);
   box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
   border-color: var(--success-color);
@@ -1261,5 +1423,3 @@ button:active {
   text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
   font-weight: 800;
 }
-
-.talent-link.
