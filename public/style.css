@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Priest Top 100 – MoP Classic</title>
+    <style>
 /* =================================================================
   Theme Variables - Enhanced with modern colors and effects
   ================================================================= */
@@ -36,7 +43,7 @@
 }
 
 /* =================================================================
-  Base & Layout Styles - Optimized for desktop
+  Base & Layout Styles - Updated for three-column layout
   ================================================================= */
 * {
   box-sizing: border-box;
@@ -60,9 +67,9 @@ body {
 
 .main-container {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 280px 1fr 320px;
   gap: 2.5rem;
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
   align-items: flex-start;
   min-height: 100vh;
@@ -129,6 +136,53 @@ body {
   border-color: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+}
+
+/* New right sidebar for talent summary */
+.talent-sidebar {
+  position: sticky;
+  top: 2.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 1.75rem;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-xl);
+  width: 320px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
+}
+
+.talent-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-shadow);
+  opacity: 0.8;
+}
+
+.talent-sidebar:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+}
+
+.talent-sidebar h3 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: var(--gradient-shadow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  letter-spacing: -0.02em;
 }
 
 h1 {
@@ -212,13 +266,6 @@ h1::before {
 
 #copy-link-btn:hover::before {
   left: 100%;
-}
-
-/* Neutralize Wowhead's injected styles */
-a.wowhead ins,
-a.wowhead del {
-  text-decoration: none !important;
-  border: 0 !important;
 }
 
 /* =================================================================
@@ -416,7 +463,7 @@ a.wowhead del {
   min-height: 600px;
 }
 
-/* Talent Summary - Improved spacing */
+/* Talent Summary - Moved to right sidebar */
 .talent-summary {
   background: transparent;
   border-radius: 0;
@@ -429,7 +476,7 @@ a.wowhead del {
 .talent-summary .talent-row {
   display: flex;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
@@ -438,8 +485,8 @@ a.wowhead del {
 }
 
 .talent-summary .talent-icon-img {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   border-radius: 12px;
   border: 3px solid var(--border-hover);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -447,89 +494,12 @@ a.wowhead del {
 }
 
 .talent-summary .talent-percent {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   margin-top: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  text-align: center;
 }
-
-/* Collapsible container - Better proportions */
-.talent-summary-container {
-  margin-bottom: 2rem;
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-lg);
-  position: relative;
-}
-
-.talent-summary-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
-}
-
-.talent-summary-container:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-.collapsible-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 1.25rem 2rem;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 1.25rem;
-  font-weight: 800;
-  font-family: inherit;
-  text-align: left;
-  transition: background-color 0.3s ease;
-}
-
-.collapsible-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  background: var(--gradient-shadow);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.collapsible-header:hover {
-  background: rgba(107, 70, 193, 0.08);
-}
-
-.collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0;
-}
-
-.collapsible-content.active {
-  max-height: 1000px;
-  opacity: 1;
-  padding: 1.5rem 2rem;
-}
-
-/* =================================================================
-  DROPDOWN FUNCTIONALITY - Professional spacing and alignment
-  ================================================================= */
 
 /* Player Rank Entry */
 .rank-entry {
@@ -897,6 +867,7 @@ a.wowhead del {
   box-shadow: 0 0 0 2px var(--gold-color), 0 12px 30px rgba(251, 191, 36, 0.4);
 }
 
+/* Loading, error, and empty states */
 .loader {
   border: 4px solid var(--border-color);
   border-top: 4px solid var(--accent-color);
@@ -912,7 +883,6 @@ a.wowhead del {
   100% { transform: rotate(360deg); }
 }
 
-/* Loading state styling */
 .loading-message {
   text-align: center;
   color: var(--text-secondary);
@@ -925,7 +895,6 @@ a.wowhead del {
   margin: 1rem 0;
 }
 
-/* Error state styling */
 .error-message {
   text-align: center;
   color: #ef4444;
@@ -938,7 +907,6 @@ a.wowhead del {
   box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
 }
 
-/* Empty state styling */
 .empty-message {
   text-align: center;
   color: var(--text-muted);
@@ -952,58 +920,50 @@ a.wowhead del {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Rankings gear styling */
-.rankings-gear-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  color: var(--text-primary);
-  font-weight: 700;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
+/* Top talent highlighting */
+.talent-summary .talent-link.is-top .talent-icon-img {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
+  border-color: var(--success-color);
+  animation: pulse-glow 3s infinite;
 }
 
-.rankings-gear-name:hover {
-  color: var(--text-accent);
-  text-shadow: 0 0 10px var(--shadow-glow);
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
+    transform: translateY(-3px) scale(1.08);
+  }
+  50% { 
+    box-shadow: 0 0 0 3px var(--success-color), 0 20px 50px rgba(16, 185, 129, 0.7);
+    transform: translateY(-4px) scale(1.1);
+  }
 }
 
-.rankings-gear-image {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  border: 1px solid var(--border-hover);
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+.talent-summary .talent-link.is-top .talent-percent {
+  color: var(--success-color);
+  text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
+  font-weight: 800;
 }
-
-.rankings-gear-name:hover .rankings-gear-image {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Rarity colors for gear links */
-.rankings-gear-name.poor { color: #9d9d9d; }
-.rankings-gear-name.common { color: #ffffff; }
-.rankings-gear-name.uncommon { color: #1eff00; }
-.rankings-gear-name.rare { color: #0070dd; }
-.rankings-gear-name.epic { color: #a335ee; }
-.rankings-gear-name.legendary { color: #ff8000; }
 
 /* =================================================================
-  Large Desktop Optimizations (1400px+)
+  Responsive Design - Updated for new layout
   ================================================================= */
-@media (min-width: 1400px) {
+
+/* Large Desktop Optimizations (1600px+) */
+@media (min-width: 1600px) {
   .main-container {
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 320px 1fr 360px;
     gap: 3rem;
-    max-width: 1800px;
+    max-width: 2000px;
   }
   
   .sidebar {
-    width: 300px;
+    width: 320px;
+    padding: 2rem;
+  }
+  
+  .talent-sidebar {
+    width: 360px;
     padding: 2rem;
   }
   
@@ -1016,54 +976,16 @@ a.wowhead del {
     margin-bottom: 2rem;
   }
   
-  .header-controls {
-    margin-bottom: 2.5rem;
-  }
-  
-  #boss-buttons button {
-    padding: 1.25rem;
-    font-size: 1rem;
-  }
-  
-  .boss-icon {
-    height: 44px;
-    width: 44px;
-  }
-  
   .talent-summary .talent-icon-img {
-    width: 72px;
-    height: 72px;
-  }
-  
-  .ranking-header {
-    padding: 1.5rem 2rem;
-  }
-  
-  .ranking-header .name-wrapper {
-    font-size: 1.1rem;
-  }
-  
-  .dropdown-content.active {
-    padding: 2rem;
-  }
-  
-  .info-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
-  
-  .gear-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.25rem;
+    width: 64px;
+    height: 64px;
   }
 }
 
-/* =================================================================
-  Medium Desktop Optimizations (1024px - 1400px)  
-  ================================================================= */
-@media (min-width: 1024px) and (max-width: 1399px) {
+/* Desktop Optimizations (1200px - 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
   .main-container {
-    max-width: 1400px;
+    max-width: 1600px;
     gap: 2rem;
   }
   
@@ -1071,56 +993,47 @@ a.wowhead del {
     padding: 2rem;
   }
   
-  .sidebar {
+  .sidebar,
+  .talent-sidebar {
     padding: 1.5rem;
-  }
-  
-  h1 {
-    font-size: 2.5rem;
-  }
-  
-  .talent-summary .talent-icon-img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .gear-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
 }
 
-/* =================================================================
-  Responsive Design - Mobile optimizations (unchanged for mobile)
-  ================================================================= */
-@media (max-width: 1023px) {
+/* Medium screens - Stack talent sidebar below main content */
+@media (max-width: 1199px) {
   .main-container {
     grid-template-columns: 260px 1fr;
+    grid-template-rows: auto auto;
     gap: 1.5rem;
   }
   
   .sidebar {
-    padding: 1.5rem;
+    grid-row: 1 / 3;
     width: 260px;
+    padding: 1.5rem;
   }
   
   .content-area {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 1.5rem;
+  }
+  
+  .talent-sidebar {
+    grid-column: 2;
+    grid-row: 2;
+    position: static;
+    width: 100%;
+    max-height: none;
     padding: 1.5rem;
   }
 
-  .info-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gear-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .talent-summary .talent-icon-img {
-    width: 56px;
-    height: 56px;
+  .talent-summary .talent-row {
+    gap: 1.25rem;
   }
 }
 
+/* Tablet and small screens */
 @media (max-width: 768px) {
   body {
     padding: 1rem;
@@ -1140,6 +1053,17 @@ a.wowhead del {
     order: -1;
     width: 100%;
     max-width: none;
+  }
+  
+  .talent-sidebar {
+    order: 1;
+    position: static;
+    width: 100%;
+    max-width: none;
+  }
+  
+  .content-area {
+    order: 0;
   }
   
   #raid-menu {
@@ -1167,10 +1091,6 @@ a.wowhead del {
   
   h1 {
     font-size: 2rem;
-  }
-  
-  .talent-summary {
-    padding: 1.5rem 1rem;
   }
   
   .talent-summary .talent-row {
@@ -1205,43 +1125,26 @@ a.wowhead del {
   .info-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
   .dropdown-content.active {
-    padding: 1.5rem;
     padding: 1rem;
   }
 
   .gear-grid {
     grid-template-columns: 1fr;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-
-  .info-section {
-    padding: 1.25rem;
-  }
-
-  .info-row {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  .info-value {
-    text-align: left;
-    width: 100%;
-    margin-top: 0.25rem;
   }
 }
 
+/* Mobile phones */
 @media (max-width: 480px) {
   body {
     padding: 0.75rem;
   }
   
   .sidebar,
-  .content-area {
+  .content-area,
+  .talent-sidebar {
     padding: 1.25rem;
     border-radius: 16px;
   }
@@ -1250,34 +1153,9 @@ a.wowhead del {
     font-size: 1.75rem;
   }
   
-  .header-controls {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
   .talent-summary .talent-icon-img {
     width: 48px;
     height: 48px;
-  }
-  
-  .talent-summary .talent-percent {
-    font-size: 0.95rem;
-  }
-
-  .ranking-header {
-    padding: 1.25rem 1rem;
-  }
-
-  .dropdown-content.active {
-    padding: 1rem;
-  }
-
-  .gear-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gear-item {
-    padding: 1rem;
   }
 
   #raid-menu {
@@ -1298,134 +1176,6 @@ a.wowhead del {
   #raid-menu button span {
     font-size: 0.8rem;
   }
-
-  #boss-buttons button {
-    padding: 0.875rem 1rem;
-    gap: 0.75rem;
-  }
-
-  .boss-icon {
-    height: 36px;
-    width: 36px;
-  }
-
-  .info-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .info-section {
-    padding: 1rem;
-  }
-
-  .gear-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-
-  .gear-item {
-    padding: 0.875rem;
-  }
-
-  .ranking-header .talent-icon-img {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
-  }
-}
-
-@media (max-width: 360px) {
-  .expand-icon {
-    display: none;
-  }
-
-  .talent-summary .talent-row {
-    gap: 0.75rem;
-  }
-
-  .talent-summary .talent-icon-img {
-    width: 40px;
-    height: 40px;
-  }
-
-  #raid-menu {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-  }
-
-  #raid-menu button {
-    height: 80px;
-    padding: 0.5rem 0.25rem;
-  }
-
-  #raid-menu .raid-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  #raid-menu button span {
-    font-size: 0.75rem;
-    line-height: 1.1;
-  }
-
-  .ranking-header .talent-row {
-    gap: 0.25rem;
-  }
-
-  .ranking-header .talent-icon-img {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    min-height: 28px;
-  }
-
-  .info-section h4 {
-    font-size: 1rem;
-  }
-
-  .info-row {
-    padding: 0.25rem 0;
-  }
-
-  .gear-header {
-    gap: 0.5rem;
-  }
-
-  .gear-icon {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-/* =================================================================
-  Focus and Accessibility improvements
-  ================================================================= */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Focus styles for keyboard navigation */
-button:focus,
-.talent-link:focus,
-.ranking-header:focus,
-.rankings-gear-name:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-  border-radius: 8px;
-}
-
-/* Ensure proper contrast for accessibility */
-.info-value,
-.gear-name {
-  color: var(--text-primary);
 }
 
 /* Custom scrollbar styling */
@@ -1446,59 +1196,401 @@ button:focus,
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-hover);
 }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Left Sidebar - Navigation -->
+        <div class="sidebar">
+            <div id="raid-menu">
+                <button class="active" onclick="selectRaid('mogu')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-87.png" alt="MSV" class="raid-icon">
+                    <span>The Stone Guard</span>
+                </button>
+                <button onclick="selectRaid('hof')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-88.png" alt="HoF" class="raid-icon">
+                    <span>Feng the Accursed</span>
+                </button>
+                <button onclick="selectRaid('tes')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-89.png" alt="TES" class="raid-icon">
+                    <span>Gara'jal the Spiritbinder</span>
+                </button>
+                <button onclick="selectRaid('tot')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-95.png" alt="ToT" class="raid-icon">
+                    <span>The Spirit Kings</span>
+                </button>
+                <button onclick="selectRaid('soo')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-96.png" alt="SoO" class="raid-icon">
+                    <span>Elegon</span>
+                </button>
+                <button onclick="selectRaid('highmaul')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-100.png" alt="HM" class="raid-icon">
+                    <span>Will of the Emperor</span>
+                </button>
+            </div>
+            
+            <div id="boss-buttons">
+                <button class="active" onclick="selectBoss('stoneguard')">
+                    <img src="https://assets.rpglogs.com/img/warcraft/zones/zone-87.png" alt="Stone Guard" class="boss-icon">
+                    The Stone Guard
+                </button>
+                <button onclick="selectBoss('feng')">
+                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/achievement_dungeon_coilfangresevior_heroic.jpg" alt="Feng" class="boss-icon">
+                    Feng the Accursed
+                </button>
+                <button onclick="selectBoss('garajal')">
+                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_souldrain.jpg" alt="Gara'jal" class="boss-icon">
+                    Gara'jal the Spiritbinder
+                </button>
+                <button onclick="selectBoss('spiritkings')">
+                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/achievement_character_pandaren_female.jpg" alt="Spirit Kings" class="boss-icon">
+                    The Spirit Kings
+                </button>
+                <button onclick="selectBoss('elegon')">
+                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_arcane_arcanetorrent.jpg" alt="Elegon" class="boss-icon">
+                    Elegon
+                </button>
+                <button onclick="selectBoss('willoftheemperor')">
+                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/achievement_boss_warlord_zela.jpg" alt="Will of Emperor" class="boss-icon">
+                    Will of the Emperor
+                </button>
+            </div>
+        </div>
 
-/* Additional enhancements for smooth interactions */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+        <!-- Main Content Area - Rankings -->
+        <div class="content-area">
+            <h1>Shadow Priest Top 100 – MoP Classic</h1>
+            <div class="header-controls">
+                <div class="last-updated">Last updated: 6/17/2024, 11:57:58 AM (3h ago)</div>
+                <button id="copy-link-btn">Copy Link</button>
+            </div>
 
-/* Ensure images load smoothly */
-img {
-  transition: opacity 0.3s ease;
-}
+            <div id="rankings">
+                <!-- Ranking Entry 1 -->
+                <div class="rank-entry">
+                    <div class="ranking-header" onclick="toggleDropdown(this)">
+                        <div class="name-wrapper">
+                            <a href="#" class="player-link">1. Necalk – 237,447 DPS</a>
+                        </div>
+                        <div class="header-right">
+                            <div class="talent-row">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_psychichorrors.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowandflame.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_warlock_harvardofsoul.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_void-blast.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_soulleech_3.jpg" alt="Talent" class="talent-icon-img">
+                            </div>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="info-grid">
+                            <div class="info-section">
+                                <h4>Performance Details</h4>
+                                <div class="info-row">
+                                    <span class="info-label">DPS:</span>
+                                    <span class="info-value">237,447</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Parse:</span>
+                                    <span class="info-value">100%</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Kill Time:</span>
+                                    <span class="info-value">4:23</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Server:</span>
+                                    <span class="info-value">Stormrage</span>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <h4>Character Info</h4>
+                                <div class="info-row">
+                                    <span class="info-label">Level:</span>
+                                    <span class="info-value">90</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Item Level:</span>
+                                    <span class="info-value">463</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Guild:</span>
+                                    <span class="info-value">&lt;Panda Express&gt;</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Region:</span>
+                                    <span class="info-value">US</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="gear-grid">
+                            <div class="gear-item">
+                                <div class="gear-header">
+                                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/items/inv_helmet_cloth_raidwarlock_n_01.jpg" alt="Helmet" class="gear-icon">
+                                    <div class="gear-info">
+                                        <div class="gear-name epic">Hood of Blind Absolution</div>
+                                        <div class="gear-slot">Head</div>
+                                    </div>
+                                    <div class="gear-ilvl">463</div>
+                                </div>
+                                <div class="gem-enchant">
+                                    <span class="gem">Brilliant Primordial Ruby</span>
+                                    <span class="enchant">Arcanum of the Jade Serpent</span>
+                                </div>
+                            </div>
+                            
+                            <div class="gear-item">
+                                <div class="gear-header">
+                                    <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/items/inv_jewelry_necklace_28.jpg" alt="Neck" class="gear-icon">
+                                    <div class="gear-info">
+                                        <div class="gear-name epic">Shadowflame Necklace</div>
+                                        <div class="gear-slot">Neck</div>
+                                    </div>
+                                    <div class="gear-ilvl">463</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-img:not([src]),
-img[src=""] {
-  opacity: 0;
-}
+                <!-- Ranking Entry 2 -->
+                <div class="rank-entry">
+                    <div class="ranking-header" onclick="toggleDropdown(this)">
+                        <div class="name-wrapper">
+                            <a href="#" class="player-link">2. Mooseflap – 229,299 DPS</a>
+                        </div>
+                        <div class="header-right">
+                            <div class="talent-row">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_psychichorrors.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowandflame.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_warlock_harvardofsoul.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_void-blast.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_soulleech_3.jpg" alt="Talent" class="talent-icon-img">
+                            </div>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-content">
+                        <div class="info-grid">
+                            <div class="info-section">
+                                <h4>Performance Details</h4>
+                                <div class="info-row">
+                                    <span class="info-label">DPS:</span>
+                                    <span class="info-value">229,299</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Parse:</span>
+                                    <span class="info-value">99%</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Kill Time:</span>
+                                    <span class="info-value">4:45</span>
+                                </div>
+                            </div>
+                            <div class="info-section">
+                                <h4>Character Info</h4>
+                                <div class="info-row">
+                                    <span class="info-label">Level:</span>
+                                    <span class="info-value">90</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Item Level:</span>
+                                    <span class="info-value">461</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-/* Enhanced button states */
-button:active {
-  transform: scale(0.98);
-}
+                <!-- Additional ranking entries would follow the same pattern -->
+                <div class="rank-entry">
+                    <div class="ranking-header" onclick="toggleDropdown(this)">
+                        <div class="name-wrapper">
+                            <a href="#" class="player-link">3. Pornographic – 220,402 DPS</a>
+                        </div>
+                        <div class="header-right">
+                            <div class="talent-row">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_psychichorrors.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowandflame.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_warlock_harvardofsoul.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_void-blast.jpg" alt="Talent" class="talent-icon-img">
+                                <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_soulleech_3.jpg" alt="Talent" class="talent-icon-img">
+                            </div>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-content">
+                        <p class="loading-message">Loading player details...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-/* Smooth transitions for dynamic content */
-[data-loading] {
-  opacity: 0.6;
-  pointer-events: none;
-}
+        <!-- Right Sidebar - Talent Usage Summary -->
+        <div class="talent-sidebar">
+            <h3>Talent Usage Summary</h3>
+            <div class="talent-summary">
+                <div class="talent-row">
+                    <a href="#" class="talent-link is-top">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_psychichorrors.jpg" alt="Psychic Horror" class="talent-icon-img">
+                        <div class="talent-percent">68.9%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowandflame.jpg" alt="Shadow and Flame" class="talent-icon-img">
+                        <div class="talent-percent">31.1%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_warlock_harvardofsoul.jpg" alt="Harvest of Souls" class="talent-icon-img">
+                        <div class="talent-percent">1.1%</div>
+                    </a>
+                </div>
+                
+                <div class="talent-row">
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_nature_nullifydisease.jpg" alt="Body and Soul" class="talent-icon-img">
+                        <div class="talent-percent">2.0%</div>
+                    </a>
+                    <a href="#" class="talent-link is-top">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowwordpain.jpg" alt="Angelic Feather" class="talent-icon-img">
+                        <div class="talent-percent">24.5%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_burningspirit.jpg" alt="Phantasm" class="talent-icon-img">
+                        <div class="talent-percent">3.6%</div>
+                    </a>
+                </div>
+                
+                <div class="talent-row">
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_fire_fireball02.jpg" alt="From Darkness" class="talent-icon-img">
+                        <div class="talent-percent">10.9%</div>
+                    </a>
+                    <a href="#" class="talent-link is-top">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_siphonmana.jpg" alt="Mindbender" class="talent-icon-img">
+                        <div class="talent-percent">74.5%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_holy_powerwordshield.jpg" alt="Power Word: Solace" class="talent-icon-img">
+                        <div class="talent-percent">16.6%</div>
+                    </a>
+                </div>
+                
+                <div class="talent-row">
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_desperate_prayer.jpg" alt="Desperate Prayer" class="talent-icon-img">
+                        <div class="talent-percent">3.7%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowworddominate.jpg" alt="Angelic Bulwark" class="talent-icon-img">
+                        <div class="talent-percent">6.3%</div>
+                    </a>
+                    <a href="#" class="talent-link is-top">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_finalprayer.jpg" alt="Final Prayer" class="talent-icon-img">
+                        <div class="talent-percent">59.4%</div>
+                    </a>
+                </div>
+                
+                <div class="talent-row">
+                    <a href="#" class="talent-link is-top">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadoworb.jpg" alt="Twist of Fate" class="talent-icon-img">
+                        <div class="talent-percent">79.9%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadesofdarkness.jpg" alt="Power Infusion" class="talent-icon-img">
+                        <div class="talent-percent">20.9%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_divineinsight.jpg" alt="Divine Insight" class="talent-icon-img">
+                        <div class="talent-percent">1.9%</div>
+                    </a>
+                </div>
+                
+                <div class="talent-row">
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_shadowfiend.jpg" alt="Halo" class="talent-icon-img">
+                        <div class="talent-percent">3.9%</div>
+                    </a>
+                    <a href="#" class="talent-link">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_shadow_mindshear.jpg" alt="Cascade" class="talent-icon-img">
+                        <div class="talent-percent">1.9%</div>
+                    </a>
+                    <a href="#" class="talent-link is-top">
+                        <img src="https://dmszsuqyoe6y6.cloudfront.net/img/warcraft/abilities/spell_priest_psyfiend.jpg" alt="Divine Star" class="talent-icon-img">
+                        <div class="talent-percent">62.5%</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-[data-loading] * {
-  cursor: wait !important;
-}
+    <script>
+        // Toggle dropdown functionality
+        function toggleDropdown(header) {
+            const dropdown = header.nextElementSibling;
+            const expandIcon = header.querySelector('.expand-icon');
+            
+            dropdown.classList.toggle('active');
+            expandIcon.classList.toggle('rotated');
+        }
 
-/* Top talent highlighting */
-.talent-summary .talent-link.is-top .talent-icon-img {
-  transform: translateY(-3px) scale(1.08);
-  box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-  border-color: var(--success-color);
-  animation: pulse-glow 3s infinite;
-}
+        // Raid selection functionality
+        function selectRaid(raidId) {
+            // Remove active class from all raid buttons
+            document.querySelectorAll('#raid-menu button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Here you would typically load different raid data
+            console.log('Selected raid:', raidId);
+        }
 
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-    transform: translateY(-3px) scale(1.08);
-  }
-  50% { 
-    box-shadow: 0 0 0 3px var(--success-color), 0 20px 50px rgba(16, 185, 129, 0.7);
-    transform: translateY(-4px) scale(1.1);
-  }
-}
+        // Boss selection functionality
+        function selectBoss(bossId) {
+            // Remove active class from all boss buttons
+            document.querySelectorAll('#boss-buttons button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Here you would typically load different boss data
+            console.log('Selected boss:', bossId);
+        }
 
-.talent-summary .talent-link.is-top .talent-percent {
-  color: var(--success-color);
-  text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
-  font-weight: 800;
-}
+        // Copy link functionality
+        document.getElementById('copy-link-btn').addEventListener('click', function() {
+            navigator.clipboard.writeText(window.location.href).then(function() {
+                const btn = document.getElementById('copy-link-btn');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy: ', err);
+            });
+        });
+
+        // Smooth scrolling for talent links
+        document.querySelectorAll('.talent-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Here you could implement filtering or highlighting functionality
+                console.log('Talent clicked:', this.querySelector('img').alt);
+            });
+        });
+
+        // Initialize tooltips or other interactive elements here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add any initialization code here
+            console.log('WoW Rankings interface loaded');
+        });
+    </script>
+</body>
+</html>
