@@ -8,30 +8,32 @@
   --border-color: #444;
   --highlight: #9482C9;
   --success: #2ecc71;
+  --container-padding: clamp(8px, 2vw, 20px);
+  --content-gap: clamp(12px, 3vw, 24px);
+  --border-radius: clamp(4px, 0.5vw, 6px);
 }
 
 /* =================================================================
-  Base & Layout Styles
+  Base & Layout Styles - Optimized for Performance
   ================================================================= */
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: 'Segoe UI', sans-serif;
-  padding: 20px;
-  margin: 0;
-  min-height: 100vh;
-  box-sizing: border-box;
-}
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: var(--container-padding);
+  margin: 0;
+  line-height: 1.5;
+}
+
 .main-container {
   display: flex;
-  gap: 24px;
+  gap: var(--content-gap);
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
@@ -39,45 +41,47 @@ body {
 }
 
 .sidebar {
-  flex: 0 0 260px;
+  flex: 0 0 clamp(200px, 20vw, 260px);
   position: sticky;
-  top: 20px;
+  top: var(--container-padding);
 }
 
 .content-area {
   flex: 1;
   min-width: 0;
   text-align: center;
-  width: 100%;
 }
 
+/* Typography - Fluid Scaling */
 h1 {
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin: 0 0 clamp(8px, 2vw, 16px);
+  font-size: clamp(1.25rem, 5vw, 2rem);
+  font-weight: 600;
 }
 
 .header-controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: clamp(8px, 2vw, 16px);
   flex-wrap: wrap;
-  margin: 4px 0 16px;
+  margin-bottom: clamp(16px, 3vw, 24px);
 }
 
 .last-updated {
   color: var(--secondary-text);
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
 }
 
+/* Simplified Button Styles */
 #copy-link-btn {
   background-color: #333;
   color: var(--text-color);
   border: 1px solid var(--border-color);
-  padding: 6px 12px;
-  border-radius: 5px;
+  padding: clamp(4px, 1vw, 8px) clamp(8px, 2vw, 12px);
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 120ms ease;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
 }
 
 #copy-link-btn:hover {
@@ -92,7 +96,7 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Navigation (Sidebar)
+  Navigation (Sidebar) - Performance Optimized
   ================================================================= */
 
 /* Raid Selection Menu */
@@ -100,33 +104,31 @@ a.wowhead del {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: clamp(4px, 1vw, 8px);
+  margin-bottom: clamp(12px, 3vw, 20px);
 }
 
 #raid-menu button {
   background-color: #222;
   color: var(--text-color);
   border: 1px solid var(--border-color);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: background-color 120ms ease;
   padding: 0;
   display: flex;
-  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-size: 12px;
   position: relative;
   overflow: hidden;
+  /* Removed unnecessary transitions for better performance */
 }
 
 #raid-menu .raid-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 4px;
+  width: clamp(48px, 8vw, 64px);
+  height: clamp(48px, 8vw, 64px);
+  border-radius: var(--border-radius);
   object-fit: cover;
+  display: block;
 }
 
 #raid-menu button span {
@@ -137,71 +139,64 @@ a.wowhead del {
   color: white;
   z-index: 1;
   font-weight: bold;
-  text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
+  font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+  text-shadow: 0 0 3px #000;
 }
 
 /* Boss Selection Menu */
 #boss-buttons {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: clamp(4px, 1vw, 8px);
 }
 
 #boss-buttons button {
   background-color: #222;
   color: var(--text-color);
   border: 1px solid var(--border-color);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 120ms ease;
-  padding: 10px 14px;
-  font-size: 16px;
+  padding: clamp(8px, 2vw, 12px) clamp(10px, 2vw, 14px);
+  font-size: clamp(0.875rem, 2vw, 1rem);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(8px, 2vw, 12px);
   text-align: left;
+  width: 100%;
 }
 
 .boss-icon {
-  height: 32px;
-  width: 32px;
-  border-radius: 4px;
+  height: clamp(24px, 4vw, 32px);
+  width: clamp(24px, 4vw, 32px);
+  border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
   flex-shrink: 0;
 }
 
+/* Simplified Hover States */
 #raid-menu button:hover,
 #boss-buttons button:hover {
   background-color: #383838;
   border-color: #666;
 }
 
-/* Active state */
+/* Active States */
 #raid-menu button.active,
 #boss-buttons button.active {
   background-color: var(--highlight);
   color: #fff;
   border-color: var(--highlight);
-  box-shadow: 0 0 10px rgba(148, 130, 201, 0.4);
-}
-
-#boss-buttons button.active {
-  transform: translateX(4px);
 }
 
 /* =================================================================
-  Rankings & Talent Display
+  Rankings & Talent Display - Performance Optimized
   ================================================================= */
 #rankings {
-  max-width: 760px;
-  margin: 30px auto 0;
+  max-width: 100%;
+  margin: clamp(16px, 4vw, 30px) auto 0;
   text-align: left;
   width: 100%;
-  padding: 0 10px;
+  padding: 0 clamp(4px, 1vw, 10px);
 }
 
 /* Player Rank Row */
@@ -209,10 +204,11 @@ a.wowhead del {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
-  margin: 12px 0;
+  gap: clamp(8px, 2vw, 16px);
+  margin: clamp(6px, 1.5vw, 12px) 0;
   width: 100%;
-  min-height: 40px;
+  min-height: clamp(32px, 5vw, 40px);
+  padding: clamp(4px, 1vw, 8px);
 }
 
 .rank-entry .name-wrapper {
@@ -223,6 +219,7 @@ a.wowhead del {
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+  font-size: clamp(0.75rem, 2.5vw, 1rem);
 }
 
 .rank-entry .player-link {
@@ -235,42 +232,42 @@ a.wowhead del {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: clamp(8px, 2vw, 12px);
+  margin-bottom: clamp(16px, 3vw, 20px);
   width: 100%;
 }
 
 .talent-summary .talent-row {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: clamp(6px, 1.5vw, 10px);
   flex-wrap: wrap;
 }
 
 .talent-summary .talent-icon-img {
-  width: 56px;
-  height: 56px;
+  width: clamp(40px, 7vw, 56px);
+  height: clamp(40px, 7vw, 56px);
 }
 
 .talent-summary .talent-percent {
-  font-size: 15px;
+  font-size: clamp(0.75rem, 2vw, 0.9375rem);
   font-weight: 600;
-  margin-top: 6px;
+  margin-top: clamp(3px, 1vw, 6px);
 }
 
 /* Per-Player Talents */
 .rank-entry .talent-row {
   display: flex;
-  gap: 5px;
+  gap: clamp(3px, 1vw, 5px);
   flex-shrink: 0;
 }
 
 .rank-entry .talent-icon-img {
-  width: 28px;
-  height: 28px;
+  width: clamp(20px, 4vw, 28px);
+  height: clamp(20px, 4vw, 28px);
 }
 
-/* General Talent Styling */
+/* Simplified Talent Styling */
 .talent-link {
   position: relative;
   display: flex;
@@ -281,42 +278,33 @@ a.wowhead del {
 }
 
 .talent-icon-img {
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
-  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, filter 120ms ease;
-  will-change: transform, filter;
+  display: block;
 }
 
 .talent-percent {
   text-align: center;
-  will-change: transform;
-  transform: translateZ(0);
 }
 
-/* Hover & Highlight */
-.talent-link:hover .talent-icon-img {
-  transform: translateY(-2px);
-  filter: brightness(1.1);
-}
-
+/* Simplified Highlight States - Reduced Animations for Performance */
 .talent-summary .talent-link.is-top .talent-icon-img {
-  transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 0 0 2px var(--success), 0 8px 22px rgba(46, 204, 113, 0.35);
   border-color: var(--success);
+  box-shadow: 0 0 0 1px var(--success);
 }
 
 .talent-summary .talent-link.is-top .talent-percent {
   color: var(--success);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   font-weight: 800;
 }
 
+/* Simplified Loader */
 .loader {
-  border: 4px solid #444;
-  border-top: 4px solid var(--highlight);
+  border: 3px solid #444;
+  border-top: 3px solid var(--highlight);
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  width: clamp(20px, 3vw, 24px);
+  height: clamp(20px, 3vw, 24px);
   animation: spin 1s linear infinite;
   margin: 0 auto 8px;
 }
@@ -327,16 +315,14 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Responsive Design
+  Responsive Design - Simplified Breakpoints
   ================================================================= */
+
+/* Large tablets and small desktops */
 @media (max-width: 900px) {
-  body {
-    padding: 15px;
-  }
-  
   .main-container {
     flex-direction: column;
-    gap: 20px;
+    gap: clamp(16px, 3vw, 20px);
   }
   
   .sidebar {
@@ -349,124 +335,78 @@ a.wowhead del {
     position: sticky;
     top: 0;
     background-color: var(--bg-color);
-    padding: 10px 0;
+    padding: clamp(8px, 2vw, 12px) 0;
     z-index: 10;
-    margin: -10px -15px 20px -15px;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-  
-  #rankings {
-    margin-top: 20px;
-    padding: 0;
-  }
-  
-  .rank-entry {
-    gap: 12px;
-  }
-  
-  .rank-entry .name-wrapper {
-    min-width: 120px;
-    font-size: 14px;
+    margin-left: calc(-1 * var(--container-padding));
+    margin-right: calc(-1 * var(--container-padding));
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+    margin-bottom: clamp(16px, 3vw, 20px);
   }
 }
 
+/* Mobile and small tablets */
 @media (max-width: 600px) {
-  body {
-    padding: 10px;
-  }
-  
-  h1 {
-    font-size: 1.4rem;
-    margin-bottom: 8px;
-  }
-  
-  .header-controls {
-    gap: 12px;
-    margin: 8px 0 16px;
-  }
-  
-  #rankings {
-    padding: 0;
-  }
-  
   .rank-entry {
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: clamp(6px, 2vw, 8px);
     background-color: #1a1a1a;
-    padding: 12px 10px;
-    border-radius: 6px;
-    margin: 8px 0;
+    padding: clamp(8px, 2vw, 12px);
+    border-radius: var(--border-radius);
   }
   
   .rank-entry .name-wrapper {
     width: 100%;
     text-align: center;
-    min-width: 0;
     white-space: normal;
-    font-size: 15px;
+    word-break: break-word;
   }
   
   .rank-entry .talent-row {
     justify-content: center;
   }
   
-  .talent-summary .talent-row {
-    gap: 8px;
+  .header-controls {
+    flex-direction: column;
+    gap: clamp(6px, 2vw, 8px);
   }
 }
 
-@media (max-width: 480px) {
+/* Very small screens */
+@media (max-width: 400px) {
+  .talent-summary .talent-row {
+    gap: clamp(4px, 1vw, 6px);
+  }
+  
+  .rank-entry .talent-row {
+    gap: clamp(2px, 0.5vw, 3px);
+  }
+}
+
+/* High-resolution displays */
+@media (min-width: 1400px) {
+  .main-container {
+    max-width: 1400px;
+  }
+  
+  #rankings {
+    max-width: 900px;
+  }
+}
+
+/* Print styles */
+@media print {
   body {
-    padding: 8px;
+    background: white;
+    color: black;
   }
   
-  h1 {
-    font-size: 1.2rem;
-  }
-  
-  .header-controls {
-    flex-direction: column;
-    gap: 8px;
+  .sidebar {
+    display: none;
   }
   
   #copy-link-btn {
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-  
-  .talent-summary .talent-icon-img {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .talent-summary .talent-percent {
-    font-size: 13px;
-  }
-  
-  .rank-entry .talent-icon-img {
-    width: 26px;
-    height: 26px;
-  }
-  
-  .rank-entry {
-    padding: 10px 8px;
-  }
-  
-  #raid-menu {
-    gap: 6px;
-    margin: -8px -8px 16px -8px;
-    padding: 8px;
-  }
-  
-  #raid-menu .raid-icon {
-    width: 56px;
-    height: 56px;
-  }
-  
-  #boss-buttons button {
-    padding: 8px 12px;
-    font-size: 14px;
+    display: none;
   }
 }
