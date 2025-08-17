@@ -18,6 +18,15 @@ body {
   color: var(--text-color);
   font-family: 'Segoe UI', sans-serif;
   padding: 20px;
+  margin: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 .main-container {
@@ -26,23 +35,26 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   align-items: flex-start;
+  width: 100%;
 }
 
 .sidebar {
-  flex: 0 0 260px; /* Sidebar width */
+  flex: 0 0 260px;
   position: sticky;
   top: 20px;
 }
 
 .content-area {
   flex: 1;
-  min-width: 0; /* Prevents flexbox overflow */
+  min-width: 0;
   text-align: center;
+  width: 100%;
 }
 
 h1 {
   margin-top: 0;
   margin-bottom: 0;
+  font-size: clamp(1.5rem, 4vw, 2rem);
 }
 
 .header-controls {
@@ -93,26 +105,21 @@ a.wowhead del {
 }
 
 #raid-menu button {
-  /* Keep all your existing styles */
   background-color: #222;
   color: var(--text-color);
   border: 1px solid var(--border-color);
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 120ms ease;
-  padding: 6px;
+  padding: 0;
   display: flex;
-  flex-direction: column; /* This needs to change to get the text over the image */
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   font-size: 12px;
-
-  /* ADD THESE NEW STYLES */
-  position: relative; /* This is the key */
-  padding: 0; /* Remove padding to make the image fill the button */
-  overflow: hidden; /* Ensures nothing spills out */
-  flex-direction: row; /* Change this back to row */
-  justify-content: center; /* Center the content */
+  position: relative;
+  overflow: hidden;
 }
 
 #raid-menu .raid-icon {
@@ -120,6 +127,21 @@ a.wowhead del {
   height: 64px;
   border-radius: 4px;
   object-fit: cover;
+}
+
+#raid-menu button span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  z-index: 1;
+  font-weight: bold;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
 
 /* Boss Selection Menu */
@@ -142,21 +164,6 @@ a.wowhead del {
   align-items: center;
   gap: 12px;
   text-align: left;
-}
-
-#raid-menu button span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    z-index: 1;
-    font-weight: bold;
-    text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
 }
 
 .boss-icon {
@@ -193,6 +200,8 @@ a.wowhead del {
   max-width: 760px;
   margin: 30px auto 0;
   text-align: left;
+  width: 100%;
+  padding: 0 10px;
 }
 
 /* Player Rank Row */
@@ -203,6 +212,7 @@ a.wowhead del {
   gap: 16px;
   margin: 12px 0;
   width: 100%;
+  min-height: 40px;
 }
 
 .rank-entry .name-wrapper {
@@ -212,6 +222,7 @@ a.wowhead del {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .rank-entry .player-link {
@@ -226,12 +237,14 @@ a.wowhead del {
   align-items: center;
   gap: 10px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .talent-summary .talent-row {
   display: flex;
   justify-content: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .talent-summary .talent-icon-img {
@@ -249,6 +262,7 @@ a.wowhead del {
 .rank-entry .talent-row {
   display: flex;
   gap: 5px;
+  flex-shrink: 0;
 }
 
 .rank-entry .talent-icon-img {
@@ -316,46 +330,143 @@ a.wowhead del {
   Responsive Design
   ================================================================= */
 @media (max-width: 900px) {
+  body {
+    padding: 15px;
+  }
+  
   .main-container {
     flex-direction: column;
+    gap: 20px;
   }
+  
   .sidebar {
     position: static;
     width: 100%;
+    flex: none;
   }
+  
   #raid-menu {
     position: sticky;
     top: 0;
     background-color: var(--bg-color);
     padding: 10px 0;
     z-index: 10;
+    margin: -10px -15px 20px -15px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
+  
+  #rankings {
+    margin-top: 20px;
+    padding: 0;
+  }
+  
+  .rank-entry {
+    gap: 12px;
+  }
+  
   .rank-entry .name-wrapper {
-    min-width: 180px; /* Allow space for talents on mobile */
+    min-width: 120px;
+    font-size: 14px;
   }
 }
 
 @media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+  
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+  
+  .header-controls {
+    gap: 12px;
+    margin: 8px 0 16px;
+  }
+  
+  #rankings {
+    padding: 0;
+  }
+  
   .rank-entry {
     flex-direction: column;
     align-items: center;
     gap: 8px;
     background-color: #1a1a1a;
-    padding: 10px;
+    padding: 12px 10px;
     border-radius: 6px;
+    margin: 8px 0;
   }
+  
   .rank-entry .name-wrapper {
-    width: auto;
+    width: 100%;
     text-align: center;
+    min-width: 0;
+    white-space: normal;
+    font-size: 15px;
+  }
+  
+  .rank-entry .talent-row {
+    justify-content: center;
+  }
+  
+  .talent-summary .talent-row {
+    gap: 8px;
   }
 }
 
 @media (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+  
+  h1 {
+    font-size: 1.2rem;
+  }
+  
+  .header-controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  #copy-link-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
   .talent-summary .talent-icon-img {
     width: 48px;
     height: 48px;
   }
+  
   .talent-summary .talent-percent {
+    font-size: 13px;
+  }
+  
+  .rank-entry .talent-icon-img {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .rank-entry {
+    padding: 10px 8px;
+  }
+  
+  #raid-menu {
+    gap: 6px;
+    margin: -8px -8px 16px -8px;
+    padding: 8px;
+  }
+  
+  #raid-menu .raid-icon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  #boss-buttons button {
+    padding: 8px 12px;
     font-size: 14px;
   }
 }
