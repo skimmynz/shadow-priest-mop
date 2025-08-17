@@ -16,6 +16,7 @@
       <nav id="raid-menu" aria-label="Raid selection"></nav>
       <div id="boss-buttons" role="group" aria-label="Bosses"></div>
     </aside>
+    
     <main class="content-area">
       <h1>Shadow Priest Top 100 – MoP Classic</h1>
       <div class="header-controls">
@@ -27,5 +28,22 @@
       <section id="rankings">
         </section>
     </main>
+    
+    <aside class="talent-sidebar">
+      <div class="talent-summary-container">
+        <button class="collapsible-header" type="button" aria-expanded="false" aria-controls="talent-summary">
+          <h3>Popular Talents</h3>
+          <span class="expand-icon">▼</span>
+        </button>
+        <div class="collapsible-content" id="talent-summary">
+          <div class="talent-summary">
+            <!-- Talent data will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
+  
   <script src="script.js" defer></script>
+</body>
+</html>
