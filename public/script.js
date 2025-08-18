@@ -381,9 +381,8 @@ function render(data, TOP_BY_TIER) {
     return `
       <div class="rank-entry">
         <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
-          <div class="name-wrapper">
+          <div class="name-wrapper" style="color:${color}">
               ${i + 1}. ${playerName} — ${dps.toLocaleString()} DPS
-            </a>
           </div>
           <div class="header-right">
             ${perPlayerTalents}
