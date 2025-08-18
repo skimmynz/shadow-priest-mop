@@ -7,7 +7,6 @@
   --card-bg: #1a1a35;
   --surface-bg: #232340;
   --hover-bg: #2a2a45;
-  --accent-color: #6366f1;
   --accent-hover: #7c3aed;
   --accent-glow: rgba(99, 102, 241, 0.25);
   --success-color: #10b981;
@@ -178,6 +177,79 @@ body {
   letter-spacing: -0.02em;
 }
 
+.talent-sidebar .talent-summary-container {
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.talent-sidebar .talent-summary-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-shadow);
+  opacity: 0.8;
+}
+
+.talent-sidebar .talent-summary-container:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+}
+
+.talent-sidebar .collapsible-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 800;
+  font-family: inherit;
+  text-align: left;
+  transition: background-color 0.3s ease;
+}
+
+.talent-sidebar .collapsible-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 800;
+  background: var(--gradient-shadow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: left;
+}
+
+.talent-sidebar .collapsible-header:hover {
+  background: rgba(107, 70, 193, 0.08);
+}
+
+.talent-sidebar .collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.talent-sidebar .collapsible-content.active {
+  max-height: 1000px;
+  opacity: 1;
+  padding: 1.5rem;
+}
+
 h1 {
   margin: 0 0 1.5rem 0;
   font-size: clamp(2.25rem, 3vw, 2.75rem);
@@ -287,7 +359,7 @@ a.wowhead del {
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0.75rem 0.5rem;
+  padding: 0.75rem 0.4rem;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -295,13 +367,14 @@ a.wowhead del {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 90px;
+  height: 95px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  min-width: 0;
 }
 
 #raid-menu .raid-icon {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 8px;
   transition: transform 0.3s ease;
@@ -312,17 +385,18 @@ a.wowhead del {
 #raid-menu button span {
   color: var(--text-primary);
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
   text-align: center;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1.1;
+  overflow: visible;
+  text-overflow: clip;
   white-space: nowrap;
-  max-width: 100%;
+  width: 100%;
+  display: block;
 }
 
 #raid-menu button::before {
@@ -464,7 +538,8 @@ a.wowhead del {
 }
 
 /* Talent Summary - Moved to right sidebar */
-.talent-summary {
+.talent-summary,
+.talent-summary-content {
   background: transparent;
   border-radius: 0;
   padding: 0;
@@ -473,18 +548,21 @@ a.wowhead del {
   box-shadow: none;
 }
 
-.talent-summary .talent-row {
+.talent-summary .talent-row,
+.talent-summary-content .talent-row {
   display: flex;
   justify-content: center;
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
-.talent-summary .talent-row:last-child {
+.talent-summary .talent-row:last-child,
+.talent-summary-content .talent-row:last-child {
   margin-bottom: 0;
 }
 
-.talent-summary .talent-icon-img {
+.talent-summary .talent-icon-img,
+.talent-summary-content .talent-icon-img {
   width: 56px;
   height: 56px;
   border-radius: 12px;
@@ -493,86 +571,13 @@ a.wowhead del {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-.talent-summary .talent-percent {
+.talent-summary .talent-percent,
+.talent-summary-content .talent-percent {
   font-size: 0.95rem;
   font-weight: 700;
   margin-top: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   text-align: center;
-}
-
-/* Collapsible container - Better proportions */
-.talent-summary-container {
-  margin-bottom: 2rem;
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-lg);
-  position: relative;
-}
-
-.talent-summary-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
-}
-
-.talent-summary-container:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-.collapsible-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 1.25rem 2rem;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 1.25rem;
-  font-weight: 800;
-  font-family: inherit;
-  text-align: left;
-  transition: background-color 0.3s ease;
-}
-
-.collapsible-header h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  background: var(--gradient-shadow);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.collapsible-header:hover {
-  background: rgba(107, 70, 193, 0.08);
-}
-
-.collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0;
-}
-
-.collapsible-content.active {
-  max-height: 1000px;
-  opacity: 1;
-  padding: 1.5rem 2rem;
 }
 
 /* Player Rank Entry */
@@ -936,7 +941,8 @@ a.wowhead del {
   box-shadow: 0 16px 32px rgba(107, 70, 193, 0.4);
 }
 
-.talent-summary .talent-link.is-meta .talent-icon-img {
+.talent-summary .talent-link.is-meta .talent-icon-img,
+.talent-summary-content .talent-link.is-meta .talent-icon-img {
   border-color: var(--gold-color);
   box-shadow: 0 0 0 2px var(--gold-color), 0 12px 30px rgba(251, 191, 36, 0.4);
 }
@@ -1037,7 +1043,8 @@ a.wowhead del {
 .rankings-gear-name.legendary { color: #ff8000; }
 
 /* Top talent highlighting */
-.talent-summary .talent-link.is-top .talent-icon-img {
+.talent-summary .talent-link.is-top .talent-icon-img,
+.talent-summary-content .talent-link.is-top .talent-icon-img {
   transform: translateY(-3px) scale(1.08);
   box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
   border-color: var(--success-color);
@@ -1055,7 +1062,8 @@ a.wowhead del {
   }
 }
 
-.talent-summary .talent-link.is-top .talent-percent {
+.talent-summary .talent-link.is-top .talent-percent,
+.talent-summary-content .talent-link.is-top .talent-percent {
   color: var(--success-color);
   text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
   font-weight: 800;
@@ -1104,7 +1112,8 @@ a.wowhead del {
     width: 44px;
   }
   
-  .talent-summary .talent-icon-img {
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
     width: 64px;
     height: 64px;
   }
@@ -1154,7 +1163,8 @@ a.wowhead del {
     font-size: 2.5rem;
   }
   
-  .talent-summary .talent-icon-img {
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
     width: 60px;
     height: 60px;
   }
@@ -1195,7 +1205,8 @@ a.wowhead del {
     padding: 1.5rem;
   }
 
-  .talent-summary .talent-row {
+  .talent-summary .talent-row,
+  .talent-summary-content .talent-row {
     gap: 1.25rem;
   }
 
@@ -1207,7 +1218,8 @@ a.wowhead del {
     grid-template-columns: 1fr;
   }
 
-  .talent-summary .talent-icon-img {
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
     width: 56px;
     height: 56px;
   }
@@ -1263,25 +1275,33 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    height: 100px;
+    height: 90px;
+    padding: 0.5rem 0.3rem;
   }
 
   #raid-menu .raid-icon {
-    width: 48px;
-    height: 48px;
+    width: 36px;
+    height: 36px;
+  }
+
+  #raid-menu button span {
+    font-size: 0.65rem;
+    line-height: 1.1;
   }
   
   h1 {
     font-size: 2rem;
   }
   
-  .talent-summary .talent-row {
+  .talent-summary .talent-row,
+  .talent-summary-content .talent-row {
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
   }
   
-  .talent-summary .talent-icon-img {
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
     width: 56px;
     height: 56px;
   }
@@ -1358,12 +1378,14 @@ a.wowhead del {
     gap: 0.75rem;
   }
   
-  .talent-summary .talent-icon-img {
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
     width: 48px;
     height: 48px;
   }
   
-  .talent-summary .talent-percent {
+  .talent-summary .talent-percent,
+  .talent-summary-content .talent-percent {
     font-size: 0.95rem;
   }
 
@@ -1389,17 +1411,17 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    height: 90px;
-    padding: 0.5rem;
+    height: 80px;
+    padding: 0.5rem 0.25rem;
   }
 
   #raid-menu .raid-icon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
 
   #raid-menu button span {
-    font-size: 0.8rem;
+    font-size: 0.6rem;
   }
 
   #boss-buttons button {
@@ -1443,11 +1465,13 @@ a.wowhead del {
     display: none;
   }
 
-  .talent-summary .talent-row {
+  .talent-summary .talent-row,
+  .talent-summary-content .talent-row {
     gap: 0.75rem;
   }
 
-  .talent-summary .talent-icon-img {
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
     width: 40px;
     height: 40px;
   }
@@ -1458,18 +1482,18 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    height: 80px;
-    padding: 0.5rem 0.25rem;
+    height: 70px;
+    padding: 0.4rem 0.2rem;
   }
 
   #raid-menu .raid-icon {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
   }
 
   #raid-menu button span {
-    font-size: 0.75rem;
-    line-height: 1.1;
+    font-size: 0.55rem;
+    line-height: 1.0;
   }
 
   .ranking-header .talent-row {
