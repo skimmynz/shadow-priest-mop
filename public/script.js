@@ -1,4 +1,4 @@
-// Shadow Priest Rankings – MoP Classic
+// Shadow Priest Rankings — MoP Classic
 // ======= Raids, Encounters & Talent Data =======
 const RAIDS = {
   msv: {
@@ -239,6 +239,11 @@ function createRaidMenu() {
       } else {
         rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
         updateLastUpdated(null);
+        // Clear talent summary when no bosses
+        const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+        if (talentSummaryElement) {
+          talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+        }
       }
     });
     raidMenu.appendChild(btn);
@@ -378,7 +383,7 @@ function render(data, TOP_BY_TIER) {
         <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
           <div class="name-wrapper">
             <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
-              ${i + 1}. ${playerName} – ${dps.toLocaleString()} DPS
+              ${i + 1}. ${playerName} — ${dps.toLocaleString()} DPS
             </a>
           </div>
           <div class="header-right">
@@ -471,7 +476,7 @@ function renderTalentSummary(data) {
   }
 
   const TOP_BY_TIER = new Map();
-  let talentSummaryHTML = `<div class="talent-summary">`;
+  let talentSummaryHTML = `<div class="talent-summary-content">`;
   for (const tier of TIER_ORDER) {
     const total = totalPerTier[tier] ?? 0;
     const rowStats = talentTiers[tier].map((talent) => {
@@ -518,17 +523,6 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
       talentSummaryElement.innerHTML = talentSummaryHTML;
     }
 
-    rankingsDiv.innerHTML = collapsibleTalentSummary + playerListHTML;
-    
-    // Attach event listener for the new toggle button
-    const toggleBtn = document.getElementById('talent-summary-toggle');
-    const contentDiv = document.getElementById('talent-summary-content');
-    toggleBtn?.addEventListener('click', () => {
-      const isActive = contentDiv.classList.toggle('active');
-      toggleBtn.setAttribute('aria-expanded', isActive);
-      toggleBtn.querySelector('.expand-icon')?.classList.toggle('rotated');
-    });
-
     if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
   };
 
@@ -564,6 +558,11 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     } else {
       rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
       updateLastUpdated(null);
+      // Clear talent summary on error
+      const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+      if (talentSummaryElement) {
+        talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
+      }
     }
   } finally {
     disableButtons(false);
@@ -578,6 +577,15 @@ document.addEventListener('DOMContentLoaded', () => {
       copyBtn.textContent = 'Copied!';
       setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
     });
+  });
+
+  // Add event listener for talent sidebar collapsible header
+  const talentToggleBtn = document.querySelector('.talent-sidebar .collapsible-header');
+  const talentContentDiv = document.querySelector('.talent-sidebar .collapsible-content');
+  talentToggleBtn?.addEventListener('click', () => {
+    const isActive = talentContentDiv.classList.toggle('active');
+    talentToggleBtn.setAttribute('aria-expanded', isActive);
+    talentToggleBtn.querySelector('.expand-icon')?.classList.toggle('rotated');
   });
 
   createRaidMenu();
@@ -603,5 +611,10 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${RAIDS[currentRaidKey].name} yet.</div>`;
     updateLastUpdated(null);
+    // Clear talent summary when no bosses
+    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+    if (talentSummaryElement) {
+      talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+    }
   }
 });
