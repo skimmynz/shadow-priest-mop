@@ -265,19 +265,6 @@ h1 {
   position: relative;
 }
 
-h1::before {
-  content: '';
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: var(--gradient-shadow);
-  border-radius: 2px;
-  box-shadow: 0 0 20px var(--shadow-glow);
-}
-
 .header-controls {
   display: flex;
   justify-content: center;
