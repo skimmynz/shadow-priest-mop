@@ -504,22 +504,19 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
-  // This new inner function handles rendering and attaching listeners
+  // This function handles rendering and attaching listeners
   const renderContentAndAttachListeners = (data) => {
     const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
     const playerListHTML = render(data, topByTier);
 
-    const collapsibleTalentSummary = `
-      <div class="talent-summary-container">
-        <button type="button" class="collapsible-header" id="talent-summary-toggle" aria-expanded="true">
-          <h3>Talent Usage Summary</h3>
-          <span class="expand-icon rotated">▼</span>
-        </button>
-        <div id="talent-summary-content" class="collapsible-content active">
-          ${talentSummaryHTML}
-        </div>
-      </div>
-    `;
+    // Update the main content area with just the player rankings
+    rankingsDiv.innerHTML = playerListHTML;
+    
+    // Update the talent summary in the right sidebar
+    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+    if (talentSummaryElement) {
+      talentSummaryElement.innerHTML = talentSummaryHTML;
+    }
 
     rankingsDiv.innerHTML = collapsibleTalentSummary + playerListHTML;
     
