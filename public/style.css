@@ -1232,20 +1232,20 @@ a.wowhead del {
   
   .sidebar {
     position: static;
-    order: -1;
+    order: 1;
     width: 100%;
     max-width: none;
   }
   
   .talent-sidebar {
-    order: 1;
+    order: 2;
     position: static;
     width: 100%;
     max-width: none;
   }
   
   .content-area {
-    order: 0;
+    order: 3;
   }
   
   #raid-menu {
