@@ -1,40 +1,4 @@
 /* =================================================================
-  Theme Variables - Enhanced with modern colors and effects
-  ================================================================= */
-:root {
-  --primary-bg: #0a0a15;
-  --secondary-bg: #141428;
-  --card-bg: #1a1a35;
-  --surface-bg: #232340;
-  --hover-bg: #2a2a45;
-  --accent-hover: #7c3aed;
-  --accent-glow: rgba(99, 102, 241, 0.25);
-  --success-color: #10b981;
-  --success-glow: rgba(16, 185, 129, 0.3);
-  --warning-color: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.3);
-  --shadow-color: #6b46c1;
-  --shadow-glow: rgba(107, 70, 193, 0.4);
-  --gold-color: #fbbf24;
-  --text-primary: #ffffff;
-  --text-secondary: #e2e8f0;
-  --text-muted: #94a3b8;
-  --text-accent: #a78bfa;
-  --border-color: #374151;
-  --border-hover: #4b5563;
-  --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-accent: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-shadow: linear-gradient(135deg, #6b46c1 0%, #7c3aed 100%);
-  --gradient-bg: radial-gradient(circle at 20% 80%, rgba(107, 70, 193, 0.12) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 40% 40%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
-}
-
-/* =================================================================
   Base & Layout Styles - Updated for three-column layout
   ================================================================= */
 * {
