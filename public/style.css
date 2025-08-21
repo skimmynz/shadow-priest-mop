@@ -1,15 +1,75 @@
 /* =================================================================
-  Base & Layout Styles - Updated for three-column layout
+  WoWhead-Inspired Theme - Enhanced Color Variables
+  Based on WoW's authentic UI colors and design patterns
   ================================================================= */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+:root {
+  /* Core WoWhead-inspired colors */
+  --primary-bg: #0a0a0a;
+  --secondary-bg: #1a1611;
+  --tertiary-bg: #2d2418;
+  --card-bg: #1f1b14;
+  --glass-bg: rgba(25, 20, 16, 0.85);
+  
+  /* WoW-themed accent colors */
+  --accent-color: #f4d03f;
+  --accent-hover: #f7dc6f;
+  --text-accent: #f4d03f;
+  --gold-color: #ffd700;
+  --success-color: #58d68d;
+  
+  /* Text colors with WoW authenticity */
+  --text-primary: #f8f1e4;
+  --text-secondary: #d5c4a1;
+  --text-muted: #938a7a;
+  
+  /* Border and interaction colors */
+  --border-color: #3e3426;
+  --border-hover: #5d4e37;
+  --glass-border: rgba(95, 78, 55, 0.4);
+  --hover-bg: rgba(244, 208, 63, 0.08);
+  
+  /* Enhanced gradients with WoW flair */
+  --gradient-bg: linear-gradient(135deg, 
+    #0a0a0a 0%, 
+    #1a1611 25%, 
+    #2d2418 50%, 
+    #1a1611 75%, 
+    #0a0a0a 100%);
+  --gradient-shadow: linear-gradient(135deg, 
+    #f4d03f 0%, 
+    #d4af37 50%, 
+    #b8860b 100%);
+  --gradient-card: linear-gradient(135deg, 
+    rgba(25, 20, 16, 0.95) 0%, 
+    rgba(45, 36, 24, 0.95) 100%);
+  
+  /* Enhanced shadows with warm tones */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 30px rgba(244, 208, 63, 0.3);
+  --shadow-glow-intense: 0 0 40px rgba(244, 208, 63, 0.6);
+  
+  /* WoW item quality colors */
+  --quality-poor: #9d9d9d;
+  --quality-common: #ffffff;
+  --quality-uncommon: #1eff00;
+  --quality-rare: #0070dd;
+  --quality-epic: #a335ee;
+  --quality-legendary: #ff8000;
+  --quality-artifact: #e6cc80;
+  --quality-heirloom: #e6cc80;
 }
 
+/* =================================================================
+  Enhanced Base Styling with WoW Texture Feel
+  ================================================================= */
 body {
   background: var(--primary-bg);
-  background-image: var(--gradient-bg);
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(244, 208, 63, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(181, 142, 11, 0.02) 0%, transparent 50%),
+    var(--gradient-bg);
   background-attachment: fixed;
   color: var(--text-primary);
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -19,8 +79,10 @@ body {
   padding: 2.5rem 2rem;
   min-height: 100vh;
   overflow-x: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* Enhanced glass morphism effect */
 .main-container {
   display: grid;
   grid-template-columns: 280px 1fr 320px;
@@ -31,286 +93,145 @@ body {
   min-height: 100vh;
 }
 
-.sidebar {
-  position: sticky;
-  top: 2.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 1.75rem;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-xl);
-  width: 280px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
-}
-
-.sidebar:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-.content-area {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-xl);
-  width: 100%;
-  min-width: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.content-area::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
-}
-
-.content-area:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-/* New right sidebar for talent summary */
+/* WoW-themed container styling */
+.sidebar,
+.content-area,
 .talent-sidebar {
-  position: sticky;
-  top: 2.5rem;
-  background: var(--glass-bg);
+  background: var(--gradient-card);
   backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 1.75rem;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-xl);
-  width: 320px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 
+    var(--shadow-xl),
+    inset 0 1px 0 rgba(244, 208, 63, 0.1),
+    0 0 0 1px var(--glass-border);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  max-height: calc(100vh - 5rem);
-  overflow-y: auto;
 }
 
+/* Decorative border effect */
+.sidebar::before,
+.content-area::before,
 .talent-sidebar::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--gradient-shadow);
+  border-radius: 16px 16px 0 0;
   opacity: 0.8;
 }
 
-.talent-sidebar:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-.talent-sidebar h3 {
-  margin: 0 0 1.5rem 0;
-  font-size: 1.25rem;
-  font-weight: 800;
-  background: var(--gradient-shadow);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-align: center;
-  letter-spacing: -0.02em;
-}
-
-.talent-sidebar .talent-summary-container {
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-lg);
-  position: relative;
-}
-
-.talent-sidebar .talent-summary-container::before {
+/* Enhanced corner decorations */
+.sidebar::after,
+.content-area::after,
+.talent-sidebar::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 0;
   right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle, 
+    rgba(244, 208, 63, 0.1) 0%, 
+    transparent 70%);
+  border-radius: 16px 0 0 0;
+  pointer-events: none;
 }
 
-.talent-sidebar .talent-summary-container:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+.sidebar {
+  position: sticky;
+  top: 2.5rem;
+  padding: 2rem;
+  width: 280px;
 }
 
-.talent-sidebar .collapsible-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.content-area {
+  padding: 2.5rem;
   width: 100%;
-  padding: 1.25rem 1.5rem;
-  background: transparent;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: 800;
-  font-family: inherit;
-  text-align: left;
-  transition: background-color 0.3s ease;
+  min-width: 0;
 }
 
-.talent-sidebar .collapsible-header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 800;
-  background: var(--gradient-shadow);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-align: left;
+.talent-sidebar {
+  position: sticky;
+  top: 2.5rem;
+  padding: 2rem;
+  width: 320px;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
 }
 
-.talent-sidebar .collapsible-header:hover {
-  background: rgba(107, 70, 193, 0.08);
+/* Enhanced hover effects */
+.sidebar:hover,
+.content-area:hover,
+.talent-sidebar:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 32px 64px rgba(0, 0, 0, 0.5),
+    var(--shadow-glow),
+    inset 0 1px 0 rgba(244, 208, 63, 0.2);
+  border-color: rgba(244, 208, 63, 0.3);
 }
 
-.talent-sidebar .collapsible-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0;
-}
-
-.talent-sidebar .collapsible-content.active {
-  max-height: 1000px;
-  opacity: 1;
-  padding: 1.5rem;
-}
-
+/* =================================================================
+  Enhanced Typography with WoW Character
+  ================================================================= */
 h1 {
-  margin: 0 0 1.5rem 0;
-  font-size: clamp(2.25rem, 3vw, 2.75rem);
+  margin: 0 0 2rem 0;
+  font-size: clamp(2.5rem, 4vw, 3.2rem);
   font-weight: 900;
-  background: var(--gradient-shadow);
+  background: linear-gradient(135deg, 
+    #ffd700 0%, 
+    #f4d03f 25%, 
+    #daa520 50%, 
+    #b8860b 75%, 
+    #ffd700 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-align: center;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  text-shadow: 0 0 30px var(--shadow-glow);
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 30px rgba(244, 208, 63, 0.5);
   position: relative;
+  filter: drop-shadow(0 0 20px rgba(244, 208, 63, 0.3));
 }
 
-.header-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.last-updated {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-#copy-link-btn {
-  background: var(--secondary-bg);
-  color: var(--text-primary);
-  border: 1px solid var(--border-hover);
-  padding: 0.75rem 1.5rem;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: inherit;
-  font-size: 0.9rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-#copy-link-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s;
-}
-
-#copy-link-btn:hover {
-  background: var(--hover-bg);
-  border-color: var(--accent-color);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px var(--shadow-glow);
-}
-
-#copy-link-btn:hover::before {
-  left: 100%;
-}
-
-/* Neutralize Wowhead's injected styles */
-a.wowhead ins,
-a.wowhead del {
-  text-decoration: none !important;
-  border: 0 !important;
+/* Enhanced section headers */
+h3, h4 {
+  background: var(--gradient-shadow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  margin-bottom: 1rem;
 }
 
 /* =================================================================
-  Navigation (Sidebar) - Optimized spacing and proportions
+  WoW-Themed Navigation Enhancement
   ================================================================= */
-
-/* Raid Selection Menu */
 #raid-menu {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 #raid-menu button {
-  background: var(--secondary-bg);
+  background: var(--gradient-card);
   color: var(--text-primary);
-  border: 1px solid var(--border-hover);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0.75rem 0.4rem;
+  padding: 1rem 0.5rem;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -318,84 +239,109 @@ a.wowhead del {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 95px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  height: 100px;
+  box-shadow: 
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(244, 208, 63, 0.1);
   min-width: 0;
 }
 
+/* Decorative corner elements */
+#raid-menu button::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: linear-gradient(135deg, 
+    rgba(244, 208, 63, 0.05) 0%, 
+    transparent 50%, 
+    rgba(181, 142, 11, 0.05) 100%);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#raid-menu button:hover::before {
+  opacity: 1;
+}
+
 #raid-menu .raid-icon {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   object-fit: cover;
   border-radius: 8px;
-  transition: transform 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--border-hover);
+  transition: all 0.3s ease;
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 0 1px rgba(244, 208, 63, 0.2);
   flex-shrink: 0;
 }
 
 #raid-menu button span {
   color: var(--text-primary);
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   transition: all 0.3s ease;
   position: relative;
   z-index: 1;
   text-align: center;
-  line-height: 1.1;
-  overflow: visible;
-  text-overflow: clip;
-  white-space: nowrap;
-  width: 100%;
-  display: block;
-}
-
-#raid-menu button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-shadow);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  line-height: 1.2;
 }
 
 #raid-menu button:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 16px 40px var(--shadow-glow);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow-intense),
+    inset 0 1px 0 rgba(244, 208, 63, 0.3);
   border-color: var(--accent-color);
-}
-
-#raid-menu button:hover::before {
-  opacity: 0.1;
 }
 
 #raid-menu button:hover .raid-icon {
   transform: scale(1.1);
+  border-color: var(--accent-color);
+  box-shadow: 
+    var(--shadow-xl),
+    var(--shadow-glow);
 }
 
 #raid-menu button:hover span {
-  color: var(--text-primary);
-  text-shadow: 0 0 10px var(--shadow-glow);
+  color: var(--text-accent);
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(244, 208, 63, 0.6);
 }
 
 #raid-menu button.active {
   border-color: var(--accent-color);
-  box-shadow: 0 0 30px var(--shadow-glow);
-  transform: translateY(-1px);
+  box-shadow: 
+    var(--shadow-xl),
+    var(--shadow-glow-intense),
+    inset 0 1px 0 rgba(244, 208, 63, 0.4);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, 
+    rgba(25, 20, 16, 0.95) 0%, 
+    rgba(45, 36, 24, 0.95) 50%,
+    rgba(35, 28, 19, 0.95) 100%);
 }
 
 #raid-menu button.active::before {
-  opacity: 0.15;
+  opacity: 1;
+  background: linear-gradient(135deg, 
+    rgba(244, 208, 63, 0.15) 0%, 
+    rgba(181, 142, 11, 0.1) 50%,
+    rgba(244, 208, 63, 0.05) 100%);
 }
 
 #raid-menu button.active span {
   color: var(--text-accent);
 }
 
-/* Boss Selection Menu - Better spacing and visual hierarchy */
+/* Enhanced boss buttons */
 #boss-buttons {
   display: flex;
   flex-direction: column;
@@ -403,23 +349,25 @@ a.wowhead del {
 }
 
 #boss-buttons button {
-  background: var(--secondary-bg);
+  background: var(--gradient-card);
   color: var(--text-primary);
-  border: 1px solid var(--border-hover);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.25rem;
   font-size: 0.9rem;
   font-weight: 600;
   font-family: inherit;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   text-align: left;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(244, 208, 63, 0.1);
 }
 
 #boss-buttons button::before {
@@ -429,14 +377,16 @@ a.wowhead del {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: var(--gradient-shadow);
-  opacity: 0.1;
-  transition: left 0.3s ease;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(244, 208, 63, 0.1), 
+    transparent);
+  transition: left 0.6s ease;
   z-index: 0;
 }
 
 #boss-buttons button:hover::before {
-  left: 0;
+  left: 100%;
 }
 
 #boss-buttons button > * {
@@ -445,50 +395,137 @@ a.wowhead del {
 }
 
 .boss-icon {
-  height: 40px;
-  width: 40px;
+  height: 44px;
+  width: 44px;
   border-radius: 8px;
   border: 2px solid var(--border-hover);
   flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease;
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 0 1px rgba(244, 208, 63, 0.2);
 }
 
 #boss-buttons button:hover {
-  background: var(--hover-bg);
+  background: linear-gradient(135deg, 
+    rgba(35, 28, 19, 0.95) 0%, 
+    rgba(45, 36, 24, 0.95) 100%);
   border-color: var(--accent-color);
-  transform: translateX(4px);
-  box-shadow: 0 8px 32px var(--shadow-glow);
+  transform: translateX(6px);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow);
 }
 
 #boss-buttons button:hover .boss-icon {
   border-color: var(--accent-color);
-  transform: scale(1.05);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--shadow-glow);
+  transform: scale(1.08);
+  box-shadow: 
+    var(--shadow-xl),
+    var(--shadow-glow);
 }
 
 #boss-buttons button.active {
   background: var(--gradient-shadow);
   border-color: var(--accent-color);
-  color: var(--text-primary);
-  transform: translateX(3px);
-  box-shadow: 0 8px 32px var(--shadow-glow);
+  color: var(--primary-bg);
+  font-weight: 700;
+  transform: translateX(4px);
+  box-shadow: 
+    var(--shadow-xl),
+    var(--shadow-glow-intense);
 }
 
 #boss-buttons button.active .boss-icon {
-  border-color: var(--accent-color);
-  box-shadow: 0 0 20px var(--shadow-glow);
+  border-color: var(--primary-bg);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(244, 208, 63, 0.8);
 }
 
 /* =================================================================
-  Rankings & Talent Display - Better spacing and alignment
+  Enhanced Ranking Display
   ================================================================= */
-#rankings {
-  margin-top: 0;
-  min-height: 600px;
+.rank-entry {
+  margin: 0 0 1rem 0;
+  background: var(--gradient-card);
+  backdrop-filter: blur(20px);
+  border-radius: 12px;
+  border: 2px solid var(--border-color);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(244, 208, 63, 0.1);
 }
 
-/* Talent Summary - Moved to right sidebar */
+.rank-entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--gradient-shadow);
+  transform: scaleY(0);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 2px 2px 0;
+}
+
+.rank-entry:hover {
+  background: linear-gradient(135deg, 
+    rgba(35, 28, 19, 0.95) 0%, 
+    rgba(45, 36, 24, 0.95) 100%);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow),
+    inset 0 1px 0 rgba(244, 208, 63, 0.2);
+}
+
+.rank-entry:hover::before {
+  transform: scaleY(1);
+}
+
+/* Enhanced ranking header */
+.ranking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(244, 208, 63, 0.02) 50%, 
+    transparent 100%);
+}
+
+.ranking-header:hover {
+  background: linear-gradient(90deg, 
+    rgba(244, 208, 63, 0.05) 0%, 
+    rgba(244, 208, 63, 0.1) 50%, 
+    rgba(244, 208, 63, 0.05) 100%);
+}
+
+.ranking-header .name-wrapper {
+  color: var(--text-accent);
+  font-weight: 700;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.1rem;
+  min-width: 0;
+  text-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(244, 208, 63, 0.3);
+}
+
+/* Enhanced talent display */
 .talent-summary,
 .talent-summary-content {
   background: transparent;
@@ -504,408 +541,242 @@ a.wowhead del {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin-bottom: 1.25rem;
-}
-
-.talent-summary .talent-row:last-child,
-.talent-summary-content .talent-row:last-child {
-  margin-bottom: 0;
+  margin-bottom: 1.5rem;
 }
 
 .talent-summary .talent-icon-img,
 .talent-summary-content .talent-icon-img {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
   border: 3px solid var(--border-hover);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    var(--shadow-lg),
+    0 0 0 1px rgba(244, 208, 63, 0.2);
 }
 
-.talent-summary .talent-percent,
-.talent-summary-content .talent-percent {
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-top: 0.5rem;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  text-align: center;
+.talent-summary .talent-link:hover .talent-icon-img,
+.talent-summary-content .talent-link:hover .talent-icon-img {
+  transform: translateY(-4px) scale(1.1);
+  filter: brightness(1.2) saturate(1.3);
+  border-color: var(--accent-color);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow-intense);
 }
 
-/* Player Rank Entry */
-.rank-entry {
-  margin: 0 0 1rem 0;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 12px;
-  border: 1px solid var(--glass-border);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+/* Enhanced meta talent highlighting */
+.talent-summary .talent-link.is-meta .talent-icon-img,
+.talent-summary-content .talent-link.is-meta .talent-icon-img {
+  border-color: var(--gold-color);
+  box-shadow: 
+    0 0 0 3px var(--gold-color), 
+    0 16px 32px rgba(255, 215, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  animation: golden-pulse 3s infinite;
 }
 
-.rank-entry::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 3px;
-  background: var(--gradient-shadow);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
+@keyframes golden-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 3px var(--gold-color), 
+      0 16px 32px rgba(255, 215, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 4px var(--gold-color), 
+      0 20px 40px rgba(255, 215, 0, 0.6),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
+  }
 }
 
-.rank-entry:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-1px);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
-}
-
-.rank-entry:hover::before {
-  transform: scaleY(1);
-}
-
-/* Ranking Header - Better proportions */
-.ranking-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.ranking-header:hover {
-  background: rgba(107, 70, 193, 0.06);
-}
-
-.ranking-header .name-wrapper {
-  color: var(--text-accent);
-  font-weight: 700;
-  flex-grow: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 1.05rem;
-  min-width: 0;
-}
-
-.ranking-header .player-link {
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.3s ease;
-}
-
-.ranking-header .player-link:hover {
-  color: var(--accent-hover);
-  text-shadow: 0 0 10px var(--shadow-glow);
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
-}
-
-/* Expand Icon */
-.expand-icon {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  user-select: none;
-  flex-shrink: 0;
-}
-
-.expand-icon.rotated {
-  transform: rotate(180deg);
-  color: var(--accent-color);
-}
-
-/* Dropdown Content - Professional spacing */
+/* Enhanced dropdown styling */
 .dropdown-content {
   max-height: 0;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.02);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, 
+    rgba(15, 12, 8, 0.95) 0%, 
+    rgba(25, 20, 16, 0.95) 100%);
+  border-top: 2px solid rgba(244, 208, 63, 0.2);
   opacity: 0;
   overflow-x: auto;
 }
 
 .dropdown-content.active {
-  max-height: 2000px;
+  max-height: 2500px;
   opacity: 1;
-  padding: 1.5rem;
+  padding: 2rem;
   overflow: auto;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Info Grid Layout - Better desktop proportions */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-  width: 100%;
-  min-width: 0;
-}
-
+/* Enhanced info sections */
 .info-section {
-  background: var(--secondary-bg);
-  padding: 1.25rem;
+  background: var(--gradient-card);
+  padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--border-color);
+  transition: all 0.4s ease;
+  box-shadow: 
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(244, 208, 63, 0.1);
   min-width: 0;
   overflow: hidden;
+  position: relative;
+}
+
+.info-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--accent-color) 50%, 
+    transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.info-section:hover::before {
+  opacity: 0.6;
 }
 
 .info-section:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow),
+    inset 0 1px 0 rgba(244, 208, 63, 0.2);
 }
 
-.info-section h4 {
-  margin: 0 0 1rem 0;
-  background: var(--gradient-shadow);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 1.05rem;
-  font-weight: 700;
-  border-bottom: 2px solid var(--border-hover);
-  padding-bottom: 0.5rem;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.6rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.info-row:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-}
-
-.info-label {
-  font-weight: 600;
-  color: var(--text-secondary);
-  min-width: 80px;
-  flex-shrink: 0;
-  font-size: 0.9rem;
-}
-
-.info-value {
-  color: var(--text-primary);
-  text-align: right;
-  font-weight: 500;
-  word-break: break-word;
-  min-width: 0;
-  font-size: 0.9rem;
-}
-
-.info-value a {
-  color: var(--text-accent);
-  text-decoration: none;
-  transition: color 0.3s ease;
-  word-break: break-all;
-}
-
-.info-value a:hover {
-  color: var(--accent-hover);
-  text-shadow: 0 0 10px var(--shadow-glow);
-}
-
-/* Gear Display - Desktop optimized grid */
-.gear-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  min-width: 0;
-}
-
+/* Enhanced gear display */
 .gear-item {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--gradient-card);
+  border: 2px solid var(--border-color);
   border-radius: 10px;
-  padding: 1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  padding: 1.25rem;
+  transition: all 0.4s ease;
+  box-shadow: 
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(244, 208, 63, 0.1);
   min-width: 0;
   overflow: hidden;
+  position: relative;
+}
+
+.gear-item::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  background: var(--gradient-shadow);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
 .gear-item:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow);
 }
 
-.gear-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
+.gear-item:hover::before {
+  opacity: 1;
 }
 
-.gear-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  border: 2px solid var(--border-hover);
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
+/* Enhanced item quality colors */
+.rankings-gear-name.poor { color: var(--quality-poor); }
+.rankings-gear-name.common { color: var(--quality-common); }
+.rankings-gear-name.uncommon { color: var(--quality-uncommon); }
+.rankings-gear-name.rare { color: var(--quality-rare); }
+.rankings-gear-name.epic { color: var(--quality-epic); }
+.rankings-gear-name.legendary { color: var(--quality-legendary); }
 
-.gear-icon:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-.gear-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.gear-name {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.9rem;
-}
-
-.gear-name.poor { color: #9d9d9d; }
-.gear-name.common { color: #ffffff; }
-.gear-name.uncommon { color: #1eff00; }
-.gear-name.rare { color: #0070dd; }
-.gear-name.epic { color: #a335ee; }
-.gear-name.legendary { color: #ff8000; }
-
-.gear-slot {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.gear-ilvl {
-  font-weight: 700;
-  color: var(--gold-color);
-  font-size: 0.85rem;
-  flex-shrink: 0;
-}
-
-.gem-enchant {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.gem,
-.enchant {
-  font-size: 0.7rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 6px;
-  background: var(--hover-bg);
-  border: 1px solid var(--border-hover);
-}
-
-.gem {
-  color: var(--success-color);
-}
-
-.enchant {
-  color: var(--text-accent);
-}
-
-.no-gear {
-  text-align: center;
-  color: var(--text-muted);
-  font-style: italic;
-  padding: 2rem;
-  background: var(--secondary-bg);
+/* Enhanced buttons and controls */
+#copy-link-btn {
+  background: var(--gradient-shadow);
+  color: var(--primary-bg);
+  border: 2px solid var(--accent-color);
+  padding: 1rem 2rem;
   border-radius: 12px;
-  border: 1px solid var(--border-color);
-}
-
-/* Per-Player Talents in Header - Better alignment */
-.ranking-header .talent-row {
-  display: flex;
-  gap: 0.4rem;
-}
-
-.ranking-header .talent-icon-img {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  border: 2px solid var(--border-hover);
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.ranking-header:hover .talent-icon-img {
-  border-color: var(--accent-color);
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px var(--shadow-glow);
-}
-
-/* General Talent Styling */
-.talent-link {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  transition: transform 0.3s ease;
-}
-
-.talent-icon-img {
+  cursor: pointer;
+  font-weight: 700;
+  font-family: inherit;
+  font-size: 0.95rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, filter;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    var(--shadow-lg),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.talent-percent {
-  text-align: center;
-  will-change: transform;
-  transform: translateZ(0);
+#copy-link-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.2), 
+    transparent);
+  transition: left 0.6s ease;
 }
 
-/* Hover & Highlight */
-.talent-link:hover .talent-icon-img {
-  transform: translateY(-4px) scale(1.1);
-  filter: brightness(1.2) saturate(1.2);
-  box-shadow: 0 16px 32px rgba(107, 70, 193, 0.4);
+#copy-link-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.4),
+    var(--shadow-glow-intense),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
 }
 
-.talent-summary .talent-link.is-meta .talent-icon-img,
-.talent-summary-content .talent-link.is-meta .talent-icon-img {
-  border-color: var(--gold-color);
-  box-shadow: 0 0 0 2px var(--gold-color), 0 12px 30px rgba(251, 191, 36, 0.4);
+#copy-link-btn:hover::before {
+  left: 100%;
 }
 
+/* Enhanced expand icons */
+.expand-icon {
+  color: var(--text-muted);
+  font-size: 1rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.expand-icon.rotated {
+  transform: rotate(180deg);
+  color: var(--accent-color);
+  filter: drop-shadow(0 0 8px rgba(244, 208, 63, 0.5));
+}
+
+/* Enhanced loading states */
 .loader {
   border: 4px solid var(--border-color);
   border-top: 4px solid var(--accent-color);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+  width: 48px;
+  height: 48px;
+  animation: spin 1.2s linear infinite;
   margin: 2rem auto 1rem;
+  box-shadow: var(--shadow-glow);
 }
 
 @keyframes spin {
@@ -913,115 +784,8 @@ a.wowhead del {
   100% { transform: rotate(360deg); }
 }
 
-/* Loading state styling */
-.loading-message {
-  text-align: center;
-  color: var(--text-secondary);
-  margin-top: 2rem;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.loading-message p {
-  margin: 1rem 0;
-}
-
-/* Error state styling */
-.error-message {
-  text-align: center;
-  color: #ef4444;
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 12px;
-  font-weight: 600;
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
-}
-
-/* Empty state styling */
-.empty-message {
-  text-align: center;
-  color: var(--text-muted);
-  margin-top: 3rem;
-  font-style: italic;
-  padding: 2.5rem 1.5rem;
-  background: var(--secondary-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  font-size: 1rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Rankings gear styling */
-.rankings-gear-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  color: var(--text-primary);
-  font-weight: 700;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-}
-
-.rankings-gear-name:hover {
-  color: var(--text-accent);
-  text-shadow: 0 0 10px var(--shadow-glow);
-}
-
-.rankings-gear-image {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  border: 1px solid var(--border-hover);
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.rankings-gear-name:hover .rankings-gear-image {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Rarity colors for gear links */
-.rankings-gear-name.poor { color: #9d9d9d; }
-.rankings-gear-name.common { color: #ffffff; }
-.rankings-gear-name.uncommon { color: #1eff00; }
-.rankings-gear-name.rare { color: #0070dd; }
-.rankings-gear-name.epic { color: #a335ee; }
-.rankings-gear-name.legendary { color: #ff8000; }
-
-/* Top talent highlighting */
-.talent-summary .talent-link.is-top .talent-icon-img,
-.talent-summary-content .talent-link.is-top .talent-icon-img {
-  transform: translateY(-3px) scale(1.08);
-  box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-  border-color: var(--success-color);
-  animation: pulse-glow 3s infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-    transform: translateY(-3px) scale(1.08);
-  }
-  50% { 
-    box-shadow: 0 0 0 3px var(--success-color), 0 20px 50px rgba(16, 185, 129, 0.7);
-    transform: translateY(-4px) scale(1.1);
-  }
-}
-
-.talent-summary .talent-link.is-top .talent-percent,
-.talent-summary-content .talent-link.is-top .talent-percent {
-  color: var(--success-color);
-  text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
-  font-weight: 800;
-}
-
 /* =================================================================
-  Large Desktop Optimizations (1600px+)
+  Responsive Enhancements
   ================================================================= */
 @media (min-width: 1600px) {
   .main-container {
@@ -1032,12 +796,12 @@ a.wowhead del {
   
   .sidebar {
     width: 320px;
-    padding: 2rem;
+    padding: 2.5rem;
   }
   
   .talent-sidebar {
     width: 360px;
-    padding: 2rem;
+    padding: 2.5rem;
   }
   
   .content-area {
@@ -1045,22 +809,71 @@ a.wowhead del {
   }
   
   h1 {
-    font-size: 3rem;
-    margin-bottom: 2rem;
-  }
-  
-  .header-controls {
+    font-size: 3.5rem;
     margin-bottom: 2.5rem;
   }
   
+  .header-controls {
+    margin-bottom: 3rem;
+  }
+  
   #boss-buttons button {
-    padding: 1.25rem;
+    padding: 1.5rem;
     font-size: 1rem;
   }
   
   .boss-icon {
-    height: 44px;
-    width: 44px;
+    height: 48px;
+    width: 48px;
+  }
+  
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
+    width: 68px;
+    height: 68px;
+  }
+  
+  .ranking-header {
+    padding: 2rem 2.5rem;
+  }
+  
+  .ranking-header .name-wrapper {
+    font-size: 1.2rem;
+  }
+  
+  .dropdown-content.active {
+    padding: 2.5rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  .gear-grid {
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* Medium Desktop Optimizations (1200px - 1599px) */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .main-container {
+    max-width: 1600px;
+    gap: 2.5rem;
+  }
+  
+  .content-area {
+    padding: 2.5rem;
+  }
+  
+  .sidebar,
+  .talent-sidebar {
+    padding: 2rem;
+  }
+  
+  h1 {
+    font-size: 3rem;
   }
   
   .talent-summary .talent-icon-img,
@@ -1069,82 +882,29 @@ a.wowhead del {
     height: 64px;
   }
   
-  .ranking-header {
-    padding: 1.5rem 2rem;
-  }
-  
-  .ranking-header .name-wrapper {
-    font-size: 1.1rem;
-  }
-  
-  .dropdown-content.active {
-    padding: 2rem;
-  }
-  
-  .info-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-  }
-  
   .gear-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 }
 
-/* =================================================================
-  Medium Desktop Optimizations (1200px - 1599px)  
-  ================================================================= */
-@media (min-width: 1200px) and (max-width: 1599px) {
-  .main-container {
-    max-width: 1600px;
-    gap: 2rem;
-  }
-  
-  .content-area {
-    padding: 2rem;
-  }
-  
-  .sidebar,
-  .talent-sidebar {
-    padding: 1.5rem;
-  }
-  
-  h1 {
-    font-size: 2.5rem;
-  }
-  
-  .talent-summary .talent-icon-img,
-  .talent-summary-content .talent-icon-img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .gear-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  }
-}
-
-/* =================================================================
-  Medium screens - Stack talent sidebar below main content
-  ================================================================= */
+/* Medium screens - Stack talent sidebar below main content */
 @media (max-width: 1199px) {
   .main-container {
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 280px 1fr;
     grid-template-rows: auto auto;
-    gap: 1.5rem;
+    gap: 2rem;
   }
   
   .sidebar {
     grid-row: 1 / 3;
-    width: 260px;
-    padding: 1.5rem;
+    width: 280px;
+    padding: 2rem;
   }
   
   .content-area {
     grid-column: 2;
     grid-row: 1;
-    padding: 1.5rem;
+    padding: 2rem;
   }
   
   .talent-sidebar {
@@ -1153,7 +913,7 @@ a.wowhead del {
     position: static;
     width: 100%;
     max-height: none;
-    padding: 1.5rem;
+    padding: 2rem;
   }
 
   .talent-summary .talent-row,
@@ -1171,24 +931,22 @@ a.wowhead del {
 
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
   }
 }
 
-/* =================================================================
-  Tablet and small screens
-  ================================================================= */
+/* Tablet and small screens */
 @media (max-width: 768px) {
   body {
-    padding: 1rem;
+    padding: 1.5rem;
     overflow-x: hidden;
   }
 
   .main-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
     width: 100%;
     max-width: 100vw;
   }
@@ -1198,6 +956,7 @@ a.wowhead del {
     order: 1;
     width: 100%;
     max-width: none;
+    padding: 1.5rem;
   }
   
   .talent-sidebar {
@@ -1205,43 +964,47 @@ a.wowhead del {
     position: static;
     width: 100%;
     max-width: none;
+    padding: 1.5rem;
   }
   
   .content-area {
     order: 3;
+    padding: 1.5rem;
   }
   
   #raid-menu {
     grid-template-columns: repeat(3, 1fr);
     position: sticky;
-    top: 1rem;
+    top: 1.5rem;
     z-index: 100;
-    background: var(--glass-bg);
+    background: var(--gradient-card);
     backdrop-filter: blur(20px);
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: 16px;
-    margin: -0.25rem -0.25rem 1.5rem -0.25rem;
-    border: 1px solid var(--glass-border);
-    box-shadow: var(--shadow-lg);
+    margin: -0.5rem -0.5rem 2rem -0.5rem;
+    border: 2px solid var(--border-color);
+    box-shadow: 
+      var(--shadow-xl),
+      0 0 0 1px var(--glass-border);
   }
 
   #raid-menu button {
-    height: 90px;
-    padding: 0.5rem 0.3rem;
+    height: 95px;
+    padding: 0.75rem 0.5rem;
   }
 
   #raid-menu .raid-icon {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
 
   #raid-menu button span {
-    font-size: 0.65rem;
-    line-height: 1.1;
+    font-size: 0.7rem;
+    line-height: 1.2;
   }
   
   h1 {
-    font-size: 2rem;
+    font-size: 2.5rem;
   }
   
   .talent-summary .talent-row,
@@ -1253,16 +1016,16 @@ a.wowhead del {
   
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
   }
   
   .ranking-header {
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    gap: 1.25rem;
     text-align: center;
-    padding: 1.25rem 1rem;
+    padding: 1.5rem;
   }
 
   .header-right {
@@ -1277,79 +1040,79 @@ a.wowhead del {
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
   }
 
   .dropdown-content.active {
     padding: 1.5rem;
-    padding: 1rem;
   }
 
   .gear-grid {
     grid-template-columns: 1fr;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
   .info-section {
-    padding: 1.25rem;
+    padding: 1.5rem;
   }
 
   .info-row {
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
+    padding: 0.75rem 0;
   }
 
   .info-value {
     text-align: left;
     width: 100%;
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
   }
 }
 
+/* Mobile phones */
 @media (max-width: 480px) {
   body {
-    padding: 0.75rem;
+    padding: 1rem;
   }
   
   .sidebar,
   .content-area,
   .talent-sidebar {
-    padding: 1.25rem;
-    border-radius: 16px;
+    padding: 1.5rem;
+    border-radius: 12px;
   }
   
   h1 {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
   
   .header-controls {
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
   }
   
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
   }
   
   .talent-summary .talent-percent,
   .talent-summary-content .talent-percent {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .ranking-header {
-    padding: 1.25rem 1rem;
+    padding: 1.25rem;
   }
 
   .dropdown-content.active {
-    padding: 1rem;
+    padding: 1.25rem;
   }
 
   .gear-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .gear-item {
@@ -1358,59 +1121,56 @@ a.wowhead del {
 
   #raid-menu {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
+    gap: 0.75rem;
+    padding: 1rem;
   }
 
   #raid-menu button {
-    height: 80px;
-    padding: 0.5rem 0.25rem;
+    height: 85px;
+    padding: 0.75rem 0.5rem;
   }
 
   #raid-menu .raid-icon {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
   }
 
   #raid-menu button span {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
   }
 
   #boss-buttons button {
-    padding: 0.875rem 1rem;
+    padding: 1rem;
     gap: 0.75rem;
   }
 
   .boss-icon {
-    height: 36px;
-    width: 36px;
+    height: 40px;
+    width: 40px;
   }
 
   .info-grid {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
   .info-section {
-    padding: 1rem;
-  }
-
-  .gear-grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    padding: 1.25rem;
   }
 
   .gear-item {
-    padding: 0.875rem;
+    padding: 1rem;
   }
 
   .ranking-header .talent-icon-img {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
   }
 }
 
+/* Very small phones */
 @media (max-width: 360px) {
   .expand-icon {
     display: none;
@@ -1423,8 +1183,8 @@ a.wowhead del {
 
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
 
   #raid-menu {
@@ -1433,29 +1193,29 @@ a.wowhead del {
   }
 
   #raid-menu button {
-    height: 70px;
-    padding: 0.4rem 0.2rem;
+    height: 75px;
+    padding: 0.5rem 0.25rem;
   }
 
   #raid-menu .raid-icon {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
 
   #raid-menu button span {
-    font-size: 0.55rem;
-    line-height: 1.0;
+    font-size: 0.6rem;
+    line-height: 1.1;
   }
 
   .ranking-header .talent-row {
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .ranking-header .talent-icon-img {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    min-height: 28px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
   }
 
   .info-section h4 {
@@ -1463,11 +1223,11 @@ a.wowhead del {
   }
 
   .info-row {
-    padding: 0.25rem 0;
+    padding: 0.5rem 0;
   }
 
   .gear-header {
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .gear-icon {
@@ -1477,7 +1237,7 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Focus and Accessibility improvements
+  Enhanced Accessibility and Performance
   ================================================================= */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1488,52 +1248,68 @@ a.wowhead del {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  
+  .expand-icon.rotated {
+    transform: none;
+  }
+  
+  .talent-link:hover .talent-icon-img {
+    transform: none;
+  }
+  
+  .rank-entry:hover {
+    transform: none;
+  }
 }
 
-/* Focus styles for keyboard navigation */
-button:focus,
-.talent-link:focus,
-.ranking-header:focus,
-.rankings-gear-name:focus {
-  outline: 2px solid var(--accent-color);
+/* Enhanced focus styles for better accessibility */
+button:focus-visible,
+.talent-link:focus-visible,
+.ranking-header:focus-visible,
+.rankings-gear-name:focus-visible {
+  outline: 3px solid var(--accent-color);
   outline-offset: 2px;
   border-radius: 8px;
+  box-shadow: 
+    0 0 0 6px rgba(244, 208, 63, 0.3),
+    var(--shadow-glow);
 }
 
-/* Ensure proper contrast for accessibility */
+/* Enhanced contrast for better readability */
 .info-value,
 .gear-name {
   color: var(--text-primary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
 }
 
-/* Custom scrollbar styling */
+/* Custom scrollbar with WoW theme */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--secondary-bg);
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--gradient-shadow);
-  border-radius: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--border-hover);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-hover);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    var(--shadow-glow);
 }
 
-/* Additional enhancements for smooth interactions */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Ensure images load smoothly */
+/* Enhanced image loading states */
 img {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.4s ease;
 }
 
 img:not([src]),
@@ -1541,17 +1317,77 @@ img[src=""] {
   opacity: 0;
 }
 
-/* Enhanced button states */
-button:active {
+img[src]:not([src=""]) {
+  opacity: 1;
+}
+
+/* Enhanced button interactions */
+button:active,
+.talent-link:active {
   transform: scale(0.98);
 }
 
-/* Smooth transitions for dynamic content */
+/* Smooth loading states */
 [data-loading] {
-  opacity: 0.6;
+  opacity: 0.7;
   pointer-events: none;
+  filter: grayscale(0.3);
 }
 
 [data-loading] * {
   cursor: wait !important;
+}
+
+/* Enhanced text shadows for better readability on dark backgrounds */
+h1, h2, h3, h4, h5, h6 {
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(244, 208, 63, 0.3);
+}
+
+/* Improved selection colors */
+::selection {
+  background: rgba(244, 208, 63, 0.3);
+  color: var(--text-primary);
+}
+
+::-moz-selection {
+  background: rgba(244, 208, 63, 0.3);
+  color: var(--text-primary);
+}
+
+/* Enhanced loading animation with WoW flair */
+@keyframes wow-spin {
+  0% { 
+    transform: rotate(0deg);
+    box-shadow: var(--shadow-glow);
+  }
+  50% {
+    box-shadow: var(--shadow-glow-intense);
+  }
+  100% { 
+    transform: rotate(360deg);
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+.loader {
+  animation: wow-spin 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Subtle texture overlay for authenticity */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(244, 208, 63, 0.01) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(181, 142, 11, 0.01) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(244, 208, 63, 0.01) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.6;
 }
