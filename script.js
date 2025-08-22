@@ -280,6 +280,125 @@ const talentIconUrl = (name) => {
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
+// ======= Utility functions =======
+// Format duration from milliseconds to readable format
+function formatDuration(ms) {
+  if (!ms || ms === 0) return 'N/A';
+  const minutes = Math.floor(ms / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
+  return `${minutes}m ${seconds}s`;
+}
+
+// Format faction
+function formatFaction(faction) {
+  return faction === 1 ? 'Alliance' : faction === 0 ? 'Horde' : 'Unknown';
+}
+
+// Format server info
+function formatServerInfo(serverName, regionName) {
+  if (!serverName) return 'Unknown Server';
+  return regionName ? `${serverName} (${regionName})` : serverName;
+}
+
+function buildGearDisplay(gear) {
+  if (!Array.isArray(gear) || gear.length === 0) {
+    return '<div class="no-gear">No gear data available</div>';
+  }
+
+  const gearSlots = {
+    0: 'Head', 1: 'Neck', 2: 'Shoulder', 3: 'Shirt', 4: 'Chest',
+    5: 'Belt', 6: 'Legs', 7: 'Feet', 8: 'Wrist', 9: 'Hands',
+    10: 'Ring 1', 11: 'Ring 2', 12: 'Trinket 1', 13: 'Trinket 2',
+    14: 'Back', 15: 'Main Hand', 16: 'Off Hand', 17: 'Ranged'
+  };
+
+  const allItemIds = gear
+    .map(item => item ? item.id : 0)
+    .filter(Boolean)
+    .join(':');
+
+  return gear.map((item, index) => {
+    if (!item || item.id === 0) return ''; // Skip empty slots
+
+    const slotName = gearSlots[index] || `Slot ${index}`;
+    const qualityClass = item.quality || 'common';
+    const iconSrc = `https://assets.rpglogs.com/img/warcraft/abilities/${item.icon || 'inv_misc_questionmark.jpg'}`;
+    
+    const params = new URLSearchParams();
+    
+    if (item.itemLevel) {
+      params.append('ilvl', item.itemLevel);
+    }
+    
+    if (allItemIds) {
+      params.append('pcs', allItemIds);
+    }
+
+    const gemIds = (Array.isArray(item.gems) ? item.gems : [])
+      .map(gem => gem.id)
+      .filter(Boolean);
+    if (gemIds.length > 0) {
+      params.append('gems', gemIds.join(':'));
+    }
+
+    if (item.permanentEnchant) {
+      params.append('ench', item.permanentEnchant);
+    }
+    
+    const queryString = params.toString();
+    const itemUrl = `https://www.wowhead.com/mop-classic/item=${item.id}${queryString ? `?${queryString}` : ''}`;
+    
+    const itemLinkHtml = `
+      <a href="${itemUrl}"
+         class="rankings-gear-name ${qualityClass} wowhead"
+         target="_blank" rel="noopener">
+        <img src="${iconSrc}" 
+             alt="${item.name || 'Unknown Item'}" 
+             class="rankings-gear-image" 
+             loading="lazy">
+        ${item.name || 'Unknown Item'}
+      </a>
+    `;
+
+    // The .gem-enchant div has been removed from the returned HTML below.
+    return `
+      <div class="gear-item">
+        <div class="gear-header">
+          <div class="gear-info">
+            ${itemLinkHtml}
+            <div class="gear-slot">${slotName}</div>
+          </div>
+          <div class="gear-ilvl">iLvl ${item.itemLevel || '0'}</div>
+        </div>
+      </div>
+    `;
+  }).filter(Boolean).join('');
+}
+
+// Add toggle function for dropdowns
+function toggleDropdown(entryId) {
+  const dropdown = document.getElementById(entryId);
+  const header = dropdown?.previousElementSibling;
+  const expandIcon = header?.querySelector('.expand-icon');
+  
+  if (dropdown && expandIcon) {
+    const isActive = dropdown.classList.contains('active');
+    
+    // Close all other dropdowns
+    document.querySelectorAll('.dropdown-content.active').forEach(el => {
+      if (el.id !== entryId) {
+        el.classList.remove('active');
+        const otherIcon = el.previousElementSibling?.querySelector('.expand-icon');
+        if (otherIcon) otherIcon.classList.remove('rotated');
+      }
+    });
+    
+    // Toggle current dropdown
+    dropdown.classList.toggle('active', !isActive);
+    expandIcon.classList.toggle('rotated', !isActive);
+  }
+}
+
 // ======= Slug & Hash helpers (fixed regexes) =======
 function slugify(str) { return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-'); }
 function hashFor(name, encounterId) { return `#${slugify(name)}-${encounterId}`; }
@@ -302,7 +421,7 @@ function createRaidMenu() {
     btn.type = 'button';
     btn.dataset.raidKey = key;
     const img = document.createElement('img');
-    img.src = `public/images/${key}.webp`;
+    img.src = `images/${key}.webp`;
     img.alt = raid.short;
     img.className = 'raid-icon';
     img.loading = 'lazy';
@@ -321,6 +440,11 @@ function createRaidMenu() {
       } else {
         rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
         updateLastUpdated(null);
+        // Clear talent summary when no bosses
+        const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+        if (talentSummaryElement) {
+          talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+        }
       }
     });
     raidMenu.appendChild(btn);
@@ -437,21 +561,90 @@ function render(data, TOP_BY_TIER) {
     if (rank >= 2 && rank <= 25) return '#e268a8';
     return '#ff8000';
   };
+
   const entries = rankings.slice(0, 100).map((r, i) => {
     const color = getColor(i + 1);
     const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
     const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
     const playerName = r?.name ?? 'Unknown';
     const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
+    
+    // Format additional data (still used in the dropdown)
+    const duration = formatDuration(r.duration);
+    const itemLevel = r.itemLevel || 'N/A';
+    const serverInfo = formatServerInfo(r.serverName, r.regionName);
+    const faction = formatFaction(r.faction);
+    const guildName = r.guildName || 'No Guild';
+    const raidSize = r.size || 'N/A';
+    
+    const entryId = `entry-${i}-${r.reportID}-${r.fightID}`;
+    
     return `
       <div class="rank-entry">
-        <div class="name-wrapper">
-          <a class="player-link" href="${reportUrl}" target="_blank" rel="noopener" style="color:${color}">
-            ${i + 1}. ${playerName} – ${dps} DPS
-          </a>
+        <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
+          <div class="name-wrapper" style="color:${color}">
+              ${i + 1}. ${playerName} — ${dps.toLocaleString()} DPS
+          </div>
+          <div class="header-right">
+            ${perPlayerTalents}
+            <span class="expand-icon">▼</span>
+          </div>
         </div>
-        ${perPlayerTalents}
-      </div>`;
+        
+        <div class="dropdown-content" id="${entryId}">
+          <div class="info-grid">
+            <div class="info-section">
+              <h4>Fight Details</h4>
+              <div class="info-row">
+                <span class="info-label">Duration:</span>
+                <span class="info-value">${duration}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Fight ID:</span>
+                <span class="info-value">${r.fightID || 'N/A'}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Report:</span>
+                <span class="info-value">
+                  <a href="${reportUrl}" target="_blank" rel="noopener">${r.reportID || 'N/A'}</a>
+                </span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Raid Size:</span>
+                <span class="info-value">${raidSize}</span>
+              </div>
+            </div>
+            
+            <div class="info-section">
+              <h4>Player Info</h4>
+              <div class="info-row">
+                <span class="info-label">Server:</span>
+                <span class="info-value">${serverInfo}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Guild:</span>
+                <span class="info-value">${guildName}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Faction:</span>
+                <span class="info-value">${faction}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Item Level:</span>
+                <span class="info-value">${itemLevel}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info-section">
+            <h4>Gear & Equipment</h4>
+            <div class="gear-grid">
+              ${buildGearDisplay(r.gear)}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
   }).join('');
 
   return entries;
@@ -482,7 +675,7 @@ function renderTalentSummary(data) {
   }
 
   const TOP_BY_TIER = new Map();
-  let talentSummaryHTML = `<div class="talent-summary">`;
+  let talentSummaryHTML = `<div class="talent-summary-content">`;
   for (const tier of TIER_ORDER) {
     const total = totalPerTier[tier] ?? 0;
     const rowStats = talentTiers[tier].map((talent) => {
@@ -515,6 +708,23 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
+  // This function handles rendering and attaching listeners
+  const renderContentAndAttachListeners = (data) => {
+    const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
+    const playerListHTML = render(data, topByTier);
+
+    // Update the main content area with just the player rankings
+    rankingsDiv.innerHTML = playerListHTML;
+    
+    // Update the talent summary in the right sidebar
+    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+    if (talentSummaryElement) {
+      talentSummaryElement.innerHTML = talentSummaryHTML;
+    }
+
+    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+  };
+
   try {
     disableButtons(true);
     selectActiveButton(encounterId);
@@ -525,10 +735,7 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     const cachedAt = cached?.cachedAt || cached?.data?.cachedAt;
     if (cached && isFresh(cachedAt) && !force) {
       updateLastUpdated(cachedAt);
-      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
-      const playerListHTML = render(cached.data, topByTier);
-      rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
-      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+      renderContentAndAttachListeners(cached.data);
       return;
     }
 
@@ -538,11 +745,7 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     const serverTs = data.cachedAt || new Date().toISOString();
     writeCache(encounterId, data, serverTs);
     updateLastUpdated(serverTs);
-
-    const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
-    const playerListHTML = render(data, topByTier);
-    rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
-    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+    renderContentAndAttachListeners(data);
 
   } catch (err) {
     if (err?.name === 'AbortError') return;
@@ -550,13 +753,15 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     const cached = readCache(encounterId);
     if (cached) {
       updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
-      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(cached.data);
-      const playerListHTML = render(cached.data, topByTier);
-      rankingsDiv.innerHTML = talentSummaryHTML + playerListHTML;
-      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+      renderContentAndAttachListeners(cached.data);
     } else {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn’t load data for ${name}. Please try again later.</div>`;
+      rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
       updateLastUpdated(null);
+      // Clear talent summary on error
+      const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+      if (talentSummaryElement) {
+        talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
+      }
     }
   } finally {
     disableButtons(false);
@@ -571,6 +776,15 @@ document.addEventListener('DOMContentLoaded', () => {
       copyBtn.textContent = 'Copied!';
       setTimeout(() => { copyBtn.textContent = 'Copy Link'; }, 2000);
     });
+  });
+
+  // Add event listener for talent sidebar collapsible header
+  const talentToggleBtn = document.querySelector('.talent-sidebar .collapsible-header');
+  const talentContentDiv = document.querySelector('.talent-sidebar .collapsible-content');
+  talentToggleBtn?.addEventListener('click', () => {
+    const isActive = talentContentDiv.classList.toggle('active');
+    talentToggleBtn.setAttribute('aria-expanded', isActive);
+    talentToggleBtn.querySelector('.expand-icon')?.classList.toggle('rotated');
   });
 
   createRaidMenu();
@@ -596,5 +810,10 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${RAIDS[currentRaidKey].name} yet.</div>`;
     updateLastUpdated(null);
+    // Clear talent summary when no bosses
+    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+    if (talentSummaryElement) {
+      talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+    }
   }
 });
