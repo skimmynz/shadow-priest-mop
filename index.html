@@ -3,10 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shadow Priest Top 100 – MoP Classic</title>
-
+  <title>Shadow Priest Top 100 — MoP Classic</title>
   <link rel="stylesheet" href="style.css" />
-
   <script>
     window.whTooltips = { colorLinks: true, iconizeLinks: false, renameLinks: false };
   </script>
@@ -18,9 +16,9 @@
       <nav id="raid-menu" aria-label="Raid selection"></nav>
       <div id="boss-buttons" role="group" aria-label="Bosses"></div>
     </aside>
-
+    
     <main class="content-area">
-      <h1>Shadow Priest Top 100 – MoP Classic</h1>
+      <h1>Shadow Priest Top 100 — MoP Classic</h1>
       <div class="header-controls">
         <div class="last-updated" id="last-updated" role="status" aria-live="polite">
           Loading last updated…
@@ -30,8 +28,24 @@
       <section id="rankings">
         </section>
     </main>
+    
+    <aside class="talent-sidebar">
+      <div class="talent-summary-container">
+        <button class="collapsible-header" type="button" aria-expanded="true" aria-controls="talent-summary">
+          <h3>Popular Talents</h3>
+          <span class="expand-icon rotated">▼</span>
+        </button>
+        <div class="collapsible-content active" id="talent-summary">
+          <div class="talent-summary">
+            <div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">
+              Select a boss to view talent data
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
-
+  
   <script src="script.js" defer></script>
 </body>
 </html>
