@@ -1,5 +1,346 @@
-// Shadow Priest Rankings — MoP Classic
-// ======= Raids, Encounters & Talent Data =======
+// Shadow Priest Rankings — MoP Classic - OPTIMIZED VERSION
+// ======= Performance Optimizations =======
+
+// Virtual Scrolling for Large Lists
+class VirtualScrollRenderer {
+  constructor(container, itemHeight = 120, bufferSize = 5) {
+    this.container = container;
+    this.itemHeight = itemHeight;
+    this.bufferSize = bufferSize;
+    this.scrollTop = 0;
+    this.containerHeight = container.clientHeight || 600;
+    this.totalItems = 0;
+    this.visibleStart = 0;
+    this.visibleEnd = 0;
+    this.items = [];
+    this.renderedElements = new Map();
+    this.topByTier = null;
+    
+    this.setupScrollListener();
+    this.setupResizeObserver();
+  }
+  
+  setupScrollListener() {
+    let ticking = false;
+    this.container.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          this.handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  
+  setupResizeObserver() {
+    if (window.ResizeObserver) {
+      const resizeObserver = new ResizeObserver(() => {
+        this.containerHeight = this.container.clientHeight;
+        this.updateVisibleRange();
+        this.renderVisibleItems();
+      });
+      resizeObserver.observe(this.container);
+    }
+  }
+  
+  handleScroll() {
+    this.scrollTop = this.container.scrollTop;
+    this.updateVisibleRange();
+    this.renderVisibleItems();
+  }
+  
+  updateVisibleRange() {
+    this.visibleStart = Math.max(0, Math.floor(this.scrollTop / this.itemHeight) - this.bufferSize);
+    this.visibleEnd = Math.min(this.totalItems, 
+      Math.ceil((this.scrollTop + this.containerHeight) / this.itemHeight) + this.bufferSize);
+  }
+  
+  setItems(items, topByTier) {
+    this.items = items.slice(0, 100); // Limit to 100 for performance
+    this.totalItems = this.items.length;
+    this.topByTier = topByTier;
+    this.renderedElements.clear();
+    
+    // Create container with proper height
+    this.container.style.height = `${this.totalItems * this.itemHeight}px`;
+    this.container.style.position = 'relative';
+    this.container.style.overflow = 'auto';
+    
+    this.updateVisibleRange();
+    this.renderVisibleItems();
+  }
+  
+  renderVisibleItems() {
+    const fragment = document.createDocumentFragment();
+    const existingElements = this.container.querySelectorAll('.rank-entry');
+    
+    // Remove elements outside visible range
+    existingElements.forEach(el => {
+      const index = parseInt(el.dataset.index);
+      if (index < this.visibleStart || index >= this.visibleEnd) {
+        el.remove();
+      }
+    });
+    
+    // Add new visible elements
+    for (let i = this.visibleStart; i < this.visibleEnd; i++) {
+      if (i >= this.items.length) continue;
+      
+      let element = this.container.querySelector(`[data-index="${i}"]`);
+      if (!element) {
+        element = this.createElement(this.items[i], i);
+        element.style.position = 'absolute';
+        element.style.top = `${i * this.itemHeight}px`;
+        element.style.width = '100%';
+        element.dataset.index = i;
+        fragment.appendChild(element);
+      }
+    }
+    
+    if (fragment.children.length > 0) {
+      this.container.appendChild(fragment);
+    }
+  }
+  
+  createElement(item, index) {
+    const color = this.getColor(index + 1);
+    const reportUrl = `https://classic.warcraftlogs.com/reports/${item.reportID}?fight=${item.fightID}&type=damage-done`;
+    const dps = typeof item?.total === 'number' ? Math.round(item.total) : '—';
+    const playerName = item?.name ?? 'Unknown';
+    const entryId = `entry-${index}-${item.reportID}-${item.fightID}`;
+    
+    const element = document.createElement('div');
+    element.className = 'rank-entry';
+    element.dataset.index = index;
+    element.dataset.entryId = entryId;
+    
+    element.innerHTML = `
+      <div class="ranking-header" data-entry-id="${entryId}">
+        <div class="name-wrapper" style="color:${color}">
+            ${index + 1}. ${playerName} — ${dps.toLocaleString()} DPS
+        </div>
+        <div class="header-right">
+          ${buildPlayerTalentIcons(item?.talents, this.topByTier)}
+          <span class="expand-icon">▼</span>
+        </div>
+      </div>
+      
+      <div class="dropdown-content" id="${entryId}">
+        <div class="lazy-content" data-entry-index="${index}" data-item='${JSON.stringify(item).replace(/'/g, "&#39;")}'>
+          <div style="text-align: center; color: #94a3b8; padding: 1rem;">Click to load details...</div>
+        </div>
+      </div>
+    `;
+    
+    return element;
+  }
+  
+  getColor(rank) {
+    if (rank === 1) return '#e5cc80';
+    if (rank >= 2 && rank <= 25) return '#e268a8';
+    return '#ff8000';
+  }
+}
+
+// Debounced DOM Updates with RequestAnimationFrame
+const DOMUpdater = {
+  pendingUpdates: new Map(),
+  
+  scheduleUpdate(key, updateFn) {
+    this.pendingUpdates.set(key, updateFn);
+    if (this.pendingUpdates.size === 1) {
+      requestAnimationFrame(() => this.flushUpdates());
+    }
+  },
+  
+  flushUpdates() {
+    this.pendingUpdates.forEach((updateFn) => updateFn());
+    this.pendingUpdates.clear();
+  }
+};
+
+// Template Cache for Performance
+const TemplateCache = new Map();
+const MemoizedTemplates = new Map();
+
+function createTemplate(templateString) {
+  if (!TemplateCache.has(templateString)) {
+    const template = document.createElement('template');
+    template.innerHTML = templateString;
+    TemplateCache.set(templateString, template);
+  }
+  return TemplateCache.get(templateString);
+}
+
+// Intersection Observer for Lazy Loading Images
+const imageObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      if (img.dataset.src) {
+        img.src = img.dataset.src;
+        img.removeAttribute('data-src');
+        img.classList.add('loaded');
+        imageObserver.unobserve(img);
+      }
+    }
+  });
+}, { rootMargin: '50px' });
+
+function createLazyImage(src, alt, className) {
+  const img = document.createElement('img');
+  img.dataset.src = src;
+  img.alt = alt;
+  img.className = className;
+  img.loading = 'lazy';
+  img.style.opacity = '0';
+  img.style.transition = 'opacity 0.3s ease';
+  
+  // Set placeholder
+  img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMzc0MTUxIi8+CjwvcnZnPgo=';
+  
+  img.addEventListener('load', () => {
+    img.style.opacity = '1';
+  });
+  
+  imageObserver.observe(img);
+  return img;
+}
+
+// Web Worker for Heavy Computations
+class TalentAnalysisWorker {
+  constructor() {
+    this.worker = null;
+    this.initWorker();
+  }
+  
+  initWorker() {
+    const workerCode = `
+      self.onmessage = function(e) {
+        const { rankings, talentTiers, TIER_ORDER, VALID_TALENT_SET, TIER_BY_TALENT, getTalentDisplayName } = e.data;
+        
+        const tierCounts = {};
+        const totalPerTier = {};
+        
+        for (const tier of TIER_ORDER) {
+          tierCounts[tier] = {};
+          totalPerTier[tier] = 0;
+          for (const talent of talentTiers[tier]) {
+            tierCounts[tier][talent] = 0;
+          }
+        }
+        
+        for (const entry of rankings) {
+          const seenTiers = new Set();
+          const talents = Array.isArray(entry?.talents) ? entry.talents : [];
+          
+          for (const t of talents) {
+            const displayName = getTalentDisplayName(t.name);
+            if (!VALID_TALENT_SET.has(displayName)) continue;
+            
+            const tier = TIER_BY_TALENT.get(displayName);
+            if (tier && !seenTiers.has(tier)) {
+              tierCounts[tier][displayName]++;
+              totalPerTier[tier]++;
+              seenTiers.add(tier);
+            }
+          }
+        }
+        
+        self.postMessage({ tierCounts, totalPerTier });
+      };
+      
+      function getTalentDisplayName(apiName) {
+        const talentNameMap = { "Surge of Light": "From Darkness, Comes Light", "Mind Control": "Dominate Mind" };
+        return talentNameMap[apiName] ?? apiName;
+      }
+    `;
+    
+    try {
+      const blob = new Blob([workerCode], { type: 'application/javascript' });
+      this.worker = new Worker(URL.createObjectURL(blob));
+    } catch (e) {
+      console.warn('Web Workers not supported, falling back to main thread');
+    }
+  }
+  
+  async analyzeTalents(rankings) {
+    if (!this.worker) {
+      // Fallback to main thread
+      return this.analyzeTalentsMainThread(rankings);
+    }
+    
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('Worker timeout'));
+      }, 5000);
+      
+      this.worker.onmessage = (e) => {
+        clearTimeout(timeout);
+        resolve(e.data);
+      };
+      
+      this.worker.onerror = (e) => {
+        clearTimeout(timeout);
+        reject(e);
+      };
+      
+      this.worker.postMessage({
+        rankings,
+        talentTiers,
+        TIER_ORDER,
+        VALID_TALENT_SET: Array.from(VALID_TALENT_SET),
+        TIER_BY_TALENT: Array.from(TIER_BY_TALENT.entries()),
+        getTalentDisplayName: getTalentDisplayName.toString()
+      });
+    });
+  }
+  
+  analyzeTalentsMainThread(rankings) {
+    // Fallback implementation
+    const tierCounts = {};
+    const totalPerTier = {};
+    
+    for (const tier of TIER_ORDER) {
+      tierCounts[tier] = {};
+      totalPerTier[tier] = 0;
+      for (const talent of talentTiers[tier]) tierCounts[tier][talent] = 0;
+    }
+    
+    for (const entry of rankings) {
+      const seenTiers = new Set();
+      const talents = Array.isArray(entry?.talents) ? entry.talents : [];
+      for (const t of talents) {
+        const displayName = getTalentDisplayName(t.name);
+        if (!VALID_TALENT_SET.has(displayName)) continue;
+        const tier = TIER_BY_TALENT.get(displayName);
+        if (tier && !seenTiers.has(tier)) {
+          tierCounts[tier][displayName]++;
+          totalPerTier[tier]++;
+          seenTiers.add(tier);
+        }
+      }
+    }
+    
+    return { tierCounts, totalPerTier };
+  }
+  
+  destroy() {
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
+  }
+}
+
+// Initialize performance components
+let virtualScroller = null;
+let talentWorker = new TalentAnalysisWorker();
+let currentData = null;
+
+// ======= Original Code with Optimizations =======
+
 const RAIDS = {
   msv: {
     short: 'MSV',
@@ -28,7 +369,6 @@ const RAIDS = {
   toes: { short: 'ToES', name: 'Terrace of Endless Spring', encounters: {} },
 };
 
-// Current raid selection (default to MSV)
 let currentRaidKey = 'msv';
 
 // DOM refs
@@ -91,7 +431,6 @@ const talentIconUrl = (name) => {
 };
 
 // ======= Utility functions =======
-// Format duration from milliseconds to readable format
 function formatDuration(ms) {
   if (!ms || ms === 0) return 'N/A';
   const minutes = Math.floor(ms / 60000);
@@ -99,12 +438,10 @@ function formatDuration(ms) {
   return `${minutes}m ${seconds}s`;
 }
 
-// Format faction
 function formatFaction(faction) {
   return faction === 1 ? 'Alliance' : faction === 0 ? 'Horde' : 'Unknown';
 }
 
-// Format server info
 function formatServerInfo(serverName, regionName) {
   if (!serverName) return 'Unknown Server';
   return regionName ? `${serverName} (${regionName})` : serverName;
@@ -128,7 +465,7 @@ function buildGearDisplay(gear) {
     .join(':');
 
   return gear.map((item, index) => {
-    if (!item || item.id === 0) return ''; // Skip empty slots
+    if (!item || item.id === 0) return '';
 
     const slotName = gearSlots[index] || `Slot ${index}`;
     const qualityClass = item.quality || 'common';
@@ -170,7 +507,6 @@ function buildGearDisplay(gear) {
       </a>
     `;
 
-    // The .gem-enchant div has been removed from the returned HTML below.
     return `
       <div class="gear-item">
         <div class="gear-header">
@@ -185,16 +521,38 @@ function buildGearDisplay(gear) {
   }).filter(Boolean).join('');
 }
 
-// Add toggle function for dropdowns
-function toggleDropdown(entryId) {
+// OPTIMIZED: Event Delegation for Dropdown Toggle
+function setupEventDelegation() {
+  rankingsDiv.addEventListener('click', (e) => {
+    const header = e.target.closest('.ranking-header');
+    if (header) {
+      const entryId = header.getAttribute('data-entry-id');
+      if (entryId) {
+        optimizedToggleDropdown(entryId);
+      }
+    }
+  });
+}
+
+// OPTIMIZED: Toggle function with lazy loading and batched DOM operations
+function optimizedToggleDropdown(entryId) {
   const dropdown = document.getElementById(entryId);
   const header = dropdown?.previousElementSibling;
   const expandIcon = header?.querySelector('.expand-icon');
   
-  if (dropdown && expandIcon) {
-    const isActive = dropdown.classList.contains('active');
-    
-    // Close all other dropdowns
+  if (!dropdown || !expandIcon) return;
+  
+  const isActive = dropdown.classList.contains('active');
+  
+  // Batch DOM reads
+  const measurements = {
+    isActive,
+    shouldOpen: !isActive
+  };
+  
+  // Batch DOM writes
+  DOMUpdater.scheduleUpdate('dropdown-' + entryId, () => {
+    // Close other dropdowns first
     document.querySelectorAll('.dropdown-content.active').forEach(el => {
       if (el.id !== entryId) {
         el.classList.remove('active');
@@ -203,13 +561,101 @@ function toggleDropdown(entryId) {
       }
     });
     
+    // Lazy load content if opening and not loaded
+    if (measurements.shouldOpen) {
+      const lazyContent = dropdown.querySelector('.lazy-content');
+      if (lazyContent && !lazyContent.dataset.loaded) {
+        try {
+          const itemData = JSON.parse(lazyContent.dataset.item.replace(/&#39;/g, "'"));
+          lazyContent.innerHTML = generateDropdownContent(itemData);
+          lazyContent.dataset.loaded = 'true';
+          
+          // Initialize Wowhead tooltips for new content
+          if (window.$WowheadPower) {
+            setTimeout(() => window.$WowheadPower.refreshLinks(), 100);
+          }
+        } catch (e) {
+          console.warn('Failed to parse item data:', e);
+          lazyContent.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 1rem;">Failed to load details</div>';
+        }
+      }
+    }
+    
     // Toggle current dropdown
-    dropdown.classList.toggle('active', !isActive);
-    expandIcon.classList.toggle('rotated', !isActive);
-  }
+    dropdown.classList.toggle('active', measurements.shouldOpen);
+    expandIcon.classList.toggle('rotated', measurements.shouldOpen);
+  });
 }
 
-// ======= Slug & Hash helpers (fixed regexes) =======
+function generateDropdownContent(item) {
+  const duration = formatDuration(item.duration);
+  const itemLevel = item.itemLevel || 'N/A';
+  const serverInfo = formatServerInfo(item.serverName, item.regionName);
+  const faction = formatFaction(item.faction);
+  const guildName = item.guildName || 'No Guild';
+  const raidSize = item.size || 'N/A';
+  const reportUrl = `https://classic.warcraftlogs.com/reports/${item.reportID}?fight=${item.fightID}&type=damage-done`;
+  
+  return `
+    <div class="info-grid">
+      <div class="info-section">
+        <h4>Fight Details</h4>
+        <div class="info-row">
+          <span class="info-label">Duration:</span>
+          <span class="info-value">${duration}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Fight ID:</span>
+          <span class="info-value">${item.fightID || 'N/A'}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Report:</span>
+          <span class="info-value">
+            <a href="${reportUrl}" target="_blank" rel="noopener">${item.reportID || 'N/A'}</a>
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Raid Size:</span>
+          <span class="info-value">${raidSize}</span>
+        </div>
+      </div>
+      
+      <div class="info-section">
+        <h4>Player Info</h4>
+        <div class="info-row">
+          <span class="info-label">Server:</span>
+          <span class="info-value">${serverInfo}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Guild:</span>
+          <span class="info-value">${guildName}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Faction:</span>
+          <span class="info-value">${faction}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Item Level:</span>
+          <span class="info-value">${itemLevel}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <h4>Gear & Equipment</h4>
+      <div class="gear-grid">
+        ${buildGearDisplay(item.gear)}
+      </div>
+    </div>
+  `;
+}
+
+// Legacy toggle function for compatibility
+function toggleDropdown(entryId) {
+  optimizedToggleDropdown(entryId);
+}
+
+// ======= Slug & Hash helpers =======
 function slugify(str) { return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-'); }
 function hashFor(name, encounterId) { return `#${slugify(name)}-${encounterId}`; }
 function updateHash(name, encounterId) { try { history.replaceState(null, '', hashFor(name, encounterId)); } catch {} }
@@ -250,7 +696,6 @@ function createRaidMenu() {
       } else {
         rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
         updateLastUpdated(null);
-        // Clear talent summary when no bosses
         const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
         if (talentSummaryElement) {
           talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
@@ -327,7 +772,7 @@ function updateLastUpdated(isoOrEpoch) {
   lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
 }
 
-// ======= Fetch + Render =======
+// ======= OPTIMIZED Fetch + Render =======
 let currentController = null;
 function disableButtons(disabled) {
   bossButtonsDiv?.querySelectorAll('button').forEach((btn) => {
@@ -354,112 +799,112 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const title = name ?? 'Unknown (no data)';
     const metaInfo = topByTier?.get(tier);
     const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
-    const metaPct = isMeta ? metaInfo.percent.toFixed(1) : null;
-    const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title}" />`;
+    
+    // Use lazy loading for talent icons
+    const img = createLazyImage(iconUrl, title, 'talent-icon-img');
+    
     const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-meta' : ''}`;
-    if (href) { return `<a class="${classes}" href="${href}" target="_blank" rel="noopener">${img}<div class="talent-percent" aria-hidden="true"></div></a>`; }
-    return `<span class="${classes}">${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
+    if (href) { 
+      const link = document.createElement('a');
+      link.className = classes;
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.appendChild(img);
+      const percentDiv = document.createElement('div');
+      percentDiv.className = 'talent-percent';
+      percentDiv.setAttribute('aria-hidden', 'true');
+      link.appendChild(percentDiv);
+      return link.outerHTML;
+    }
+    const span = document.createElement('span');
+    span.className = classes;
+    span.appendChild(img);
+    const percentDiv = document.createElement('div');
+    percentDiv.className = 'talent-percent';
+    percentDiv.setAttribute('aria-hidden', 'true');
+    span.appendChild(percentDiv);
+    return span.outerHTML;
   });
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
-function render(data, TOP_BY_TIER) {
+// OPTIMIZED: Use Virtual Scrolling for Rankings
+function optimizedRender(data, TOP_BY_TIER) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
-
-  const getColor = (rank) => {
-    if (rank === 1) return '#e5cc80';
-    if (rank >= 2 && rank <= 25) return '#e268a8';
-    return '#ff8000';
-  };
-
-  const entries = rankings.slice(0, 100).map((r, i) => {
-    const color = getColor(i + 1);
-    const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
-    const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
-    const playerName = r?.name ?? 'Unknown';
-    const perPlayerTalents = buildPlayerTalentIcons(r?.talents, TOP_BY_TIER);
-    
-    // Format additional data (still used in the dropdown)
-    const duration = formatDuration(r.duration);
-    const itemLevel = r.itemLevel || 'N/A';
-    const serverInfo = formatServerInfo(r.serverName, r.regionName);
-    const faction = formatFaction(r.faction);
-    const guildName = r.guildName || 'No Guild';
-    const raidSize = r.size || 'N/A';
-    
-    const entryId = `entry-${i}-${r.reportID}-${r.fightID}`;
-    
-    return `
-      <div class="rank-entry">
-        <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
-          <div class="name-wrapper" style="color:${color}">
-              ${i + 1}. ${playerName} — ${dps.toLocaleString()} DPS
-          </div>
-          <div class="header-right">
-            ${perPlayerTalents}
-            <span class="expand-icon">▼</span>
-          </div>
-        </div>
-        
-        <div class="dropdown-content" id="${entryId}">
-          <div class="info-grid">
-            <div class="info-section">
-              <h4>Fight Details</h4>
-              <div class="info-row">
-                <span class="info-label">Duration:</span>
-                <span class="info-value">${duration}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Fight ID:</span>
-                <span class="info-value">${r.fightID || 'N/A'}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Report:</span>
-                <span class="info-value">
-                  <a href="${reportUrl}" target="_blank" rel="noopener">${r.reportID || 'N/A'}</a>
-                </span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Raid Size:</span>
-                <span class="info-value">${raidSize}</span>
-              </div>
-            </div>
-            
-            <div class="info-section">
-              <h4>Player Info</h4>
-              <div class="info-row">
-                <span class="info-label">Server:</span>
-                <span class="info-value">${serverInfo}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Guild:</span>
-                <span class="info-value">${guildName}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Faction:</span>
-                <span class="info-value">${faction}</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Item Level:</span>
-                <span class="info-value">${itemLevel}</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="info-section">
-            <h4>Gear & Equipment</h4>
-            <div class="gear-grid">
-              ${buildGearDisplay(r.gear)}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  return entries;
+  
+  // Initialize virtual scroller if not exists
+  if (!virtualScroller) {
+    virtualScroller = new VirtualScrollRenderer(rankingsDiv, 120, 5);
+  }
+  
+  // Set items for virtual scrolling
+  virtualScroller.setItems(rankings, TOP_BY_TIER);
 }
 
+// OPTIMIZED: Talent Summary with Web Worker
+async function optimizedRenderTalentSummary(data) {
+  const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
+  
+  try {
+    // Use web worker for heavy computation
+    const { tierCounts, totalPerTier } = await talentWorker.analyzeTalents(rankings);
+    
+    const TOP_BY_TIER = new Map();
+    let talentSummaryHTML = `<div class="talent-summary-content">`;
+    
+    for (const tier of TIER_ORDER) {
+      const total = totalPerTier[tier] ?? 0;
+      const rowStats = talentTiers[tier].map((talent) => {
+        const count = tierCounts[tier][talent] ?? 0;
+        const percentNum = total > 0 ? (count / total) * 100 : 0;
+        const percent = percentNum.toFixed(1);
+        const iconUrl = talentIconUrl(talent);
+        const spellId = getSpellId(talent);
+        const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : `https://www.wowhead.com/`;
+        return { talent, percentNum, percent, iconUrl, wowheadUrl };
+      });
+      
+      const maxPct = Math.max(...rowStats.map((s) => s.percentNum), 0);
+      const EPS = 0.05;
+      const winners = rowStats.filter((s) => s.percentNum >= maxPct - EPS && maxPct > 0).map((s) => s.talent);
+      TOP_BY_TIER.set(tier, { winners: new Set(winners), percent: maxPct });
+      
+      talentSummaryHTML += `<div class="talent-row">`;
+      for (const stat of rowStats) {
+        const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
+        const color = stat.percentNum >= 75 ? 'limegreen' : stat.percentNum <= 10 ? 'red' : 'orange';
+        
+        // Use lazy loading for talent summary icons
+        const img = createLazyImage(stat.iconUrl, stat.talent, 'talent-icon-img');
+        const linkElement = document.createElement('a');
+        linkElement.className = `talent-link wowhead ${isTop ? 'is-top' : ''}`;
+        linkElement.href = stat.wowheadUrl;
+        linkElement.target = '_blank';
+        linkElement.rel = 'noopener';
+        linkElement.appendChild(img);
+        
+        const percentDiv = document.createElement('div');
+        percentDiv.className = 'talent-percent';
+        percentDiv.style.color = color;
+        percentDiv.textContent = `${stat.percent}%`;
+        linkElement.appendChild(percentDiv);
+        
+        talentSummaryHTML += linkElement.outerHTML;
+      }
+      talentSummaryHTML += `</div>`;
+    }
+    talentSummaryHTML += `</div>`;
+
+    return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
+  } catch (error) {
+    console.warn('Talent analysis failed, falling back to main thread:', error);
+    // Fallback to original implementation
+    return renderTalentSummary(data);
+  }
+}
+
+// Original render function for fallback
 function renderTalentSummary(data) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
   const tierCounts = {};
@@ -514,48 +959,90 @@ function renderTalentSummary(data) {
   return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
 }
 
+// OPTIMIZED: Main fetch function
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
-  // This function handles rendering and attaching listeners
-  const renderContentAndAttachListeners = (data) => {
-    const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
-    const playerListHTML = render(data, topByTier);
+  // Store current data for lazy loading
+  const setCurrentData = (data) => {
+    currentData = data;
+  };
 
-    // Update the main content area with just the player rankings
-    rankingsDiv.innerHTML = playerListHTML;
-    
-    // Update the talent summary in the right sidebar
-    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
-    if (talentSummaryElement) {
-      talentSummaryElement.innerHTML = talentSummaryHTML;
+  // Optimized content rendering with batched updates
+  const renderContentAndAttachListeners = async (data) => {
+    try {
+      // Use optimized talent summary generation
+      const { html: talentSummaryHTML, topByTier } = await optimizedRenderTalentSummary(data);
+      
+      // Store data for lazy loading
+      setCurrentData(data);
+      
+      // Batch DOM updates
+      DOMUpdater.scheduleUpdate('main-content', () => {
+        // Clear and setup virtual scrolling
+        rankingsDiv.innerHTML = '';
+        rankingsDiv.style.height = '600px'; // Set container height
+        rankingsDiv.style.overflow = 'auto';
+        rankingsDiv.style.position = 'relative';
+        
+        // Use optimized render
+        optimizedRender(data, topByTier);
+        
+        // Update talent summary in sidebar
+        const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+        if (talentSummaryElement) {
+          talentSummaryElement.innerHTML = talentSummaryHTML;
+        }
+        
+        // Refresh Wowhead tooltips after DOM update
+        if (window.$WowheadPower) {
+          setTimeout(() => window.$WowheadPower.refreshLinks(), 200);
+        }
+      });
+      
+    } catch (error) {
+      console.error('Error in renderContentAndAttachListeners:', error);
+      // Fallback to basic rendering
+      const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
+      setCurrentData(data);
+      optimizedRender(data, topByTier);
+      
+      const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+      if (talentSummaryElement) {
+        talentSummaryElement.innerHTML = talentSummaryHTML;
+      }
     }
-
-    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
   };
 
   try {
     disableButtons(true);
     selectActiveButton(encounterId);
     updateHash(name, encounterId);
-    rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ${name}…</p></div>`;
+    
+    // Show loading state
+    DOMUpdater.scheduleUpdate('loading', () => {
+      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ${name}…</p></div>`;
+    });
 
     const cached = readCache(encounterId);
     const cachedAt = cached?.cachedAt || cached?.data?.cachedAt;
     if (cached && isFresh(cachedAt) && !force) {
       updateLastUpdated(cachedAt);
-      renderContentAndAttachListeners(cached.data);
+      await renderContentAndAttachListeners(cached.data);
       return;
     }
 
-    const res = await fetch(API_URL(encounterId), { signal: currentController.signal, headers: { 'accept': 'application/json' } });
+    const res = await fetch(API_URL(encounterId), { 
+      signal: currentController.signal, 
+      headers: { 'accept': 'application/json' } 
+    });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const serverTs = data.cachedAt || new Date().toISOString();
     writeCache(encounterId, data, serverTs);
     updateLastUpdated(serverTs);
-    renderContentAndAttachListeners(data);
+    await renderContentAndAttachListeners(data);
 
   } catch (err) {
     if (err?.name === 'AbortError') return;
@@ -563,11 +1050,12 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     const cached = readCache(encounterId);
     if (cached) {
       updateLastUpdated(cached.cachedAt || cached.data?.cachedAt);
-      renderContentAndAttachListeners(cached.data);
+      await renderContentAndAttachListeners(cached.data);
     } else {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
+      DOMUpdater.scheduleUpdate('error', () => {
+        rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
+      });
       updateLastUpdated(null);
-      // Clear talent summary on error
       const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
       if (talentSummaryElement) {
         talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
@@ -581,6 +1069,9 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
 
 // ======= Boot =======
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize event delegation
+  setupEventDelegation();
+  
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       copyBtn.textContent = 'Copied!';
@@ -620,10 +1111,31 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${RAIDS[currentRaidKey].name} yet.</div>`;
     updateLastUpdated(null);
-    // Clear talent summary when no bosses
     const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
     if (talentSummaryElement) {
       talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
     }
   }
 });
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (talentWorker) {
+    talentWorker.destroy();
+  }
+  if (currentController) {
+    currentController.abort();
+  }
+});
+
+// Performance monitoring (optional)
+if (typeof PerformanceObserver !== 'undefined') {
+  const observer = new PerformanceObserver((list) => {
+    for (const entry of list.getEntries()) {
+      if (entry.entryType === 'measure' && entry.name.startsWith('rankings-')) {
+        console.log(`Performance: ${entry.name} took ${entry.duration.toFixed(2)}ms`);
+      }
+    }
+  });
+  observer.observe({ entryTypes: ['measure'] });
+}
