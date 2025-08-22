@@ -578,6 +578,8 @@ a.wowhead del {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  contain: layout style paint;
+  transform: translateZ(0);
 }
 
 .rank-entry::before {
@@ -651,7 +653,7 @@ a.wowhead del {
 .expand-icon {
   color: var(--text-muted);
   font-size: 0.9rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease;
   user-select: none;
   flex-shrink: 0;
 }
@@ -670,6 +672,7 @@ a.wowhead del {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   opacity: 0;
   overflow-x: auto;
+  contain: layout paint;
 }
 
 .dropdown-content.active {
@@ -1354,6 +1357,7 @@ a.wowhead del {
   .talent-sidebar {
     padding: 1.25rem;
     border-radius: 16px;
+    transform: translateZ(0);
   }
   
   h1 {
