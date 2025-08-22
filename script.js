@@ -421,7 +421,7 @@ function createRaidMenu() {
     btn.type = 'button';
     btn.dataset.raidKey = key;
     const img = document.createElement('img');
-    img.src = `images/${key}.webp`;
+    img.src = `public/images/${key}.webp`;
     img.alt = raid.short;
     img.className = 'raid-icon';
     img.loading = 'lazy';
