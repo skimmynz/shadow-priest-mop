@@ -1,148 +1,3 @@
-// Shadow Priest Rankings — MoP Classic - OPTIMIZED VERSION
-// ======= Performance Optimizations =======
-
-// Virtual Scrolling for Large Lists
-class VirtualScrollRenderer {
-  constructor(container, itemHeight = 120, bufferSize = 5) {
-    this.container = container;
-    this.itemHeight = itemHeight;
-    this.bufferSize = bufferSize;
-    this.scrollTop = 0;
-    this.containerHeight = container.clientHeight || 600;
-    this.totalItems = 0;
-    this.visibleStart = 0;
-    this.visibleEnd = 0;
-    this.items = [];
-    this.renderedElements = new Map();
-    this.topByTier = null;
-    
-    this.setupScrollListener();
-    this.setupResizeObserver();
-  }
-  
-  setupScrollListener() {
-    let ticking = false;
-    this.container.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          this.handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    });
-  }
-  
-  setupResizeObserver() {
-    if (window.ResizeObserver) {
-      const resizeObserver = new ResizeObserver(() => {
-        this.containerHeight = this.container.clientHeight;
-        this.updateVisibleRange();
-        this.renderVisibleItems();
-      });
-      resizeObserver.observe(this.container);
-    }
-  }
-  
-  handleScroll() {
-    this.scrollTop = this.container.scrollTop;
-    this.updateVisibleRange();
-    this.renderVisibleItems();
-  }
-  
-  updateVisibleRange() {
-    this.visibleStart = Math.max(0, Math.floor(this.scrollTop / this.itemHeight) - this.bufferSize);
-    this.visibleEnd = Math.min(this.totalItems, 
-      Math.ceil((this.scrollTop + this.containerHeight) / this.itemHeight) + this.bufferSize);
-  }
-  
-  setItems(items, topByTier) {
-    this.items = items.slice(0, 100); // Limit to 100 for performance
-    this.totalItems = this.items.length;
-    this.topByTier = topByTier;
-    this.renderedElements.clear();
-    
-    // Create container with proper height
-    this.container.style.height = `${this.totalItems * this.itemHeight}px`;
-    this.container.style.position = 'relative';
-    this.container.style.overflow = 'auto';
-    
-    this.updateVisibleRange();
-    this.renderVisibleItems();
-  }
-  
-  renderVisibleItems() {
-    const fragment = document.createDocumentFragment();
-    const existingElements = this.container.querySelectorAll('.rank-entry');
-    
-    // Remove elements outside visible range
-    existingElements.forEach(el => {
-      const index = parseInt(el.dataset.index);
-      if (index < this.visibleStart || index >= this.visibleEnd) {
-        el.remove();
-      }
-    });
-    
-    // Add new visible elements
-    for (let i = this.visibleStart; i < this.visibleEnd; i++) {
-      if (i >= this.items.length) continue;
-      
-      let element = this.container.querySelector(`[data-index="${i}"]`);
-      if (!element) {
-        element = this.createElement(this.items[i], i);
-        element.style.position = 'absolute';
-        element.style.top = `${i * this.itemHeight}px`;
-        element.style.width = '100%';
-        element.dataset.index = i;
-        fragment.appendChild(element);
-      }
-    }
-    
-    if (fragment.children.length > 0) {
-      this.container.appendChild(fragment);
-    }
-  }
-  
-  createElement(item, index) {
-    const color = this.getColor(index + 1);
-    const reportUrl = `https://classic.warcraftlogs.com/reports/${item.reportID}?fight=${item.fightID}&type=damage-done`;
-    const dps = typeof item?.total === 'number' ? Math.round(item.total) : '—';
-    const playerName = item?.name ?? 'Unknown';
-    const entryId = `entry-${index}-${item.reportID}-${item.fightID}`;
-    
-    const element = document.createElement('div');
-    element.className = 'rank-entry';
-    element.dataset.index = index;
-    element.dataset.entryId = entryId;
-    
-    element.innerHTML = `
-      <div class="ranking-header" data-entry-id="${entryId}">
-        <div class="name-wrapper" style="color:${color}">
-            ${index + 1}. ${playerName} — ${dps.toLocaleString()} DPS
-        </div>
-        <div class="header-right">
-          ${buildPlayerTalentIcons(item?.talents, this.topByTier)}
-          <span class="expand-icon">▼</span>
-        </div>
-      </div>
-      
-      <div class="dropdown-content" id="${entryId}">
-        <div class="lazy-content" data-entry-index="${index}" data-item='${JSON.stringify(item).replace(/'/g, "&#39;")}'>
-          <div style="text-align: center; color: #94a3b8; padding: 1rem;">Click to load details...</div>
-        </div>
-      </div>
-    `;
-    
-    return element;
-  }
-  
-  getColor(rank) {
-    if (rank === 1) return '#e5cc80';
-    if (rank >= 2 && rank <= 25) return '#e268a8';
-    return '#ff8000';
-  }
-}
-
 // Debounced DOM Updates with RequestAnimationFrame
 const DOMUpdater = {
   pendingUpdates: new Map(),
@@ -162,7 +17,6 @@ const DOMUpdater = {
 
 // Template Cache for Performance
 const TemplateCache = new Map();
-const MemoizedTemplates = new Map();
 
 function createTemplate(templateString) {
   if (!TemplateCache.has(templateString)) {
@@ -218,7 +72,7 @@ class TalentAnalysisWorker {
   initWorker() {
     const workerCode = `
       self.onmessage = function(e) {
-        const { rankings, talentTiers, TIER_ORDER, VALID_TALENT_SET, TIER_BY_TALENT, getTalentDisplayName } = e.data;
+        const { rankings, talentTiers, TIER_ORDER, VALID_TALENT_SET, TIER_BY_TALENT } = e.data;
         
         const tierCounts = {};
         const totalPerTier = {};
@@ -267,7 +121,6 @@ class TalentAnalysisWorker {
   
   async analyzeTalents(rankings) {
     if (!this.worker) {
-      // Fallback to main thread
       return this.analyzeTalentsMainThread(rankings);
     }
     
@@ -291,14 +144,12 @@ class TalentAnalysisWorker {
         talentTiers,
         TIER_ORDER,
         VALID_TALENT_SET: Array.from(VALID_TALENT_SET),
-        TIER_BY_TALENT: Array.from(TIER_BY_TALENT.entries()),
-        getTalentDisplayName: getTalentDisplayName.toString()
+        TIER_BY_TALENT: Array.from(TIER_BY_TALENT.entries())
       });
     });
   }
   
   analyzeTalentsMainThread(rankings) {
-    // Fallback implementation
     const tierCounts = {};
     const totalPerTier = {};
     
@@ -335,11 +186,8 @@ class TalentAnalysisWorker {
 }
 
 // Initialize performance components
-let virtualScroller = null;
 let talentWorker = new TalentAnalysisWorker();
 let currentData = null;
-
-// ======= Original Code with Optimizations =======
 
 const RAIDS = {
   msv: {
@@ -521,21 +369,21 @@ function buildGearDisplay(gear) {
   }).filter(Boolean).join('');
 }
 
-// OPTIMIZED: Event Delegation for Dropdown Toggle
+// FIXED: Event Delegation for Dropdown Toggle
 function setupEventDelegation() {
   rankingsDiv.addEventListener('click', (e) => {
     const header = e.target.closest('.ranking-header');
     if (header) {
       const entryId = header.getAttribute('data-entry-id');
       if (entryId) {
-        optimizedToggleDropdown(entryId);
+        toggleDropdown(entryId);
       }
     }
   });
 }
 
-// OPTIMIZED: Toggle function with lazy loading and batched DOM operations
-function optimizedToggleDropdown(entryId) {
+// FIXED: Toggle function with proper lazy loading
+function toggleDropdown(entryId) {
   const dropdown = document.getElementById(entryId);
   const header = dropdown?.previousElementSibling;
   const expandIcon = header?.querySelector('.expand-icon');
@@ -544,47 +392,38 @@ function optimizedToggleDropdown(entryId) {
   
   const isActive = dropdown.classList.contains('active');
   
-  // Batch DOM reads
-  const measurements = {
-    isActive,
-    shouldOpen: !isActive
-  };
+  // Close other dropdowns first
+  document.querySelectorAll('.dropdown-content.active').forEach(el => {
+    if (el.id !== entryId) {
+      el.classList.remove('active');
+      const otherIcon = el.previousElementSibling?.querySelector('.expand-icon');
+      if (otherIcon) otherIcon.classList.remove('rotated');
+    }
+  });
   
-  // Batch DOM writes
-  DOMUpdater.scheduleUpdate('dropdown-' + entryId, () => {
-    // Close other dropdowns first
-    document.querySelectorAll('.dropdown-content.active').forEach(el => {
-      if (el.id !== entryId) {
-        el.classList.remove('active');
-        const otherIcon = el.previousElementSibling?.querySelector('.expand-icon');
-        if (otherIcon) otherIcon.classList.remove('rotated');
-      }
-    });
-    
-    // Lazy load content if opening and not loaded
-    if (measurements.shouldOpen) {
-      const lazyContent = dropdown.querySelector('.lazy-content');
-      if (lazyContent && !lazyContent.dataset.loaded) {
-        try {
-          const itemData = JSON.parse(lazyContent.dataset.item.replace(/&#39;/g, "'"));
-          lazyContent.innerHTML = generateDropdownContent(itemData);
-          lazyContent.dataset.loaded = 'true';
-          
-          // Initialize Wowhead tooltips for new content
-          if (window.$WowheadPower) {
-            setTimeout(() => window.$WowheadPower.refreshLinks(), 100);
-          }
-        } catch (e) {
-          console.warn('Failed to parse item data:', e);
-          lazyContent.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 1rem;">Failed to load details</div>';
+  // Lazy load content if opening and not loaded
+  if (!isActive) {
+    const lazyContent = dropdown.querySelector('.lazy-content');
+    if (lazyContent && !lazyContent.dataset.loaded) {
+      try {
+        const itemData = JSON.parse(lazyContent.dataset.item.replace(/&#39;/g, "'"));
+        lazyContent.innerHTML = generateDropdownContent(itemData);
+        lazyContent.dataset.loaded = 'true';
+        
+        // Initialize Wowhead tooltips for new content
+        if (window.$WowheadPower) {
+          setTimeout(() => window.$WowheadPower.refreshLinks(), 100);
         }
+      } catch (e) {
+        console.warn('Failed to parse item data:', e);
+        lazyContent.innerHTML = '<div style="color: #ef4444; text-align: center; padding: 1rem;">Failed to load details</div>';
       }
     }
-    
-    // Toggle current dropdown
-    dropdown.classList.toggle('active', measurements.shouldOpen);
-    expandIcon.classList.toggle('rotated', measurements.shouldOpen);
-  });
+  }
+  
+  // Toggle current dropdown
+  dropdown.classList.toggle('active', !isActive);
+  expandIcon.classList.toggle('rotated', !isActive);
 }
 
 function generateDropdownContent(item) {
@@ -648,11 +487,6 @@ function generateDropdownContent(item) {
       </div>
     </div>
   `;
-}
-
-// Legacy toggle function for compatibility
-function toggleDropdown(entryId) {
-  optimizedToggleDropdown(entryId);
 }
 
 // ======= Slug & Hash helpers =======
@@ -772,7 +606,7 @@ function updateLastUpdated(isoOrEpoch) {
   lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
 }
 
-// ======= OPTIMIZED Fetch + Render =======
+// ======= FIXED Fetch + Render =======
 let currentController = null;
 function disableButtons(disabled) {
   bossButtonsDiv?.querySelectorAll('button').forEach((btn) => {
@@ -829,17 +663,51 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
-// OPTIMIZED: Use Virtual Scrolling for Rankings
-function optimizedRender(data, TOP_BY_TIER) {
+// FIXED: Standard Rendering without Virtual Scrolling for Working Dropdowns
+function renderRankings(data, TOP_BY_TIER) {
   const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
   
-  // Initialize virtual scroller if not exists
-  if (!virtualScroller) {
-    virtualScroller = new VirtualScrollRenderer(rankingsDiv, 120, 5);
+  // Limit to 100 entries for performance
+  const limitedRankings = rankings.slice(0, 100);
+  
+  let html = '';
+  
+  for (let index = 0; index < limitedRankings.length; index++) {
+    const item = limitedRankings[index];
+    const color = getColor(index + 1);
+    const reportUrl = `https://classic.warcraftlogs.com/reports/${item.reportID}?fight=${item.fightID}&type=damage-done`;
+    const dps = typeof item?.total === 'number' ? Math.round(item.total) : '—';
+    const playerName = item?.name ?? 'Unknown';
+    const entryId = `entry-${index}-${item.reportID}-${item.fightID}`;
+    
+    html += `
+      <div class="rank-entry" data-index="${index}" data-entry-id="${entryId}">
+        <div class="ranking-header" data-entry-id="${entryId}">
+          <div class="name-wrapper" style="color:${color}">
+              ${index + 1}. ${playerName} — ${dps.toLocaleString()} DPS
+          </div>
+          <div class="header-right">
+            ${buildPlayerTalentIcons(item?.talents, TOP_BY_TIER)}
+            <span class="expand-icon">▼</span>
+          </div>
+        </div>
+        
+        <div class="dropdown-content" id="${entryId}">
+          <div class="lazy-content" data-entry-index="${index}" data-item='${JSON.stringify(item).replace(/'/g, "&#39;")}'>
+            <div style="text-align: center; color: #94a3b8; padding: 1rem;">Click to load details...</div>
+          </div>
+        </div>
+      </div>
+    `;
   }
   
-  // Set items for virtual scrolling
-  virtualScroller.setItems(rankings, TOP_BY_TIER);
+  return html;
+}
+
+function getColor(rank) {
+  if (rank === 1) return '#e5cc80';
+  if (rank >= 2 && rank <= 25) return '#e268a8';
+  return '#ff8000';
 }
 
 // OPTIMIZED: Talent Summary with Web Worker
@@ -959,7 +827,7 @@ function renderTalentSummary(data) {
   return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
 }
 
-// OPTIMIZED: Main fetch function
+// FIXED: Main fetch function with standard rendering
 async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
   if (currentController) currentController.abort();
   currentController = new AbortController();
@@ -969,7 +837,7 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     currentData = data;
   };
 
-  // Optimized content rendering with batched updates
+  // Fixed content rendering with batched updates
   const renderContentAndAttachListeners = async (data) => {
     try {
       // Use optimized talent summary generation
@@ -980,14 +848,8 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
       
       // Batch DOM updates
       DOMUpdater.scheduleUpdate('main-content', () => {
-        // Clear and setup virtual scrolling
-        rankingsDiv.innerHTML = '';
-        rankingsDiv.style.height = '600px'; // Set container height
-        rankingsDiv.style.overflow = 'auto';
-        rankingsDiv.style.position = 'relative';
-        
-        // Use optimized render
-        optimizedRender(data, topByTier);
+        // Use standard rendering instead of virtual scrolling
+        rankingsDiv.innerHTML = renderRankings(data, topByTier);
         
         // Update talent summary in sidebar
         const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
@@ -1006,7 +868,7 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
       // Fallback to basic rendering
       const { html: talentSummaryHTML, topByTier } = renderTalentSummary(data);
       setCurrentData(data);
-      optimizedRender(data, topByTier);
+      rankingsDiv.innerHTML = renderRankings(data, topByTier);
       
       const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
       if (talentSummaryElement) {
