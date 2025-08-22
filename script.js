@@ -625,6 +625,7 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const tier = TIER_BY_TALENT.get(displayName);
     if (tier && !chosenByTier.has(tier)) chosenByTier.set(tier, displayName);
   }
+  
   const cells = TIER_ORDER.map((tier) => {
     const name = chosenByTier.get(tier) ?? null;
     const iconUrl = talentIconUrl(name);
@@ -634,32 +635,32 @@ function buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
     const metaInfo = topByTier?.get(tier);
     const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
     
+    // Only show talent icon if we have valid talent data
+    if (!name || !href) {
+      return '<div class="talent-placeholder"></div>'; // No wowhead class
+    }
+    
     // Use lazy loading for talent icons
     const img = createLazyImage(iconUrl, title, 'talent-icon-img');
     
-    const classes = `talent-link${href ? ' wowhead' : ''}${isMeta ? ' is-meta' : ''}`;
-    if (href) { 
-      const link = document.createElement('a');
-      link.className = classes;
-      link.href = href;
-      link.target = '_blank';
-      link.rel = 'noopener';
-      link.appendChild(img);
-      const percentDiv = document.createElement('div');
-      percentDiv.className = 'talent-percent';
-      percentDiv.setAttribute('aria-hidden', 'true');
-      link.appendChild(percentDiv);
-      return link.outerHTML;
-    }
-    const span = document.createElement('span');
-    span.className = classes;
-    span.appendChild(img);
+    // Only add wowhead class for valid talents with hrefs
+    const classes = `talent-link wowhead${isMeta ? ' is-meta' : ''}`;
+    
+    const link = document.createElement('a');
+    link.className = classes;
+    link.href = href;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.appendChild(img);
+    
     const percentDiv = document.createElement('div');
     percentDiv.className = 'talent-percent';
     percentDiv.setAttribute('aria-hidden', 'true');
-    span.appendChild(percentDiv);
-    return span.outerHTML;
+    link.appendChild(percentDiv);
+    
+    return link.outerHTML;
   });
+  
   return `<div class="talent-row">${cells.join('')}</div>`;
 }
 
