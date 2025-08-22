@@ -13,7 +13,18 @@ const RAIDS = {
       "Will of the Emperor": 1407,
     },
   },
-  hof: { short: 'HoF', name: 'Heart of Fear', encounters: {} },
+  hof: {
+      short: 'HoF',
+      name: 'Heart of Fear',
+      encounters: {
+        "Imperial Vizier Zor'lok": 1507,
+        "Blade Lord Ta'yak": 1504,
+        "Garalon": 1498,
+        "Wind Lord Mel'jarak": 1499,
+        "Amber-Shaper Un'sok": 1532,
+        "Grand Empress Shek'zeer": 1501,
+      },
+    },
   toes: { short: 'ToES', name: 'Terrace of Endless Spring', encounters: {} },
 };
 
