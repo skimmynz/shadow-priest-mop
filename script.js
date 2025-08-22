@@ -19,9 +19,9 @@ const RAIDS = {
       encounters: {
         "Imperial Vizier Zor'lok": 1507,
         "Blade Lord Ta'yak": 1504,
-        "Garalon": 1498,
-        "Wind Lord Mel'jarak": 1499,
-        "Amber-Shaper Un'sok": 1532,
+        "Garalon": 1463,
+        "Wind Lord Mel'jarak": 1498,
+        "Amber-Shaper Un'sok": 1499,
         "Grand Empress Shek'zeer": 1501,
       },
     },
