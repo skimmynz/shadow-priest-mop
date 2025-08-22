@@ -688,7 +688,7 @@ function renderRankings(data, TOP_BY_TIER) {
               ${index + 1}. ${playerName} — ${dps.toLocaleString()} DPS
           </div>
           <div class="header-right">
-            ${buildPlayerTalentIcons(item?.talents, TOP_BY_TIER)}
+            ${buildPlayerTalentIcons(item?.combatantInfo?.talents, TOP_BY_TIER)}
             <span class="expand-icon">▼</span>
           </div>
         </div>
