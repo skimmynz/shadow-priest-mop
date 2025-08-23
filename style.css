@@ -354,14 +354,14 @@ a.wowhead del {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 95px;
+  height: 115px; /* Changed from 95px */
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   min-width: 0;
 }
 
 #raid-menu .raid-icon {
-  width: 40px;
-  height: 40px;
+  width: 56px;
+  height: 56px;
   object-fit: cover;
   border-radius: 8px;
   transition: transform 0.3s ease;
