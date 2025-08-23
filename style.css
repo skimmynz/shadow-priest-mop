@@ -372,7 +372,7 @@ a.wowhead del {
 #raid-menu button span {
   color: var(--text-primary);
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 1.0rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
   transition: all 0.3s ease;
   position: relative;
