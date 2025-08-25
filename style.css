@@ -41,6 +41,8 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -67,87 +69,23 @@ body {
   min-height: 100vh;
 }
 
-.sidebar {
-  position: sticky;
-  top: 2.5rem;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 1.75rem;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-xl);
-  width: 280px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
-}
-
-.sidebar:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-.content-area {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-xl);
-  width: 100%;
-  min-width: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.content-area::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--gradient-shadow);
-  opacity: 0.8;
-}
-
-.content-area:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-  box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
-}
-
-/* New right sidebar for talent summary */
+/* Shared styles for all sidebar/content containers */
+.sidebar,
+.content-area,
 .talent-sidebar {
-  position: sticky;
-  top: 2.5rem;
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 1.75rem;
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-xl);
-  width: 320px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  max-height: calc(100vh - 5rem);
-  overflow-y: auto;
 }
 
+.sidebar::before,
+.content-area::before,
 .talent-sidebar::before {
   content: '';
   position: absolute;
@@ -159,10 +97,32 @@ body {
   opacity: 0.8;
 }
 
+.sidebar:hover,
+.content-area:hover,
 .talent-sidebar:hover {
   border-color: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+}
+
+.sidebar {
+  position: sticky;
+  top: 2.5rem;
+  width: 280px;
+}
+
+.content-area {
+  width: 100%;
+  min-width: 0;
+  padding: 2.5rem;
+}
+
+.talent-sidebar {
+  position: sticky;
+  top: 2.5rem;
+  width: 320px;
+  max-height: calc(100vh - 5rem);
+  overflow-y: auto;
 }
 
 .talent-sidebar h3 {
@@ -354,7 +314,7 @@ a.wowhead del {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  height: 115px; /* Changed from 95px */
+  height: 115px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   min-width: 0;
 }
@@ -398,33 +358,34 @@ a.wowhead del {
   transition: opacity 0.3s ease;
 }
 
-#raid-menu button:hover {
+#raid-menu button:hover,
+#raid-menu button.active {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 16px 40px var(--shadow-glow);
   border-color: var(--accent-color);
 }
 
-#raid-menu button:hover::before {
+#raid-menu button:hover::before,
+#raid-menu button.active::before {
   opacity: 0.1;
+}
+
+#raid-menu button.active::before {
+  opacity: 0.15;
 }
 
 #raid-menu button:hover .raid-icon {
   transform: scale(1.1);
 }
 
-#raid-menu button:hover span {
-  color: var(--text-primary);
+#raid-menu button:hover span,
+#raid-menu button.active span {
   text-shadow: 0 0 10px var(--shadow-glow);
 }
 
 #raid-menu button.active {
-  border-color: var(--accent-color);
   box-shadow: 0 0 30px var(--shadow-glow);
   transform: translateY(-1px);
-}
-
-#raid-menu button.active::before {
-  opacity: 0.15;
 }
 
 #raid-menu button.active span {
@@ -556,6 +517,7 @@ a.wowhead del {
   border: 3px solid var(--border-hover);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  will-change: transform, filter;
 }
 
 .talent-summary .talent-percent,
@@ -565,6 +527,8 @@ a.wowhead del {
   margin-top: 0.5rem;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   text-align: center;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 /* Player Rank Entry */
@@ -913,17 +877,6 @@ a.wowhead del {
   transition: transform 0.3s ease;
 }
 
-.talent-icon-img {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform, filter;
-}
-
-.talent-percent {
-  text-align: center;
-  will-change: transform;
-  transform: translateZ(0);
-}
-
 /* Hover & Highlight */
 .talent-link:hover .talent-icon-img {
   transform: translateY(-4px) scale(1.1);
@@ -937,59 +890,31 @@ a.wowhead del {
   box-shadow: 0 0 0 2px var(--gold-color), 0 12px 30px rgba(251, 191, 36, 0.4);
 }
 
-.loader {
-  border: 4px solid var(--border-color);
-  border-top: 4px solid var(--accent-color);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 2rem auto 1rem;
+/* Top talent highlighting */
+.talent-summary .talent-link.is-top .talent-icon-img,
+.talent-summary-content .talent-link.is-top .talent-icon-img {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
+  border-color: var(--success-color);
+  animation: pulse-glow 3s infinite;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
+    transform: translateY(-3px) scale(1.08);
+  }
+  50% { 
+    box-shadow: 0 0 0 3px var(--success-color), 0 20px 50px rgba(16, 185, 129, 0.7);
+    transform: translateY(-4px) scale(1.1);
+  }
 }
 
-/* Loading state styling */
-.loading-message {
-  text-align: center;
-  color: var(--text-secondary);
-  margin-top: 2rem;
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.loading-message p {
-  margin: 1rem 0;
-}
-
-/* Error state styling */
-.error-message {
-  text-align: center;
-  color: #ef4444;
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 12px;
-  font-weight: 600;
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
-}
-
-/* Empty state styling */
-.empty-message {
-  text-align: center;
-  color: var(--text-muted);
-  margin-top: 3rem;
-  font-style: italic;
-  padding: 2.5rem 1.5rem;
-  background: var(--secondary-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  font-size: 1rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+.talent-summary .talent-link.is-top .talent-percent,
+.talent-summary-content .talent-link.is-top .talent-percent {
+  color: var(--success-color);
+  text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
+  font-weight: 800;
 }
 
 /* Rankings gear styling */
@@ -1032,31 +957,57 @@ a.wowhead del {
 .rankings-gear-name.epic { color: #a335ee; }
 .rankings-gear-name.legendary { color: #ff8000; }
 
-/* Top talent highlighting */
-.talent-summary .talent-link.is-top .talent-icon-img,
-.talent-summary-content .talent-link.is-top .talent-icon-img {
-  transform: translateY(-3px) scale(1.08);
-  box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-  border-color: var(--success-color);
-  animation: pulse-glow 3s infinite;
+/* Loading, error, and empty states */
+.loader {
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto 1rem;
 }
 
-@keyframes pulse-glow {
-  0%, 100% { 
-    box-shadow: 0 0 0 3px var(--success-color), 0 16px 40px rgba(16, 185, 129, 0.5);
-    transform: translateY(-3px) scale(1.08);
-  }
-  50% { 
-    box-shadow: 0 0 0 3px var(--success-color), 0 20px 50px rgba(16, 185, 129, 0.7);
-    transform: translateY(-4px) scale(1.1);
-  }
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.talent-summary .talent-link.is-top .talent-percent,
-.talent-summary-content .talent-link.is-top .talent-percent {
-  color: var(--success-color);
-  text-shadow: 0 2px 12px rgba(16, 185, 129, 0.6);
-  font-weight: 800;
+.loading-message {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-top: 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.loading-message p {
+  margin: 1rem 0;
+}
+
+.error-message {
+  text-align: center;
+  color: #ef4444;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
+}
+
+.empty-message {
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 3rem;
+  font-style: italic;
+  padding: 2.5rem 1.5rem;
+  background: var(--secondary-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* =================================================================
@@ -1315,18 +1266,15 @@ a.wowhead del {
   }
 
   .info-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
   }
 
   .dropdown-content.active {
-    padding: 1.5rem;
     padding: 1rem;
   }
 
   .gear-grid {
-    grid-template-columns: 1fr;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 
@@ -1540,10 +1488,29 @@ button:focus,
   border-radius: 8px;
 }
 
-/* Ensure proper contrast for accessibility */
-.info-value,
-.gear-name {
-  color: var(--text-primary);
+/* Button active state */
+button:active {
+  transform: scale(0.98);
+}
+
+/* Ensure images load smoothly */
+img {
+  transition: opacity 0.3s ease;
+}
+
+img:not([src]),
+img[src=""] {
+  opacity: 0;
+}
+
+/* Smooth transitions for dynamic content */
+[data-loading] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+[data-loading] * {
+  cursor: wait !important;
 }
 
 /* Custom scrollbar styling */
@@ -1563,35 +1530,4 @@ button:focus,
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-hover);
-}
-
-/* Additional enhancements for smooth interactions */
-* {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Ensure images load smoothly */
-img {
-  transition: opacity 0.3s ease;
-}
-
-img:not([src]),
-img[src=""] {
-  opacity: 0;
-}
-
-/* Enhanced button states */
-button:active {
-  transform: scale(0.98);
-}
-
-/* Smooth transitions for dynamic content */
-[data-loading] {
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-[data-loading] * {
-  cursor: wait !important;
 }
