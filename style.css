@@ -881,20 +881,26 @@ a.wowhead del {
   border: 1px solid var(--border-color);
 }
 
-/* Per-Player Talents in Header - Better alignment */
+/* Per-Player Talents in Header/
 .ranking-header .talent-row {
   display: flex;
   gap: 0.4rem;
+  align-items: center; /* Add this to center align vertically */
+  flex-wrap: nowrap; /* Prevent wrapping */
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .ranking-header .talent-icon-img {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
+  min-width: 32px; /* Prevent shrinking */
+  min-height: 32px; /* Prevent shrinking */
   border-radius: 6px;
   border: 2px solid var(--border-hover);
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
+  object-fit: cover; /* Ensure images scale properly */
+  flex-shrink: 0; /* Prevent individual icons from shrinking */
 
 .ranking-header:hover .talent-icon-img {
   border-color: var(--accent-color);
@@ -1305,7 +1311,11 @@ a.wowhead del {
   }
 
   .header-right {
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0; /* Prevent the entire right section from shrinking */
+  min-width: fit-content; /* Ensure it maintains its width */
   }
   
   .ranking-header .name-wrapper {
