@@ -881,26 +881,20 @@ a.wowhead del {
   border: 1px solid var(--border-color);
 }
 
-/* Per-Player Talents in Header/
+/* Per-Player Talents in Header - Better alignment */
 .ranking-header .talent-row {
   display: flex;
   gap: 0.4rem;
-  align-items: center; /* Add this to center align vertically */
-  flex-wrap: nowrap; /* Prevent wrapping */
-  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .ranking-header .talent-icon-img {
-  width: 40px;
-  height: 40px;
-  min-width: 32px; /* Prevent shrinking */
-  min-height: 32px; /* Prevent shrinking */
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   border: 2px solid var(--border-hover);
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  object-fit: cover; /* Ensure images scale properly */
-  flex-shrink: 0; /* Prevent individual icons from shrinking */
+}
 
 .ranking-header:hover .talent-icon-img {
   border-color: var(--accent-color);
@@ -1311,11 +1305,7 @@ a.wowhead del {
   }
 
   .header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0; /* Prevent the entire right section from shrinking */
-  min-width: fit-content; /* Ensure it maintains its width */
+    justify-content: center;
   }
   
   .ranking-header .name-wrapper {
@@ -1604,276 +1594,4 @@ button:active {
 
 [data-loading] * {
   cursor: wait !important;
-}
-
-/* =================================================================
-   INP Performance Optimizations - Add to existing CSS
-   ================================================================= */
-
-/* Force hardware acceleration and optimize repaints */
-.rank-entry,
-.ranking-header,
-.dropdown-content,
-.talent-icon-img,
-.boss-icon,
-.raid-icon {
-  will-change: auto;
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Optimize transitions to use only transform and opacity */
-.rank-entry {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.rank-entry:hover {
-  transform: translateY(-1px) translateZ(0);
-}
-
-.dropdown-content {
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.3s ease;
-  contain: layout style paint;
-}
-
-.dropdown-content.active {
-  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-              opacity 0.3s ease;
-}
-
-/* Reduce animation complexity for better INP */
-.talent-icon-img {
-  transition: transform 0.2s ease;
-}
-
-.talent-link:hover .talent-icon-img {
-  transform: translateY(-2px) scale(1.05) translateZ(0);
-}
-
-/* Optimize button interactions */
-#raid-menu button,
-#boss-buttons button {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-#raid-menu button:hover,
-#boss-buttons button:hover {
-  transform: translateY(-1px) translateZ(0);
-}
-
-/* Reduce expensive box-shadow animations */
-.sidebar:hover,
-.content-area:hover,
-.talent-sidebar:hover {
-  transform: translateY(-1px) translateZ(0);
-  box-shadow: var(--shadow-xl);
-}
-
-/* Optimize gear display for faster rendering */
-.gear-grid {
-  contain: layout style;
-}
-
-.gear-item {
-  contain: layout style paint;
-  transition: transform 0.2s ease;
-}
-
-.gear-item:hover {
-  transform: translateY(-1px) translateZ(0);
-}
-
-/* Optimize loading states */
-.loader {
-  contain: layout style paint size;
-}
-
-/* Add content-visibility for off-screen content */
-.dropdown-content:not(.active) {
-  content-visibility: hidden;
-}
-
-.rank-entry:not(:hover) .dropdown-content {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 400px;
-}
-
-/* Optimize image loading */
-img[loading="lazy"] {
-  content-visibility: auto;
-  contain-intrinsic-size: 40px 40px;
-}
-
-.talent-icon-img,
-.boss-icon,
-.raid-icon,
-.gear-icon,
-.rankings-gear-image {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-}
-
-/* Reduce layout shifts */
-.talent-row {
-  min-height: 72px; /* Prevent layout shift during loading */
-}
-
-.ranking-header {
-  min-height: 80px; /* Consistent height */
-}
-
-/* Optimize scrolling performance */
-.talent-sidebar {
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-color) var(--secondary-bg);
-  contain: layout style paint;
-}
-
-.talent-sidebar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.talent-sidebar::-webkit-scrollbar-thumb {
-  background: var(--accent-color);
-  border-radius: 3px;
-}
-
-/* Optimize text rendering */
-.name-wrapper,
-.info-label,
-.info-value,
-.gear-name {
-  text-rendering: optimizeSpeed;
-}
-
-/* Prevent unnecessary reflows on hover */
-.expand-icon {
-  display: inline-block;
-  width: 16px;
-  text-align: center;
-}
-
-/* Optimize dropdown placeholder */
-.dropdown-placeholder {
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  contain: layout style paint;
-}
-
-/* Performance hints for critical elements */
-.main-container {
-  contain: layout style;
-}
-
-.sidebar,
-.content-area,
-.talent-sidebar {
-  contain: layout style paint;
-}
-
-/* Optimize for touch interactions */
-@media (hover: none) {
-  .rank-entry:hover,
-  .talent-link:hover .talent-icon-img,
-  .gear-item:hover,
-  .sidebar:hover,
-  .content-area:hover,
-  .talent-sidebar:hover {
-    transform: none;
-  }
-  
-  /* Simplify animations on touch devices */
-  * {
-    transition-duration: 0.1s !important;
-  }
-}
-
-/* Reduce motion for accessibility and performance */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-    transform: none !important;
-  }
-}
-
-/* Optimize for low-end devices */
-@media (max-width: 768px) {
-  /* Reduce visual complexity on mobile */
-  .rank-entry,
-  .sidebar,
-  .content-area,
-  .talent-sidebar {
-    backdrop-filter: none;
-    background: var(--secondary-bg);
-  }
-  
-  /* Simplify shadows on mobile */
-  .rank-entry,
-  .gear-item,
-  .info-section {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  /* Disable hover effects on mobile */
-  .rank-entry:hover,
-  .gear-item:hover,
-  .info-section:hover {
-    transform: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-}
-
-/* Critical path optimization */
-.rankings-critical {
-  critical-resource-hint: preload;
-}
-
-/* Optimize repaints for frequently changing elements */
-.last-updated,
-.loader,
-.talent-percent {
-  contain: layout style paint;
-}
-
-/* GPU acceleration for smooth animations */
-.talent-link.is-top .talent-icon-img {
-  transform: translateY(-3px) scale(1.08) translateZ(0);
-}
-
-/* Optimize table-like layouts */
-.info-grid {
-  contain: layout style;
-}
-
-.info-row {
-  contain: layout style paint;
-}
-
-/* Prevent font loading layout shifts */
-body {
-  font-display: swap;
-}
-
-/* Optimize for interaction responsiveness */
-button:active {
-  transform: scale(0.98) translateZ(0);
-  transition: transform 0.1s ease;
-}
-
-/* Lazy loading optimization */
-.gear-grid {
-  overflow: hidden;
-  contain: layout style paint;
-}
-
-.gear-item:not(:hover) {
-  contain: layout style paint;
 }
