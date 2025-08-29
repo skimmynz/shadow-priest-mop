@@ -10,7 +10,7 @@ const SPELL_IDS = {
   VAMPIRIC_TOUCH: 34914,
   SHADOW_WORD_PAIN: 589,
   MIND_FLAY: 15407,
-  SHADOW_ORBS: 95740, // MoP Classic aura id (not 77487)
+  SHADOW_ORBS: 95740, 
 };
 
 // Public v2 endpoints on main domain (recommended)
