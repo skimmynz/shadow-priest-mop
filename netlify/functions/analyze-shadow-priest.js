@@ -84,7 +84,6 @@ query GetReportInfo($code: String!) {
           type
           subType
           server
-          guid
         }
       }
     }
