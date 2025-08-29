@@ -1,6 +1,8 @@
 // netlify/functions/analyze-shadow-priest.js
-// Fixed version with proper OAuth2 authentication
 
+// -----------------------------
+// Constants / Spell IDs (MoP)
+// -----------------------------
 const SPELL_IDS = {
   DEVOURING_PLAGUE: 2944,
   MIND_BLAST: 8092,
@@ -8,69 +10,57 @@ const SPELL_IDS = {
   VAMPIRIC_TOUCH: 34914,
   SHADOW_WORD_PAIN: 589,
   MIND_FLAY: 15407,
-  SHADOW_ORBS: 77487,
+  SHADOW_ORBS: 95740, // MoP Classic aura id (not 77487)
 };
 
-const WCL_API_BASE = 'https://classic.warcraftlogs.com/api/v2/client';
-const WCL_OAUTH_BASE = 'https://classic.warcraftlogs.com/oauth/token';
+// Public v2 endpoints on main domain (recommended)
+// Docs: https://www.warcraftlogs.com/api/docs
+const WCL_API_BASE = 'https://www.warcraftlogs.com/api/v2/client';
+const WCL_OAUTH_BASE = 'https://www.warcraftlogs.com/oauth/token';
 
-// OAuth2 Authentication Manager
+// -----------------------------
+// OAuth2 Authentication
+// -----------------------------
 class WCLAuth {
   constructor(clientId, clientSecret) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.token = null;
-    this.tokenExpiry = null;
+    this.tokenExpiry = 0;
   }
 
   async getAccessToken() {
-    console.log('Getting OAuth2 access token...');
-    
-    // Return cached token if still valid
-    if (this.token && this.tokenExpiry > Date.now()) {
-      console.log('Using cached token');
-      return this.token;
+    if (this.token && this.tokenExpiry > Date.now()) return this.token;
+
+    const res = await fetch(WCL_OAUTH_BASE, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json',
+      },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: this.clientId,
+        client_secret: this.clientSecret,
+      }),
+    });
+
+    if (!res.ok) {
+      const t = await res.text();
+      throw new Error(`OAuth failed (${res.status}): ${t}`);
     }
-
-    try {
-      console.log('Requesting new OAuth2 token...');
-      
-      const response = await fetch(WCL_OAUTH_BASE, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Accept': 'application/json'
-        },
-        body: new URLSearchParams({
-          grant_type: 'client_credentials',
-          client_id: this.clientId,
-          client_secret: this.clientSecret
-        })
-      });
-
-      console.log('OAuth response status:', response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('OAuth error:', errorText);
-        throw new Error(`OAuth failed (${response.status}): Invalid client credentials`);
-      }
-
-      const data = await response.json();
-      console.log('OAuth2 token received successfully');
-      
-      this.token = data.access_token;
-      this.tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // 1 min buffer
-      
-      return this.token;
-    } catch (error) {
-      console.error('OAuth2 failed:', error);
-      throw new Error(`Authentication failed: ${error.message}`);
-    }
+    const data = await res.json();
+    this.token = data.access_token;
+    // subtract 60s buffer
+    this.tokenExpiry = Date.now() + data.expires_in * 1000 - 60_000;
+    return this.token;
   }
 }
 
+// -----------------------------
 // GraphQL Queries
+// -----------------------------
+// IMPORTANT: ReportFight does not have 'boss { }' field. Use encounterID, times, kill, etc.
 const GET_REPORT_INFO = `
 query GetReportInfo($code: String!) {
   reportData {
@@ -79,15 +69,11 @@ query GetReportInfo($code: String!) {
       title
       startTime
       endTime
-      fights {
+      fights(translate: true) {
         id
-        name
+        encounterID
         startTime
         endTime
-        boss {
-          id
-          name
-        }
         difficulty
         kill
       }
@@ -105,8 +91,9 @@ query GetReportInfo($code: String!) {
   }
 }`;
 
+// For events, the v2 API returns a paginator with JSON 'data' and 'nextPageTimestamp'.
 const GET_CAST_EVENTS = `
-query GetCastEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
+query GetCastEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!, $start: Float, $end: Float) {
   reportData {
     report(code: $code) {
       events(
@@ -114,25 +101,20 @@ query GetCastEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
         sourceID: $sourceID
         dataType: Casts
         abilityID: [${SPELL_IDS.DEVOURING_PLAGUE}, ${SPELL_IDS.MIND_BLAST}, ${SPELL_IDS.SHADOW_WORD_DEATH}]
+        startTime: $start
+        endTime: $end
+        limit: 10000
+        useAbilityIDs: true
       ) {
-        data {
-          ... on Cast {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-          }
-        }
+        data
+        nextPageTimestamp
       }
     }
   }
 }`;
 
 const GET_DOT_EVENTS = `
-query GetDoTEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
+query GetDoTEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!, $start: Float, $end: Float) {
   reportData {
     report(code: $code) {
       events(
@@ -140,46 +122,20 @@ query GetDoTEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
         sourceID: $sourceID
         dataType: Debuffs
         abilityID: [${SPELL_IDS.VAMPIRIC_TOUCH}, ${SPELL_IDS.SHADOW_WORD_PAIN}]
+        startTime: $start
+        endTime: $end
+        limit: 10000
+        useAbilityIDs: true
       ) {
-        data {
-          ... on ApplyDebuff {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-            targetID
-          }
-          ... on RefreshDebuff {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-            targetID
-          }
-          ... on RemoveDebuff {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-            targetID
-          }
-        }
+        data
+        nextPageTimestamp
       }
     }
   }
 }`;
 
 const GET_SHADOW_ORB_EVENTS = `
-query GetShadowOrbEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
+query GetShadowOrbEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!, $start: Float, $end: Float) {
   reportData {
     report(code: $code) {
       events(
@@ -187,97 +143,80 @@ query GetShadowOrbEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
         sourceID: $sourceID
         dataType: Buffs
         abilityID: [${SPELL_IDS.SHADOW_ORBS}]
+        startTime: $start
+        endTime: $end
+        limit: 10000
+        useAbilityIDs: true
       ) {
-        data {
-          ... on ApplyBuff {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-            stacks
-          }
-          ... on ApplyBuffStack {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-            stacks
-          }
-          ... on RemoveBuff {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-          }
-          ... on RemoveBuffStack {
-            timestamp
-            type
-            ability {
-              guid
-              name
-            }
-            sourceID
-            stacks
-          }
-        }
+        data
+        nextPageTimestamp
       }
     }
   }
 }`;
 
-// WarcraftLogs API Client
-class WarcraftLogsAPI {
-  constructor(auth) {
-    this.auth = auth;
+const GET_DAMAGE_EVENTS = `
+query GetDamageEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!, $start: Float, $end: Float) {
+  reportData {
+    report(code: $code) {
+      events(
+        fightIDs: $fightIDs
+        sourceID: $sourceID
+        dataType: DamageDone
+        abilityID: [${SPELL_IDS.MIND_BLAST}, ${SPELL_IDS.SHADOW_WORD_DEATH}]
+        startTime: $start
+        endTime: $end
+        limit: 10000
+        useAbilityIDs: true
+      ) {
+        data
+        nextPageTimestamp
+      }
+    }
   }
+}`;
+
+// -----------------------------
+// Warcraft Logs API Client
+// -----------------------------
+class WarcraftLogsAPI {
+  constructor(auth) { this.auth = auth; }
 
   async makeRequest(query, variables = {}) {
-    try {
-      console.log('Making WCL API request...');
-      
-      const token = await this.auth.getAccessToken();
-      
-      const response = await fetch(WCL_API_BASE, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          query,
-          variables
-        })
-      });
-
-      console.log('WCL API response status:', response.status);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('WCL API error response:', errorText);
-        throw new Error(`WCL API error (${response.status}): ${errorText}`);
-      }
-
-      const data = await response.json();
-      
-      if (data.errors) {
-        console.error('GraphQL errors:', data.errors);
-        throw new Error(`GraphQL error: ${data.errors[0].message}`);
-      }
-
-      return data.data;
-    } catch (error) {
-      console.error('WCL API Request failed:', error);
-      throw error;
+    const token = await this.auth.getAccessToken();
+    const res = await fetch(WCL_API_BASE, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+    if (!res.ok) {
+      const t = await res.text();
+      throw new Error(`WCL API error (${res.status}): ${t}`);
     }
+    const json = await res.json();
+    if (json.errors) throw new Error(`GraphQL error: ${json.errors[0].message}`);
+    return json.data;
+  }
+
+  // Generic paginator: keeps fetching pages until nextPageTimestamp is null.
+  async fetchAllEvents(query, variables) {
+    const all = [];
+    let next = variables.start ?? undefined;
+    let safety = 0;
+    do {
+      const pageVars = { ...variables, start: next };
+      const data = await this.makeRequest(query, pageVars);
+      const paginator = data?.reportData?.report?.events;
+      if (!paginator) break;
+      const items = Array.isArray(paginator.data) ? paginator.data : [];
+      all.push(...items);
+      next = paginator.nextPageTimestamp ?? null;
+      safety++;
+    } while (next && safety < 100); // guard
+    return all;
   }
 
   async getReportInfo(reportCode) {
@@ -285,57 +224,44 @@ class WarcraftLogsAPI {
   }
 
   async getShadowPriestData(reportCode, fightId, playerName) {
-    console.log(`Getting report info for ${reportCode}`);
-    const reportInfo = await this.getReportInfo(reportCode);
-    
-    if (!reportInfo.reportData || !reportInfo.reportData.report) {
-      throw new Error('Report not found or is private');
-    }
-    
-    const report = reportInfo.reportData.report;
-    
-    const player = report.masterData.actors.find(actor => 
-      actor.name.toLowerCase() === playerName.toLowerCase() && 
-      actor.type === 'Player'
+    const info = await this.getReportInfo(reportCode);
+    const report = info?.reportData?.report;
+    if (!report) throw new Error('Report not found or is private');
+
+    const player = report.masterData.actors.find(
+      a => a.type === 'Player' && a.name.toLowerCase() === playerName.toLowerCase()
     );
-    
     if (!player) {
-      const playerNames = report.masterData.actors
-        .filter(actor => actor.type === 'Player')
-        .map(actor => actor.name)
-        .join(', ');
-      throw new Error(`Player "${playerName}" not found. Available players: ${playerNames}`);
+      const names = report.masterData.actors.filter(a => a.type === 'Player').map(a => a.name).join(', ');
+      throw new Error(`Player "${playerName}" not found. Available players: ${names}`);
     }
 
     const fight = report.fights.find(f => f.id === fightId);
     if (!fight) {
-      const availableFights = report.fights.map(f => `${f.id}: ${f.name}`).join(', ');
-      throw new Error(`Fight ${fightId} not found. Available fights: ${availableFights}`);
+      const fightsList = report.fights.map(f => `${f.id}:${f.encounterID}`).join(', ');
+      throw new Error(`Fight ${fightId} not found. Available fights: ${fightsList}`);
     }
 
     const sourceID = player.id;
     const fightIDs = [fightId];
+    const start = fight.startTime;
+    const end = fight.endTime;
 
-    console.log(`Fetching events for ${playerName} (ID: ${sourceID}) in fight ${fightId}: ${fight.name}`);
-
-    const [castEvents, dotEvents, orbEvents] = await Promise.all([
-      this.makeRequest(GET_CAST_EVENTS, { code: reportCode, fightIDs, sourceID }),
-      this.makeRequest(GET_DOT_EVENTS, { code: reportCode, fightIDs, sourceID }),
-      this.makeRequest(GET_SHADOW_ORB_EVENTS, { code: reportCode, fightIDs, sourceID })
+    // Fetch and paginate all events
+    const [casts, debuffs, orbs, damage] = await Promise.all([
+      this.fetchAllEvents(GET_CAST_EVENTS, { code: reportCode, fightIDs, sourceID, start, end }),
+      this.fetchAllEvents(GET_DOT_EVENTS, { code: reportCode, fightIDs, sourceID, start, end }),
+      this.fetchAllEvents(GET_SHADOW_ORB_EVENTS, { code: reportCode, fightIDs, sourceID, start, end }),
+      this.fetchAllEvents(GET_DAMAGE_EVENTS, { code: reportCode, fightIDs, sourceID, start, end }),
     ]);
 
-    return {
-      report,
-      player,
-      castEvents: castEvents.reportData.report.events.data || [],
-      dotEvents: dotEvents.reportData.report.events.data || [],
-      orbEvents: orbEvents.reportData.report.events.data || [],
-      fight
-    };
+    return { report, player, fight, castEvents: casts, dotEvents: debuffs, orbEvents: orbs, dmgEvents: damage };
   }
 }
 
-// Shadow Priest Analyzer
+// -----------------------------
+// Analyzer
+// -----------------------------
 class ShadowPriestAnalyzer {
   constructor(data) {
     this.data = data;
@@ -344,194 +270,185 @@ class ShadowPriestAnalyzer {
     this.fightDuration = this.fightEnd - this.fightStart;
   }
 
+  abilityIdOf(e) {
+    // Events JSON may contain abilityGameID or ability.guid depending on options
+    return e.abilityGameID ?? e.ability?.guid ?? e.ability?.id ?? null;
+  }
+
   analyzeCasts() {
-    const casts = {
-      devouringPlague: 0,
-      mindBlast: 0,
-      shadowWordDeath: 0
-    };
-
-    this.data.castEvents.forEach(event => {
-      switch (event.ability.guid) {
-        case SPELL_IDS.DEVOURING_PLAGUE:
-          casts.devouringPlague++;
-          break;
-        case SPELL_IDS.MIND_BLAST:
-          casts.mindBlast++;
-          break;
-        case SPELL_IDS.SHADOW_WORD_DEATH:
-          casts.shadowWordDeath++;
-          break;
-      }
-    });
-
-    console.log('Cast analysis:', casts);
-    return casts;
+    const counts = { devouringPlague: 0, mindBlast: 0, shadowWordDeath: 0 };
+    for (const e of this.data.castEvents) {
+      if (e.type !== 'cast') continue;
+      const id = this.abilityIdOf(e);
+      if (id === SPELL_IDS.DEVOURING_PLAGUE) counts.devouringPlague++;
+      else if (id === SPELL_IDS.MIND_BLAST) counts.mindBlast++;
+      else if (id === SPELL_IDS.SHADOW_WORD_DEATH) counts.shadowWordDeath++;
+    }
+    return counts;
   }
 
   analyzeOrbGeneration() {
+    // Track stack deltas for the Shadow Orbs aura (95740)
     let totalOrbs = 0;
-    
-    this.data.orbEvents.forEach(event => {
-      if (event.type === 'applybuff' || event.type === 'applybuffstack') {
-        totalOrbs += 1;
-      }
-    });
+    let lastStacks = 0;
+    for (const e of this.data.orbEvents) {
+      if (!['applybuff', 'applybuffstack', 'removebuffstack', 'removebuff'].includes(e.type)) continue;
+      const id = this.abilityIdOf(e);
+      if (id !== SPELL_IDS.SHADOW_ORBS) continue;
 
-    console.log('Total orbs generated:', totalOrbs);
+      // Pull stacks from common fields that may appear in JSON:
+      const nextStacks =
+        e.stacks ?? e.stack ?? e.newStacks ?? e.new_stack ?? e.new ?? (e.type === 'removebuff' ? 0 : undefined);
+
+      if (typeof nextStacks === 'number') {
+        const delta = nextStacks - lastStacks;
+        if (delta > 0) totalOrbs += delta;
+        lastStacks = nextStacks;
+      } else {
+        // Fallback: if we don't get stack counts, count apply/stack as +1
+        if (e.type === 'applybuff' || e.type === 'applybuffstack') totalOrbs += 1;
+      }
+    }
     return totalOrbs;
   }
 
   calculatePossibleCasts() {
-    const fightDurationSeconds = this.fightDuration / 1000;
-    
-    const possible = {
-      mindBlast: Math.max(1, Math.floor(fightDurationSeconds / 8) + 1),
-      shadowWordDeath: Math.max(1, Math.floor(fightDurationSeconds / 9) + 1)
+    const secs = this.fightDuration / 1000;
+    // Simple baseline (you can refine with haste/procs later)
+    return {
+      mindBlast: Math.max(1, Math.floor(secs / 8) + 1),
+      shadowWordDeath: Math.max(1, Math.floor(secs / 9) + 1),
     };
-
-    console.log('Possible casts:', possible);
-    return possible;
   }
 
   analyzeDotUptime() {
-    const dots = {
-      vampiricTouch: this.analyzeSingleDot(SPELL_IDS.VAMPIRIC_TOUCH, 15000, 3000),
-      shadowWordPain: this.analyzeSingleDot(SPELL_IDS.SHADOW_WORD_PAIN, 18000, 3000)
-    };
-
-    console.log('DoT analysis:', dots);
-    return dots;
+    const vt = this.analyzeSingleDot(SPELL_IDS.VAMPIRIC_TOUCH, 15000, 3000); // adjust if you prefer 18s/3s
+    const swp = this.analyzeSingleDot(SPELL_IDS.SHADOW_WORD_PAIN, 18000, 3000);
+    return { vampiricTouch: vt, shadowWordPain: swp };
   }
 
   analyzeSingleDot(spellId, duration, tickInterval) {
-    const dotEvents = this.data.dotEvents.filter(e => e.ability.guid === spellId);
-    
-    if (dotEvents.length === 0) {
+    // Only events for this DoT
+    const events = this.data.dotEvents.filter(e => this.abilityIdOf(e) === spellId);
+
+    if (events.length === 0) {
       return { uptime: 0, clips: 0, ticksLost: 0 };
     }
 
-    const eventsByTarget = {};
-
-    dotEvents.forEach(event => {
-      const targetId = event.targetID;
-      if (!eventsByTarget[targetId]) {
-        eventsByTarget[targetId] = [];
-      }
-      eventsByTarget[targetId].push(event);
-    });
+    // Group by target
+    const byTarget = new Map();
+    for (const e of events) {
+      const tgt = e.targetID ?? e.target?.id ?? 'unknown';
+      if (!byTarget.has(tgt)) byTarget.set(tgt, []);
+      byTarget.get(tgt).push(e);
+    }
 
     let bestUptime = 0;
     let totalClips = 0;
     let totalTicksLost = 0;
 
-    Object.keys(eventsByTarget).forEach(targetId => {
-      const events = eventsByTarget[targetId].sort((a, b) => a.timestamp - b.timestamp);
+    for (const [_, evs] of byTarget) {
+      evs.sort((a, b) => a.timestamp - b.timestamp);
+
       let activeStart = null;
       let targetUptime = 0;
-      let targetClips = 0;
-      let targetTicksLost = 0;
+      let clips = 0;
+      let ticksLost = 0;
 
-      events.forEach(event => {
-        switch (event.type) {
+      for (const e of evs) {
+        switch (e.type) {
           case 'applydebuff':
-            activeStart = event.timestamp;
+            activeStart = e.timestamp;
             break;
-            
           case 'refreshdebuff':
             if (activeStart) {
-              const timeActive = event.timestamp - activeStart;
-              const remainingTime = duration - timeActive;
-              
-              if (remainingTime > tickInterval * 1.5) {
-                targetClips++;
-                targetTicksLost += Math.floor(remainingTime / tickInterval);
+              const timeActive = e.timestamp - activeStart;
+              const remaining = duration - timeActive;
+              if (remaining > tickInterval * 1.5) {
+                clips += 1;
+                ticksLost += Math.floor(remaining / tickInterval);
               }
-              
               targetUptime += timeActive;
-              activeStart = event.timestamp;
+              activeStart = e.timestamp;
             }
             break;
-            
           case 'removedebuff':
             if (activeStart) {
-              targetUptime += event.timestamp - activeStart;
+              targetUptime += e.timestamp - activeStart;
               activeStart = null;
             }
             break;
         }
-      });
+      }
 
       if (activeStart) {
         const endTime = Math.min(this.fightEnd, activeStart + duration);
         targetUptime += endTime - activeStart;
       }
 
-      const uptimePercent = (targetUptime / this.fightDuration) * 100;
-      bestUptime = Math.max(bestUptime, uptimePercent);
-      totalClips += targetClips;
-      totalTicksLost += targetTicksLost;
-    });
+      const pct = (targetUptime / this.fightDuration) * 100;
+      bestUptime = Math.max(bestUptime, pct);
+      totalClips += clips;
+      totalTicksLost += ticksLost;
+    }
 
     return {
       uptime: Math.min(100, bestUptime),
       clips: totalClips,
-      ticksLost: totalTicksLost
+      ticksLost: totalTicksLost,
     };
   }
 
   analyze() {
-    console.log('Starting Shadow Priest analysis...');
-    
     const casts = this.analyzeCasts();
     const orbs = this.analyzeOrbGeneration();
-    const possibleCasts = this.calculatePossibleCasts();
+    const possible = this.calculatePossibleCasts();
     const dots = this.analyzeDotUptime();
 
-    const results = {
-      devouringPlague: {
-        casts: casts.devouringPlague,
-        orbs: orbs
-      },
+    return {
+      devouringPlague: { casts: casts.devouringPlague, orbs },
       mindBlast: {
         casts: casts.mindBlast,
-        possible: possibleCasts.mindBlast,
-        efficiency: parseFloat(((casts.mindBlast / possibleCasts.mindBlast) * 100).toFixed(1))
+        possible: possible.mindBlast,
+        efficiency: Number(((casts.mindBlast / possible.mindBlast) * 100).toFixed(1)),
       },
       shadowWordDeath: {
         casts: casts.shadowWordDeath,
-        possible: possibleCasts.shadowWordDeath,
-        efficiency: parseFloat(((casts.shadowWordDeath / possibleCasts.shadowWordDeath) * 100).toFixed(1))
+        possible: possible.shadowWordDeath,
+        efficiency: Number(((casts.shadowWordDeath / possible.shadowWordDeath) * 100).toFixed(1)),
       },
       vampiricTouch: {
-        uptime: parseFloat(dots.vampiricTouch.uptime.toFixed(1)),
+        uptime: Number(dots.vampiricTouch.uptime.toFixed(1)),
         clips: dots.vampiricTouch.clips,
-        ticksLost: dots.vampiricTouch.ticksLost
+        ticksLost: dots.vampiricTouch.ticksLost,
       },
       shadowWordPain: {
-        uptime: parseFloat(dots.shadowWordPain.uptime.toFixed(1)),
+        uptime: Number(dots.shadowWordPain.uptime.toFixed(1)),
         clips: dots.shadowWordPain.clips,
-        ticksLost: dots.shadowWordPain.ticksLost
+        ticksLost: dots.shadowWordPain.ticksLost,
       },
-      fightDuration: this.fightDuration
+      fight: {
+        id: this.data.fight.id,
+        encounterID: this.data.fight.encounterID,
+        durationMs: this.fightDuration,
+        kill: this.data.fight.kill,
+        difficulty: this.data.fight.difficulty,
+      },
     };
-
-    console.log('Analysis complete:', results);
-    return results;
   }
 }
 
-// Utility functions
+// -----------------------------
+// Utilities
+// -----------------------------
 function extractReportCode(url) {
-  const match = url.match(/reports\/([A-Za-z0-9]+)/);
-  return match ? match[1] : null;
+  const m = url.match(/reports\/([A-Za-z0-9]+)/);
+  return m ? m[1] : null;
 }
-
 function extractFightId(url) {
-  const match = url.match(/fight=(\d+)/);
-  return match ? parseInt(match[1]) : 1;
+  const m = url.match(/fight=(\d+)/);
+  return m ? parseInt(m[1]) : 1;
 }
-
 function createResponse(statusCode, body) {
   return {
     statusCode,
@@ -539,132 +456,65 @@ function createResponse(statusCode, body) {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Content-Type',
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   };
 }
 
-// Main Netlify Function Handler
-exports.handler = async (event, context) => {
-  console.log('=== Shadow Priest Analyzer Function Started ===');
-  console.log('HTTP Method:', event.httpMethod);
-  
+// -----------------------------
+// Netlify Handler
+// -----------------------------
+exports.handler = async (event) => {
   try {
-    // Handle CORS preflight
-    if (event.httpMethod === 'OPTIONS') {
-      console.log('Handling CORS preflight');
-      return createResponse(200, { message: 'CORS OK' });
-    }
+    if (event.httpMethod === 'OPTIONS') return createResponse(200, { message: 'CORS OK' });
+    if (event.httpMethod !== 'POST') return createResponse(405, { success: false, error: 'Method not allowed' });
 
-    if (event.httpMethod !== 'POST') {
-      return createResponse(405, { 
-        success: false, 
-        error: 'Method not allowed' 
-      });
-    }
-
-    // Check environment variables
-    console.log('Checking environment variables...');
     const clientId = process.env.WCL_CLIENT_ID;
     const clientSecret = process.env.WCL_CLIENT_SECRET;
-    
-    // Fallback to direct API key if OAuth credentials not available
-    const directApiKey = process.env.WCL_API_KEY;
-    
     if (!clientId || !clientSecret) {
-      if (!directApiKey) {
-        console.error('No authentication credentials found');
-        return createResponse(500, {
-          success: false,
-          error: 'Server configuration error: Need either OAuth credentials (WCL_CLIENT_ID + WCL_CLIENT_SECRET) or direct API key (WCL_API_KEY)'
-        });
-      }
-      
-      console.log('Using direct API key authentication');
-      // Use direct API key (this might not work with v2 API)
       return createResponse(500, {
         success: false,
-        error: 'WarcraftLogs API v2 requires OAuth2. Please set WCL_CLIENT_ID and WCL_CLIENT_SECRET environment variables instead of WCL_API_KEY'
+        error: 'Server configuration error: set WCL_CLIENT_ID and WCL_CLIENT_SECRET',
       });
     }
 
-    console.log('Using OAuth2 authentication');
-    console.log('Client ID length:', clientId.length);
-
-    // Parse request body
-    let requestData;
+    let req;
     try {
-      requestData = JSON.parse(event.body || '{}');
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError);
-      return createResponse(400, {
-        success: false,
-        error: 'Invalid JSON in request body'
-      });
+      req = JSON.parse(event.body || '{}');
+    } catch {
+      return createResponse(400, { success: false, error: 'Invalid JSON in request body' });
     }
 
-    const { wclUrl, playerName } = requestData;
-    
+    const { wclUrl, playerName } = req;
     if (!wclUrl || !playerName) {
-      return createResponse(400, {
-        success: false,
-        error: 'Missing required parameters: wclUrl and playerName'
-      });
+      return createResponse(400, { success: false, error: 'Missing required parameters: wclUrl and playerName' });
     }
 
-    // Extract report details
     const reportCode = extractReportCode(wclUrl);
     const fightId = extractFightId(wclUrl);
-    
-    console.log('Report code:', reportCode);
-    console.log('Fight ID:', fightId);
-    console.log('Player name:', playerName);
-    
-    if (!reportCode) {
-      return createResponse(400, {
-        success: false,
-        error: 'Invalid WarcraftLogs URL format'
-      });
-    }
+    if (!reportCode) return createResponse(400, { success: false, error: 'Invalid WarcraftLogs URL format' });
 
-    // Initialize OAuth authentication
-    const auth = new WCLAuth(clientId, clientSecret);
-    const api = new WarcraftLogsAPI(auth);
-    
-    // Fetch data from WarcraftLogs
-    console.log('Fetching Shadow Priest data...');
+    const api = new WarcraftLogsAPI(new WCLAuth(clientId, clientSecret));
+
     const data = await api.getShadowPriestData(reportCode, fightId, playerName);
-    
-    // Analyze the data
-    console.log('Analyzing data...');
     const analyzer = new ShadowPriestAnalyzer(data);
     const results = analyzer.analyze();
-    
-    // Add metadata
-    results.metadata = {
-      reportCode,
-      fightId,
-      playerName: data.player.name,
-      fightName: data.fight.name,
-      bossName: data.fight.name, // Use fight name as boss name since boss field not available
-      kill: data.fight.kill,
-      analyzedAt: new Date().toISOString()
-    };
 
-    console.log('Analysis successful');
     return createResponse(200, {
       success: true,
-      data: results
+      data: {
+        ...results,
+        metadata: {
+          reportCode,
+          fightId,
+          encounterID: data.fight.encounterID,
+          playerName: data.player.name,
+          analyzedAt: new Date().toISOString(),
+        },
+      },
     });
-
-  } catch (error) {
-    console.error('Function handler error:', error);
-    
-    return createResponse(500, {
-      success: false,
-      error: error.message,
-      timestamp: new Date().toISOString()
-    });
+  } catch (err) {
+    return createResponse(500, { success: false, error: err.message, timestamp: new Date().toISOString() });
   }
 };
