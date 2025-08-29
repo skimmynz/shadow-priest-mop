@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Priest MoP Classic Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #9370db;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #b8b8d1;
+        }
+
+        .input-section {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #9370db;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            color: #e0e0e0;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="url"]:focus {
+            outline: none;
+            border-color: #9370db;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+        }
+
+        .analyze-btn {
+            background: linear-gradient(45deg, #9370db, #6a4c93);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+
+        .analyze-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+
+        .stat-card h3 {
+            color: #9370db;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-card .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            background: #9370db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .stat-details {
+            color: #b8b8d1;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .uptime-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .uptime-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff4757, #ffa726, #66bb6a);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
+
+        .warning {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            color: #ffcdd2;
+        }
+
+        .good {
+            background: rgba(102, 187, 106, 0.2);
+            border: 1px solid rgba(102, 187, 106, 0.5);
+            color: #c8e6c9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #9370db;
+            font-size: 1.2em;
+        }
+
+        .error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            color: #ffcdd2;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .info-box {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid rgba(33, 150, 243, 0.5);
+            color: #bbdefb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .demo-btn {
+            background: linear-gradient(45deg, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌙 Shadow Priest Analyzer</h1>
+            <p>MoP Classic Performance Analysis Tool</p>
+        </div>
+
+        <div class="input-section">
+            <div class="info-box">
+                📋 <strong>How to use:</strong> Go to WarcraftLogs, find your report, and copy the URL. Make sure to include the specific fight you want to analyze. The tool will fetch data using the WCL API and analyze your Shadow Priest performance.
+            </div>
+            
+            <div class="input-group">
+                <label for="wclUrl">WarcraftLogs Report URL:</label>
+                <input type="url" id="wclUrl" placeholder="https://classic.warcraftlogs.com/reports/ABC123DEF456#fight=1">
+                <button class="demo-btn" onclick="loadDemo()">Load Demo Data</button>
+            </div>
+            
+            <div class="input-group">
+                <label for="playerName">Character Name:</label>
+                <input type="text" id="playerName" placeholder="Enter your character name">
+            </div>
+            
+            <button class="analyze-btn" onclick="analyzeLog()">Analyze Performance</button>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div>🔄 Analyzing your Shadow Priest performance...</div>
+        </div>
+
+        <div id="error" class="error" style="display: none;"></div>
+
+        <div id="results" class="results">
+            <!-- Results will be populated here -->
+        </div>
+    </div>
+
+    <script>
+        // Demo data for testing
+        const demoData = {
+            devouringPlague: { casts: 42, orbs: 38 },
+            mindBlast: { casts: 89, possible: 95, efficiency: 93.7 },
+            shadowWordDeath: { casts: 23, possible: 28, efficiency: 82.1 },
+            vampiricTouch: { uptime: 94.2, clips: 3, ticksLost: 8 },
+            shadowWordPain: { uptime: 96.8, clips: 1, ticksLost: 2 },
+            fightDuration: 420000 // 7 minutes in ms
+        };
+
+        function loadDemo() {
+            document.getElementById('wclUrl').value = 'https://classic.warcraftlogs.com/reports/DEMO123456#fight=1';
+            document.getElementById('playerName').value = 'DemoShadowPriest';
+        }
+
+        async function analyzeLog() {
+            const url = document.getElementById('wclUrl').value;
+            const playerName = document.getElementById('playerName').value;
+
+            if (!url || !playerName) {
+                showError('Please enter both WarcraftLogs URL and character name');
+                return;
+            }
+
+            showLoading();
+            hideError();
+            hideResults();
+
+            try {
+                // Check if it's demo data
+                if (url.includes('DEMO')) {
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    displayResults(demoData);
+                    return;
+                }
+
+                // Call the Netlify function for real analysis
+                const response = await fetch('/.netlify/functions/analyze-shadow-priest', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        wclUrl: url,
+                        playerName: playerName
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || `Server error: ${response.status}`);
+                }
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Analysis failed');
+                }
+
+                // Display the results
+                displayResults(result.data);
+                
+            } catch (error) {
+                console.error('Analysis error:', error);
+                showError(`Analysis failed: ${error.message}`);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function displayResults(data) {
+            const resultsContainer = document.getElementById('results');
+            
+            // Add metadata card if available
+            const metadataCard = data.metadata ? `
+                <div class="stat-card">
+                    <h3><span class="icon">📋</span>Fight Information</h3>
+                    <div class="stat-details">
+                        <strong>${data.metadata.fightName || 'Fight ' + data.metadata.fightId}</strong><br>
+                        ${data.metadata.bossName ? `Boss: ${data.metadata.bossName}<br>` : ''}
+                        Duration: ${Math.floor(data.fightDuration / 60000)}m ${Math.floor((data.fightDuration % 60000) / 1000)}s<br>
+                        ${data.metadata.kill !== undefined ? `Result: ${data.metadata.kill ? '✅ Kill' : '❌ Wipe'}<br>` : ''}
+                        <small>Report: ${data.metadata.reportCode} | Fight: ${data.metadata.fightId}</small>
+                    </div>
+                </div>
+            ` : '';
+            
+            resultsContainer.innerHTML = metadataCard + `
+                <div class="stat-card">
+                    <h3><span class="icon">🦠</span>Devouring Plague</h3>
+                    <div class="stat-value">${data.devouringPlague.casts}</div>
+                    <div class="stat-details">
+                        Total casts<br>
+                        Shadow Orbs generated: ${data.devouringPlague.orbs}<br>
+                        Orb efficiency: ${data.devouringPlague.casts > 0 ? ((data.devouringPlague.orbs / data.devouringPlague.casts) * 100).toFixed(1) : 0}%
+                    </div>
+                </div>
+
+                <div class="stat-card ${data.mindBlast.efficiency > 90 ? 'good' : data.mindBlast.efficiency < 80 ? 'warning' : ''}">
+                    <h3><span class="icon">🧠</span>Mind Blast</h3>
+                    <div class="stat-value">${data.mindBlast.casts}/${data.mindBlast.possible}</div>
+                    <div class="stat-details">
+                        Efficiency: ${data.mindBlast.efficiency}%<br>
+                        Missed casts: ${data.mindBlast.possible - data.mindBlast.casts}<br>
+                        ${data.mindBlast.efficiency > 90 ? '✅ Excellent usage!' : data.mindBlast.efficiency > 80 ? '⚠️ Room for improvement' : '❌ Needs attention'}
+                    </div>
+                </div>
+
+                <div class="stat-card ${data.shadowWordDeath.efficiency > 85 ? 'good' : data.shadowWordDeath.efficiency < 70 ? 'warning' : ''}">
+                    <h3><span class="icon">💀</span>Shadow Word: Death</h3>
+                    <div class="stat-value">${data.shadowWordDeath.casts}/${data.shadowWordDeath.possible}</div>
+                    <div class="stat-details">
+                        Efficiency: ${data.shadowWordDeath.efficiency}%<br>
+                        Missed casts: ${data.shadowWordDeath.possible - data.shadowWordDeath.casts}<br>
+                        ${data.shadowWordDeath.efficiency > 85 ? '✅ Good usage' : '⚠️ Consider using more on execute phases'}
+                    </div>
+                </div>
+
+                <div class="stat-card ${data.vampiricTouch.uptime > 95 ? 'good' : data.vampiricTouch.uptime < 85 ? 'warning' : ''}">
+                    <h3><span class="icon">🩸</span>Vampiric Touch</h3>
+                    <div class="stat-value">${data.vampiricTouch.uptime}%</div>
+                    <div class="uptime-bar">
+                        <div class="uptime-fill" style="width: ${data.vampiricTouch.uptime}%"></div>
+                    </div>
+                    <div class="stat-details">
+                        Uptime<br>
+                        Clips: ${data.vampiricTouch.clips}<br>
+                        Ticks lost: ${data.vampiricTouch.ticksLost}<br>
+                        ${data.vampiricTouch.clips > 5 ? '⚠️ High clip count - be careful with refreshes' : '✅ Good DoT management'}
+                    </div>
+                </div>
+
+                <div class="stat-card ${data.shadowWordPain.uptime > 95 ? 'good' : data.shadowWordPain.uptime < 85 ? 'warning' : ''}">
+                    <h3><span class="icon">😵</span>Shadow Word: Pain</h3>
+                    <div class="stat-value">${data.shadowWordPain.uptime}%</div>
+                    <div class="uptime-bar">
+                        <div class="uptime-fill" style="width: ${data.shadowWordPain.uptime}%"></div>
+                    </div>
+                    <div class="stat-details">
+                        Uptime<br>
+                        Clips: ${data.shadowWordPain.clips}<br>
+                        Ticks lost: ${data.shadowWordPain.ticksLost}<br>
+                        ${data.shadowWordPain.clips > 3 ? '⚠️ Some clipping detected' : '✅ Excellent DoT management'}
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <h3><span class="icon">📊</span>Overall Analysis</h3>
+                    <div class="stat-value">${calculateOverallScore(data)}%</div>
+                    <div class="stat-details">
+                        Performance Score<br>
+                        ${getPerformanceFeedback(calculateOverallScore(data))}<br>
+                        ${data.metadata ? `<small>Analyzed: ${new Date(data.metadata.analyzedAt).toLocaleString()}</small>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            showResults();
+        }
+
+        function calculateOverallScore(data) {
+            // Weighted scoring system
+            const scores = [
+                data.mindBlast.efficiency * 0.25,
+                data.shadowWordDeath.efficiency * 0.15,
+                data.vampiricTouch.uptime * 0.3,
+                data.shadowWordPain.uptime * 0.3
+            ];
+            
+            return Math.round(scores.reduce((a, b) => a + b, 0));
+        }
+
+        function getPerformanceFeedback(score) {
+            if (score >= 95) return '🏆 Outstanding performance!';
+            if (score >= 90) return '✨ Excellent play!';
+            if (score >= 80) return '👍 Good performance!';
+            if (score >= 70) return '📈 Room for improvement';
+            return '📚 Consider reviewing rotation guides';
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function showResults() {
+            document.getElementById('results').style.display = 'grid';
+        }
+
+        function hideResults() {
+            document.getElementById('results').style.display = 'none';
+        }
+
+        // Real WCL API integration would go here
+        async function fetchWCLData(reportId, fightId, playerName) {
+            // This would require:
+            // 1. WCL API key
+            // 2. GraphQL queries for:
+            //    - Cast events for DP, MB, SWD
+            //    - Buff/debuff events for VT, SWP
+            //    - Damage events to calculate orb generation
+            //    - Aura applications/removals for clip detection
+            
+            throw new Error('WCL API integration needed');
+        }
+    </script>
+</body>
+</html>
