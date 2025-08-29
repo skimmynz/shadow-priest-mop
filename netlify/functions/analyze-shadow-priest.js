@@ -1,5 +1,5 @@
 // netlify/functions/analyze-shadow-priest.js
-// Clean version with single class declarations and WCL_API_KEY
+// Fixed version with proper OAuth2 authentication
 
 const SPELL_IDS = {
   DEVOURING_PLAGUE: 2944,
@@ -12,6 +12,63 @@ const SPELL_IDS = {
 };
 
 const WCL_API_BASE = 'https://classic.warcraftlogs.com/api/v2/client';
+const WCL_OAUTH_BASE = 'https://classic.warcraftlogs.com/oauth/token';
+
+// OAuth2 Authentication Manager
+class WCLAuth {
+  constructor(clientId, clientSecret) {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
+    this.token = null;
+    this.tokenExpiry = null;
+  }
+
+  async getAccessToken() {
+    console.log('Getting OAuth2 access token...');
+    
+    // Return cached token if still valid
+    if (this.token && this.tokenExpiry > Date.now()) {
+      console.log('Using cached token');
+      return this.token;
+    }
+
+    try {
+      console.log('Requesting new OAuth2 token...');
+      
+      const response = await fetch(WCL_OAUTH_BASE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: new URLSearchParams({
+          grant_type: 'client_credentials',
+          client_id: this.clientId,
+          client_secret: this.clientSecret
+        })
+      });
+
+      console.log('OAuth response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('OAuth error:', errorText);
+        throw new Error(`OAuth failed (${response.status}): Invalid client credentials`);
+      }
+
+      const data = await response.json();
+      console.log('OAuth2 token received successfully');
+      
+      this.token = data.access_token;
+      this.tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // 1 min buffer
+      
+      return this.token;
+    } catch (error) {
+      console.error('OAuth2 failed:', error);
+      throw new Error(`Authentication failed: ${error.message}`);
+    }
+  }
+}
 
 // GraphQL Queries
 const GET_REPORT_INFO = `
@@ -179,18 +236,20 @@ query GetShadowOrbEvents($code: String!, $fightIDs: [Int]!, $sourceID: Int!) {
 
 // WarcraftLogs API Client
 class WarcraftLogsAPI {
-  constructor(apiKey) {
-    this.apiKey = apiKey;
+  constructor(auth) {
+    this.auth = auth;
   }
 
   async makeRequest(query, variables = {}) {
     try {
       console.log('Making WCL API request...');
       
+      const token = await this.auth.getAccessToken();
+      
       const response = await fetch(WCL_API_BASE, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -505,17 +564,33 @@ exports.handler = async (event, context) => {
       });
     }
 
-    // Check API key
-    const apiKey = process.env.WCL_API_KEY;
-    if (!apiKey) {
-      console.error('WCL_API_KEY environment variable not set');
+    // Check environment variables
+    console.log('Checking environment variables...');
+    const clientId = process.env.WCL_CLIENT_ID;
+    const clientSecret = process.env.WCL_CLIENT_SECRET;
+    
+    // Fallback to direct API key if OAuth credentials not available
+    const directApiKey = process.env.WCL_API_KEY;
+    
+    if (!clientId || !clientSecret) {
+      if (!directApiKey) {
+        console.error('No authentication credentials found');
+        return createResponse(500, {
+          success: false,
+          error: 'Server configuration error: Need either OAuth credentials (WCL_CLIENT_ID + WCL_CLIENT_SECRET) or direct API key (WCL_API_KEY)'
+        });
+      }
+      
+      console.log('Using direct API key authentication');
+      // Use direct API key (this might not work with v2 API)
       return createResponse(500, {
         success: false,
-        error: 'Server configuration error: Missing WarcraftLogs API key'
+        error: 'WarcraftLogs API v2 requires OAuth2. Please set WCL_CLIENT_ID and WCL_CLIENT_SECRET environment variables instead of WCL_API_KEY'
       });
     }
 
-    console.log('API key found, length:', apiKey.length);
+    console.log('Using OAuth2 authentication');
+    console.log('Client ID length:', clientId.length);
 
     // Parse request body
     let requestData;
@@ -553,8 +628,9 @@ exports.handler = async (event, context) => {
       });
     }
 
-    // Initialize API client
-    const api = new WarcraftLogsAPI(apiKey);
+    // Initialize OAuth authentication
+    const auth = new WCLAuth(clientId, clientSecret);
+    const api = new WarcraftLogsAPI(auth);
     
     // Fetch data from WarcraftLogs
     console.log('Fetching Shadow Priest data...');
