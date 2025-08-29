@@ -647,7 +647,7 @@ exports.handler = async (event, context) => {
       fightId,
       playerName: data.player.name,
       fightName: data.fight.name,
-      bossName: data.fight.boss?.name || 'Unknown',
+      bossName: data.fight.name, // Use fight name as boss name since boss field not available
       kill: data.fight.kill,
       analyzedAt: new Date().toISOString()
     };
