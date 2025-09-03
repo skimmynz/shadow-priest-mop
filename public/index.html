@@ -4,266 +4,276 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shadow Priest Cast Analyzer</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .icon-alert::before { content: "⚠️"; }
+        .icon-search::before { content: "🔍"; }
+        .icon-loader::before { content: "⏳"; }
+        .icon-chart::before { content: "📊"; }
+        .icon-arrow-left::before { content: "←"; }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
-    
-    <script type="text/babel">
-        const { useState } = React;
-        const { AlertCircle, Search, Loader2, BarChart3, ArrowLeft } = lucideReact;
+    <div id="root">
+        <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Navigation back to main site -->
+                <div class="mb-6">
+                    <a href="/" class="inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 transition-colors">
+                        <span class="icon-arrow-left"></span>
+                        Back to Shadow Priest Rankings
+                    </a>
+                </div>
 
-        const CastAnalyzer = () => {
-            const [url, setUrl] = useState('');
-            const [loading, setLoading] = useState(false);
-            const [results, setResults] = useState(null);
-            const [error, setError] = useState('');
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20">
+                    <div class="text-center mb-8">
+                        <div class="flex items-center justify-center gap-3 mb-4">
+                            <span class="icon-chart text-2xl"></span>
+                            <h1 class="text-3xl font-bold text-white">Shadow Priest Cast Analyzer</h1>
+                        </div>
+                        <p class="text-blue-200">Track Shadow Priest spell casts from WarcraftLogs reports</p>
+                    </div>
 
-            // Shadow Priest spells to track
-            const shadowPriestSpells = {
-                34914: 'Vampiric Touch',
-                2944: 'Devouring Plague', 
-                589: 'Shadow Word: Pain',
-                8092: 'Mind Blast',
-                15407: 'Mind Flay',
-                32379: 'Shadow Word: Death',
-                73510: 'Mind Spike'
-            };
-
-            const parseUrl = (url) => {
-                try {
-                    const urlObj = new URL(url);
-                    const pathParts = urlObj.pathname.split('/');
-                    const reportId = pathParts[pathParts.length - 1];
-                    
-                    const params = new URLSearchParams(urlObj.search);
-                    const fight = params.get('fight');
-                    const source = params.get('source');
-                    
-                    return { reportId, fight, source };
-                } catch (err) {
-                    throw new Error('Invalid URL format');
-                }
-            };
-
-            const analyzeLog = async () => {
-                if (!url.trim()) {
-                    setError('Please enter a WarcraftLogs URL');
-                    return;
-                }
-
-                setLoading(true);
-                setError('');
-                setResults(null);
-
-                try {
-                    const { reportId, fight, source } = parseUrl(url);
-                    
-                    if (!reportId || !fight) {
-                        throw new Error('URL must include report ID and fight number');
-                    }
-
-                    const response = await fetch('/.netlify/functions/analyze-warcraft-logs', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            reportId,
-                            fight,
-                            source
-                        })
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(errorData.error || `Request failed: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    
-                    if (data.type === 'players') {
-                        setResults({
-                            type: 'players',
-                            fight: data.fight,
-                            players: data.players
-                        });
-                    } else {
-                        const castCounts = {};
-                        let totalTrackedCasts = 0;
-                        
-                        data.events.forEach(event => {
-                            if (event.type === 'cast' && shadowPriestSpells[event.abilityGameID]) {
-                                const spellName = shadowPriestSpells[event.abilityGameID];
-                                castCounts[spellName] = (castCounts[spellName] || 0) + 1;
-                                totalTrackedCasts++;
-                            }
-                        });
-
-                        const sortedCasts = Object.entries(castCounts)
-                            .sort(([,a], [,b]) => b - a)
-                            .map(([spell, count]) => ({ spell, count }));
-
-                        setResults({
-                            type: 'casts',
-                            player: data.player,
-                            fight: data.fight,
-                            casts: sortedCasts,
-                            totalTrackedCasts: totalTrackedCasts,
-                            totalAllCasts: data.totalCasts
-                        });
-                    }
-
-                } catch (err) {
-                    setError(err.message);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6">
-                    <div className="max-w-4xl mx-auto">
-                        {/* Navigation back to main site */}
-                        <div className="mb-6">
-                            <a 
-                                href="/" 
-                                className="inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 transition-colors"
-                            >
-                                <ArrowLeft size={16} />
-                                Back to Shadow Priest Rankings
-                            </a>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-blue-200 mb-2">
+                                WarcraftLogs Fight URL
+                            </label>
+                            <input
+                                type="url"
+                                id="urlInput"
+                                placeholder="https://classic.warcraftlogs.com/reports/H3hZVgNBtyXPRbmQ?fight=18&type=damage-done&source=11"
+                                class="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50"
+                            />
+                            <p class="text-xs text-blue-300 mt-1">
+                                Include fight number. Source ID is optional - if not provided, available Priests will be shown.
+                            </p>
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20">
-                            <div className="text-center mb-8">
-                                <div className="flex items-center justify-center gap-3 mb-4">
-                                    <BarChart3 size={32} className="text-blue-300" />
-                                    <h1 className="text-3xl font-bold text-white">Shadow Priest Cast Analyzer</h1>
-                                </div>
-                                <p className="text-blue-200">Track Shadow Priest spell casts from WarcraftLogs reports</p>
-                            </div>
+                        <button
+                            id="analyzeBtn"
+                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                        >
+                            <span class="icon-search"></span>
+                            Analyze Shadow Priest Casts
+                        </button>
+                    </div>
 
-                            <div className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-blue-200 mb-2">
-                                        WarcraftLogs Fight URL
-                                    </label>
-                                    <input
-                                        type="url"
-                                        value={url}
-                                        onChange={(e) => setUrl(e.target.value)}
-                                        placeholder="https://classic.warcraftlogs.com/reports/H3hZVgNBtyXPRbmQ?fight=18&type=damage-done&source=11"
-                                        className="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50"
-                                    />
-                                    <p className="text-xs text-blue-300 mt-1">
-                                        Include fight number. Source ID is optional - if not provided, available Priests will be shown.
-                                    </p>
-                                </div>
-
-                                <button
-                                    onClick={analyzeLog}
-                                    disabled={loading}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <Loader2 size={20} className="animate-spin" />
-                                            Analyzing...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Search size={20} />
-                                            Analyze Shadow Priest Casts
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-
-                            {error && (
-                                <div className="mt-6 bg-red-500/20 border border-red-500/50 rounded-lg p-4">
-                                    <div className="flex items-center gap-2 text-red-200">
-                                        <AlertCircle size={20} />
-                                        <span className="font-medium">Error:</span>
-                                    </div>
-                                    <p className="text-red-100 mt-1">{error}</p>
-                                </div>
-                            )}
-
-                            {results && (
-                                <div className="mt-8 bg-white/5 rounded-xl p-6 border border-white/10">
-                                    {results.type === 'players' ? (
-                                        <div>
-                                            <h2 className="text-xl font-semibold text-white mb-4">
-                                                Available Priests in Fight: {results.fight.name}
-                                            </h2>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                                                {results.players.map((player) => (
-                                                    <div key={player.id} className="bg-white/10 rounded-lg p-3">
-                                                        <div className="text-white font-medium">{player.name}</div>
-                                                        <div className="text-sm text-blue-200">ID: {player.id}</div>
-                                                        <div className="text-sm text-blue-300">{player.subType}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <p className="text-blue-200 mt-4 text-sm">
-                                                Add &source=ID to your URL to analyze a specific priest's casts
-                                            </p>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <div className="mb-6">
-                                                <h2 className="text-xl font-semibold text-white mb-2">
-                                                    Shadow Priest Spell Analysis
-                                                </h2>
-                                                <div className="text-blue-200 space-y-1">
-                                                    <p><strong>Player:</strong> {results.player?.name || 'Unknown'}</p>
-                                                    <p><strong>Fight:</strong> {results.fight.name}</p>
-                                                    <p><strong>Tracked Shadow Priest Casts:</strong> {results.totalTrackedCasts}</p>
-                                                    <p><strong>Total Cast Events:</strong> {results.totalAllCasts}</p>
-                                                </div>
-                                            </div>
-
-                                            <div className="space-y-3">
-                                                <h3 className="text-lg font-medium text-white mb-4">Shadow Priest Spell Casts</h3>
-                                                {results.casts.length > 0 ? (
-                                                    results.casts.map((cast, index) => (
-                                                        <div key={index} className="bg-gradient-to-r from-purple-800/30 to-blue-800/30 rounded-lg p-4 flex justify-between items-center border border-purple-500/20">
-                                                            <span className="text-white font-medium">{cast.spell}</span>
-                                                            <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                                                                {cast.count} casts
-                                                            </span>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div className="text-center py-8">
-                                                        <p className="text-blue-200 mb-2">No Shadow Priest spells found for this player in this fight.</p>
-                                                        <p className="text-sm text-blue-300">
-                                                            Tracked spells: Vampiric Touch, Devouring Plague, Shadow Word: Pain, Mind Blast, Mind Flay, Shadow Word: Death, Mind Spike
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-
-                            <div className="mt-8 text-center text-blue-300 text-sm">
-                                <p>This tool analyzes WarcraftLogs reports to track Shadow Priest spell usage.</p>
-                                <p className="mt-1">Only Priest players are shown when no specific source is provided.</p>
-                            </div>
+                    <!-- Error display -->
+                    <div id="error" class="mt-6 bg-red-500/20 border border-red-500/50 rounded-lg p-4 hidden">
+                        <div class="flex items-center gap-2 text-red-200">
+                            <span class="icon-alert"></span>
+                            <span class="font-medium">Error:</span>
                         </div>
+                        <p class="text-red-100 mt-1" id="errorMessage"></p>
+                    </div>
+
+                    <!-- Results display -->
+                    <div id="results" class="mt-8 bg-white/5 rounded-xl p-6 border border-white/10 hidden">
+                        <div id="resultsContent"></div>
+                    </div>
+
+                    <div class="mt-8 text-center text-blue-300 text-sm">
+                        <p>This tool analyzes WarcraftLogs reports to track Shadow Priest spell usage.</p>
+                        <p class="mt-1">Only Priest players are shown when no specific source is provided.</p>
                     </div>
                 </div>
-            );
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Shadow Priest spells to track
+        const shadowPriestSpells = {
+            34914: 'Vampiric Touch',
+            2944: 'Devouring Plague',
+            589: 'Shadow Word: Pain',
+            8092: 'Mind Blast',
+            15407: 'Mind Flay',
+            32379: 'Shadow Word: Death',
+            73510: 'Mind Spike'
         };
 
-        ReactDOM.render(<CastAnalyzer />, document.getElementById('root'));
+        // Parse WarcraftLogs URL
+        function parseUrl(url) {
+            try {
+                const urlObj = new URL(url);
+                const pathParts = urlObj.pathname.split('/');
+                const reportId = pathParts[pathParts.length - 1];
+                
+                const params = new URLSearchParams(urlObj.search);
+                const fight = params.get('fight');
+                const source = params.get('source');
+                
+                return { reportId, fight, source };
+            } catch (err) {
+                throw new Error('Invalid URL format');
+            }
+        }
+
+        // Show/hide elements
+        function showError(message) {
+            document.getElementById('error').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('results').classList.add('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('error').classList.add('hidden');
+        }
+
+        function showResults(content) {
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('resultsContent').innerHTML = content;
+        }
+
+        function setLoading(loading) {
+            const btn = document.getElementById('analyzeBtn');
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="icon-loader spinner"></span>Analyzing...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<span class="icon-search"></span>Analyze Shadow Priest Casts';
+            }
+        }
+
+        // Main analyze function
+        async function analyzeLog() {
+            const url = document.getElementById('urlInput').value.trim();
+            
+            if (!url) {
+                showError('Please enter a WarcraftLogs URL');
+                return;
+            }
+
+            setLoading(true);
+            hideError();
+
+            try {
+                const { reportId, fight, source } = parseUrl(url);
+                
+                if (!reportId || !fight) {
+                    throw new Error('URL must include report ID and fight number');
+                }
+
+                const response = await fetch('/.netlify/functions/analyze-warcraft-logs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        reportId,
+                        fight,
+                        source
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.type === 'players') {
+                    // Show available players
+                    const playersHtml = `
+                        <h2 class="text-xl font-semibold text-white mb-4">
+                            Available Priests in Fight: ${data.fight.name}
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            ${data.players.map(player => `
+                                <div class="bg-white/10 rounded-lg p-3">
+                                    <div class="text-white font-medium">${player.name}</div>
+                                    <div class="text-sm text-blue-200">ID: ${player.id}</div>
+                                    <div class="text-sm text-blue-300">${player.subType}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <p class="text-blue-200 mt-4 text-sm">
+                            Add &source=ID to your URL to analyze a specific priest's casts
+                        </p>
+                    `;
+                    showResults(playersHtml);
+                } else {
+                    // Process cast data
+                    const castCounts = {};
+                    let totalTrackedCasts = 0;
+                    
+                    data.events.forEach(event => {
+                        if (event.type === 'cast' && shadowPriestSpells[event.abilityGameID]) {
+                            const spellName = shadowPriestSpells[event.abilityGameID];
+                            castCounts[spellName] = (castCounts[spellName] || 0) + 1;
+                            totalTrackedCasts++;
+                        }
+                    });
+
+                    const sortedCasts = Object.entries(castCounts)
+                        .sort(([,a], [,b]) => b - a);
+
+                    const castsHtml = `
+                        <div class="mb-6">
+                            <h2 class="text-xl font-semibold text-white mb-2">Shadow Priest Spell Analysis</h2>
+                            <div class="text-blue-200 space-y-1">
+                                <p><strong>Player:</strong> ${data.player?.name || 'Unknown'}</p>
+                                <p><strong>Fight:</strong> ${data.fight.name}</p>
+                                <p><strong>Tracked Shadow Priest Casts:</strong> ${totalTrackedCasts}</p>
+                                <p><strong>Total Cast Events:</strong> ${data.totalCasts}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-medium text-white mb-4">Shadow Priest Spell Casts</h3>
+                            ${sortedCasts.length > 0 ? 
+                                sortedCasts.map(([spell, count]) => `
+                                    <div class="bg-gradient-to-r from-purple-800/30 to-blue-800/30 rounded-lg p-4 flex justify-between items-center border border-purple-500/20">
+                                        <span class="text-white font-medium">${spell}</span>
+                                        <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                            ${count} casts
+                                        </span>
+                                    </div>
+                                `).join('') :
+                                `<div class="text-center py-8">
+                                    <p class="text-blue-200 mb-2">No Shadow Priest spells found for this player in this fight.</p>
+                                    <p class="text-sm text-blue-300">
+                                        Tracked spells: ${Object.values(shadowPriestSpells).join(', ')}
+                                    </p>
+                                </div>`
+                            }
+                        </div>
+                        <div class="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-500/20">
+                            <h4 class="text-sm font-medium text-blue-200 mb-2">Tracked Shadow Priest Spells:</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-xs text-blue-300">
+                                ${Object.values(shadowPriestSpells).map(spell => `<span>• ${spell}</span>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                    showResults(castsHtml);
+                }
+
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('analyzeBtn').addEventListener('click', analyzeLog);
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeLog();
+            }
+        });
+
+        console.log('Shadow Priest Cast Analyzer loaded successfully!');
     </script>
 </body>
 </html>
