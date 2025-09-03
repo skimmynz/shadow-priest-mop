@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wrath Shadow Priest Analyzer</title>
+    <title>Shadow Priest Cast Analyzer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .icon-alert::before { content: "⚠️"; }
@@ -18,88 +18,53 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .dropdown-arrow::after {
-            content: "▼";
-            font-size: 12px;
-            color: #93c5fd;
-        }
     </style>
 </head>
 <body>
     <div id="root">
-        <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
-            <div class="max-w-6xl mx-auto">
-                <!-- Header -->
-                <div class="text-center mb-8">
-                    <div class="flex items-center justify-center gap-3 mb-4">
-                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-green-500 rounded-lg flex items-center justify-center">
-                            <span class="text-white text-xl">👤</span>
-                        </div>
-                        <h1 class="text-3xl font-bold text-white">Wrath Shadow Priest Analyzer</h1>
-                    </div>
+        <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-6">
+            <div class="max-w-4xl mx-auto">
+                <!-- Navigation back to main site -->
+                <div class="mb-6">
+                    <a href="/" class="inline-flex items-center gap-2 text-blue-300 hover:text-blue-200 transition-colors">
+                        <span class="icon-arrow-left"></span>
+                        Back to Shadow Priest Rankings
+                    </a>
                 </div>
 
-                <div class="bg-gray-800/60 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-gray-700">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                        <!-- Report ID Input -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Enter WCL report ID or URL
-                            </label>
-                            <div class="relative">
-                                <input
-                                    type="text"
-                                    id="reportInput"
-                                    placeholder="H3hZVgNBtyXPRbmQ"
-                                    class="w-full p-3 pr-10 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50"
-                                />
-                                <button id="loadReportBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-400 hover:text-blue-300">
-                                    ✓
-                                </button>
-                            </div>
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-2xl border border-white/20">
+                    <div class="text-center mb-8">
+                        <div class="flex items-center justify-center gap-3 mb-4">
+                            <span class="icon-chart text-2xl"></span>
+                            <h1 class="text-3xl font-bold text-white">Shadow Priest Cast Analyzer</h1>
                         </div>
-
-                        <!-- Player Selection -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Select Player
-                            </label>
-                            <div class="relative">
-                                <select
-                                    id="playerSelect"
-                                    disabled
-                                    class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed appearance-none dropdown-arrow"
-                                >
-                                    <option value="">Load report first</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Encounter Selection -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">
-                                Select Encounter
-                            </label>
-                            <div class="relative">
-                                <select
-                                    id="encounterSelect"
-                                    disabled
-                                    class="w-full p-3 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50 disabled:opacity-50 disabled:cursor-not-allowed appearance-none dropdown-arrow"
-                                >
-                                    <option value="">Select player first</option>
-                                </select>
-                            </div>
-                        </div>
+                        <p class="text-blue-200">Track Shadow Priest spell casts from WarcraftLogs reports</p>
                     </div>
 
-                    <button
-                        id="analyzeBtn"
-                        disabled
-                        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
-                    >
-                        <span class="icon-search"></span>
-                        Analyze Shadow Priest Performance
-                    </button>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-blue-200 mb-2">
+                                WarcraftLogs Fight URL
+                            </label>
+                            <input
+                                type="url"
+                                id="urlInput"
+                                placeholder="https://classic.warcraftlogs.com/reports/H3hZVgNBtyXPRbmQ?fight=18&type=damage-done&source=11"
+                                class="w-full p-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-blue-300 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/50"
+                            />
+                            <p class="text-xs text-blue-300 mt-1">
+                                Include fight number. Source ID is optional - if not provided, available Priests will be shown.
+                            </p>
+                        </div>
+
+                        <button
+                            id="analyzeBtn"
+                            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center gap-2"
+                        >
+                            <span class="icon-search"></span>
+                            Analyze Shadow Priest Casts
+                        </button>
+                    </div>
 
                     <!-- Error display -->
                     <div id="error" class="mt-6 bg-red-500/20 border border-red-500/50 rounded-lg p-4 hidden">
@@ -111,8 +76,12 @@
                     </div>
 
                     <!-- Results display -->
-                    <div id="results" class="mt-8 hidden">
+                    <div id="results" class="mt-8 bg-white/5 rounded-xl p-6 border border-white/10 hidden">
                         <div id="resultsContent"></div>
+                    </div>
+
+                    <div class="mt-8 text-center text-blue-300 text-sm">
+                        <p>This tool analyzes WarcraftLogs reports to track Shadow Priest spell usage.</p>
                     </div>
                 </div>
             </div>
@@ -120,54 +89,74 @@
     </div>
 
     <script>
-        // Shadow Priest spells with their details
+        // Shadow Priest spells to track
         const shadowPriestSpells = {
-            34914: { name: 'Vampiric Touch', type: 'dot', gcd: 1.5 },
-            2944: { name: 'Devouring Plague', type: 'dot', gcd: 1.5 },
-            589: { name: 'Shadow Word: Pain', type: 'dot', gcd: 1.5 },
-            8092: { name: 'Mind Blast', type: 'instant', gcd: 1.5 },
-            15407: { name: 'Mind Flay', type: 'channel', gcd: 0 },
-            32379: { name: 'Shadow Word: Death', type: 'instant', gcd: 1.5 },
-            73510: { name: 'Mind Spike', type: 'cast', gcd: 1.5 }
+            34914: 'Vampiric Touch',
+            2944: 'Devouring Plague',
+            589: 'Shadow Word: Pain',
+            8092: 'Mind Blast',
+            15407: 'Mind Flay',
+            32379: 'Shadow Word: Death',
+            73510: 'Mind Spike'
         };
 
-        // State management
-        let reportData = null;
-        let currentAnalysis = null;
+        // Store current report data for reuse
+        let currentReportData = null;
 
-        // Utility functions
-        function extractReportId(input) {
-            if (!input) return null;
-            // If it's already just an ID
-            if (input.length <= 20 && !input.includes('/')) {
-                return input;
+        // Parse WarcraftLogs URL
+        function parseUrl(url) {
+            try {
+                const urlObj = new URL(url);
+                const pathParts = urlObj.pathname.split('/');
+                const reportId = pathParts[pathParts.length - 1];
+                
+                const params = new URLSearchParams(urlObj.search);
+                const fight = params.get('fight');
+                const source = params.get('source');
+                
+                return { reportId, fight, source };
+            } catch (err) {
+                throw new Error('Invalid URL format');
             }
-            // Extract from URL
-            const match = input.match(/reports\/([a-zA-Z0-9]+)/);
-            return match ? match[1] : null;
         }
 
-        function formatTime(ms) {
-            const seconds = Math.floor(ms / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+        // Update URL with source ID
+        function updateUrlWithSource(sourceId) {
+            const urlInput = document.getElementById('urlInput');
+            const currentUrl = urlInput.value.trim();
+            
+            try {
+                const urlObj = new URL(currentUrl);
+                urlObj.searchParams.set('source', sourceId);
+                urlInput.value = urlObj.toString();
+            } catch (err) {
+                console.error('Failed to update URL:', err);
+            }
         }
 
-        function formatNumber(num) {
-            if (num === null || num === undefined) return '---';
-            if (typeof num !== 'number') return num;
-            return num.toLocaleString();
+        // Analyze specific priest
+        async function analyzePriest(playerId, playerName) {
+            // Update the URL input with the source ID
+            updateUrlWithSource(playerId);
+            
+            // Start analysis immediately
+            await analyzeLog();
         }
 
-        // UI Management
+        // Show/hide elements
         function showError(message) {
             document.getElementById('error').classList.remove('hidden');
             document.getElementById('errorMessage').textContent = message;
+            document.getElementById('results').classList.add('hidden');
         }
 
         function hideError() {
             document.getElementById('error').classList.add('hidden');
+        }
+
+        function showResults(content) {
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('resultsContent').innerHTML = content;
         }
 
         function setLoading(loading) {
@@ -176,120 +165,130 @@
                 btn.disabled = true;
                 btn.innerHTML = '<span class="icon-loader spinner"></span>Analyzing...';
             } else {
-                const canAnalyze = document.getElementById('playerSelect').value && 
-                                 document.getElementById('encounterSelect').value;
-                btn.disabled = !canAnalyze;
-                btn.innerHTML = '<span class="icon-search"></span>Analyze Shadow Priest Performance';
+                btn.disabled = false;
+                btn.innerHTML = '<span class="icon-search"></span>Analyze Shadow Priest Casts';
             }
         }
 
-        // Data Loading Functions
-        async function loadReport() {
-            const input = document.getElementById('reportInput').value.trim();
-            const reportId = extractReportId(input);
+        // Main analyze function
+        async function analyzeLog() {
+            const url = document.getElementById('urlInput').value.trim();
             
-            if (!reportId) {
-                showError('Please enter a valid report ID or URL');
+            if (!url) {
+                showError('Please enter a WarcraftLogs URL');
                 return;
             }
-
-            try {
-                hideError();
-                document.getElementById('loadReportBtn').innerHTML = '⏳';
-                
-                // Load report data (you'll need to implement this endpoint)
-                const response = await fetch('/.netlify/functions/load-report-data', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ reportId })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to load report');
-                }
-
-                reportData = await response.json();
-                populatePlayerDropdown();
-                document.getElementById('loadReportBtn').innerHTML = '✓';
-                
-            } catch (err) {
-                showError(err.message);
-                document.getElementById('loadReportBtn').innerHTML = '✓';
-            }
-        }
-
-        function populatePlayerDropdown() {
-            const playerSelect = document.getElementById('playerSelect');
-            playerSelect.innerHTML = '<option value="">Select a Shadow Priest</option>';
-            
-            // Filter for Shadow Priests
-            const shadowPriests = reportData.players.filter(p => 
-                p.type === 'Priest' && p.specs && p.specs.includes('Shadow')
-            );
-            
-            shadowPriests.forEach(player => {
-                const option = document.createElement('option');
-                option.value = player.id;
-                option.textContent = player.name;
-                playerSelect.appendChild(option);
-            });
-            
-            playerSelect.disabled = shadowPriests.length === 0;
-            if (shadowPriests.length === 0) {
-                showError('No Shadow Priests found in this report');
-            }
-        }
-
-        function populateEncounterDropdown() {
-            const encounterSelect = document.getElementById('encounterSelect');
-            encounterSelect.innerHTML = '<option value="">Select an encounter</option>';
-            
-            reportData.fights.forEach(fight => {
-                if (fight.boss && fight.boss > 0) { // Only boss fights
-                    const option = document.createElement('option');
-                    option.value = fight.id;
-                    option.textContent = `${fight.name} (${formatTime(fight.end_time - fight.start_time)})`;
-                    encounterSelect.appendChild(option);
-                }
-            });
-            
-            encounterSelect.disabled = false;
-            updateAnalyzeButton();
-        }
-
-        function updateAnalyzeButton() {
-            const canAnalyze = document.getElementById('playerSelect').value && 
-                             document.getElementById('encounterSelect').value;
-            document.getElementById('analyzeBtn').disabled = !canAnalyze;
-        }
-
-        // Analysis Functions
-        async function analyzePerformance() {
-            const playerId = document.getElementById('playerSelect').value;
-            const fightId = document.getElementById('encounterSelect').value;
-            
-            if (!playerId || !fightId) return;
 
             setLoading(true);
             hideError();
 
             try {
-                const response = await fetch('/.netlify/functions/analyze-detailed-performance', {
+                const { reportId, fight, source } = parseUrl(url);
+                
+                if (!reportId || !fight) {
+                    throw new Error('URL must include report ID and fight number');
+                }
+
+                const response = await fetch('/.netlify/functions/analyze-warcraft-logs', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({
-                        reportId: reportData.reportId,
-                        playerId: parseInt(playerId),
-                        fightId: parseInt(fightId)
+                        reportId,
+                        fight,
+                        source
                     })
                 });
 
                 if (!response.ok) {
-                    throw new Error('Analysis failed');
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `Request failed: ${response.status}`);
                 }
 
-                currentAnalysis = await response.json();
-                displayResults();
+                const data = await response.json();
+                
+                if (data.type === 'players') {
+                    // Store report data for later use
+                    currentReportData = { reportId, fight };
+                    
+                    // Show available players with clickable options
+                    const playersHtml = `
+                        <h2 class="text-xl font-semibold text-white mb-4">
+                            Available Priests in Fight: ${data.fight.name}
+                        </h2>
+                        <p class="text-blue-200 mb-4 text-sm">
+                            Click on a priest to automatically analyze their casts:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            ${data.players.map(player => `
+                                <button 
+                                    class="bg-white/10 hover:bg-white/20 rounded-lg p-4 text-left transition-all duration-200 border border-white/10 hover:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 group"
+                                    onclick="analyzePriest(${player.id}, '${player.name.replace(/'/g, "\\'")}')">
+                                    <div class="text-white font-medium group-hover:text-blue-200 transition-colors">${player.name}</div>
+                                    <div class="text-sm text-blue-200 mt-1">ID: ${player.id}</div>
+                                    <div class="text-sm text-blue-300">${player.subType}</div>
+                                    <div class="text-xs text-blue-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Click to analyze →
+                                    </div>
+                                </button>
+                            `).join('')}
+                        </div>
+                    `;
+                    showResults(playersHtml);
+                } else {
+                    // Process cast data
+                    const castCounts = {};
+                    let totalTrackedCasts = 0;
+                    
+                    data.events.forEach(event => {
+                        if (event.type === 'cast' && shadowPriestSpells[event.abilityGameID]) {
+                            const spellName = shadowPriestSpells[event.abilityGameID];
+                            castCounts[spellName] = (castCounts[spellName] || 0) + 1;
+                            totalTrackedCasts++;
+                        }
+                    });
+
+                    const sortedCasts = Object.entries(castCounts)
+                        .sort(([,a], [,b]) => b - a);
+
+                    const castsHtml = `
+                        <div class="mb-6">
+                            <h2 class="text-xl font-semibold text-white mb-2">Shadow Priest Spell Analysis</h2>
+                            <div class="text-blue-200 space-y-1">
+                                <p><strong>Player:</strong> ${data.player?.name || 'Unknown'}</p>
+                                <p><strong>Fight:</strong> ${data.fight.name}</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <h3 class="text-lg font-medium text-white mb-4">Shadow Priest Spell Casts</h3>
+                            ${sortedCasts.length > 0 ? 
+                                sortedCasts.map(([spell, count]) => `
+                                    <div class="bg-gradient-to-r from-purple-800/30 to-blue-800/30 rounded-lg p-4 flex justify-between items-center border border-purple-500/20">
+                                        <span class="text-white font-medium">${spell}</span>
+                                        <span class="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                            ${count} casts
+                                        </span>
+                                    </div>
+                                `).join('') :
+                                `<div class="text-center py-8">
+                                    <p class="text-blue-200 mb-2">No Shadow Priest spells found for this player in this fight.</p>
+                                    <p class="text-sm text-blue-300">
+                                        Tracked spells: ${Object.values(shadowPriestSpells).join(', ')}
+                                    </p>
+                                </div>`
+                            }
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button 
+                                onclick="location.reload()" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                                Analyze Another Fight
+                            </button>
+                        </div>
+                    `;
+                    showResults(castsHtml);
+                }
 
             } catch (err) {
                 showError(err.message);
@@ -298,154 +297,15 @@
             }
         }
 
-        function calculateSpellMetrics(spellData) {
-            const metrics = {
-                casts: spellData.casts?.length || 0,
-                damage: spellData.damage || 0,
-                activeDPS: '---',
-                activeTime: '0:00',
-                hits: spellData.hits?.length || 0,
-                avgHit: 0,
-                critRate: 0,
-                damagePerGCD: '---',
-                avgDelay: '---',
-                avgDotDowntime: '---',
-                clippedDots: '---',
-                avgSpellpower: spellData.avgSpellpower || '---',
-                avgHaste: spellData.avgHaste || '---',
-                gcdUsage: 0
-            };
-
-            if (spellData.hits && spellData.hits.length > 0) {
-                metrics.avgHit = Math.round(spellData.damage / spellData.hits.length);
-                const crits = spellData.hits.filter(hit => hit.hitType === 2).length;
-                metrics.critRate = Math.round((crits / spellData.hits.length) * 100);
-            }
-
-            if (spellData.activeTime > 0) {
-                metrics.activeDPS = Math.round(spellData.damage / (spellData.activeTime / 1000));
-                metrics.activeTime = formatTime(spellData.activeTime);
-            }
-
-            return metrics;
-        }
-
-        function displayResults() {
-            const player = reportData.players.find(p => p.id == document.getElementById('playerSelect').value);
-            const fight = reportData.fights.find(f => f.id == document.getElementById('encounterSelect').value);
-            
-            let resultsHtml = `
-                <div class="bg-gray-800/40 rounded-xl p-6 border border-gray-700">
-                    <div class="mb-6">
-                        <h2 class="text-2xl font-bold text-white mb-2">Shadow Priest Analysis</h2>
-                        <div class="text-gray-300 space-y-1">
-                            <p><strong>Player:</strong> ${player.name}</p>
-                            <p><strong>Fight:</strong> ${fight.name}</p>
-                            <p><strong>Duration:</strong> ${formatTime(fight.end_time - fight.start_time)}</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-            `;
-
-            Object.entries(shadowPriestSpells).forEach(([spellId, spellInfo]) => {
-                const spellData = currentAnalysis.spells[spellId] || {};
-                const metrics = calculateSpellMetrics(spellData);
-                
-                resultsHtml += `
-                    <div class="bg-gray-900/50 rounded-lg p-4 border border-gray-600">
-                        <h3 class="text-lg font-semibold text-white mb-4">${spellInfo.name}</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 text-sm">
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Casts</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.casts)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Damage</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.damage)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Active DPS</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.activeDPS)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Active Time</div>
-                                <div class="text-white font-semibold">${metrics.activeTime}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Hits</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.hits)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Avg Hit</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.avgHit)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Crit Rate</div>
-                                <div class="text-white font-semibold">${metrics.critRate}%</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Damage/GCD</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.damagePerGCD)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Avg Delay</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.avgDelay)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Avg DoT Downtime</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.avgDotDowntime)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Clipped DoTs</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.clippedDots)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Avg Spellpower</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.avgSpellpower)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">Avg Haste</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.avgHaste)}</div>
-                            </div>
-                            <div class="bg-gray-800 rounded p-3">
-                                <div class="text-gray-400">GCD Usage</div>
-                                <div class="text-white font-semibold">${formatNumber(metrics.gcdUsage)}</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-
-            resultsHtml += `
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('resultsContent').innerHTML = resultsHtml;
-            document.getElementById('results').classList.remove('hidden');
-        }
-
-        // Event Listeners
-        document.getElementById('loadReportBtn').addEventListener('click', loadReport);
-        document.getElementById('reportInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') loadReport();
-        });
-
-        document.getElementById('playerSelect').addEventListener('change', function() {
-            if (this.value) {
-                populateEncounterDropdown();
-            } else {
-                document.getElementById('encounterSelect').innerHTML = '<option value="">Select player first</option>';
-                document.getElementById('encounterSelect').disabled = true;
-                updateAnalyzeButton();
+        // Event listeners
+        document.getElementById('analyzeBtn').addEventListener('click', analyzeLog);
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeLog();
             }
         });
 
-        document.getElementById('encounterSelect').addEventListener('change', updateAnalyzeButton);
-        document.getElementById('analyzeBtn').addEventListener('click', analyzePerformance);
-
-        console.log('Wrath Shadow Priest Analyzer loaded successfully!');
+        console.log('Shadow Priest Cast Analyzer loaded successfully!');
     </script>
 </body>
 </html>
