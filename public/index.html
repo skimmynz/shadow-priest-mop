@@ -82,7 +82,6 @@
 
                     <div class="mt-8 text-center text-blue-300 text-sm">
                         <p>This tool analyzes WarcraftLogs reports to track Shadow Priest spell usage.</p>
-                        <p class="mt-1">Only Priest players are shown when no specific source is provided.</p>
                     </div>
                 </div>
             </div>
@@ -281,12 +280,6 @@
                                     </p>
                                 </div>`
                             }
-                        </div>
-                        <div class="mt-6 p-4 bg-blue-900/20 rounded-lg border border-blue-500/20">
-                            <h4 class="text-sm font-medium text-blue-200 mb-2">Tracked Shadow Priest Spells:</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-xs text-blue-300">
-                                ${Object.values(shadowPriestSpells).map(spell => `<span>• ${spell}</span>`).join('')}
-                            </div>
                         </div>
                         <div class="mt-4 text-center">
                             <button 
