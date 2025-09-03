@@ -101,6 +101,9 @@
             73510: 'Mind Spike'
         };
 
+        // Store current report data for reuse
+        let currentReportData = null;
+
         // Parse WarcraftLogs URL
         function parseUrl(url) {
             try {
@@ -116,6 +119,29 @@
             } catch (err) {
                 throw new Error('Invalid URL format');
             }
+        }
+
+        // Update URL with source ID
+        function updateUrlWithSource(sourceId) {
+            const urlInput = document.getElementById('urlInput');
+            const currentUrl = urlInput.value.trim();
+            
+            try {
+                const urlObj = new URL(currentUrl);
+                urlObj.searchParams.set('source', sourceId);
+                urlInput.value = urlObj.toString();
+            } catch (err) {
+                console.error('Failed to update URL:', err);
+            }
+        }
+
+        // Analyze specific priest
+        async function analyzePriest(playerId, playerName) {
+            // Update the URL input with the source ID
+            updateUrlWithSource(playerId);
+            
+            // Start analysis immediately
+            await analyzeLog();
         }
 
         // Show/hide elements
@@ -184,23 +210,36 @@
                 const data = await response.json();
                 
                 if (data.type === 'players') {
-                    // Show available players
+                    // Store report data for later use
+                    currentReportData = { reportId, fight };
+                    
+                    // Show available players with clickable options
                     const playersHtml = `
                         <h2 class="text-xl font-semibold text-white mb-4">
                             Available Priests in Fight: ${data.fight.name}
                         </h2>
+                        <p class="text-blue-200 mb-4 text-sm">
+                            Click on a priest to automatically analyze their casts:
+                        </p>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                             ${data.players.map(player => `
-                                <div class="bg-white/10 rounded-lg p-3">
-                                    <div class="text-white font-medium">${player.name}</div>
-                                    <div class="text-sm text-blue-200">ID: ${player.id}</div>
+                                <button 
+                                    class="bg-white/10 hover:bg-white/20 rounded-lg p-4 text-left transition-all duration-200 border border-white/10 hover:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 group"
+                                    onclick="analyzePriest(${player.id}, '${player.name.replace(/'/g, "\\'")}')">
+                                    <div class="text-white font-medium group-hover:text-blue-200 transition-colors">${player.name}</div>
+                                    <div class="text-sm text-blue-200 mt-1">ID: ${player.id}</div>
                                     <div class="text-sm text-blue-300">${player.subType}</div>
-                                </div>
+                                    <div class="text-xs text-blue-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Click to analyze →
+                                    </div>
+                                </button>
                             `).join('')}
                         </div>
-                        <p class="text-blue-200 mt-4 text-sm">
-                            Add &source=ID to your URL to analyze a specific priest's casts
-                        </p>
+                        <div class="mt-4 p-3 bg-blue-900/20 rounded-lg border border-blue-500/20">
+                            <p class="text-blue-200 text-sm">
+                                💡 <strong>Tip:</strong> You can also manually add &source=ID to your URL above to analyze a specific priest
+                            </p>
+                        </div>
                     `;
                     showResults(playersHtml);
                 } else {
@@ -253,6 +292,13 @@
                             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 text-xs text-blue-300">
                                 ${Object.values(shadowPriestSpells).map(spell => `<span>• ${spell}</span>`).join('')}
                             </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <button 
+                                onclick="location.reload()" 
+                                class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+                                Analyze Another Fight
+                            </button>
                         </div>
                     `;
                     showResults(castsHtml);
