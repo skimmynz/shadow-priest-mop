@@ -132,7 +132,6 @@
 }
 
 .nav-button:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px var(--shadow-glow);
   background: var(--gradient-accent);
 }
@@ -284,7 +283,6 @@ html {
 }
 
 #copy-link-btn.nav-button:hover {
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px var(--shadow-glow);
   background: var(--gradient-accent);
 }
@@ -360,7 +358,6 @@ body {
 .content-area:hover,
 .talent-sidebar:hover {
   border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
 }
 
@@ -420,7 +417,6 @@ body {
 
 .talent-sidebar .talent-summary-container:hover {
   border-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
   box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
 }
 
@@ -533,7 +529,6 @@ h1 {
 #copy-link-btn:hover {
   background: var(--hover-bg);
   border-color: var(--accent-color);
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px var(--shadow-glow);
 }
 
@@ -621,7 +616,6 @@ a.wowhead del {
 
 #raid-menu button:hover,
 #raid-menu button.active {
-  transform: translateY(-2px) scale(1.02);
   box-shadow: 0 16px 40px var(--shadow-glow);
   border-color: var(--accent-color);
 }
@@ -646,7 +640,6 @@ a.wowhead del {
 
 #raid-menu button.active {
   box-shadow: 0 0 30px var(--shadow-glow);
-  transform: translateY(-1px);
 }
 
 #raid-menu button.active span {
@@ -715,7 +708,6 @@ a.wowhead del {
 #boss-buttons button:hover {
   background: var(--hover-bg);
   border-color: var(--accent-color);
-  transform: translateX(4px);
   box-shadow: 0 8px 32px var(--shadow-glow);
 }
 
@@ -729,7 +721,6 @@ a.wowhead del {
   background: var(--gradient-shadow);
   border-color: var(--accent-color);
   color: var(--text-primary);
-  transform: translateX(3px);
   box-shadow: 0 8px 32px var(--shadow-glow);
 }
 
