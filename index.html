@@ -11,39 +11,61 @@
   <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
 </head>
 <body>
-  <div class="main-container">
-    <aside class="sidebar">
-      <nav id="raid-menu" aria-label="Raid selection"></nav>
-      <div id="boss-buttons" role="group" aria-label="Bosses"></div>
-    </aside>
-    
-    <main class="content-area">
-      <h1>Shadow Priest Top 100 — MoP Classic</h1>
-      <div class="header-controls">
-        <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-          Loading last updated…
-        </div>
-        <button id="copy-link-btn">Copy Link</button>
+  <!-- Sticky Navigation Menu -->
+  <nav class="sticky-nav">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <h2>Shadow Priest Rankings</h2>
       </div>
-      <section id="rankings">
+      <div class="nav-menu">
+        <a href="#rankings" class="nav-link">Rankings</a>
+        <a href="#talents" class="nav-link">Talents</a>
+        <button id="copy-link-btn" class="nav-button">Copy Link</button>
+      </div>
+      <!-- Mobile menu toggle -->
+      <div class="nav-toggle" id="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Content wrapper to prevent overlap with sticky nav -->
+  <div class="content-wrapper">
+    <div class="main-container">
+      <aside class="sidebar">
+        <nav id="raid-menu" aria-label="Raid selection"></nav>
+        <div id="boss-buttons" role="group" aria-label="Bosses"></div>
+      </aside>
+      
+      <main class="content-area">
+        <h1 id="home">Shadow Priest Top 100 — MoP Classic</h1>
+        <div class="header-controls">
+          <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+            Loading last updated…
+          </div>
+        </div>
+        <section id="rankings">
         </section>
-    </main>
-    
-    <aside class="talent-sidebar">
-      <div class="talent-summary-container">
-        <button class="collapsible-header" type="button" aria-expanded="true" aria-controls="talent-summary">
-          <h3>Popular Talents</h3>
-          <span class="expand-icon rotated">▼</span>
-        </button>
-        <div class="collapsible-content active" id="talent-summary">
-          <div class="talent-summary">
-            <div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">
-              Select a boss to view talent data
+      </main>
+      
+      <aside class="talent-sidebar" id="talents">
+        <div class="talent-summary-container">
+          <button class="collapsible-header" type="button" aria-expanded="true" aria-controls="talent-summary">
+            <h3>Popular Talents</h3>
+            <span class="expand-icon rotated">▼</span>
+          </button>
+          <div class="collapsible-content active" id="talent-summary">
+            <div class="talent-summary">
+              <div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">
+                Select a boss to view talent data
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </div>
   </div>
   
   <script src="script.js" defer></script>
