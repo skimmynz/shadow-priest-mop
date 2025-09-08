@@ -74,7 +74,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.02em;
-  position: absolute;
+  position: relative;
+  left: 2rem;
 }
 
 .nav-menu {
