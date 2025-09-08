@@ -75,6 +75,7 @@
   background-clip: text;
   letter-spacing: -0.02em;
   position: relative;
+  flex-shrink: 0;
 }
 
 .nav-menu {
