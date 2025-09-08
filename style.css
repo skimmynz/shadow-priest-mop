@@ -61,6 +61,7 @@
   align-items: center;
   justify-content: center;
   height: 70px;
+  position: relative;
 }
 
 .nav-brand h2 {
@@ -73,6 +74,8 @@
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: -0.02em;
+  position: absolute;
+  left: 2rem;
 }
 
 .nav-menu {
@@ -146,6 +149,8 @@
   padding: 0.5rem;
   border-radius: 8px;
   transition: background 0.3s ease;
+  position: absolute;
+  right: 2rem;
 }
 
 .nav-toggle:hover {
