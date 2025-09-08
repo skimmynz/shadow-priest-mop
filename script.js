@@ -373,7 +373,6 @@ function toggleDropdown(entryId) {
 const optimizedRenderer = new OptimizedRenderer();
 let currentData = null;
 
-// Rest of your existing code with key optimizations...
 const RAIDS = {
   msv: {
     short: 'MSV',
@@ -399,7 +398,16 @@ const RAIDS = {
       "Grand Empress Shek'zeer": 1501,
     },
   },
-  toes: { short: 'ToES', name: 'Terrace of Endless Spring', encounters: {} },
+  toes: { 
+    short: 'ToES', 
+    name: 'Terrace of Endless Spring', 
+    encounters: {
+      "Protectors of the Endless": 1409,
+      "Tsulong": 1505,
+      "Lei Shi": 1506,
+      "Sha of Fear": 1431,
+    }
+  },
 };
 
 let currentRaidKey = 'msv';
