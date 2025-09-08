@@ -59,7 +59,7 @@
   padding: 0 2rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   height: 70px;
   position: relative;
 }
