@@ -1,158 +1,3 @@
-// Sticky Navigation Functionality
-function initStickyNavigation() {
-  const stickyNav = document.querySelector('.sticky-nav');
-  const navToggle = document.getElementById('nav-toggle');
-  const navMenu = document.querySelector('.nav-menu');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const copyBtn = document.getElementById('copy-link-btn');
-  
-  if (!stickyNav) return;
-
-  // Mobile menu toggle functionality
-  if (navToggle && navMenu) {
-    navToggle.addEventListener('click', function(e) {
-      e.stopPropagation();
-      navToggle.classList.toggle('active');
-      navMenu.classList.toggle('active');
-    });
-    
-    // Close mobile menu when clicking on a link
-    navLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        navToggle.classList.remove('active');
-        navMenu.classList.remove('active');
-      });
-    });
-    
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
-        navToggle.classList.remove('active');
-        navMenu.classList.remove('active');
-      }
-    });
-  }
-  
-  // Add scroll shadow effect
-  let lastScrollY = window.scrollY;
-  
-  function updateNavOnScroll() {
-    const currentScrollY = window.scrollY;
-    
-    if (currentScrollY > 50) {
-      stickyNav.classList.add('scrolled');
-    } else {
-      stickyNav.classList.remove('scrolled');
-    }
-    
-    lastScrollY = currentScrollY;
-  }
-  
-  // Throttled scroll listener for better performance
-  let ticking = false;
-  
-  function handleScroll() {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        updateNavOnScroll();
-        updateActiveNavLink();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }
-  
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  
-  // Smooth scrolling for navigation links
-  navLinks.forEach(link => {
-    link.addEventListener('click', function(e) {
-      const href = this.getAttribute('href');
-      
-      // Only handle internal links starting with #
-      if (href && href.startsWith('#')) {
-        const targetId = href.substring(1);
-        const targetElement = document.getElementById(targetId);
-        
-        if (targetElement) {
-          e.preventDefault();
-          
-          const navHeight = stickyNav ? stickyNav.offsetHeight : 70;
-          const targetPosition = targetElement.offsetTop - navHeight - 20;
-          
-          window.scrollTo({
-            top: Math.max(0, targetPosition),
-            behavior: 'smooth'
-          });
-        }
-      }
-    });
-  });
-  
-  // Update active navigation link based on scroll position
-  function updateActiveNavLink() {
-    const sections = ['home', 'rankings', 'talents'];
-    let currentSection = '';
-    
-    sections.forEach(sectionId => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        const navHeight = stickyNav ? stickyNav.offsetHeight : 70;
-        
-        if (rect.top <= navHeight + 100 && rect.bottom >= navHeight) {
-          currentSection = sectionId;
-        }
-      }
-    });
-    
-    // Update active class on nav links
-    navLinks.forEach(link => {
-      const href = link.getAttribute('href');
-      link.classList.remove('active');
-      
-      if (href === `#${currentSection}`) {
-        link.classList.add('active');
-      }
-    });
-  }
-  
-  // Move copy button functionality to nav
-  if (copyBtn) {
-    const debouncedCopy = createDebounced(() => {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        const originalText = copyBtn.textContent;
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => { 
-          copyBtn.textContent = originalText; 
-        }, 2000);
-      }).catch(() => {
-        // Fallback for browsers that don't support clipboard API
-        const textArea = document.createElement('textarea');
-        textArea.value = window.location.href;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        
-        const originalText = copyBtn.textContent;
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => { 
-          copyBtn.textContent = originalText; 
-        }, 2000);
-      });
-    }, 300);
-    
-    copyBtn.addEventListener('click', debouncedCopy);
-  }
-  
-  // Initialize
-  updateNavOnScroll();
-  updateActiveNavLink();
-}
-
-// Initialize sticky navigation when DOM is loaded
-document.addEventListener('DOMContentLoaded', initStickyNavigation);
 // Time-slicing for large operations
 class TimeSlicing {
   static async processInChunks(items, processor, chunkSize = 50, yieldEvery = 5) {
@@ -568,7 +413,6 @@ let currentRaidKey = 'msv';
 const raidMenu = document.getElementById('raid-menu');
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
-const copyBtn = document.getElementById('copy-link-btn');
 
 // Optimized last updated element creation
 let lastUpdatedEl = document.getElementById('last-updated');
@@ -582,12 +426,12 @@ if (!lastUpdatedEl) {
   }
 }
 
-// Cache and API configuration (unchanged)
+// Cache and API configuration
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
 const API_URL = (encounterId) => `/.netlify/functions/getLogs?encounterId=${encounterId}`;
 
-// Talent data (unchanged for brevity - include your existing talent data here)
+// Talent data
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -644,7 +488,7 @@ const talentNameMap = {
   "Mind Control": "Dominate Mind"
 };
 
-// Precomputed helpers (unchanged)
+// Precomputed helpers
 const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
 const VALID_TALENT_SET = new Set(Object.values(talentTiers).flat());
 const TIER_BY_TALENT = (() => {
@@ -662,7 +506,7 @@ const talentIconUrl = (name) => {
   return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
 };
 
-// Utility functions (keep your existing ones, they're fine)
+// Utility functions
 function formatDuration(ms) {
   if (!ms || ms === 0) return 'N/A';
   const minutes = Math.floor(ms / 60000);
@@ -1118,20 +962,6 @@ function trackPerformance(name, startTime) {
 // Boot sequence with performance optimizations
 document.addEventListener('DOMContentLoaded', () => {
   const initStart = performance.now();
-  
-  // Initialize copy button with debouncing
-  if (copyBtn) {
-    const debouncedCopy = createDebounced(() => {
-      navigator.clipboard.writeText(window.location.href).then(() => {
-        copyBtn.textContent = 'Copied!';
-        setTimeout(() => { 
-          copyBtn.textContent = 'Copy Link'; 
-        }, 2000);
-      });
-    }, 300);
-    
-    copyBtn.addEventListener('click', debouncedCopy, { passive: true });
-  }
 
   // Add optimized event listener for talent sidebar
   const talentToggleBtn = document.querySelector('.talent-sidebar .collapsible-header');
