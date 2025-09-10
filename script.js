@@ -963,23 +963,6 @@ function trackPerformance(name, startTime) {
 document.addEventListener('DOMContentLoaded', () => {
   const initStart = performance.now();
 
-  // Add optimized event listener for talent sidebar
-  const talentToggleBtn = document.querySelector('.talent-sidebar .collapsible-header');
-  const talentContentDiv = document.querySelector('.talent-sidebar .collapsible-content');
-  
-  if (talentToggleBtn && talentContentDiv) {
-    const debouncedToggle = createDebounced(() => {
-      const isActive = talentContentDiv.classList.toggle('active');
-      talentToggleBtn.setAttribute('aria-expanded', isActive);
-      const expandIcon = talentToggleBtn.querySelector('.expand-icon');
-      if (expandIcon) {
-        expandIcon.classList.toggle('rotated');
-      }
-    }, 100);
-    
-    talentToggleBtn.addEventListener('click', debouncedToggle, { passive: true });
-  }
-
   // Create raid menu and boss buttons
   createRaidMenu();
   buildBossButtonsForRaid(currentRaidKey);
