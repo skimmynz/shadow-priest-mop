@@ -1,3 +1,35 @@
+// Add rate limiting
+const rateLimiter = new Map();
+exports.handler = async function(event, context) {
+  const clientIP = event.headers['client-ip'] || event.headers['x-forwarded-for'];
+  const now = Date.now();
+  const windowStart = now - 60000; // 1 minute window
+  
+  if (rateLimiter.has(clientIP)) {
+    const requests = rateLimiter.get(clientIP).filter(time => time > windowStart);
+    if (requests.length >= 30) { // Max 30 requests per minute
+      return {
+        statusCode: 429,
+        body: JSON.stringify({ error: 'Rate limit exceeded' })
+      };
+    }
+    requests.push(now);
+    rateLimiter.set(clientIP, requests);
+  } else {
+    rateLimiter.set(clientIP, [now]);
+  }
+  
+  // Validate encounterId is numeric
+  const encounterId = parseInt(event.queryStringParameters?.encounterId);
+  if (!encounterId || encounterId < 1 || encounterId > 99999) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Invalid encounterId' })
+    };
+  }
+  
+};
+
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
