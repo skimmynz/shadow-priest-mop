@@ -427,7 +427,7 @@ if (!lastUpdatedEl) {
 }
 
 // Cache and API configuration
-const CACHE_TTL_MS = 6 * 60 * 60 * 1000;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
 const API_URL = (encounterId) => `/.netlify/functions/getLogs?encounterId=${encounterId}`;
 
