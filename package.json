@@ -7,7 +7,9 @@
     "start": "netlify dev"
   },
   "dependencies": {
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "@arcjet/node": "^1.0.0"
+
   },
   "license": "MIT"
 }
