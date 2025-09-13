@@ -1173,6 +1173,12 @@ function trackPerformance(name, startTime) {
 document.addEventListener('DOMContentLoaded', () => {
   const initStart = performance.now();
 
+  // Initialize rate limiting
+  resetRateLimit();
+  
+  // Initialize refresh button
+  initializeRefreshButton();
+
   // Create raid menu and boss buttons
   createRaidMenu();
   buildBossButtonsForRaid(currentRaidKey);
