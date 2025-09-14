@@ -1351,6 +1351,811 @@ a.wowhead del {
 }
 
 /* =================================================================
+  Parsing Rules Styles - For Header Area Implementation
+  ================================================================= */
+
+/* Header Area Parsing Rules Container */
+.parsing-rules-header-container {
+  margin: 1rem 0 2rem 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  max-width: 100%;
+}
+
+.parsing-rules-header-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--warning-color) 0%, var(--gold-color) 50%, var(--warning-color) 100%);
+  opacity: 0.8;
+}
+
+.parsing-rules-header-container:hover {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.15);
+}
+
+/* Toggle Header - Compact for header area */
+.parsing-rules-toggle {
+  cursor: pointer;
+  padding: 1rem 1.5rem;
+  background: rgba(245, 158, 11, 0.05);
+  transition: all 0.3s ease;
+  user-select: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.parsing-rules-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.1), transparent);
+  transition: left 0.3s ease;
+}
+
+.parsing-rules-toggle:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.parsing-rules-toggle:hover::before {
+  left: 100%;
+}
+
+.parsing-rules-toggle:focus {
+  outline: 2px solid var(--warning-color);
+  outline-offset: -2px;
+}
+
+.parsing-rules-icon {
+  color: var(--warning-color);
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.parsing-rules-toggle:hover .parsing-rules-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.parsing-rules-title {
+  font-size: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--warning-color) 0%, var(--gold-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.01em;
+  flex: 1;
+}
+
+.parsing-rules-count {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.parsing-rules-arrow {
+  color: var(--warning-color);
+  font-size: 0.9rem;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+/* Content Area - Optimized for header placement */
+.parsing-rules-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  background: rgba(245, 158, 11, 0.02);
+  border-top: 1px solid rgba(245, 158, 11, 0.1);
+}
+
+.parsing-rules-content.active {
+  opacity: 1;
+  padding: 1.25rem 1.5rem;
+}
+
+.parsing-rules-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.parsing-rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.parsing-rule-item::before {
+  content: '⚡';
+  color: var(--warning-color);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+}
+
+.parsing-rule-item:hover {
+  background: var(--hover-bg);
+  border-color: rgba(245, 158, 11, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+}
+
+.parsing-rule-item:hover::before {
+  transform: scale(1.1);
+}
+
+/* =================================================================
+  JavaScript State Management
+  ================================================================= */
+
+/* Expanded state */
+.parsing-rules-toggle[aria-expanded="true"] .parsing-rules-arrow {
+  transform: rotate(180deg);
+}
+
+/* Loading state */
+.parsing-rules-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.parsing-rules-loading::before {
+  content: '⚡';
+  margin-right: 0.5rem;
+  animation: pulse 1.5s infinite;
+  color: var(--warning-color);
+}
+
+/* =================================================================
+  Responsive Design for Header Placement
+  ================================================================= */
+
+/* Large Desktop */
+@media (min-width: 1600px) {
+  .parsing-rules-header-container {
+    margin: 1.5rem 0 2.5rem 0;
+  }
+  
+  .parsing-rules-toggle {
+    padding: 1.25rem 2rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 1.1rem;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 1.5rem 2rem;
+  }
+  
+  .parsing-rules-list {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Medium Desktop */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .parsing-rules-list {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Medium screens */
+@media (max-width: 1199px) {
+  .parsing-rules-header-container {
+    margin: 1rem 0 1.5rem 0;
+  }
+  
+  .parsing-rules-toggle {
+    padding: 1rem 1.25rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 0.95rem;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 1rem 1.25rem;
+  }
+  
+  .parsing-rules-list {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .parsing-rules-header-container {
+    margin: 0.875rem 0 1.25rem 0;
+    border-radius: 12px;
+  }
+  
+  .parsing-rules-toggle {
+    padding: 0.875rem 1rem;
+    gap: 0.5rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 0.9rem;
+  }
+  
+  .parsing-rules-count {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 0.875rem 1rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    gap: 0.5rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .parsing-rules-header-container {
+    margin: 0.75rem 0 1rem 0;
+  }
+  
+  .parsing-rules-toggle {
+    padding: 0.75rem 0.875rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 0.85rem;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  
+  .parsing-rules-count {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.35rem;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 0.75rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 0.625rem;
+    font-size: 0.8rem;
+    flex-direction: column;
+    gap: 0.375rem;
+    text-align: left;
+  }
+  
+  .parsing-rule-item::before {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .parsing-rules-toggle {
+    padding: 0.625rem 0.75rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 0.8rem;
+  }
+  
+  .parsing-rules-icon {
+    font-size: 1rem;
+  }
+  
+  .parsing-rules-arrow {
+    font-size: 0.8rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* =================================================================
+  Alternative: Parsing Rules in Main Content (Collapsible)
+  ================================================================= */
+
+/* Parsing Rules Section in Main Content */
+.parsing-rules-section {
+  margin: 2rem 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.parsing-rules-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--warning-color) 0%, var(--gold-color) 50%, var(--warning-color) 100%);
+  opacity: 0.8;
+}
+
+.parsing-rules-section:hover {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.15);
+}
+
+/* Toggle Header */
+.parsing-rules-toggle {
+  cursor: pointer;
+  padding: 1.5rem 2rem;
+  background: rgba(245, 158, 11, 0.05);
+  transition: all 0.3s ease;
+  user-select: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.parsing-rules-toggle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.1), transparent);
+  transition: left 0.3s ease;
+}
+
+.parsing-rules-toggle:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.parsing-rules-toggle:hover::before {
+  left: 100%;
+}
+
+.parsing-rules-toggle:focus {
+  outline: 2px solid var(--warning-color);
+  outline-offset: -2px;
+}
+
+.parsing-rules-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--warning-color) 0%, var(--gold-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+}
+
+.parsing-rules-title .parsing-rules-icon {
+  font-size: 1.3rem;
+  margin-right: 0.5rem;
+  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.4));
+  transition: transform 0.3s ease;
+}
+
+.parsing-rules-toggle:hover .parsing-rules-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.parsing-rules-arrow {
+  color: var(--warning-color);
+  font-size: 1rem;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Content Area */
+.parsing-rules-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  display: none;
+}
+
+.parsing-rules-content.active {
+  display: block;
+  opacity: 1;
+  padding: 0 2rem 2rem 2rem;
+}
+
+.parsing-rules-content .parsing-rules-list {
+  list-style: none;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.parsing-rules-content .parsing-rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--secondary-bg);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.parsing-rules-content .parsing-rule-item:hover {
+  background: var(--hover-bg);
+  border-color: rgba(245, 158, 11, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
+}
+
+.parsing-rule-bullet {
+  color: var(--warning-color);
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 0.1rem;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+}
+
+.parsing-rule-text {
+  flex: 1;
+  font-weight: 500;
+}
+
+/* Footer */
+.parsing-rules-footer {
+  border-top: 1px solid rgba(245, 158, 11, 0.2);
+  padding-top: 1rem;
+  text-align: center;
+}
+
+.parsing-rules-note {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.parsing-rules-note::before,
+.parsing-rules-note::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(245, 158, 11, 0.3), transparent);
+}
+
+/* =================================================================
+  Responsive Adaptations
+  ================================================================= */
+
+/* Large Desktop */
+@media (min-width: 1600px) {
+  .parsing-rules-container {
+    padding: 2rem;
+  }
+  
+  .parsing-rules-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .parsing-rules-content .parsing-rule-item {
+    padding: 1.25rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+/* Medium screens */
+@media (max-width: 1199px) {
+  .parsing-rules-container {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+  }
+  
+  .parsing-rules-header h3 {
+    font-size: 1.05rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 0.625rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .parsing-rules-section {
+    margin: 1.5rem 0;
+    border-radius: 12px;
+  }
+  
+  .parsing-rules-toggle {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 1.1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  .parsing-rules-title .parsing-rules-icon {
+    font-size: 1.2rem;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  .parsing-rules-content .parsing-rule-item {
+    padding: 0.875rem 1rem;
+    font-size: 0.9rem;
+    gap: 0.75rem;
+  }
+  
+  .parsing-rules-container {
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+  }
+  
+  .parsing-rules-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .parsing-rules-header h3 {
+    font-size: 1rem;
+  }
+  
+  .parsing-rule-item {
+    font-size: 0.85rem;
+    padding: 0.75rem;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .parsing-rules-toggle {
+    padding: 1rem;
+  }
+  
+  .parsing-rules-title {
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+  
+  .parsing-rules-title .parsing-rules-icon {
+    font-size: 1.1rem;
+    margin-right: 0.25rem;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 0 1rem 1rem 1rem;
+  }
+  
+  .parsing-rules-content .parsing-rule-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.85rem;
+    gap: 0.5rem;
+    flex-direction: column;
+    text-align: left;
+  }
+  
+  .parsing-rule-bullet {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+  
+  .parsing-rules-container {
+    padding: 1rem;
+  }
+  
+  .parsing-rules-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  .parsing-rules-header h3 {
+    font-size: 0.95rem;
+  }
+  
+  .parsing-rule-item {
+    font-size: 0.8rem;
+    padding: 0.625rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+  }
+  
+  .parsing-rule-item::before {
+    align-self: flex-start;
+    margin-top: 0;
+  }
+}
+
+/* =================================================================
+  Animation and Interaction Enhancements
+  ================================================================= */
+
+/* Smooth fade-in for parsing rules */
+@keyframes parsing-rules-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.parsing-rules-container,
+.parsing-rules-section {
+  animation: parsing-rules-fade-in 0.4s ease-out;
+}
+
+/* Staggered animation for rule items */
+.parsing-rule-item {
+  animation: parsing-rules-fade-in 0.4s ease-out;
+  animation-fill-mode: both;
+}
+
+.parsing-rule-item:nth-child(1) { animation-delay: 0.1s; }
+.parsing-rule-item:nth-child(2) { animation-delay: 0.2s; }
+.parsing-rule-item:nth-child(3) { animation-delay: 0.3s; }
+.parsing-rule-item:nth-child(4) { animation-delay: 0.4s; }
+.parsing-rule-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Loading state for parsing rules */
+.parsing-rules-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.parsing-rules-loading::before {
+  content: '⚡';
+  margin-right: 0.5rem;
+  animation: pulse 1.5s infinite;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .parsing-rules-container,
+  .parsing-rules-section,
+  .parsing-rule-item {
+    animation: none;
+  }
+  
+  .parsing-rules-toggle::before {
+    transition: none;
+  }
+  
+  .parsing-rules-arrow,
+  .parsing-rules-icon {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .parsing-rules-container {
+    border: 2px solid var(--warning-color);
+  }
+  
+  .parsing-rule-item {
+    border: 2px solid var(--warning-color);
+    background: var(--primary-bg);
+  }
+  
+  .parsing-rules-toggle {
+    border: 2px solid var(--warning-color);
+  }
+}
+
+/* Focus management */
+.parsing-rules-toggle:focus-visible {
+  box-shadow: 0 0 0 3px var(--warning-color);
+  border-radius: 4px;
+}
+
+/* =================================================================
   Focus and Accessibility improvements
   ================================================================= */
 @media (prefers-reduced-motion: reduce) {
