@@ -806,6 +806,24 @@ function renderParsingRules(encounterId) {
       }
     });
 
+    // Add parsing rules to header area
+    domBatcher.schedule('parsing-rules', () => {
+      const lastUpdatedEl = document.getElementById('last-updated');
+      if (lastUpdatedEl) {
+        // Remove existing parsing rules if any
+        const existingRules = document.querySelector('.parsing-rules-header-container');
+        if (existingRules) {
+          existingRules.remove();
+        }
+        
+        // Add new parsing rules after last-updated
+        const parsingRulesHTML = renderParsingRules(encounterId);
+        if (parsingRulesHTML) {
+          lastUpdatedEl.insertAdjacentHTML('afterend', parsingRulesHTML);
+        }
+      }
+    });
+
     // Refresh Wowhead tooltips
     scheduler.postTask(() => {
       if (window.$WowheadPower) {
