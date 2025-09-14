@@ -763,11 +763,6 @@ function renderParsingRules(encounterId) {
   
   return `
     <div class="parsing-rules-header-container">
-      <div class="parsing-rules-header">
-        <span class="parsing-rules-icon">⚡</span>
-        <span class="parsing-rules-title">Parsing Rules</span>
-        <span class="parsing-rules-count">(${rules.rules.length})</span>
-      </div>
       <div class="parsing-rules-content active">
         <ul class="parsing-rules-list">
           ${ruleItems}
