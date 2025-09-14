@@ -1372,7 +1372,7 @@ a.wowhead del {
 .parsing-rules-content.active {
   display: block;
   opacity: 1;
-  padding: 1.25rem 1.5rem;
+  padding: 0.5rem 1rem;
   background: rgba(245, 158, 11, 0.02);
 }
 
