@@ -645,6 +645,135 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
+  const PARSING_RULES = {
+  // MSV
+  1395: { // The Stone Guard
+    title: "The Stone Guard",
+    rules: [
+      "The damage bonus from Energized Tiles is normalized."
+    ]
+  },
+  1390: { // Feng the Accursed
+    title: "Feng the Accursed", 
+    rules: [
+      "Damage done to Soul Fragments is removed."
+    ]
+  },
+  1434: { // Gara'jal the Spiritbinder
+    title: "Gara'jal the Spiritbinder",
+    rules: [
+      "Damage done to Spirit Totems is removed."
+    ]
+  },
+  1436: { // The Spirit Kings
+    title: "The Spirit Kings",
+    rules: [
+      "No rules, though friendly fire damage (during Mind Control) is already excluded."
+    ]
+  },
+  1500: { // Elegon
+    title: "Elegon",
+    rules: [
+      "Damage done during Draw Power is normalized, and damage done to Cosmic Sparks is removed."
+    ]
+  },
+  1407: { // Will of the Emperor
+    title: "Will of the Emperor",
+    rules: [
+      "Damage done to Emperor's Rage is removed from 25-man Heroic.",
+      "Will of the Emperor is removed from Damage All Star Points."
+    ]
+  },
+  
+  // HoF
+  1507: { // Imperial Vizier Zor'lok
+    title: "Imperial Vizier Zor'lok",
+    rules: [
+      "Damage done to adds that don't die is removed."
+    ]
+  },
+  1504: { // Blade Lord Ta'yak
+    title: "Blade Lord Ta'yak",
+    rules: [
+      "No rules."
+    ]
+  },
+  1463: { // Garalon
+    title: "Garalon",
+    rules: [
+      "Garalon is removed from Damage All Star Points."
+    ]
+  },
+  1498: { // Wind Lord Mel'jarak
+    title: "Wind Lord Mel'jarak",
+    rules: [
+      "Damage done to adds that don't die is removed."
+    ]
+  },
+  1499: { // Amber-Shaper Un'sok
+    title: "Amber-Shaper Un'sok",
+    rules: [
+      "Amber-Shaper is removed from All Star Points (both Damage and Healing)."
+    ]
+  },
+  1501: { // Grand Empress Shek'zeer
+    title: "Grand Empress Shek'zeer",
+    rules: [
+      "Damage done to Kor'thik Reavers and Set'thik Windblades is removed."
+    ]
+  },
+  
+  // ToES
+  1409: { // Protectors of the Endless
+    title: "Protectors of the Endless",
+    rules: [
+      "Damage done to bosses that heal to full is removed.",
+      "Damage gained from Corrupted Essence is normalized.",
+      "Only Hardmode/Elite order ranks as Heroic. This means Protector Kaolan has to die last."
+    ]
+  },
+  1505: { // Tsulong
+    title: "Tsulong",
+    rules: [
+      "Damage done to The Dark of Night, Fright Spawn, and Embodied Terrors is removed."
+    ]
+  },
+  1506: { // Lei Shi
+    title: "Lei Shi",
+    rules: [
+      "Damage done to Animated Protectors is removed."
+    ]
+  },
+  1431: { // Sha of Fear
+    title: "Sha of Fear",
+    rules: [
+      "Sha of Fear is removed from Damage ASP."
+    ]
+  }
+};
+
+// Function to render parsing rules
+function renderParsingRules(encounterId) {
+  const rules = PARSING_RULES[encounterId];
+  if (!rules) return '';
+  
+  const ruleItems = rules.rules.map(rule => `
+    <li class="parsing-rule-item">${rule}</li>
+  `).join('');
+  
+  return `
+    <div class="parsing-rules-container">
+      <div class="parsing-rules-header">
+        <h3>Parsing Rules</h3>
+        <div class="parsing-rules-icon">📊</div>
+      </div>
+      <ul class="parsing-rules-list">
+        ${ruleItems}
+      </ul>
+    </div>
+  `;
+}
+
   const renderContentAndAttachListeners = async (data) => {
     currentData = data; // Store for lazy loading
     
