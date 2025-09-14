@@ -762,10 +762,12 @@ function renderParsingRules(encounterId) {
   `).join('');
   
   return `
+    <div class="parsing-rules-header-container">
       <div class="parsing-rules-content active">
         <ul class="parsing-rules-list">
           ${ruleItems}
         </ul>
+      </div>
     </div>
   `;
 }
