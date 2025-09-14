@@ -762,14 +762,18 @@ function renderParsingRules(encounterId) {
   `).join('');
   
   return `
-    <div class="parsing-rules-container">
-      <div class="parsing-rules-header">
-        <h3>Parsing Rules</h3>
-        <div class="parsing-rules-icon">📊</div>
+    <div class="parsing-rules-header-container">
+      <div class="parsing-rules-toggle" onclick="toggleParsingRules()" tabindex="0" role="button" aria-expanded="false">
+        <span class="parsing-rules-icon">⚡</span>
+        <span class="parsing-rules-title">Parsing Rules</span>
+        <span class="parsing-rules-count">(${rules.rules.length})</span>
+        <span class="parsing-rules-arrow">▼</span>
       </div>
-      <ul class="parsing-rules-list">
-        ${ruleItems}
-      </ul>
+      <div class="parsing-rules-content" id="parsing-rules-content">
+        <ul class="parsing-rules-list">
+          ${ruleItems}
+        </ul>
+      </div>
     </div>
   `;
 }
