@@ -1351,7 +1351,7 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Parsing Rules Styles - Clean version with no dark background
+  Parsing Rules Styles
   ================================================================= */
 /* Content Area*/
 .parsing-rules-content.active {
@@ -1371,7 +1371,7 @@ a.wowhead del {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-/* Rule items - Clean text without dark background */
+/* Rule items*/
 .parsing-rule-item {
   display: flex;
   align-items: flex-start;
