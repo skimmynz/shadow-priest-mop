@@ -1379,10 +1379,6 @@ a.wowhead del {
   opacity: 0.8;
 }
 
-.parsing-rules-header-container:hover {
-  border-color: rgba(245, 158, 11, 0.3);
-  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.15);
-}
 
 /* Content Area - Always visible, no toggle needed */
 .parsing-rules-content.active {
