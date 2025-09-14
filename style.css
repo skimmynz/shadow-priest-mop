@@ -1351,9 +1351,40 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Parsing Rules Styles
+  Parsing Rules Styles - Clean version with no dark background
   ================================================================= */
-/* Content Area*/
+
+/* Header Area Parsing Rules Container */
+.parsing-rules-header-container {
+  margin: 1rem 0 2rem 0;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  max-width: 100%;
+}
+
+.parsing-rules-header-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--warning-color) 0%, var(--gold-color) 50%, var(--warning-color) 100%);
+  opacity: 0.8;
+}
+
+.parsing-rules-header-container:hover {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 16px 40px rgba(245, 158, 11, 0.15);
+}
+
+/* Content Area - Always visible, no toggle needed */
 .parsing-rules-content.active {
   display: block;
   opacity: 1;
@@ -1371,7 +1402,7 @@ a.wowhead del {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-/* Rule items*/
+/* Rule items - Clean text without dark background */
 .parsing-rule-item {
   display: flex;
   align-items: flex-start;
