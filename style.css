@@ -1351,7 +1351,7 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Parsing Rules Styles - Clean version with no conflicts
+  Parsing Rules Styles - Clean version with no dark background
   ================================================================= */
 
 /* Header Area Parsing Rules Container */
@@ -1402,21 +1402,21 @@ a.wowhead del {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
-/* Rule items - Fixed to ensure text visibility */
+/* Rule items - Clean text without dark background */
 .parsing-rule-item {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
   padding: 0.875rem 1rem;
-  background: var(--secondary-bg);
-  border: 1px solid rgba(245, 158, 11, 0.2);
+  background: transparent;
+  border: none;
   border-radius: 10px;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   line-height: 1.5;
   font-size: 0.9rem;
-  color: #e2e8f0; /* Fixed: explicit color for text visibility */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #e2e8f0;
+  box-shadow: none;
   font-weight: 500;
   font-family: inherit;
 }
@@ -1428,18 +1428,6 @@ a.wowhead del {
   flex-shrink: 0;
   margin-top: 0.1rem;
   filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
-}
-
-.parsing-rule-item:hover {
-  background: var(--hover-bg);
-  border-color: rgba(245, 158, 11, 0.35);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.2);
-  color: #ffffff; /* Brighter text on hover */
-}
-
-.parsing-rule-item:hover::before {
-  transform: scale(1.1);
 }
 
 /* =================================================================
@@ -1544,6 +1532,7 @@ a.wowhead del {
     font-size: 0.75rem;
   }
 }
+
 /* =================================================================
   Focus and Accessibility improvements
   ================================================================= */
@@ -1594,14 +1583,7 @@ img[src=""] {
 }
 
 /* Custom scrollbar styling */
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-hover);
-}
-
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
-}bar {
+::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -1615,4 +1597,11 @@ html {
   border-radius: 4px;
 }
 
-::-webkit-scroll
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-hover);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
