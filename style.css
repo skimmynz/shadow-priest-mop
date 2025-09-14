@@ -1430,7 +1430,7 @@ a.wowhead del {
   
   .parsing-rules-list {
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 1rem;
+    gap: 0.5rem;
   }
   
   .parsing-rule-item {
