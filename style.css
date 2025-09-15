@@ -999,7 +999,7 @@ a.wowhead del {
 }
 
 /* =================================================================
-  Medium screens - Stack talent sidebar below main content
+  Medium screens
   ================================================================= */
 @media (max-width: 1199px) {
   .main-container {
@@ -1016,13 +1016,13 @@ a.wowhead del {
   
   .content-area {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 2;
     padding: 1.5rem;
   }
   
   .talent-sidebar {
     grid-column: 2;
-    grid-row: 2;
+    grid-row: 1;
     position: static;
     width: 100%;
     max-height: none;
