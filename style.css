@@ -999,6 +999,57 @@ a.wowhead del {
 }
 
 /* =================================================================
+  Medium screens - Stack talent sidebar below main content
+  ================================================================= */
+@media (max-width: 1199px) {
+  .main-container {
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem;
+  }
+  
+  .sidebar {
+    grid-row: 1 / 3;
+    width: 260px;
+    padding: 1.5rem;
+  }
+  
+  .content-area {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 1.5rem;
+  }
+  
+  .talent-sidebar {
+    grid-column: 2;
+    grid-row: 2;
+    position: static;
+    width: 100%;
+    max-height: none;
+    padding: 1.5rem;
+  }
+
+  .talent-summary .talent-row,
+  .talent-summary-content .talent-row {
+    gap: 1.25rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gear-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .talent-summary .talent-icon-img,
+  .talent-summary-content .talent-icon-img {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* =================================================================
   Tablet and small screens
   ================================================================= */
 @media (max-width: 768px) {
@@ -1380,6 +1431,34 @@ a.wowhead del {
     padding: 1rem 1.25rem;
     font-size: 0.95rem;
     min-width: 350px;
+  }
+}
+
+/* Medium Desktop */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .parsing-rules-list {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Medium screens */
+@media (max-width: 1199px) {
+  .parsing-rules-header-container {
+    margin: 1rem 0 1.5rem 0;
+  }
+  
+  .parsing-rules-content.active {
+    padding: 1rem 1.25rem;
+  }
+  
+  .parsing-rules-list {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+  
+  .parsing-rule-item {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.85rem;
   }
 }
 
