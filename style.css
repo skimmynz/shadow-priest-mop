@@ -1329,10 +1329,6 @@ a.wowhead del {
   padding: 0;
   display: flex;
   gap: 0.75rem;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(245, 158, 11, 0.3) transparent;
 }
 
 /* Rule items*/
@@ -1352,9 +1348,6 @@ a.wowhead del {
   box-shadow: none;
   font-weight: 500;
   font-family: inherit;
-  flex: 0 0 auto;
-  min-width: 300px;
-  white-space: nowrap;
 }
 
 .parsing-rule-item::before {
