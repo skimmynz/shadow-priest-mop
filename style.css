@@ -1404,10 +1404,12 @@ a.wowhead del {
   content: '⚡';
   position: absolute;
   left: 0;
-  top: 0.25rem;
+  top: 50%; 
+  transform: translateY(-50%);  
   color: var(--warning-color);
   font-size: 0.9rem;
   filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+  line-height: 1; 
 }
 
 /* =================================================================
