@@ -938,8 +938,8 @@ a.wowhead del {
   
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 64px;
-    height: 64px;
+    width: 50px;
+    height: 50px;
   }
   
   .ranking-header {
@@ -1044,8 +1044,8 @@ a.wowhead del {
 
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 56px;
-    height: 56px;
+    width: 50px;
+    height: 50px;
   }
 }
 
@@ -1126,8 +1126,8 @@ a.wowhead del {
   
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
-    width: 56px;
-    height: 56px;
+    width: 50px;
+    height: 50px;
   }
   
   .ranking-header {
