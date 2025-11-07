@@ -1,0 +1,1013 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow Priest Haste Calculator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://wow.zamimg.com/widgets/power.js"></script>
+
+  <style>
+    :root {
+      --primary-bg: #0a0a15;
+      --secondary-bg: #141428;
+      --card-bg: #1a1a35;
+      --surface-bg: #232340;
+      --accent-color: #6366f1;
+      --accent-hover: #7c3aed;
+      --accent-glow: rgba(99, 102, 241, 0.25);
+      --success-color: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.3);
+      --warning-color: #f59e0b;
+      --warning-glow: rgba(245, 158, 11, 0.3);
+      --shadow-color: #6b46c1;
+      --shadow-glow: rgba(107, 70, 193, 0.4);
+      --text-primary: #ffffff;
+      --text-secondary: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-accent: #a78bfa;
+      --border-color: #374151;
+      --border-hover: #4b5563;
+      --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-accent: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      --gradient-shadow: linear-gradient(135deg, #6b46c1 0%, #7c3aed 100%);
+      --gradient-bg: radial-gradient(circle at 20% 80%, rgba(107, 70, 193, 0.12) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                      radial-gradient(circle at 40% 40%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      min-height: 100vh;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+      background-image: var(--gradient-bg);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      background: var(--gradient-shadow);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      text-shadow: 0 0 30px var(--shadow-glow);
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .main-content {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 2rem;
+      align-items: start;
+      max-width: 100%;
+    }
+
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .input-card,
+    .result-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-xl);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .input-card:hover,
+    .result-card:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .input-card::before,
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-shadow);
+      opacity: 0.8;
+    }
+
+    .input-card {
+      padding: 2rem;
+    }
+
+    .input-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: stretch;
+    }
+
+    .toggle-buttons {
+      display: flex;
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      padding: 6px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 25px rgba(0, 0, 0, 0.15);
+      flex: 1;
+      position: relative;
+    }
+
+    .toggle-btn {
+      padding: 0.875rem 1.25rem;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.875rem;
+      font-family: inherit;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      flex: 1;
+      z-index: 2;
+    }
+
+    .toggle-btn.active {
+      background: var(--gradient-shadow);
+      color: white;
+      box-shadow: 0 8px 25px var(--shadow-glow), 0 4px 12px rgba(107, 70, 193, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .haste-input {
+      flex: 1;
+      min-width: 140px;
+      padding: 0.875rem 1.25rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--secondary-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 16px;
+      color: var(--text-primary);
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+      -moz-appearance: textfield;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .haste-input::-webkit-outer-spin-button,
+    .haste-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .haste-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--accent-glow), 0 16px 32px rgba(0, 0, 0, 0.25);
+      transform: translateY(-2px);
+    }
+
+    .haste-input:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+
+    .haste-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+      font-weight: 500;
+    }
+
+    .race-selection {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .race-toggle {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      user-select: none;
+      padding: 1rem 1.5rem;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+    }
+    
+    .race-toggle:hover {
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .race-checkbox {
+      display: none;
+    }
+
+    .goblin-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .race-checkbox:checked ~ .goblin-icon {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 15px var(--accent-glow), 0 4px 8px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+    }
+    
+    .race-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+    
+    .race-switch::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--border-color);
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .race-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .race-checkbox:checked + .race-switch::before {
+      background: var(--gradient-shadow);
+      box-shadow: 0 0 20px var(--shadow-glow);
+    }
+    
+    .race-checkbox:checked + .race-switch::after {
+      transform: translateX(22px);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+    
+    .race-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+    
+    .race-checkbox:checked ~ .race-text {
+      color: var(--text-primary);
+    }
+
+    .result-card {
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .result-label {
+      color: var(--text-accent);
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .result-value {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: var(--gradient-shadow);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.75rem;
+      line-height: 1;
+      text-shadow: 0 0 30px var(--shadow-glow);
+    }
+
+    .conversion-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .gcd-warning {
+      background: linear-gradient(135deg, var(--warning-color), #d97706);
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 12px;
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: 0 8px 25px var(--warning-glow);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .right-panel {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .spells-table {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-xl);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .spells-table:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+    }
+
+    .spells-table::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-shadow);
+      opacity: 0.8;
+    }
+
+    .table-header {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .table-title {
+      font-size: 1.375rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-align: center;
+      letter-spacing: -0.02em;
+      background: var(--gradient-shadow);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .spells-container {
+      background: transparent;
+    }
+
+    .spell-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      gap: 1.5rem;
+    }
+
+    .spell-row:last-child {
+      border-bottom: none;
+    }
+
+    .spell-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: var(--gradient-shadow);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .spell-row:hover::before {
+      width: 4px;
+    }
+
+    .spell-row:hover {
+      background: rgba(107, 70, 193, 0.08);
+      transform: translateX(8px);
+    }
+
+    .spell-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .spell-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 2px solid var(--border-color);
+      object-fit: cover;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .spell-icon:hover {
+      border-color: var(--accent-color);
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+    }
+
+    .spell-name {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .spell-name:hover {
+      color: var(--accent-color);
+      text-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .ticks-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.875rem;
+      min-width: 80px;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .ticks-badge.no-ticks {
+      background: var(--border-color);
+      color: var(--text-muted);
+    }
+
+    .ticks-badge.has-ticks {
+      background: var(--success-color);
+      color: white;
+      box-shadow: 0 0 25px var(--success-glow);
+      animation: pulse-glow 3s ease-in-out infinite;
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 25px var(--success-glow);
+      }
+      50% {
+        box-shadow: 0 0 35px var(--success-glow), 0 0 45px rgba(16, 185, 129, 0.2);
+        transform: scale(1.02);
+      }
+    }
+
+    .breakpoint-info {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+      min-width: 140px;
+    }
+
+    .breakpoint-text {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .breakpoint-maxed {
+      color: var(--success-color);
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-shadow: 0 0 10px var(--success-glow);
+    }
+
+    .progress-container {
+      width: 140px;
+      height: 10px;
+      background: var(--border-color);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--gradient-shadow);
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @media (max-width: 1024px) {
+      .main-content {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      
+      .left-panel {
+        position: static;
+        flex-direction: row;
+        gap: 1rem;
+      }
+      
+      .input-card,
+      .result-card {
+        flex: 1;
+      }
+
+      .input-card {
+        padding: 1.5rem;
+      }
+
+      .result-card {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem 0.5rem;
+        gap: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .header p {
+        font-size: 1rem;
+      }
+      
+      .left-panel {
+        flex-direction: column;
+      }
+      
+      .input-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      
+      .toggle-buttons {
+        width: 100%;
+      }
+
+      .main-content {
+        gap: 1rem;
+      }
+      
+      .spell-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.25rem 1.5rem;
+      }
+      
+      .spell-info {
+        justify-content: center;
+        flex-wrap: nowrap;
+      }
+
+      .spell-name {
+        font-size: 0.9rem;
+      }
+
+      .ticks-badge {
+        min-width: 70px;
+        padding: 0.4rem 0.7rem;
+        font-size: 0.8rem;
+      }
+      
+      .breakpoint-info {
+        text-align: center;
+        align-items: center;
+      }
+      
+      .progress-container {
+        width: 120px;
+      }
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--secondary-bg);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gradient-shadow);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Shadow Priest Haste Calculator</h1>
+      <p>Optimize your DoT breakpoints and maximize your damage potential in Mists of Pandaria Classic</p>
+    </div>
+
+    <div class="main-content">
+      <div class="left-panel">
+        <div class="input-card">
+          <div class="input-section">
+            <div class="input-row">
+              <div class="toggle-buttons">
+                <button class="toggle-btn active" data-mode="rating">Haste Rating</button>
+                <button class="toggle-btn" data-mode="percentage">Haste %</button>
+              </div>
+              <input
+                type="number"
+                id="hasteInput"
+                class="haste-input"
+                min="0"
+                max="20000"
+                step="1"
+                placeholder="0"
+              />
+            </div>
+            
+            <div class="race-selection">
+              <label class="race-toggle">
+                <input type="checkbox" id="goblinRacial" class="race-checkbox">
+                <span class="race-switch"></span>
+                <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
+                <span class="race-text">Goblin (+1% haste)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-label">Effective Haste</div>
+          <div class="result-value" id="hasteResult">5.00%</div>
+          <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
+          <div id="gcdWarning"></div>
+        </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="spells-table">
+          <div class="table-header">
+            <h2 class="table-title">DoT Breakpoint Analysis</h2>
+          </div>
+          <div class="spells-container" id="spellsContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // MoP Classic spell data with corrected URLs
+    const breakpoints = {
+      "Shadow Word: Pain": {
+        id: 589,
+        points: [8.32, 24.97, 41.68],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
+        url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
+      },
+      "Vampiric Touch": {
+        id: 34914,
+        points: [9.99, 30.01, 49.95],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
+        url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
+      },
+      "Devouring Plague": {
+        id: 2944,
+        points: [8.28, 24.92, 41.74],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
+        url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
+      }
+    };
+
+    let inputMode = 'rating'; // 'rating' or 'percentage'
+    const hasteInput = document.getElementById('hasteInput');
+
+    // Toggle between input modes
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        inputMode = this.dataset.mode;
+        
+        if (inputMode === 'rating') {
+          hasteInput.placeholder = '0';
+          hasteInput.setAttribute('max', '38450');
+          hasteInput.setAttribute('maxlength', '5');
+          hasteInput.setAttribute('step', '1');
+          hasteInput.type = 'number';
+        } else {
+          hasteInput.placeholder = '0.00%';
+          hasteInput.removeAttribute('max');
+          hasteInput.removeAttribute('step');
+          hasteInput.removeAttribute('maxlength');
+          hasteInput.type = 'text';
+          hasteInput.inputMode = 'decimal';
+        }
+        
+        hasteInput.value = '';
+        calculateHaste();
+      });
+    });
+
+    function calculateHaste() {
+      let inputValue = parseFloat(hasteInput.value) || 0;
+      const isGoblin = document.getElementById('goblinRacial').checked;
+      
+      let effectiveHaste;
+      let rating;
+      
+      if (inputMode === 'rating') {
+        rating = Math.min(inputValue, 20000);
+        
+        // Shadowform passive 5% haste
+        const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
+        effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
+      } else {
+        // Input is percentage, calculate rating
+        inputValue = Math.min(inputValue, 99.99);
+        effectiveHaste = inputValue;
+        rating = calculateRatingFromPercent(inputValue, isGoblin);
+      }
+
+      document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
+      
+      // Show conversion
+      const conversionText = document.getElementById('conversionText');
+      if (inputMode === 'rating') {
+        if (rating > 0) {
+          const base = isGoblin ? 6 : 5;
+          conversionText.textContent = `${Math.round(rating).toLocaleString()} rating + ${base}% base`;
+        } else {
+          const base = isGoblin ? 6 : 5;
+          conversionText.textContent = `Base: ${base}% ${isGoblin ? '(5% Shadowform + 1% Goblin)' : 'Shadowform'}`;
+        }
+      } else {
+        conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
+      }
+
+      // GCD Cap warning
+      const gcdCap = isGoblin ? 17614 : 18215;
+      const warningElement = document.getElementById('gcdWarning');
+      
+      if (rating >= gcdCap) {
+        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating)</div>`;
+      } else {
+        warningElement.innerHTML = '';
+      }
+
+      updateSpellTable(effectiveHaste, isGoblin);
+    }
+    
+    function handleInput(e) {
+      if (inputMode === 'percentage') {
+        let value = e.target.value;
+        // Remove all non-digit characters
+        let digits = value.replace(/\D/g, '');
+        
+        // Limit to 4 digits
+        digits = digits.substring(0, 4);
+
+        // Insert decimal point after the second digit
+        if (digits.length > 2) {
+          e.target.value = digits.slice(0, 2) + '.' + digits.slice(2);
+        } else {
+          e.target.value = digits;
+        }
+      }
+      calculateHaste();
+    }
+
+    function updateSpellTable(effectiveHaste, isGoblin) {
+      let spellsHTML = '';
+      
+      for (const [spell, data] of Object.entries(breakpoints)) {
+        let extraTicks = 0;
+        let nextBP = 'Maxed';
+        let nextBPValue = null;
+
+        for (let i = 0; i < data.points.length; i++) {
+          if (effectiveHaste >= data.points[i]) {
+            extraTicks++;
+          } else {
+            nextBPValue = data.points[i];
+            nextBP = `${nextBPValue}% (${calculateRatingFromPercent(nextBPValue, isGoblin).toLocaleString()} rating)`;
+            break;
+          }
+        }
+
+        let progressPercent = 100;
+        if (nextBPValue !== null) {
+          const prevBP = data.points[extraTicks - 1] ?? 0;
+          progressPercent = Math.min(
+            100,
+            Math.max(0, ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100)
+          );
+        }
+
+        const isMaxed = nextBP === 'Maxed';
+        const ticksClass = extraTicks > 0 ? 'has-ticks' : 'no-ticks';
+
+        spellsHTML += `
+          <div class="spell-row">
+            <div class="spell-info">
+              <a href="${data.url}"
+                  target="_blank"
+                  class="spell-name"
+                  data-wowhead="spell=${data.id}&domain=mop-classic">
+                <img src="${data.icon}" alt="${spell}" class="spell-icon">
+              </a>
+              <a href="${data.url}"
+                  target="_blank"
+                  class="spell-name"
+                  data-wowhead="spell=${data.id}&domain=mop-classic">
+                ${spell}
+              </a>
+              <div class="ticks-badge ${ticksClass}">+${extraTicks} tick${extraTicks !== 1 ? 's' : ''}</div>
+            </div>
+            
+            <div class="breakpoint-info">
+              <div class="breakpoint-text-container">
+                <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
+                  ${nextBP}
+                </div>
+              </div>
+              ${!isMaxed ? `
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                </div>
+              ` : ''}
+            </div>
+          </div>`;
+      }
+      
+      document.getElementById('spellsContainer').innerHTML = spellsHTML;
+
+      // Refresh Wowhead tooltips
+      if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+      }
+    }
+
+    // Calculate rating from percentage
+    function calculateRatingFromPercent(targetPercent, isGoblin = false) {
+      const targetHasteDecimal = targetPercent / 100;
+      const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
+      return Math.max(0, Math.round(42500 * ((1 + targetHasteDecimal) / baseMultiplier - 1)));
+    }
+
+    // Event listeners
+    hasteInput.addEventListener('input', handleInput);
+    hasteInput.addEventListener('paste', handleInput);
+    hasteInput.addEventListener('keydown', function(e) {
+      // For rating mode, prevent non-numeric keys (except allowed keys)
+      if (inputMode === 'rating') {
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        const isNumericKey = e.key >= '0' && e.key <= '9';
+        const isControlKey = e.ctrlKey || e.metaKey;
+        
+        // Allow control keys and allowed keys
+        if (allowedKeys.includes(e.key) || isControlKey) {
+          return;
+        }
+        
+        // Prevent non-numeric keys
+        if (!isNumericKey) {
+          e.preventDefault();
+          return;
+        }
+        
+        // Check if text is selected
+        const hasSelection = this.selectionStart !== this.selectionEnd;
+        
+        // Prevent input if already at 5 digits and no text is selected
+        if (this.value.length >= 5 && !hasSelection) {
+          e.preventDefault();
+        }
+      }
+    });
+    document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
+    hasteInput.addEventListener('focus', function() {
+      this.select();
+    });
+
+    // Initialize on load
+    calculateHaste();
+  </script>
+</body>
+</html>
