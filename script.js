@@ -1,3 +1,4 @@
+
 // Time-slicing for large operations
 class TimeSlicing {
   static async processInChunks(items, processor, chunkSize = 50, yieldEvery = 5) {
@@ -16,7 +17,7 @@ class TimeSlicing {
   }
 }
 
-// Optimized DOM batch updates
+// Optimized DOM batch updates (no reliance on fragment.children)
 class DOMBatcher {
   constructor() {
     this.pendingUpdates = new Map();
@@ -30,24 +31,20 @@ class DOMBatcher {
     }
   }
   flush() {
-    const fragment = document.createDocumentFragment();
-    this.pendingUpdates.forEach(updateFn => updateFn(fragment));
-    // Single DOM write
-    if (fragment.children.length > 0) {
-      const container = document.getElementById('rankings');
-      container?.replaceChildren(fragment);
-    }
+    // Just run the queued update functions; they write to the DOM themselves.
+    this.pendingUpdates.forEach(updateFn => {
+      try { updateFn(); } catch (e) { console.error('DOMBatcher update failed:', e); }
+    });
     this.pendingUpdates.clear();
     this.isScheduled = false;
   }
 }
 
-// Initialize optimized components
+// Task scheduler polyfill
 const domBatcher = new DOMBatcher();
-const scheduler = window.scheduler ||
-{
+const scheduler = window.scheduler || {
   postTask: (fn, options) => {
-    const priority = options?.priority || 'background';
+    const priority = options && options.priority ? options.priority : 'background';
     if (priority === 'user-blocking') {
       return Promise.resolve().then(fn);
     }
@@ -57,8 +54,8 @@ const scheduler = window.scheduler ||
 
 // Debounced event handlers
 function createDebounced(fn, delay = 100, immediate = false) {
-  let timeoutId;
-  let lastArgs;
+  let timeoutId = null;
+  let lastArgs = null;
   const debounced = function (...args) {
     lastArgs = args;
     if (immediate && !timeoutId) {
@@ -79,28 +76,32 @@ function createDebounced(fn, delay = 100, immediate = false) {
   return debounced;
 }
 
-// ---- Boss icon helpers (NEW) ----
-// Throne of Thunder (T15) assets use 15xx icon IDs, not 515xx encounter IDs.
-// Normalize: 51559–51580 -> 1559–1580; otherwise return encounterId unchanged.
+/* --------------------------------------------------------------------
+   Boss icon helpers (Throne of Thunder normalization)
+   -------------------------------------------------------------------- */
+// ToT assets use 15xx icon IDs, not 515xx encounter IDs.
+// Normalize: 51559–51580 -> 1559–1580; otherwise return unchanged.
 function getBossIconId(encounterId) {
   if (encounterId >= 51559 && encounterId <= 51580) {
     return encounterId - 50000; // e.g., 51577 -> 1577
   }
   return encounterId; // T14 etc. already match asset icon IDs
 }
-
 function bossIconUrl(encounterId) {
   const iconId = getBossIconId(encounterId);
-  return `https://assets.rpglogs.com/img/warcraft/bosses/${iconId}-icon.jpg?v=2`;
+  return 'https://assets.rpglogs.com/img/warcraft/bosses/' + iconId + '-icon.jpg?v=2';
 }
 
-// Optimized talent analysis with time-slicing
+/* --------------------------------------------------------------------
+   Talent analysis (time-sliced)
+   -------------------------------------------------------------------- */
 async function analyzeTalentsOptimized(rankings) {
   if (!Array.isArray(rankings) || rankings.length === 0) {
     return { tierCounts: {}, totalPerTier: {} };
   }
   const tierCounts = {};
   const totalPerTier = {};
+
   // Initialize structures
   for (const tier of TIER_ORDER) {
     tierCounts[tier] = {};
@@ -109,13 +110,13 @@ async function analyzeTalentsOptimized(rankings) {
       tierCounts[tier][talent] = 0;
     }
   }
-  // Process rankings in time-sliced chunks
+
   await TimeSlicing.processInChunks(
     rankings,
     async (chunk) => {
       return chunk.map(entry => {
         const seenTiers = new Set();
-        const talents = Array.isArray(entry?.talents) ? entry.talents : [];
+        const talents = Array.isArray(entry && entry.talents) ? entry.talents : [];
         for (const t of talents) {
           const displayName = getTalentDisplayName(t.name);
           if (!VALID_TALENT_SET.has(displayName)) continue;
@@ -130,12 +131,14 @@ async function analyzeTalentsOptimized(rankings) {
       });
     },
     25, // Smaller chunk size for better yielding
-    2  // Yield more frequently
+    2   // Yield more frequently
   );
   return { tierCounts, totalPerTier };
 }
 
-// Optimized rendering with virtual scrolling concepts
+/* --------------------------------------------------------------------
+   Optimized Renderer
+   -------------------------------------------------------------------- */
 class OptimizedRenderer {
   constructor(container) {
     this.container = container;
@@ -143,10 +146,10 @@ class OptimizedRenderer {
   }
 
   async renderRankings(data, topByTier) {
-    const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
+    const rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     const visibleRankings = rankings.slice(0, 100);
 
-    // Pre-calculate all rank colors
+    // Pre-calculate colors
     const rankColors = new Map();
     for (let i = 0; i < visibleRankings.length; i++) {
       const rank = i + 1;
@@ -155,60 +158,59 @@ class OptimizedRenderer {
       else rankColors.set(i, '#ff8000');
     }
 
-    // Time-slice the rendering process
     const renderedEntries = await TimeSlicing.processInChunks(
       visibleRankings,
       async (chunk) => {
-        return chunk.map((r, localIndex) => {
+        return chunk.map((r) => {
           const globalIndex = visibleRankings.indexOf(r);
           return this.renderSingleEntry(r, globalIndex, rankColors.get(globalIndex), topByTier);
         });
       },
-      10, // Small chunks for better responsiveness
-      1   // Yield after every chunk
+      10,
+      1
     );
     return renderedEntries.join('');
   }
 
   renderSingleEntry(r, index, color, topByTier) {
-    const cacheKey = `${r.reportID}-${r.fightID}-${index}`;
+    const cacheKey = (r.reportID + '-' + r.fightID + '-' + index);
     if (this.renderCache.has(cacheKey)) {
       return this.renderCache.get(cacheKey);
     }
-    const reportUrl = `https://classic.warcraftlogs.com/reports/${r.reportID}?fight=${r.fightID}&type=damage-done`;
-    const dps = typeof r?.total === 'number' ? Math.round(r.total) : '—';
-    const playerName = r?.name ?? 'Unknown';
-    const perPlayerTalents = this.buildPlayerTalentIcons(r?.talents, topByTier);
-    const entryId = `entry-${index}-${r.reportID}-${r.fightID}`;
-    const html = `
-      <div class="rank-entry">
-        <div class="ranking-header" onclick="toggleDropdown('${entryId}')">
-          <div class="name-wrapper" style="color:${color}">
-            ${index + 1}. ${playerName} — ${dps.toLocaleString()} DPS
-          </div>
-          <div class="header-right">
-            ${perPlayerTalents}
-            <span class="expand-icon">▼</span>
-          </div>
-        </div>
-        <div class="dropdown-content" id="${entryId}">
-          ${this.renderDropdownContent(r, reportUrl)}
-        </div>
-      </div>
-    `;
+    const reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
+    const dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
+    const playerName = (r && r.name) ? r.name : 'Unknown';
+    const perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
+    const entryId = 'entry-' + index + '-' + r.reportID + '-' + r.fightID;
+
+    const html =
+      '<div class="rank-entry">' +
+        '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
+          '<div class="name-wrapper" style="color:' + color + '">' +
+            (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
+          '</div>' +
+          '<div class="header-right">' +
+            perPlayerTalents +
+            '<span class="expand-icon">▼</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="dropdown-content" id="' + entryId + '">' +
+          this.renderDropdownContent(r, reportUrl) +
+        '</div>' +
+      '</div>';
+
     this.renderCache.set(cacheKey, html);
     return html;
   }
 
   renderDropdownContent(r, reportUrl) {
-    // Lazy render dropdown content only when needed
-    return `
-      <div class="dropdown-placeholder" data-report-id="${r.reportID}" data-fight-id="${r.fightID}">
-        <div style="text-align: center; padding: 1rem; color: #94a3b8;">
-          Click to load details...
-        </div>
-      </div>
-    `;
+    return (
+      '<div class="dropdown-placeholder" data-report-id="' + r.reportID + '" data-fight-id="' + r.fightID + '">' +
+        '<div style="text-align: center; padding: 1rem; color: #94a3b8;">' +
+          'Click to load details...' +
+        '</div>' +
+      '</div>'
+    );
   }
 
   buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
@@ -221,43 +223,44 @@ class OptimizedRenderer {
       if (tier && !chosenByTier.has(tier)) chosenByTier.set(tier, displayName);
     }
     const cells = TIER_ORDER.map((tier) => {
-      const name = chosenByTier.get(tier) ?? null;
+      const name = chosenByTier.get(tier) || null;
       const iconUrl = talentIconUrl(name);
       const spellId = name ? getSpellId(name) : 0;
-      const href = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : null;
-      const title = name ?? 'Unknown (no data)';
-      const metaInfo = topByTier?.get(tier);
-      const isMeta = !!(name && metaInfo && metaInfo.winners.has(name));
-      const img = `<img class="talent-icon-img" loading="lazy" src="${iconUrl}" alt="${title{isMeta ? ' is-meta' : ''}`;
+      const href = spellId ? ('https://www.wowhead.com/mop-classic/spell=' + spellId) : null;
+      const title = name || 'Unknown (no data)';
+      const metaInfo = topByTier && topByTier.get ? topByTier.get(tier) : null;
+      const isMeta = !!(name && metaInfo && metaInfo.winners && metaInfo.winners.has(name));
+      const img = '<img class="talent-icon-img" loading="lazy" src="' + iconUrl + '" alt="' + title + '" />';
+      const classes = 'talent-link' + (href ? ' wowhead' : '') + (isMeta ? ' is-meta' : '');
       if (href) {
-        return `${href}${img}<div class="talent-percent" aria-hidden="true"></div></a>`;
+        return '<a class="' + classes + '" href="' + href + '" target="_blank" rel="noopener">' + img + '<div class="talent-percent" aria-hidden="true"></div></a>';
       }
-      return `<span class="${classes}">${img}<div class="talent-percent" aria-hidden="true"></div></span>`;
+      return '<span class="' + classes + '">' + img + '<div class="talent-percent" aria-hidden="true"></div></span>';
     });
-    return `<div class="talent-row">${cells.join('')}</div>`;
+    return '<div class="talent-row">' + cells.join('') + '</div>';
   }
 }
 
-// Optimized dropdown toggle with lazy loading
+/* --------------------------------------------------------------------
+   Dropdown toggle (debounced, lazy-load)
+   -------------------------------------------------------------------- */
 const debouncedToggleDropdown = createDebounced(async function (entryId) {
   const dropdown = document.getElementById(entryId);
-  const header = dropdown?.previousElementSibling;
-  const expandIcon = header?.querySelector('.expand-icon');
+  const header = dropdown ? dropdown.previousElementSibling : null;
+  const expandIcon = header ? header.querySelector('.expand-icon') : null;
   if (!dropdown || !expandIcon) return;
   const isActive = dropdown.classList.contains('active');
 
-  // Close other dropdowns immediately (no animation needed)
   const otherDropdowns = document.querySelectorAll('.dropdown-content.active');
   otherDropdowns.forEach(el => {
     if (el.id !== entryId) {
       el.classList.remove('active');
-      const otherIcon = el.previousElementSibling?.querySelector('.expand-icon');
+      const otherIcon = el.previousElementSibling ? el.previousElementSibling.querySelector('.expand-icon') : null;
       if (otherIcon) otherIcon.classList.remove('rotated');
     }
   });
 
   if (!isActive) {
-    // Lazy load dropdown content if it's a placeholder
     const placeholder = dropdown.querySelector('.dropdown-placeholder');
     if (placeholder) {
       const reportId = placeholder.dataset.reportId;
@@ -266,89 +269,64 @@ const debouncedToggleDropdown = createDebounced(async function (entryId) {
     }
   }
 
-  // Toggle current dropdown
   dropdown.classList.toggle('active', !isActive);
   expandIcon.classList.toggle('rotated', !isActive);
-}, 50, true); // Immediate execution with trailing debounce
+}, 50, true);
 
-// Lazy load dropdown content
 async function loadDropdownContent(dropdown, reportId, fightId) {
-  if (!currentData?.rankings) return;
+  if (!currentData || !currentData.rankings) return;
   const entry = currentData.rankings.find(r =>
-    r.reportID === reportId && r.fightID === parseInt(fightId)
+    r.reportID === reportId && r.fightID === parseInt(fightId, 10)
   );
   if (!entry) return;
 
-  const reportUrl = `https://classic.warcraftlogs.com/reports/${reportId}?fight=${fightId}&type=damage-done`;
+  const reportUrl = 'https://classic.warcraftlogs.com/reports/' + reportId + '?fight=' + fightId + '&type=damage-done';
   const duration = formatDuration(entry.duration);
-  const itemLevel = entry.itemLevel ?? 'N/A';
+  const itemLevel = (entry.itemLevel != null) ? entry.itemLevel : 'N/A';
   const serverInfo = formatServerInfo(entry.serverName, entry.regionName);
   const faction = formatFaction(entry.faction);
-  const guildName = entry.guildName ?? 'No Guild';
-  const raidSize = entry.size ?? 'N/A';
+  const guildName = entry.guildName || 'No Guild';
+  const raidSize = (entry.size != null) ? entry.size : 'N/A';
 
-  const content = `
-    <div class="info-grid">
-      <div class="info-section">
-        <h4>Fight Details</h4>
-        <div class="info-row">
-          <span class="info-label">Duration:</span>
-          <span class="info-value">${duration}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Fight ID:</span>
-          <span class="info-value">${fightId}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Report:</span>
-          <span class="info-value">
-            <areportUrl}${reportId}</a>
-          </span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Raid Size:</span>
-          <span class="info-value">${raidSize}</span>
-        </div>
-      </div>
-      <div class="info-section">
-        <h4>Player Info</h4>
-        <div class="info-row">
-          <span class="info-label">Server:</span>
-          <span class="info-value">${serverInfo}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Guild:</span>
-          <span class="info-value">${guildName}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Faction:</span>
-          <span class="info-value">${faction}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Item Level:</span>
-          <span class="info-value">${itemLevel}</span>
-        </div>
-      </div>
-    </div>
-    <div class="info-section">
-      <h4>Gear & Equipment</h4>
-      <div class="gear-grid">
-        ${buildGearDisplay(entry.gear)}
-      </div>
-    </div>
-  `;
+  const content =
+    '<div class="info-grid">' +
+      '<div class="info-section">' +
+        '<h4>Fight Details</h4>' +
+        '<div class="info-row"><span class="info-label">Duration:</span><span class="info-value">' + duration + '</span></div>' +
+        '<div class="info-row"><span class="info-label">Fight ID:</span><span class="info-value">' + fightId + '</span></div>' +
+        '<div class="info-row"><span class="info-label">Report:</span><span class="info-value"><a href="' + reportUrl + '" target="_blank" rel="noopener">' + reportId + '</a></span></div>' +
+        '<div class="info-row"><span class="info-label">Raid Size:</span><span class="info-value">' + raidSize + '</span></div>' +
+      '</div>' +
+      '<div class="info-section">' +
+        '<h4>Player Info</h4>' +
+        '<div class="info-row"><span class="info-label">Server:</span><span class="info-value">' + serverInfo + '</span></div>' +
+        '<div class="info-row"><span class="info-label">Guild:</span><span class="info-value">' + guildName + '</span></div>' +
+        '<div class="info-row"><span class="info-label">Faction:</span><span class="info-value">' + faction + '</span></div>' +
+        '<div class="info-row"><span class="info-label">Item Level:</span><span class="info-value">' + itemLevel + '</span></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="info-section">' +
+      '<h4>Gear & Equipment</h4>' +
+      '<div class="gear-grid">' +
+        buildGearDisplay(entry.gear) +
+      '</div>' +
+    '</div>';
+
   dropdown.innerHTML = content;
 }
 
-// Global toggle function for backwards compatibility
+// Global toggle function
 function toggleDropdown(entryId) {
   debouncedToggleDropdown(entryId);
 }
 
-// Initialize optimized renderer
+// Renderer init
 const optimizedRenderer = new OptimizedRenderer();
 let currentData = null;
 
+/* --------------------------------------------------------------------
+   Tier / Raids data
+   -------------------------------------------------------------------- */
 const TIERS = {
   t14: {
     name: 'T14',
@@ -362,8 +340,8 @@ const TIERS = {
           "Gara'jal the Spiritbinder": 1434,
           "The Spirit Kings": 1436,
           "Elegon": 1500,
-          "Will of the Emperor": 1407,
-        },
+          "Will of the Emperor": 1407
+        }
       },
       hof: {
         short: 'HoF',
@@ -374,8 +352,8 @@ const TIERS = {
           "Garalon": 1463,
           "Wind Lord Mel'jarak": 1498,
           "Amber-Shaper Un'sok": 1499,
-          "Grand Empress Shek'zeer": 1501,
-        },
+          "Grand Empress Shek'zeer": 1501
+        }
       },
       toes: {
         short: 'ToES',
@@ -384,9 +362,9 @@ const TIERS = {
           "Protectors of the Endless": 1409,
           "Tsulong": 1505,
           "Lei Shi": 1506,
-          "Sha of Fear": 1431,
+          "Sha of Fear": 1431
         }
-      },
+      }
     }
   },
   t15: {
@@ -408,22 +386,22 @@ const TIERS = {
           "Iron Qon": 51559,
           "Twin Consorts": 51560,
           "Lei Shen": 51579,
-          "Ra-den": 51580,
-        },
-      },
+          "Ra-den": 51580
+        }
+      }
     }
-  },
+  }
 };
 
 let currentTierKey = 't15';
 let currentRaidKey = 'tot';
 
-// DOM refs with null checks
+// DOM refs
 const raidMenu = document.getElementById('raid-menu');
 const bossButtonsDiv = document.getElementById('boss-buttons');
 const rankingsDiv = document.getElementById('rankings');
 
-// Optimized last updated element creation
+// Last updated element
 let lastUpdatedEl = document.getElementById('last-updated');
 if (!lastUpdatedEl) {
   const h1 = document.querySelector('h1');
@@ -435,21 +413,24 @@ if (!lastUpdatedEl) {
   }
 }
 
-// Cache and API configuration
+/* --------------------------------------------------------------------
+   Cache & API
+   -------------------------------------------------------------------- */
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
-const CACHE_KEY = (encounterId) => `spriest_rankings_${encounterId}`;
-const API_URL = (encounterId) => `/.netlify/functions/getLogs?encounterId=${encounterId}`;
+const CACHE_KEY = (encounterId) => 'spriest_rankings_' + encounterId;
+const API_URL = (encounterId) => '/.netlify/functions/getLogs?encounterId=' + encounterId;
 
-// Talent data
+/* --------------------------------------------------------------------
+   Talents
+   -------------------------------------------------------------------- */
 const talentTiers = {
   15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
   30: ["Body and Soul", "Angelic Feather", "Phantasm"],
   45: ["From Darkness, Comes Light", "Mindbender", "Solace and Insanity"],
   60: ["Desperate Prayer", "Spectral Guise", "Angelic Bulwark"],
   75: ["Twist of Fate", "Power Infusion", "Divine Insight"],
-  90: ["Cascade", "Divine Star", "Halo"],
+  90: ["Cascade", "Divine Star", "Halo"]
 };
-
 const talentIcons = {
   "Void Tendrils": "spell_priest_voidtendrils",
   "Psyfiend": "spell_priest_psyfiend",
@@ -468,9 +449,8 @@ const talentIcons = {
   "Divine Insight": "spell_priest_burningwill",
   "Cascade": "ability_priest_cascade",
   "Divine Star": "spell_priest_divinestar",
-  "Halo": "ability_priest_halo",
+  "Halo": "ability_priest_halo"
 };
-
 const talentSpellIds = {
   "Void Tendrils": 108920,
   "Psyfiend": 108921,
@@ -489,9 +469,8 @@ const talentSpellIds = {
   "Divine Insight": 109175,
   "Cascade": 121135,
   "Divine Star": 110744,
-  "Halo": 120517,
+  "Halo": 120517
 };
-
 const talentNameMap = {
   "Surge of Light": "From Darkness, Comes Light",
   "Mind Control": "Dominate Mind"
@@ -499,34 +478,37 @@ const talentNameMap = {
 
 // Precomputed helpers
 const TIER_ORDER = Object.keys(talentTiers).map(Number).sort((a, b) => a - b);
-const VALID_TALENT_SET = new Set(Object.values(talentTiers).flat());
+const VALID_TALENT_SET = new Set([].concat(...Object.values(talentTiers)));
 const TIER_BY_TALENT = (() => {
   const m = new Map();
-  for (const [tier, talents] of Object.entries(talentTiers)) {
-    for (const t of talents) m.set(t, Number(tier));
+  for (const tierStr in talentTiers) {
+    const tier = Number(tierStr);
+    for (const t of talentTiers[tier]) m.set(t, tier);
   }
   return m;
 })();
-const getSpellId = (name) => talentSpellIds[name] ?? 0;
-const getTalentDisplayName = (apiName) => talentNameMap[apiName] ?? apiName;
+const getSpellId = (name) => (name in talentSpellIds ? talentSpellIds[name] : 0);
+const getTalentDisplayName = (apiName) => (apiName in talentNameMap ? talentNameMap[apiName] : apiName);
 const talentIconUrl = (name) => {
-  const iconKey = talentIcons[name] ?? "inv_misc_questionmark";
-  return `https://assets.rpglogs.com/img/warcraft/abilities/${iconKey}.jpg`;
+  const key = name && talentIcons[name] ? talentIcons[name] : 'inv_misc_questionmark';
+  return 'https://assets.rpglogs.com/img/warcraft/abilities/' + key + '.jpg';
 };
 
-// Utility functions
+/* --------------------------------------------------------------------
+   Utility
+   -------------------------------------------------------------------- */
 function formatDuration(ms) {
   if (!ms || ms === 0) return 'N/A';
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
-  return `${minutes}m ${seconds}s`;
+  return minutes + 'm ' + seconds + 's';
 }
 function formatFaction(faction) {
   return faction === 1 ? 'Alliance' : faction === 0 ? 'Horde' : 'Unknown';
 }
 function formatServerInfo(serverName, regionName) {
   if (!serverName) return 'Unknown Server';
-  return regionName ? `${serverName} (${regionName})` : serverName;
+  return regionName ? (serverName + ' (' + regionName + ')') : serverName;
 }
 function buildGearDisplay(gear) {
   if (!Array.isArray(gear) || gear.length === 0) {
@@ -538,73 +520,73 @@ function buildGearDisplay(gear) {
     10: 'Ring 1', 11: 'Ring 2', 12: 'Trinket 1', 13: 'Trinket 2',
     14: 'Back', 15: 'Main Hand', 16: 'Off Hand', 17: 'Ranged'
   };
-  const allItemIds = gear
-    .map(item => item ? item.id : 0)
-    .filter(Boolean)
-    .join(':');
+  const allItemIds = gear.map(item => item ? item.id : 0).filter(Boolean).join(':');
 
   return gear.map((item, index) => {
     if (!item || item.id === 0) return '';
-    const slotName = gearSlots[index] ?? `Slot ${index}`;
-    const qualityClass = item.quality ?? 'common';
-    const iconSrc = `https://assets.rpglogs.com/img/warcraft/abilities/${item.icon ?? 'inv_misc_questionmark.jpg'}`;
+    const slotName = gearSlots[index] || ('Slot ' + index);
+    const qualityClass = item.quality || 'common';
+    const iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + (item.icon || 'inv_misc_questionmark.jpg');
     const params = new URLSearchParams();
-    if (item.itemLevel) { params.append('ilvl', item.itemLevel); }
-    if (allItemIds) { params.append('pcs', allItemIds); }
-    const gemIds = (Array.isArray(item.gems) ? item.gems : [])
-      .map(gem => gem.id)
-      .filter(Boolean);
-    if (gemIds.length > 0) { params.append('gems', gemIds.join(':')); }
-    if (item.permanentEnchant) { params.append('ench', item.permanentEnchant); }
+    if (item.itemLevel) params.append('ilvl', item.itemLevel);
+    if (allItemIds) params.append('pcs', allItemIds);
+    const gemIds = (Array.isArray(item.gems) ? item.gems : []).map(g => g.id).filter(Boolean);
+    if (gemIds.length > 0) params.append('gems', gemIds.join(':'));
+    if (item.permanentEnchant) params.append('ench', item.permanentEnchant);
     const queryString = params.toString();
-    const itemUrl = `https://www.wowhead.com/mop-classic/item=${item.id}${queryString ? `?${queryString}` : ''}`;
-    const itemLinkHtml = `
-      <a href="${itemUrl}"
-         class="rankings-gear-name ${qualityClass} wowhead"
-         target="_blank" rel="noopenerear-item">
-        <div class="gear-header">
-          <div class="gear-info">
-            ${itemLinkHtml}
-            <div class="gear-slot">${slotName}</div>
-          </div>
-          <div class="gear-ilvl">iLvl ${item.itemLevel ?? '0'}</div>
-        </div>
-      </div>
-    `;
+    const itemUrl = 'https://www.wowhead.com/mop-classic/item=' + item.id + (queryString ? ('?' + queryString) : '');
+    const itemLinkHtml =
+      '<a href="' + itemUrl + '" class="rankings-gear-name ' + qualityClass + ' wowhead" target="_blank" rel="noopener">' +
+        '<img src="' + iconSrc + '" alt="' + (item.name || 'Unknown Item') + '" class="rankings-gear-image" loading="lazy">' +
+        (item.name || 'Unknown Item') +
+      '</a>';
+    return (
+      '<div class="gear-item">' +
+        '<div class="gear-header">' +
+          '<div class="gear-info">' +
+            itemLinkHtml +
+            '<div class="gear-slot">' + slotName + '</div>' +
+          '</div>' +
+          '<div class="gear-ilvl">iLvl ' + (item.itemLevel || '0') + '</div>' +
+        '</div>' +
+      '</div>'
+    );
   }).filter(Boolean).join('');
 }
 
-// Optimized talent summary rendering
+/* --------------------------------------------------------------------
+   Talent summary rendering
+   -------------------------------------------------------------------- */
 async function renderTalentSummary(data) {
-  const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
-  // Use optimized analysis
-  const { tierCounts, totalPerTier } = await analyzeTalentsOptimized(rankings);
+  const rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
+  const result = await analyzeTalentsOptimized(rankings);
+  const tierCounts = result.tierCounts;
+  const totalPerTier = result.totalPerTier;
+
   const TOP_BY_TIER = new Map();
   let talentSummaryHTML = '<div class="talent-summary-content">';
 
   for (const tier of TIER_ORDER) {
-    const total = totalPerTier[tier] ?? 0;
+    const total = totalPerTier[tier] || 0;
     const rowStats = talentTiers[tier].map((talent) => {
-      const count = tierCounts[tier][talent] ?? 0;
+      const count = (tierCounts[tier] && tierCounts[tier][talent]) ? tierCounts[tier][talent] : 0;
       const percentNum = total > 0 ? (count / total) * 100 : 0;
       const percent = percentNum.toFixed(1);
       const iconUrl = talentIconUrl(talent);
       const spellId = getSpellId(talent);
-      const wowheadUrl = spellId ? `https://www.wowhead.com/mop-classic/spell=${spellId}` : 'https://www.wowhead.com/';
-      return { talent, percentNum, percent, iconUrl, wowheadUrl };
+      const wowheadUrl = spellId ? ('https://www.wowhead.com/mop-classic/spell=' + spellId) : 'https://www.wowhead.com/';
+      return { talent: talent, percentNum: percentNum, percent: percent, iconUrl: iconUrl, wowheadUrl: wowheadUrl };
     });
-    const maxPct = Math.max(...rowStats.map((s) => s.percentNum), 0);
+    const maxPct = Math.max.apply(null, rowStats.map(s => s.percentNum).concat([0]));
     const EPS = 0.05;
-    const winners = rowStats
-      .filter((s) => s.percentNum >= maxPct - EPS && maxPct > 0)
-      .map((s) => s.talent);
+    const winners = rowStats.filter(s => s.percentNum >= maxPct - EPS && maxPct > 0).map(s => s.talent);
     TOP_BY_TIER.set(tier, { winners: new Set(winners), percent: maxPct });
 
     talentSummaryHTML += '<div class="talent-row">';
     for (const stat of rowStats) {
       const isTop = stat.percentNum >= maxPct - EPS && maxPct > 0;
-      const color = stat.percentNum >= 75 ? 'limegreen' : stat.percentNum <= 10 ? 'red' : 'orange';
-      talentSummaryHTML += `${stat.wowheadUrl}${stat.iconUrl}<div class="talent-percent" style="color:${color}">${stat.percent}%</div></a>`;
+      const color = stat.percentNum >= 75 ? 'limegreen' : (stat.percentNum <= 10 ? 'red' : 'orange');
+      talentSummaryHTML += '<a class="talent-link wowhead ' + (isTop ? 'is-top' : '') + '" href="' + stat.wowheadUrl + '" target="_blank" rel="noopener"><img class="talent-icon-img" loading="lazy" src="' + stat.iconUrl + '" alt="' + stat.talent + '" /><div class="talent-percent" style="color:' + color + '">' + stat.percent + '%</div></a>';
     }
     talentSummaryHTML += '</div>';
   }
@@ -613,66 +595,26 @@ async function renderTalentSummary(data) {
   return { html: talentSummaryHTML, topByTier: TOP_BY_TIER };
 }
 
-// Parsing rules
+/* --------------------------------------------------------------------
+   Parsing rules
+   -------------------------------------------------------------------- */
 const PARSING_RULES = {
-  // MSV
-  1395: { // The Stone Guard
-    title: "The Stone Guard",
-    rules: [
-      "The damage bonus from Energized Tiles is normalized."
-    ]
-  },
-  1390: { // Feng the Accursed
-    title: "Feng the Accursed",
-    rules: [
-      "Damage done to Soul Fragments is removed."
-    ]
-  },
-  1434: { // Gara'jal the Spiritbinder
-    title: "Gara'jal the Spiritbinder",
-    rules: [
-      "Damage done to Spirit Totems is removed."
-    ]
-  },
-  1436: { // The Spirit Kings
-    title: "The Spirit Kings",
-    rules: [
-      "No rules, though friendly fire damage (during Mind Control) is already excluded."
-    ]
-  },
-  1500: { // Elegon
-    title: "Elegon",
-    rules: [
-      "Damage done during Draw Power is normalized, and damage done to Cosmic Sparks is removed."
-    ]
-  },
-  1407: { // Will of the Emperor
-    title: "Will of the Emperor",
-    rules: [
-      "Damage done to Emperor's Rage is removed from 25-man Heroic.",
-      "Will of the Emperor is removed from Damage All Star Points."
-    ]
-  },
-
-  // HoF
+  1395: { title: "The Stone Guard", rules: ["The damage bonus from Energized Tiles is normalized."] },
+  1390: { title: "Feng the Accursed", rules: ["Damage done to Soul Fragments is removed."] },
+  1434: { title: "Gara'jal the Spiritbinder", rules: ["Damage done to Spirit Totems is removed."] },
+  1436: { title: "The Spirit Kings", rules: ["No rules, though friendly fire damage (during Mind Control) is already excluded."] },
+  1500: { title: "Elegon", rules: ["Damage done during Draw Power is normalized, and damage done to Cosmic Sparks is removed."] },
+  1407: { title: "Will of the Emperor", rules: ["Damage done to Emperor's Rage is removed from 25-man Heroic.","Will of the Emperor is removed from Damage All Star Points."] },
   1507: { title: "Imperial Vizier Zor'lok", rules: ["Damage done to adds that don't die is removed."] },
   1504: { title: "Blade Lord Ta'yak", rules: ["No rules."] },
   1463: { title: "Garalon", rules: ["Garalon is removed from Damage All Star Points."] },
   1498: { title: "Wind Lord Mel'jarak", rules: ["Damage done to adds that don't die is removed."] },
   1499: { title: "Amber-Shaper Un'sok", rules: ["Amber-Shaper is removed from All Star Points (both Damage and Healing)."] },
   1501: { title: "Grand Empress Shek'zeer", rules: ["Damage done to Kor'thik Reavers and Set'thik Windblades is removed."] },
-
-  // ToES
-  1409: { title: "Protectors of the Endless", rules: [
-    "Damage done to bosses that heal to full is removed.",
-    "Damage gained from Corrupted Essence is normalized.",
-    "Only Hardmode/Elite order ranks as Heroic. This means Protector Kaolan has to die last."
-  ]},
+  1409: { title: "Protectors of the Endless", rules: ["Damage done to bosses that heal to full is removed.","Damage gained from Corrupted Essence is normalized.","Only Hardmode/Elite order ranks as Heroic. This means Protector Kaolan has to die last."] },
   1505: { title: "Tsulong", rules: ["Damage done to The Dark of Night, Fright Spawn, and Embodied Terrors is removed."] },
   1506: { title: "Lei Shi", rules: ["Damage done to Animated Protectors is removed."] },
   1431: { title: "Sha of Fear", rules: ["Sha of Fear is removed from Damage ASP."] },
-
-  // ToT (placeholders - add rules as needed)
   51577: { title: "Jin'rokh the Breaker", rules: ["No rules."] },
   51575: { title: "Horridon", rules: ["No rules."] },
   51570: { title: "Council of Elders", rules: ["No rules."] },
@@ -685,82 +627,66 @@ const PARSING_RULES = {
   51559: { title: "Iron Qon", rules: ["No rules."] },
   51560: { title: "Twin Consorts", rules: ["No rules."] },
   51579: { title: "Lei Shen", rules: ["No rules."] },
-  51580: { title: "Ra-den", rules: ["No rules."] },
+  51580: { title: "Ra-den", rules: ["No rules."] }
 };
 
-// Function to render parsing rules
 function renderParsingRules(encounterId) {
   const rules = PARSING_RULES[encounterId];
   if (!rules) return '';
-  const ruleItems = rules.rules.map(rule => `
-    <li class="parsing-rule-item">${rule}</li>
-  `).join('');
-  return `
-    <div class="parsing-rules-header-container">
-      <div class="parsing-rules-content active">
-        <ul class="parsing-rules-list">
-          ${ruleItems}
-        </ul>
-      </div>
-    </div>
-  `;
+  const ruleItems = rules.rules.map(rule => '<li class="parsing-rule-item">' + rule + '</li>').join('');
+  return (
+    '<div class="parsing-rules-header-container">' +
+      '<div class="parsing-rules-content active">' +
+        '<ul class="parsing-rules-list">' +
+          ruleItems +
+        '</ul>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
-// Optimized main fetch and display function
-async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}) {
-  // Performance timing
+/* --------------------------------------------------------------------
+   Main fetch & display
+   -------------------------------------------------------------------- */
+async function fetchAndDisplayRankings(name, encounterId, opts) {
+  const force = opts && opts.force ? opts.force : false;
   const startTime = performance.now();
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
   const renderContentAndAttachListeners = async (data) => {
-    currentData = data; // Store for lazy loading
-    // Use Promise.all to parallelize talent summary and rankings rendering
-    const [talentResult, rankingsHTML] = await Promise.all([
-      renderTalentSummary(data),
-      optimizedRenderer.renderRankings(data, null) // We'll update topByTier after
-    ]);
-    const { html: talentSummaryHTML, topByTier } = talentResult;
-    // Update rankings with talent analysis
+    currentData = data;
+
+    const talentResult = await renderTalentSummary(data);
+    const topByTier = talentResult.topByTier;
+    const talentSummaryHTML = talentResult.html;
+
     const finalRankingsHTML = await optimizedRenderer.renderRankings(data, topByTier);
 
-    // Batch DOM updates
     domBatcher.schedule('rankings', () => {
-      if (rankingsDiv) {
-        rankingsDiv.innerHTML = finalRankingsHTML;
-      }
+      if (rankingsDiv) rankingsDiv.innerHTML = finalRankingsHTML;
     });
     domBatcher.schedule('talents', () => {
-      const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
-      if (talentSummaryElement) {
-        talentSummaryElement.innerHTML = talentSummaryHTML;
-      }
+      const el = document.querySelector('.talent-sidebar .talent-summary');
+      if (el) el.innerHTML = talentSummaryHTML;
     });
-
-    // Add parsing rules to header area
     domBatcher.schedule('parsing-rules', () => {
       const lastUpdatedEl = document.getElementById('last-updated');
       if (lastUpdatedEl) {
-        // Remove existing parsing rules if any
         const existingRules = document.querySelector('.parsing-rules-header-container');
-        if (existingRules) { existingRules.remove(); }
-        // Add new parsing rules after last-updated
+        if (existingRules) existingRules.remove();
         const parsingRulesHTML = renderParsingRules(encounterId);
-        if (parsingRulesHTML) {
-          lastUpdatedEl.insertAdjacentHTML('afterend', parsingRulesHTML);
-        }
+        if (parsingRulesHTML) lastUpdatedEl.insertAdjacentHTML('afterend', parsingRulesHTML);
       }
     });
 
-    // Refresh Wowhead tooltips
     scheduler.postTask(() => {
       if (window.$WowheadPower) {
         window.$WowheadPower.refreshLinks();
       }
     }, { priority: 'background' });
 
-    const endTime = performance.now();
-    console.log(`Rendering completed in ${endTime - startTime}ms`);
+    console.log('Rendering completed in ' + (performance.now() - startTime) + 'ms');
   };
 
   try {
@@ -769,11 +695,11 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
     updateHash(name, encounterId);
 
     if (rankingsDiv) {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ${name}…</p></div>`;
+      rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ' + name + '…</p></div>';
     }
 
     const cached = readCache(encounterId);
-    const cachedAt = cached?.cachedAt ?? cached?.data?.cachedAt;
+    const cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
     if (cached && isFresh(cachedAt) && !force) {
       updateLastUpdated(cachedAt);
       await renderContentAndAttachListeners(cached.data);
@@ -784,31 +710,30 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
       signal: currentController.signal,
       headers: { 'accept': 'application/json' }
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
 
     const data = await res.json();
-    const serverTs = data.cachedAt ?? new Date().toISOString();
+    const serverTs = data.cachedAt || (new Date()).toISOString();
     writeCache(encounterId, data, serverTs);
     updateLastUpdated(serverTs);
     await renderContentAndAttachListeners(data);
 
   } catch (err) {
-    if (err?.name === 'AbortError') return;
+    if (err && err.name === 'AbortError') return;
     console.error('Failed to fetch rankings:', err);
 
     const cached = readCache(encounterId);
     if (cached) {
-      updateLastUpdated(cached.cachedAt ?? cached.data?.cachedAt);
+      updateLastUpdated(cached.cachedAt || (cached.data && cached.data.cachedAt));
       await renderContentAndAttachListeners(cached.data);
     } else {
       if (rankingsDiv) {
-        rankingsDiv.innerHTML = `<div style="text-align:center;color:red;margin-top:16px;">Couldn't load data for ${name}. Please try again later.</div>`;
+        rankingsDiv.innerHTML = '<div style="text-align:center;color:red;margin-top:16px;">Couldn\'t load data for ' + name + '. Please try again later.</div>';
       }
       updateLastUpdated(null);
-      // Clear talent summary on error
-      const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
-      if (talentSummaryElement) {
-        talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
+      const el = document.querySelector('.talent-sidebar .talent-summary');
+      if (el) {
+        el.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
       }
     }
   } finally {
@@ -817,20 +742,21 @@ async function fetchAndDisplayRankings(name, encounterId, { force = false } = {}
   }
 }
 
-// Utility functions
+/* --------------------------------------------------------------------
+   Hash, menus & buttons
+   -------------------------------------------------------------------- */
 function slugify(str) {
-  return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-');
+  return String(str).normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/--+/g, '-');
 }
-function hashFor(name, encounterId) {
-  return `#${slugify(name)}-${encounterId}`;
-}
-function updateHash(name, encounterId) {
-  try {
-    history.replaceState(null, '', hashFor(name, encounterId));
-  } catch {}
-}
+function hashFor(name, encounterId) { return '#' + slugify(name) + '-' + encounterId; }
+function updateHash(name, encounterId) { try { history.replaceState(null, '', hashFor(name, encounterId)); } catch {} }
 function parseHash() {
-  const h = location.hash ?? '';
+  const h = location.hash || '';
   const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
   if (m) return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10) };
   const legacy = h.match(/^#e-(\d+)$/i);
@@ -838,7 +764,6 @@ function parseHash() {
   return null;
 }
 
-// Tier-aware menu creation
 function createTierMenu() {
   if (!raidMenu) return;
   const fragment = document.createDocumentFragment();
@@ -849,11 +774,12 @@ function createTierMenu() {
   tierSelect.id = 'tier-select';
   tierSelect.className = 'tier-select';
 
-  for (const [tierKey, tier] of Object.entries(TIERS)) {
+  for (const tierKey in TIERS) {
+    const tier = TIERS[tierKey];
     const option = document.createElement('option');
     option.value = tierKey;
     option.textContent = tier.name;
-    option.selected = tierKey === currentTierKey;
+    option.selected = (tierKey === currentTierKey);
     tierSelect.appendChild(option);
   }
 
@@ -869,8 +795,8 @@ function createTierMenu() {
     buildBossButtonsForRaid(firstRaidKey);
     const entries = Object.entries(raids[firstRaidKey].encounters);
     if (entries.length > 0) {
-      const [bossName, encounterId] = entries[0];
-      fetchAndDisplayRankings(bossName, encounterId);
+      const firstBoss = entries[0];
+      fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
     }
   }, 100));
   tierDropdownContainer.appendChild(tierSelect);
@@ -881,13 +807,14 @@ function createTierMenu() {
   raidButtonsContainer.className = 'raid-buttons-container';
   const raids = TIERS[currentTierKey].raids;
 
-  for (const [key, raid] of Object.entries(raids)) {
+  for (const key in raids) {
+    const raid = raids[key];
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.dataset.raidKey = key;
 
     const img = document.createElement('img');
-    img.src = `public/images/${key}.webp`;
+    img.src = 'public/images/' + key + '.webp';
     img.alt = raid.short;
     img.className = 'raid-icon';
     img.loading = 'lazy';
@@ -905,16 +832,16 @@ function createTierMenu() {
       buildBossButtonsForRaid(key);
       const entries = Object.entries(raids[key].encounters);
       if (entries.length > 0) {
-        const [bossName, encounterId] = entries[0];
-        fetchAndDisplayRankings(bossName, encounterId);
+        const firstBoss = entries[0];
+        fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
       } else {
         if (rankingsDiv) {
-          rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
+          rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ' + raid.name + ' yet.</div>';
         }
         updateLastUpdated(null);
-        const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
-        if (talentSummaryElement) {
-          talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+        const el = document.querySelector('.talent-sidebar .talent-summary');
+        if (el) {
+          el.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
         }
       }
     }, 100), { passive: true });
@@ -927,15 +854,15 @@ function createTierMenu() {
   selectActiveRaid(currentRaidKey);
 }
 
-function createRaidMenu() {
-  createTierMenu();
-}
+function createRaidMenu() { createTierMenu(); }
 
 function selectActiveRaid(raidKey) {
   const container = document.getElementById('raid-buttons-container');
-  container?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-  const active = container?.querySelector(`button[data-raid-key="${raidKey}"]`);
-  active?.classList.add('active');
+  if (!container) return;
+  const buttons = container.querySelectorAll('button');
+  buttons.forEach(b => b.classList.remove('active'));
+  const active = container.querySelector('button[data-raid-key="' + raidKey + '"]');
+  if (active) active.classList.add('active');
 }
 
 function buildBossButtonsForRaid(raidKey) {
@@ -951,7 +878,7 @@ function buildBossButtonsForRaid(raidKey) {
     button.dataset.bossName = name;
 
     const img = document.createElement('img');
-    img.src = bossIconUrl(id); // <-- fixed: normalize ToT IDs to icon IDs
+    img.src = bossIconUrl(id);                 // FIXED
     img.alt = name;
     img.className = 'boss-icon';
     img.loading = 'lazy';
@@ -975,74 +902,75 @@ function buildBossButtonsForRaid(raidKey) {
 }
 
 function selectActiveButton(encounterId) {
-  bossButtonsDiv?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
-  const active = bossButtonsDiv?.querySelector(`button[data-encounter-id="${encounterId}"]`);
-  active?.classList.add('active');
+  if (!bossButtonsDiv) return;
+  bossButtonsDiv.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+  const active = bossButtonsDiv.querySelector('button[data-encounter-id="' + encounterId + '"]');
+  if (active) active.classList.add('active');
 }
 
 function findRaidKeyByEncounterId(encounterId) {
-  for (const [tierKey, tier] of Object.entries(TIERS)) {
-    for (const [raidKey, raid] of Object.entries(tier.raids)) {
+  for (const tierKey in TIERS) {
+    const tier = TIERS[tierKey];
+    for (const raidKey in tier.raids) {
+      const raid = tier.raids[raidKey];
       if (Object.values(raid.encounters).includes(encounterId)) {
-        return { tierKey, raidKey };
+        return { tierKey: tierKey, raidKey: raidKey };
       }
     }
   }
   return null;
 }
 
-// Cache helpers (optimized)
+/* --------------------------------------------------------------------
+   Cache helpers
+   -------------------------------------------------------------------- */
 function readCache(encounterId) {
   try {
     const raw = localStorage.getItem(CACHE_KEY(encounterId));
     if (!raw) return null;
     return JSON.parse(raw);
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 }
-function writeCache(encounterId, data, cachedAt = new Date().toISOString()) {
+function writeCache(encounterId, data, cachedAt) {
   try {
-    localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt }));
+    const ts = cachedAt || (new Date()).toISOString();
+    localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data: data, cachedAt: ts }));
   } catch {}
 }
 function isFresh(cachedAt) {
   try {
     const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt);
-    return Date.now() - ts < CACHE_TTL_MS;
-  } catch {
-    return false;
-  }
+    return (Date.now() - ts) < CACHE_TTL_MS;
+  } catch { return false; }
 }
 function formatAgo(dateish) {
   const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
   if (isNaN(ms)) return 'unknown';
-  if (ms < 60_000) return 'just now';
-  const mins = Math.floor(ms / 60_000);
-  if (mins < 60) return `${mins}m ago`;
+  if (ms < 60000) return 'just now';
+  const mins = Math.floor(ms / 60000);
+  if (mins < 60) return mins + 'm ago';
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return hours + 'h ago';
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return days + 'd ago';
 }
 function updateLastUpdated(isoOrEpoch) {
   if (!lastUpdatedEl) return;
-  if (!isoOrEpoch) {
-    lastUpdatedEl.textContent = '';
-    return;
-  }
+  if (!isoOrEpoch) { lastUpdatedEl.textContent = ''; return; }
   const when = new Date(isoOrEpoch).toLocaleString();
   const ago = formatAgo(isoOrEpoch);
-  lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
+  lastUpdatedEl.textContent = 'Last updated: ' + when + ' (' + ago + ')';
 }
 
-// Optimized button state management
+/* --------------------------------------------------------------------
+   Button state
+   -------------------------------------------------------------------- */
 let currentController = null;
 function disableButtons(disabled) {
-  const buttons = bossButtonsDiv?.querySelectorAll('button');
+  const buttons = bossButtonsDiv ? bossButtonsDiv.querySelectorAll('button') : null;
   if (!buttons) return;
   requestAnimationFrame(() => {
-    buttons.forEach((btn) => {
+    buttons.forEach(btn => {
       btn.disabled = disabled;
       btn.style.opacity = disabled ? '0.7' : '';
       btn.style.cursor = disabled ? 'not-allowed' : '';
@@ -1050,24 +978,25 @@ function disableButtons(disabled) {
   });
 }
 
-// Initialize performance monitoring
-let performanceMetrics = {
-  renderTimes: [],
-  interactionTimes: []
-};
+/* --------------------------------------------------------------------
+   Performance logging
+   -------------------------------------------------------------------- */
+let performanceMetrics = { renderTimes: [], interactionTimes: [] };
 function trackPerformance(name, startTime) {
   const duration = performance.now() - startTime;
-  performanceMetrics.renderTimes.push({ name, duration, timestamp: Date.now() });
-  // Keep only last 20 measurements
+  performanceMetrics.renderTimes.push({ name: name, duration: duration, timestamp: Date.now() });
   if (performanceMetrics.renderTimes.length > 20) {
     performanceMetrics.renderTimes = performanceMetrics.renderTimes.slice(-20);
   }
-  console.log(`Performance: ${name} completed in ${duration.toFixed(2)}ms`);
+  console.log('Performance: ' + name + ' completed in ' + duration.toFixed(2) + 'ms');
 }
 
-// Boot sequence with performance optimizations
+/* --------------------------------------------------------------------
+   Boot sequence
+   -------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
   const initStart = performance.now();
+
   createTierMenu();
   buildBossButtonsForRaid(currentRaidKey);
 
@@ -1075,13 +1004,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (ph && ph.id) {
     const result = findRaidKeyByEncounterId(ph.id);
     if (result) {
-      const { tierKey, raidKey } = result;
+      const tierKey = result.tierKey;
+      const raidKey = result.raidKey;
       currentTierKey = tierKey;
       currentRaidKey = raidKey;
       createTierMenu();
       selectActiveRaid(raidKey);
       buildBossButtonsForRaid(raidKey);
-      const bossName = Object.entries(TIERS[tierKey].raids[raidKey].encounters).find(([, id]) => id === ph.id)?.[0] ?? 'Encounter';
+      const entries = Object.entries(TIERS[tierKey].raids[raidKey].encounters);
+      const match = entries.find(pair => pair[1] === ph.id);
+      const bossName = match ? match[0] : 'Encounter';
       fetchAndDisplayRankings(bossName, ph.id);
       trackPerformance('Initial load from hash', initStart);
       return;
@@ -1092,17 +1024,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentRaid = currentTier.raids[currentRaidKey];
   const entries = Object.entries(currentRaid.encounters);
   if (entries.length) {
-    const [bossName, encounterId] = entries[0];
-    fetchAndDisplayRankings(bossName, encounterId);
+    const firstBoss = entries[0];
+    fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
   } else {
     if (rankingsDiv) {
-      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${currentRaid.name} yet.</div>`;
+      rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ' + currentRaid.name + ' yet.</div>';
     }
     updateLastUpdated(null);
-    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
-    if (talentSummaryElement) {
-      talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+    const el = document.querySelector('.talent-sidebar .talent-summary');
+    if (el) {
+      el.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
     }
   }
+
   trackPerformance('DOMContentLoaded', initStart);
 });
