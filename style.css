@@ -291,7 +291,9 @@ a.wowhead del {
 /* Boss Selection Menu */
 #boss-buttons {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: stretch;
   gap: 0.5rem;
 }
 #boss-buttons button {
