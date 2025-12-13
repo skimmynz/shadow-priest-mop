@@ -1,4 +1,3 @@
-
 /* =================================================================
    Theme Variables
    ================================================================= */
@@ -9,7 +8,7 @@
   --surface-bg: #232340;
   --hover-bg: #2a2a45;
 
-  /* Accent colors (added) */
+  /* Accent colors */
   --accent-color: #6366f1;
   --accent-hover: #7c3aed;
   --accent-glow: rgba(99, 102, 241, 0.25);
@@ -82,7 +81,7 @@ body {
   min-height: 100vh;
 }
 
-/* Shared container styles */
+/* Shared containers */
 .sidebar,
 .content-area,
 .talent-sidebar {
@@ -118,11 +117,12 @@ body {
   top: 2.5rem;
   width: 280px;
   overflow-y: auto;
+  overflow-x: hidden;         /* guard: no horizontal overflow */
   max-height: calc(100vh - 4rem);
   scrollbar-width: thin;             /* Firefox */
   scrollbar-color: #666 transparent; /* Firefox */
 }
-/* WebKit scrollbars (correct selectors) */
+/* WebKit scrollbars */
 .sidebar::-webkit-scrollbar { width: 8px; }
 .sidebar::-webkit-scrollbar-track { background: transparent; }
 .sidebar::-webkit-scrollbar-thumb {
@@ -204,10 +204,8 @@ a.wowhead del {
    Navigation (Sidebar)
    ================================================================= */
 
-/* ---------- Tier dropdown stays above ---------- */
-.tier-dropdown-container {
-  margin-bottom: 0.75rem;
-}
+/* Tier dropdown */
+.tier-dropdown-container { margin-bottom: 0.75rem; }
 .tier-select {
   width: 100%;
   border-radius: 8px;
@@ -218,10 +216,10 @@ a.wowhead del {
 }
 
 /* ---------- Raid Buttons (MSV / HoF / ToES) SIDE-BY-SIDE ---------- */
-/* JS creates <div id="raid-buttons-container"> inside #raid-menu */
+/* Created by JS: <div id="raid-buttons-container"> inside #raid-menu */
 #raid-buttons-container {
   display: grid;
-  grid-template-columns: repeat(3, minmax(84px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); /* auto-fit prevents clipping */
   gap: 0.75rem;
   align-items: start;
 }
@@ -277,6 +275,8 @@ a.wowhead del {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 0.75rem;
   align-items: stretch; /* equal heights across row */
+  width: 100%;          /* contained to sidebar */
+  max-width: 100%;
 }
 
 #boss-buttons button {
@@ -302,6 +302,10 @@ a.wowhead del {
   align-items: center;
   column-gap: 0.75rem;
   padding: 0.875rem 1rem;
+
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;   /* include padding/borders in width */
 
   position: relative;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -352,7 +356,7 @@ a.wowhead del {
   box-shadow: 0 0 20px var(--shadow-glow);
 }
 
-/* Boss name text—single line with ellipsis */
+/* Boss name text—single line with ellipsis for uniform cards */
 #boss-buttons button span {
   display: block;
   white-space: nowrap;        /* single line for uniformity */
@@ -360,7 +364,7 @@ a.wowhead del {
   text-overflow: ellipsis;
   line-height: 1.2;
 }
-/* If you prefer 2-line clamp, swap the block above for this:
+/* Prefer two lines? Swap the block above for:
 #boss-buttons button span {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -670,7 +674,7 @@ a.wowhead del {
   border: 1px solid var(--border-color);
 }
 
-/* Talent icon hover and highlighting */
+/* Talent icon hover/highlight */
 .ranking-header .talent-row { display: flex; gap: 0.4rem; }
 .ranking-header .talent-icon-img {
   width: 40px; height: 40px;
@@ -729,7 +733,7 @@ a.wowhead del {
   font-weight: 800;
 }
 
-/* Rankings gear link styling */
+/* Rankings gear links */
 .rankings-gear-name {
   display: inline-flex;
   align-items: center;
@@ -890,12 +894,12 @@ button:focus,
 /* Button active state */
 button:active { transform: scale(0.98); }
 
-/* Ensure images load smoothly */
+/* Image loading */
 img { transition: opacity 0.3s ease; }
 img:not([src]),
 img[src=""] { opacity: 0; }
 
-/* Smooth transitions for dynamic content */
+/* Dynamic content */
 [data-loading] { opacity: 0.6; pointer-events: none; }
 [data-loading] * { cursor: wait !important; }
 
@@ -916,8 +920,9 @@ img[src=""] { opacity: 0; }
   h1 { font-size: 3rem; margin-bottom: 2rem; }
   .header-controls { margin-bottom: 2.5rem; }
 
-  /* Wider raid/boss cards */
+  /* prefer 3-up raids on very wide sidebars */
   #raid-buttons-container { grid-template-columns: repeat(3, minmax(100px, 1fr)); }
+
   #boss-buttons { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 
   #boss-buttons button { font-size: 1rem; padding: 1.0rem 1.25rem; }
@@ -1011,7 +1016,7 @@ img[src=""] { opacity: 0; }
   .talent-sidebar { order: 2; position: static; width: 100%; max-width: none; }
   .content-area { order: 3; }
 
-  /* Sticky raid menu container remains */
+  /* Sticky raid menu wrapper */
   #raid-menu {
     position: sticky;
     top: 1rem;
@@ -1024,22 +1029,18 @@ img[src=""] { opacity: 0; }
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow-lg);
   }
-  /* tighter grid for raid buttons */
+
+  /* raid buttons: tighter grid */
   #raid-buttons-container {
-    grid-template-columns: repeat(3, minmax(72px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
     gap: 0.5rem;
   }
   #raid-buttons-container button {
     min-height: 100px;
     padding: 0.5rem 0.35rem;
   }
-  #raid-buttons-container .raid-icon {
-    width: 44px;
-    height: 44px;
-  }
-  #raid-buttons-container button span {
-    font-size: 0.8rem;
-  }
+  #raid-buttons-container .raid-icon { width: 44px; height: 44px; }
+  #raid-buttons-container button span { font-size: 0.8rem; }
 
   h1 { font-size: 2rem; }
 
@@ -1101,10 +1102,8 @@ img[src=""] { opacity: 0; }
   .gear-grid { grid-template-columns: 1fr; }
   .gear-item { padding: 1rem; }
 
-  /* raid buttons: 2-up on phones */
-  #raid-buttons-container {
-    grid-template-columns: repeat(2, minmax(90px, 1fr));
-  }
+  /* phones: 2-up raids */
+  #raid-buttons-container { grid-template-columns: repeat(2, minmax(90px, 1fr)); }
 
   #boss-buttons { gap: 0.5rem; }
   #boss-buttons button { padding: 0.875rem 1rem; }
@@ -1148,3 +1147,4 @@ img[src=""] { opacity: 0; }
 
   .parsing-rule-item { padding: 0.5rem; font-size: 0.75rem; }
 }
+
