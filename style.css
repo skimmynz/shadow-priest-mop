@@ -106,6 +106,13 @@ body {
   overflow-x: hidden;
   contain: layout paint;
   max-height: calc(100vh - 5rem);
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+}
+.sidebar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
 }
 
 /* Content areas */
