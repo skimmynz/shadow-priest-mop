@@ -1,3 +1,4 @@
+
 /* =================================================================
    Theme Variables
    ================================================================= */
@@ -15,11 +16,13 @@
 
   --success-color: #10b981;
   --success-glow: rgba(16, 185, 129, 0.3);
+
   --warning-color: #f59e0b;
   --warning-glow: rgba(245, 158, 11, 0.3);
 
   --shadow-color: #6b46c1;
   --shadow-glow: rgba(107, 70, 193, 0.4);
+
   --gold-color: #fbbf24;
 
   --text-primary: #ffffff;
@@ -39,6 +42,7 @@
   --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --gradient-accent: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   --gradient-shadow: linear-gradient(135deg, #6b46c1 0%, #7c3aed 100%);
+
   --gradient-bg:
     radial-gradient(circle at 20% 80%, rgba(107, 70, 193, 0.12) 0%, transparent 50%),
     radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
@@ -55,9 +59,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--primary-bg);
   background-image: var(--gradient-bg);
@@ -163,6 +165,7 @@ h1 {
   line-height: 1.1;
   position: relative;
 }
+
 .header-controls {
   display: flex;
   justify-content: center;
@@ -191,7 +194,6 @@ a.wowhead del {
 /* =================================================================
    Navigation (Sidebar)
    ================================================================= */
-
 /* Raid menu wrapper containment */
 #raid-menu {
   width: 100%;
@@ -239,6 +241,10 @@ a.wowhead del {
   box-sizing: border-box;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+#raid-buttons-container button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 #raid-buttons-container .raid-icon {
   width: 48px;
@@ -298,12 +304,14 @@ a.wowhead del {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 0.875rem;
-
   width: 100%;
   box-sizing: border-box;
-
   position: relative;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+#boss-buttons button:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 #boss-buttons button::before {
   content: '';
@@ -384,9 +392,10 @@ a.wowhead del {
 }
 .talent-summary .talent-row:last-child,
 .talent-summary-content .talent-row:last-child { margin-bottom: 0; }
+
 .talent-summary .talent-icon-img,
 .talent-summary-content .talent-icon-img {
-  width: 44px; 
+  width: 44px;
   height: 44px;
   border-radius: 10px;
   border: 2px solid var(--border-hover);
@@ -448,7 +457,6 @@ a.wowhead del {
   transition: all 0.3s ease;
 }
 .ranking-header:hover { background: rgba(107, 70, 193, 0.06); }
-
 .ranking-header .name-wrapper {
   color: var(--text-accent);
   font-weight: 700;
@@ -623,6 +631,7 @@ a.wowhead del {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 .gear-info { flex: 1; min-width: 0; }
+
 .gear-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -631,12 +640,15 @@ a.wowhead del {
   white-space: nowrap;
   font-size: 0.9rem;
 }
-.gear-name.poor      { color: #9d9d9d; }
-.gear-name.common    { color: #ffffff; }
-.gear-name.uncommon  { color: #1eff00; }
-.gear-name.rare      { color: #0070dd; }
-.gear-name.epic      { color: #a335ee; }
+
+/* Rarity colors for names (if used separately) */
+.gear-name.poor { color: #9d9d9d; }
+.gear-name.common { color: #ffffff; }
+.gear-name.uncommon { color: #1eff00; }
+.gear-name.rare { color: #0070dd; }
+.gear-name.epic { color: #a335ee; }
 .gear-name.legendary { color: #ff8000; }
+
 .gear-slot { font-size: 0.8rem; color: var(--text-muted); }
 .gear-ilvl { font-weight: 700; color: var(--gold-color); font-size: 0.85rem; flex-shrink: 0; }
 .gem-enchant { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
@@ -673,7 +685,6 @@ a.wowhead del {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 15px var(--shadow-glow);
 }
-
 .talent-link {
   position: relative;
   display: flex;
@@ -744,12 +755,13 @@ a.wowhead del {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
-/* Rarity colors */
-.rankings-gear-name.poor      { color: #9d9d9d; }
-.rankings-gear-name.common    { color: #ffffff; }
-.rankings-gear-name.uncommon  { color: #1eff00; }
-.rankings-gear-name.rare      { color: #0070dd; }
-.rankings-gear-name.epic      { color: #a335ee; }
+
+/* Rarity colors (links) */
+.rankings-gear-name.poor { color: #9d9d9d; }
+.rankings-gear-name.common { color: #ffffff; }
+.rankings-gear-name.uncommon { color: #1eff00; }
+.rankings-gear-name.rare { color: #0070dd; }
+.rankings-gear-name.epic { color: #a335ee; }
 .rankings-gear-name.legendary { color: #ff8000; }
 
 /* =================================================================
@@ -780,3 +792,15 @@ a.wowhead del {
   margin-top: 2rem;
   padding: 1.5rem;
   background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+}
+
+/* Small responsive tweaks */
+@media (max-width: 1200px) {
+  .main-container { grid-template-columns: 260px 1fr 300px; }
+}
+@media (max-width: 992px) {
+  .main-container { grid-template-columns: 1fr; }
+  .sidebar, .talent-sidebar { position: static; max-height: none; width: 100%; }
+}
