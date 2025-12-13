@@ -1146,3 +1146,320 @@ document.addEventListener('DOMContentLoaded', () => {
   
   trackPerformance('DOMContentLoaded', initStart);
 });
+
+a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
+      }
+    }
+  } finally {
+    disableButtons(false);
+    currentController = null;
+  }
+}
+
+function slugify(str) { 
+  return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-'); 
+}
+
+function hashFor(name, encounterId) { 
+  return `#${slugify(name)}-${encounterId}`; 
+}
+
+function updateHash(name, encounterId) { 
+  try { 
+    history.replaceState(null, '', hashFor(name, encounterId)); 
+  } catch {} 
+}
+
+function parseHash() {
+  const h = location.hash ?? '';
+  const m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
+  if (m) return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10) };
+  const legacy = h.match(/^#e-(\d+)$/i);
+  if (legacy) return { slug: 'e', id: parseInt(legacy[1], 10), legacy: true };
+  return null;
+}
+
+function createTierMenu() {
+  if (!raidMenu) return;
+  
+  const fragment = document.createDocumentFragment();
+  
+  const tierDropdownContainer = document.createElement('div');
+  tierDropdownContainer.className = 'tier-dropdown-container';
+  
+  const tierSelect = document.createElement('select');
+  tierSelect.id = 'tier-select';
+  tierSelect.className = 'tier-select';
+  
+  for (const [tierKey, tier] of Object.entries(TIERS)) {
+    const option = document.createElement('option');
+    option.value = tierKey;
+    option.textContent = tier.name;
+    option.selected = tierKey === currentTierKey;
+    tierSelect.appendChild(option);
+  }
+  
+  tierSelect.addEventListener('change', createDebounced((e) => {
+    const newTierKey = e.target.value;
+    if (currentTierKey === newTierKey) return;
+    
+    currentTierKey = newTierKey;
+    createRaidMenu();
+    
+    const raids = TIERS[newTierKey].raids;
+    const firstRaidKey = Object.keys(raids)[0];
+    currentRaidKey = firstRaidKey;
+    selectActiveRaid(firstRaidKey);
+    buildBossButtonsForRaid(firstRaidKey);
+    
+    const entries = Object.entries(raids[firstRaidKey].encounters);
+    if (entries.length > 0) {
+      const [bossName, encounterId] = entries[0];
+      fetchAndDisplayRankings(bossName, encounterId);
+    }
+  }, 100));
+  
+  tierDropdownContainer.appendChild(tierSelect);
+  fragment.appendChild(tierDropdownContainer);
+  
+  const raidButtonsContainer = document.createElement('div');
+  raidButtonsContainer.id = 'raid-buttons-container';
+  raidButtonsContainer.className = 'raid-buttons-container';
+  
+  const raids = TIERS[currentTierKey].raids;
+  for (const [key, raid] of Object.entries(raids)) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.raidKey = key;
+    
+    const img = document.createElement('img');
+    img.src = `public/images/${key}.webp`;
+    img.alt = raid.short;
+    img.className = 'raid-icon';
+    img.loading = 'lazy';
+    
+    const span = document.createElement('span');
+    span.textContent = raid.short;
+    
+    btn.append(img, span);
+    
+    btn.addEventListener('click', createDebounced((e) => {
+      e.preventDefault();
+      if (currentRaidKey === key) return;
+      
+      currentRaidKey = key;
+      selectActiveRaid(key);
+      buildBossButtonsForRaid(key);
+      
+      const entries = Object.entries(raids[key].encounters);
+      if (entries.length > 0) {
+        const [bossName, encounterId] = entries[0];
+        fetchAndDisplayRankings(bossName, encounterId);
+      } else {
+        if (rankingsDiv) {
+          rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${raid.name} yet.</div>`;
+        }
+        updateLastUpdated(null);
+        
+        const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+        if (talentSummaryElement) {
+          talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+        }
+      }
+    }, 100), { passive: true });
+    
+    raidButtonsContainer.appendChild(btn);
+  }
+  
+  fragment.appendChild(raidButtonsContainer);
+  raidMenu.replaceChildren(fragment);
+  selectActiveRaid(currentRaidKey);
+}
+
+function createRaidMenu() {
+  createTierMenu();
+}
+
+function selectActiveRaid(raidKey) {
+  const container = document.getElementById('raid-buttons-container');
+  container?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+  const active = container?.querySelector(`button[data-raid-key="${raidKey}"]`);
+  active?.classList.add('active');
+}
+
+function buildBossButtonsForRaid(raidKey) {
+  if (!bossButtonsDiv) return;
+  
+  const fragment = document.createDocumentFragment();
+  const raid = TIERS[currentTierKey].raids[raidKey];
+  
+  if (!raid) return;
+  
+  const encounters = raid.encounters;
+  
+  for (const [name, id] of Object.entries(encounters)) {
+    const button = document.createElement('button');
+    button.dataset.encounterId = String(id);
+    button.dataset.bossName = name;
+    
+    const img = document.createElement('img');
+    img.src = `https://assets.rpglogs.com/img/warcraft/bosses/${id}-icon.jpg?v=2`;
+    img.alt = name;
+    img.className = 'boss-icon';
+    img.loading = 'lazy';
+    
+    const span = document.createElement('span');
+    span.textContent = name;
+    
+    button.append(img, span);
+    
+    button.addEventListener('click', createDebounced((e) => {
+      e.preventDefault();
+      fetchAndDisplayRankings(name, id);
+    }, 100), { passive: true });
+    
+    fragment.appendChild(button);
+  }
+  
+  bossButtonsDiv.replaceChildren(fragment);
+}
+
+function selectActiveButton(encounterId) {
+  bossButtonsDiv?.querySelectorAll('button').forEach((b) => b.classList.remove('active'));
+  const active = bossButtonsDiv?.querySelector(`button[data-encounter-id="${encounterId}"]`);
+  active?.classList.add('active');
+}
+
+function findRaidKeyByEncounterId(encounterId) {
+  for (const [tierKey, tier] of Object.entries(TIERS)) {
+    for (const [raidKey, raid] of Object.entries(tier.raids)) {
+      if (Object.values(raid.encounters).includes(encounterId)) {
+        return { tierKey, raidKey };
+      }
+    }
+  }
+  return null;
+}
+
+function readCache(encounterId) { 
+  try { 
+    const raw = localStorage.getItem(CACHE_KEY(encounterId)); 
+    if (!raw) return null; 
+    return JSON.parse(raw); 
+  } catch { 
+    return null; 
+  } 
+}
+
+function writeCache(encounterId, data, cachedAt = new Date().toISOString()) { 
+  try { 
+    localStorage.setItem(CACHE_KEY(encounterId), JSON.stringify({ data, cachedAt })); 
+  } catch {} 
+}
+
+function isFresh(cachedAt) { 
+  try { 
+    const ts = typeof cachedAt === 'number' ? cachedAt : Date.parse(cachedAt); 
+    return Date.now() - ts < CACHE_TTL_MS; 
+  } catch { 
+    return false; 
+  } 
+}
+
+function formatAgo(dateish) {
+  const ms = Date.now() - (typeof dateish === 'number' ? dateish : Date.parse(dateish));
+  if (isNaN(ms)) return 'unknown';
+  if (ms < 60_000) return 'just now';
+  const mins = Math.floor(ms / 60_000);
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
+function updateLastUpdated(isoOrEpoch) {
+  if (!lastUpdatedEl) return;
+  if (!isoOrEpoch) { 
+    lastUpdatedEl.textContent = ''; 
+    return; 
+  }
+  const when = new Date(isoOrEpoch).toLocaleString();
+  const ago = formatAgo(isoOrEpoch);
+  lastUpdatedEl.textContent = `Last updated: ${when} (${ago})`;
+}
+
+let currentController = null;
+
+function disableButtons(disabled) {
+  const buttons = bossButtonsDiv?.querySelectorAll('button');
+  if (!buttons) return;
+  
+  requestAnimationFrame(() => {
+    buttons.forEach((btn) => {
+      btn.disabled = disabled;
+      btn.style.opacity = disabled ? '0.7' : '';
+      btn.style.cursor = disabled ? 'not-allowed' : '';
+    });
+  });
+}
+
+let performanceMetrics = {
+  renderTimes: [],
+  interactionTimes: []
+};
+
+function trackPerformance(name, startTime) {
+  const duration = performance.now() - startTime;
+  performanceMetrics.renderTimes.push({ name, duration, timestamp: Date.now() });
+  
+  if (performanceMetrics.renderTimes.length > 20) {
+    performanceMetrics.renderTimes = performanceMetrics.renderTimes.slice(-20);
+  }
+  
+  console.log(`Performance: ${name} completed in ${duration.toFixed(2)}ms`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const initStart = performance.now();
+
+  createTierMenu();
+  buildBossButtonsForRaid(currentRaidKey);
+
+  const ph = parseHash();
+  if (ph && ph.id) {
+    const result = findRaidKeyByEncounterId(ph.id);
+    if (result) {
+      const { tierKey, raidKey } = result;
+      currentTierKey = tierKey;
+      currentRaidKey = raidKey;
+      createTierMenu();
+      selectActiveRaid(raidKey);
+      buildBossButtonsForRaid(raidKey);
+      const bossName = Object.entries(TIERS[tierKey].raids[raidKey].encounters).find(([, id]) => id === ph.id)?.[0] ?? 'Encounter';
+      fetchAndDisplayRankings(bossName, ph.id);
+      trackPerformance('Initial load from hash', initStart);
+      return;
+    }
+  }
+
+  const currentTier = TIERS[currentTierKey];
+  const currentRaid = currentTier.raids[currentRaidKey];
+  const entries = Object.entries(currentRaid.encounters);
+  if (entries.length) {
+    const [bossName, encounterId] = entries[0];
+    fetchAndDisplayRankings(bossName, encounterId);
+  } else {
+    if (rankingsDiv) {
+      rankingsDiv.innerHTML = `<div style="text-align:center;color:#bbb;margin-top:16px;">No bosses added for ${currentRaid.name} yet.</div>`;
+    }
+    updateLastUpdated(null);
+    
+    const talentSummaryElement = document.querySelector('.talent-sidebar .talent-summary');
+    if (talentSummaryElement) {
+      talentSummaryElement.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
+    }
+  }
+  
+  trackPerformance('DOMContentLoaded', initStart);
+});
