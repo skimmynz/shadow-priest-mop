@@ -1,45 +1,47 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Shadow Priest Top 100 — MoP Classic</title>
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="httpsttps://fonts.gstatic.com
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="->
-    style.css
-
-    <!-- Scripts -->
-    script.js</script>
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="brand">
-        <h1>Shadow Priest Top 100</h1>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow Priest Top 100 – MoP Classic</title>
+  
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    window.whTooltips = { colorLinks: true, iconizeLinks: false, renameLinks: false };
+  </script>
+  <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5698535707794768"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="main-container">
+    <aside class="sidebar">
+      <nav id="raid-menu" aria-label="Raid selection"></nav>
+      <div id="boss-buttons" role="group" aria-label="Bosses"></div>
+    </aside>
+    
+    <main class="content-area">
+      <h1>SHADOW PRIEST TOP 100</h1>
+      <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+          Loading last updated…
       </div>
-      <p id="last-updated" class="last-updated"></p>
-    </header>
-
-    <main class="main-container">
-      <aside class="sidebar" aria-label="Navigation">
-        <div id="raid-menu" class="raid-menu"></div>
-        <div id="boss-buttons" class="boss-buttons"></div>
-      </aside>
-
-      <section class="content-area" aria-label="Rankings">
-        <div id="rankings" class="rankings"></div>
+      <section id="rankings">
       </section>
-
-      <aside class="talent-sidebar" aria-label="Popular talents">
-        <h3>Popular Talents</h3>
-        <div class="talent-summary"></div>
-      </aside>
     </main>
-
-    <footer class="site-footer">
-      <small class="footnote">Built for MoP Classic Logs • Shadow Priest edition</small>
-    </footer>
-  </body>
+    
+    <aside class="talent-sidebar" id="talents">
+      <h3>Popular Talents</h3>
+      <div class="talent-summary">
+        <div style="text-align: center; color: #6b7280; padding: 2rem; font-style: italic;">
+          Select a boss to view talent data
+        </div>
+      </div>
+    </aside>
+  </div>
+  
+  <script src="script.js" defer></script>
+</body>
 </html>
