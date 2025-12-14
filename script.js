@@ -833,22 +833,21 @@ function createTierMenu() {
 
   const raids = TIERS[currentTierKey].raids;
   for (const key in raids) {
-    const raid = raids[key];
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.dataset.raidKey = key;
-
-    const img = document.createElement('img');
-    img.src = 'public/images/' + key + '.webp';
-    img.alt = raid.short;
-    img.className = 'raid-icon';
-    img.loading = 'lazy';
-
-    const span = document.createElement('span');
-    span.textContent = raid.short;
-
-    btn.append(img, span);
-
+      const raid = raids[key];
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.raidKey = key;
+  
+      const img = document.createElement('img');
+      img.src = 'public/images/' + key + '.webp';
+      img.alt = raid.name;  // ← CHANGED
+      img.className = 'raid-icon';
+      img.loading = 'lazy';
+  
+      const span = document.createElement('span');
+      span.textContent = raid.name;  // ← CHANGED
+  
+      btn.append(img, span);
     btn.addEventListener('click', createDebounced((e) => {
       e.preventDefault();
       if (currentRaidKey === key) return;
