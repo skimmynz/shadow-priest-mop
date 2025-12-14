@@ -61,51 +61,50 @@ body {
   overflow-x: hidden;
 }
 
-.main-container {
-  display: grid;
-  grid-template-columns: 280px 1fr 320px;
-  gap: 2.5rem;
+/* Unified container */
+.unified-container {
   max-width: 1800px;
   margin: 0 auto;
-  align-items: flex-start;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.unified-container:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 0;
   min-height: 100vh;
 }
 
-/* Shared container styles */
+/* Shared styles for sections */
 .sidebar,
 .content-area,
 .talent-sidebar {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 16px;
-  padding: 1.5rem;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   position: relative;
-  overflow: hidden;
-}
-.sidebar::before,
-.content-area::before,
-.talent-sidebar::before {
-  display: none;
-}
-.sidebar:hover,
-.content-area:hover,
-.talent-sidebar:hover {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  transition: none;
 }
 
-/* Sidebar + containment */
+/* Sidebar */
 .sidebar {
-  position: sticky;
-  top: 2.5rem;
-  width: 280px;
+  padding: 2rem 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   overflow-y: auto;
   overflow-x: hidden;
   contain: layout paint;
-  max-height: calc(100vh - 5rem);
+  max-height: 100vh;
   
   /* Hide scrollbar for Chrome, Safari and Opera */
   scrollbar-width: none; /* Firefox */
@@ -115,17 +114,20 @@ body {
   display: none; /* Chrome, Safari and Opera */
 }
 
-/* Content areas */
+/* Content area */
 .content-area {
   width: 100%;
   min-width: 0;
-  padding: 2rem;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+  max-height: 100vh;
 }
+
+/* Talent sidebar */
 .talent-sidebar {
-  position: sticky;
-  top: 2.5rem;
-  width: 320px;
-  max-height: calc(100vh - 5rem);
+  padding: 2rem 1.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  max-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -834,30 +836,33 @@ a.wowhead del {
    Responsive Design
    ================================================================= */
 @media (max-width: 1400px) {
-  .main-container {
+  .main-grid {
     grid-template-columns: 260px 1fr 300px;
-    gap: 2rem;
-  }
-  .sidebar {
-    width: 260px;
-  }
-  .talent-sidebar {
-    width: 300px;
   }
 }
 
 @media (max-width: 1200px) {
-  .main-container {
+  .main-grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
   }
+  
   .sidebar,
   .talent-sidebar {
-    position: relative;
-    top: 0;
-    width: 100%;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     max-height: none;
   }
+  
+  .talent-sidebar {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: none;
+  }
+  
+  .content-area {
+    max-height: none;
+  }
+  
   h1 {
     font-size: 2rem;
   }
@@ -867,14 +872,17 @@ a.wowhead del {
   body {
     padding: 1rem;
   }
-  .main-container {
-    gap: 1.5rem;
+  
+  .unified-container {
+    border-radius: 16px;
   }
+  
   .sidebar,
   .content-area,
   .talent-sidebar {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
+  
   h1 {
     font-size: 1.75rem;
     letter-spacing: 0.05em;
