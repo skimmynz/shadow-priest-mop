@@ -121,8 +121,14 @@ body {
   padding: 2rem 2.5rem;
   overflow-y: auto;
   max-height: 100vh;
+  
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
 }
-
+.content-area::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
 /* Talent sidebar */
 .talent-sidebar {
   padding: 2rem 1.5rem;
