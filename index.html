@@ -17,29 +17,31 @@
      crossorigin="anonymous"></script>
 </head>
 <body>
-  <div class="main-container">
-    <aside class="sidebar">
-      <nav id="raid-menu" aria-label="Raid selection"></nav>
-      <div id="boss-buttons" role="group" aria-label="Bosses"></div>
-    </aside>
-    
-    <main class="content-area">
-      <h1>SHADOW PRIEST TOP 100</h1>
-      <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-          Loading last updated…
-      </div>
-      <section id="rankings">
-      </section>
-    </main>
-    
-    <aside class="talent-sidebar" id="talents">
-      <h3>Popular Talents</h3>
-      <div class="talent-summary">
-        <div style="text-align: center; color: #6b7280; padding: 2rem; font-style: italic;">
-          Select a boss to view talent data
+  <div class="unified-container">
+    <div class="main-grid">
+      <aside class="sidebar">
+        <nav id="raid-menu" aria-label="Raid selection"></nav>
+        <div id="boss-buttons" role="group" aria-label="Bosses"></div>
+      </aside>
+      
+      <main class="content-area">
+        <h1>SHADOW PRIEST TOP 100</h1>
+        <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+            Loading last updated…
         </div>
-      </div>
-    </aside>
+        <section id="rankings">
+        </section>
+      </main>
+      
+      <aside class="talent-sidebar" id="talents">
+        <h3>Popular Talents</h3>
+        <div class="talent-summary">
+          <div style="text-align: center; color: #6b7280; padding: 2rem; font-style: italic;">
+            Select a boss to view talent data
+          </div>
+        </div>
+      </aside>
+    </div>
   </div>
   
   <script src="script.js" defer></script>
