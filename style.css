@@ -780,6 +780,16 @@ a.wowhead del {
   border-radius: 12px;
   padding: 1rem;
   transition: all 0.3s ease;
+  animation: parsing-glow 3s ease-in-out infinite;
+}
+
+@keyframes parsing-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(124, 58, 237, 0.6);
+  }
 }
 .parsing-rules-content.active {
   display: block;
