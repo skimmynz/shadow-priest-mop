@@ -811,12 +811,6 @@ a.wowhead del {
 .parsing-rule-item:last-child {
   border-bottom: none;
 }
-.parsing-rule-item::before {
-  content: "• ";
-  color: var(--accent-color);
-  font-weight: bold;
-  margin-right: 0.5rem;
-}
 
 /* =================================================================
    Loading / Error / Empty States
