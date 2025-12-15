@@ -516,6 +516,11 @@ a.wowhead del {
   overflow-x: auto;
   contain: layout paint;
 }
+
+.dropdown-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
 .dropdown-content.active {
   max-height: 2000px;
   opacity: 1;
