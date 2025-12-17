@@ -881,8 +881,6 @@ function createTierMenu() {
   selectActiveRaid(currentRaidKey);
 }
 
-function createRaidMenu() { createTierMenu(); }
-
 function selectActiveRaid(raidKey) {
   const container = document.getElementById('raid-buttons-container');
   if (!container) return;
