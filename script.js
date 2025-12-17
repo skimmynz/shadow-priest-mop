@@ -780,51 +780,55 @@ function parseHash() {
   return null;
 }
 
+// Replace your entire createTierMenu() function with this:
+
 function createTierMenu() {
   if (!raidMenu) return;
 
   const fragment = document.createDocumentFragment();
 
-  // Tier dropdown
-  const tierDropdownContainer = document.createElement('div');
-  tierDropdownContainer.className = 'tier-dropdown-container';
-
-  const tierSelect = document.createElement('select');
-  tierSelect.id = 'tier-select';
-  tierSelect.className = 'tier-select';
+  // Tier toggle buttons (instead of dropdown)
+  const tierToggleContainer = document.createElement('div');
+  tierToggleContainer.className = 'tier-toggle-container';
 
   for (const tierKey in TIERS) {
     const tier = TIERS[tierKey];
-    const option = document.createElement('option');
-    option.value = tierKey;
-    option.textContent = tier.name;
-    option.selected = (tierKey === currentTierKey);
-    tierSelect.appendChild(option);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'tier-toggle-button';
+    button.dataset.tierKey = tierKey;
+    button.textContent = tier.name;
+    
+    if (tierKey === currentTierKey) {
+      button.classList.add('active');
+    }
+
+    button.addEventListener('click', createDebounced((e) => {
+      e.preventDefault();
+      const newTierKey = e.currentTarget.dataset.tierKey;
+      if (currentTierKey === newTierKey) return;
+
+      currentTierKey = newTierKey;
+      createTierMenu();
+
+      const raids = TIERS[newTierKey].raids;
+      const firstRaidKey = Object.keys(raids)[0];
+
+      currentRaidKey = firstRaidKey;
+      selectActiveRaid(firstRaidKey);
+      buildBossButtonsForRaid(firstRaidKey);
+
+      const entries = Object.entries(raids[firstRaidKey].encounters);
+      if (entries.length > 0) {
+        const firstBoss = entries[0];
+        fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
+      }
+    }, 100));
+
+    tierToggleContainer.appendChild(button);
   }
 
-  tierSelect.addEventListener('change', createDebounced((e) => {
-    const newTierKey = e.target.value;
-    if (currentTierKey === newTierKey) return;
-
-    currentTierKey = newTierKey;
-    createTierMenu();
-
-    const raids = TIERS[newTierKey].raids;
-    const firstRaidKey = Object.keys(raids)[0];
-
-    currentRaidKey = firstRaidKey;
-    selectActiveRaid(firstRaidKey);
-    buildBossButtonsForRaid(firstRaidKey);
-
-    const entries = Object.entries(raids[firstRaidKey].encounters);
-    if (entries.length > 0) {
-      const firstBoss = entries[0];
-      fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
-    }
-  }, 100));
-
-  tierDropdownContainer.appendChild(tierSelect);
-  fragment.appendChild(tierDropdownContainer);
+  fragment.appendChild(tierToggleContainer);
 
   // Raid buttons
   const raidButtonsContainer = document.createElement('div');
@@ -833,21 +837,21 @@ function createTierMenu() {
 
   const raids = TIERS[currentTierKey].raids;
   for (const key in raids) {
-      const raid = raids[key];
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.dataset.raidKey = key;
-  
-      const img = document.createElement('img');
-      img.src = 'public/images/' + key + '.webp';
-      img.alt = raid.name;  // ← CHANGED
-      img.className = 'raid-icon';
-      img.loading = 'lazy';
-  
-      const span = document.createElement('span');
-      span.textContent = raid.name;  // ← CHANGED
-  
-      btn.append(img, span);
+    const raid = raids[key];
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.dataset.raidKey = key;
+
+    const img = document.createElement('img');
+    img.src = 'public/images/' + key + '.webp';
+    img.alt = raid.name;
+    img.className = 'raid-icon';
+    img.loading = 'lazy';
+
+    const span = document.createElement('span');
+    span.textContent = raid.name;
+
+    btn.append(img, span);
     btn.addEventListener('click', createDebounced((e) => {
       e.preventDefault();
       if (currentRaidKey === key) return;
