@@ -255,16 +255,6 @@ a.wowhead del {
   transform: translateY(-1px);
 }
 
-.tier-toggle-button.active::after {
-  content: '✓';
-  position: absolute;
-  top: 4px;
-  right: 6px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  opacity: 0.8;
-}
-
 .tier-toggle-button:active {
   transform: translateY(0);
 }
