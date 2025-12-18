@@ -801,26 +801,26 @@ function createTierMenu() {
       button.classList.add('active');
     }
 
-    button.addEventListener('click', createDebounced((e) => {
-      const newTierKey = e.currentTarget.dataset.tierKey;
-      if (currentTierKey === newTierKey) return;
-
-      currentTierKey = newTierKey;
-      createTierMenu();
-
-      const raids = TIERS[newTierKey].raids;
-      const firstRaidKey = Object.keys(raids)[0];
-
-      currentRaidKey = firstRaidKey;
-      selectActiveRaid(firstRaidKey);
-      buildBossButtonsForRaid(firstRaidKey);
-
-      const entries = Object.entries(raids[firstRaidKey].encounters);
-      if (entries.length > 0) {
-        const firstBoss = entries[0];
-        fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
-      }
-    }, 100));
+  button.addEventListener('click', (e) => {
+    const newTierKey = e.currentTarget.dataset.tierKey;
+    if (currentTierKey === newTierKey) return;
+  
+    currentTierKey = newTierKey;
+    createTierMenu();
+  
+    const raids = TIERS[newTierKey].raids;
+    const firstRaidKey = Object.keys(raids)[0];
+  
+    currentRaidKey = firstRaidKey;
+    selectActiveRaid(firstRaidKey);
+    buildBossButtonsForRaid(firstRaidKey);
+  
+    const entries = Object.entries(raids[firstRaidKey].encounters);
+    if (entries.length > 0) {
+      const firstBoss = entries[0];
+      fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
+    }
+  });
 
     tierToggleContainer.appendChild(button);
   }
