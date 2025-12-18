@@ -780,8 +780,6 @@ function parseHash() {
   return null;
 }
 
-// Replace your entire createTierMenu() function with this:
-
 function createTierMenu() {
   if (!raidMenu) return;
 
@@ -804,7 +802,6 @@ function createTierMenu() {
     }
 
     button.addEventListener('click', createDebounced((e) => {
-      e.preventDefault();
       const newTierKey = e.currentTarget.dataset.tierKey;
       if (currentTierKey === newTierKey) return;
 
