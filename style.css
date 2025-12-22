@@ -68,7 +68,7 @@ body {
 /* Unified container */
 .unified-container {
   max-width: 1800px;
-  margin: 2rem 1.5rem;
+  margin: 2rem auto;
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   border-radius: 20px;
@@ -997,6 +997,7 @@ a.wowhead del {
   top: 0;
   left: 0;
   right: 0;
+  width: 100%;
   z-index: 1000;
   background: rgba(26, 29, 41, 0.95);
   backdrop-filter: blur(12px);
@@ -1012,6 +1013,7 @@ a.wowhead del {
   justify-content: space-between;
   align-items: center;
   height: 64px;
+  width: 100%;
 }
 
 .nav-logo {
