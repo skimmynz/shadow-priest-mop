@@ -10,6 +10,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
+  <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -17,92 +18,42 @@
   <script src="https://wow.zamimg.com/widgets/power.js"></script>
 
   <style>
-    :root {
-      --primary-bg: #0f1117;
-      --secondary-bg: #1a1d29;
-      --card-bg: #1e2130;
-      --surface-bg: #23263a;
-      --hover-bg: #2a2d42;
-    
-      /* Accent colors */
-      --accent-color: #7c3aed;
-      --accent-hover: #8b5cf6;
-      --accent-glow: rgba(124, 58, 237, 0.3);
-      --success-color: #10b981;
-      --success-glow: rgba(16, 185, 129, 0.3);
-      --warning-color: #f59e0b;
-      --warning-glow: rgba(245, 158, 11, 0.3);
-      --shadow-color: #6b46c1;
-      --shadow-glow: rgba(107, 70, 193, 0.4);
-      --text-primary: #ffffff;
-      --text-secondary: #e2e8f0;
-      --text-muted: #94a3b8;
-      --text-accent: #a78bfa;
-      --border-color: #374151;
-      --border-hover: #4b5563;
-      --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
-      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-      --glass-bg: rgba(255, 255, 255, 0.03);
-      --glass-border: rgba(255, 255, 255, 0.06);
+    /* Additional styles specific to haste calculator */
+    .haste-container {
+      padding: 2rem 2.5rem;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: var(--primary-bg);
-      color: var(--text-primary);
-      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-      line-height: 1.6;
-      padding: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .header {
+    .haste-header {
       text-align: center;
-      margin-bottom: 1rem;
-      position: relative;
+      margin-bottom: 2rem;
     }
 
-    .header h1 {
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 900;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+    .haste-header h1 {
+      margin: 0 0 0.75rem 0;
+      font-size: clamp(2rem, 3vw, 2.75rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.03em;
+      letter-spacing: 0.1em;
       line-height: 1.1;
+      text-transform: uppercase;
     }
 
-    .header p {
+    .haste-header p {
       color: var(--text-secondary);
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 400;
       opacity: 0.9;
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
       line-height: 1.6;
     }
 
-    .main-content {
-      flex: 1;
+    .haste-main-content {
       display: grid;
       grid-template-columns: 400px 1fr;
       gap: 2rem;
@@ -110,7 +61,7 @@
       max-width: 100%;
     }
 
-    .left-panel {
+    .haste-left-panel {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
@@ -120,11 +71,10 @@
 
     .input-card,
     .result-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--shadow-xl);
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       position: relative;
       overflow: hidden;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -132,9 +82,9 @@
 
     .input-card:hover,
     .result-card:hover {
-      border-color: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
       transform: translateY(-2px);
-      box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
     }
 
     .input-card::before,
@@ -145,7 +95,9 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       opacity: 0.8;
     }
 
@@ -167,54 +119,54 @@
 
     .toggle-buttons {
       display: flex;
-      background: var(--secondary-bg);
-      border-radius: 16px;
+      background: var(--card-bg);
+      border-radius: 12px;
       padding: 6px;
       border: 1px solid var(--border-color);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
       flex: 1;
       position: relative;
     }
 
     .toggle-btn {
-      padding: 0.875rem 1.25rem;
+      padding: 0.875rem 1rem;
       background: transparent;
       color: var(--text-secondary);
       border: none;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
       font-size: 0.875rem;
       font-family: inherit;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       flex: 1;
       z-index: 2;
     }
 
     .toggle-btn.active {
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      background: var(--accent-color);
       color: white;
-      box-shadow: 0 8px 25px var(--shadow-glow), 0 4px 12px rgba(107, 70, 193, 0.4);
+      box-shadow: 0 4px 12px var(--accent-glow);
       transform: translateY(-1px);
     }
 
     .haste-input {
       flex: 1;
-      min-width: 140px;
-      padding: 0.875rem 1.25rem;
-      font-size: 1.25rem;
+      min-width: 120px;
+      padding: 0.875rem 1rem;
+      font-size: 1.125rem;
       font-weight: 700;
       font-family: inherit;
-      background: var(--secondary-bg);
+      background: var(--card-bg);
       border: 2px solid var(--border-color);
-      border-radius: 16px;
+      border-radius: 12px;
       color: var(--text-primary);
       text-align: center;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
       -moz-appearance: textfield;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 25px rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .haste-input::-webkit-outer-spin-button,
@@ -225,13 +177,12 @@
 
     .haste-input:focus {
       border-color: var(--accent-color);
-      box-shadow: 0 0 0 4px var(--accent-glow), 0 16px 32px rgba(0, 0, 0, 0.25);
-      transform: translateY(-2px);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      transform: translateY(-1px);
     }
 
     .haste-input:hover {
       border-color: var(--border-hover);
-      transform: translateY(-1px);
     }
 
     .haste-input::placeholder {
@@ -245,7 +196,7 @@
       justify-content: center;
       align-items: center;
     }
-    
+
     .race-toggle {
       display: flex;
       align-items: center;
@@ -253,19 +204,18 @@
       cursor: pointer;
       user-select: none;
       padding: 1rem 1.5rem;
-      border-radius: 16px;
+      border-radius: 12px;
       transition: all 0.3s ease;
-      background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px);
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
     }
-    
+
     .race-toggle:hover {
-      background: rgba(255, 255, 255, 0.06);
+      background: var(--hover-bg);
       transform: translateY(-1px);
-      border-color: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
     }
-    
+
     .race-checkbox {
       display: none;
     }
@@ -276,22 +226,22 @@
       border-radius: 50%;
       border: 2px solid var(--border-color);
       transition: all 0.3s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
     .race-checkbox:checked ~ .goblin-icon {
       border-color: var(--accent-color);
-      box-shadow: 0 0 15px var(--accent-glow), 0 4px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 12px var(--accent-glow);
       transform: scale(1.05);
     }
-    
+
     .race-switch {
       position: relative;
       display: inline-block;
       width: 48px;
       height: 24px;
     }
-    
+
     .race-switch::before {
       content: '';
       position: absolute;
@@ -303,7 +253,7 @@
       border-radius: 12px;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .race-switch::after {
       content: '';
       position: absolute;
@@ -311,29 +261,29 @@
       left: 2px;
       width: 20px;
       height: 20px;
-      background-color: #ffffff;
+      background-color: 
+#ffffff;
       border-radius: 50%;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
-    
+
     .race-checkbox:checked + .race-switch::before {
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      box-shadow: 0 0 20px var(--shadow-glow);
+      background: var(--accent-color);
+      box-shadow: 0 0 15px var(--accent-glow);
     }
-    
+
     .race-checkbox:checked + .race-switch::after {
       transform: translateX(22px);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     }
-    
+
     .race-text {
       color: var(--text-secondary);
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       transition: color 0.3s ease;
     }
-    
+
     .race-checkbox:checked ~ .race-text {
       color: var(--text-primary);
     }
@@ -346,7 +296,7 @@
 
     .result-label {
       color: var(--text-accent);
-      font-size: 0.875rem;
+      font-size: 0.75rem;
       font-weight: 700;
       margin-bottom: 0.75rem;
       text-transform: uppercase;
@@ -354,9 +304,11 @@
     }
 
     .result-value {
-      font-size: 2.5rem;
+      font-size: 2.25rem;
       font-weight: 900;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -366,43 +318,41 @@
 
     .conversion-text {
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 500;
       line-height: 1.4;
     }
 
     .gcd-warning {
-      background: linear-gradient(135deg, var(--warning-color), #d97706);
+      background: var(--warning-color);
       color: white;
-      padding: 0.75rem 1.25rem;
-      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
       margin-top: 1rem;
       font-weight: 600;
-      font-size: 0.875rem;
-      box-shadow: 0 8px 25px var(--warning-glow);
-      border: 1px solid rgba(245, 158, 11, 0.3);
+      font-size: 0.8rem;
+      box-shadow: 0 4px 12px var(--warning-glow);
     }
 
-    .right-panel {
+    .haste-right-panel {
       min-height: 0;
       overflow: hidden;
     }
 
     .spells-table {
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--shadow-xl);
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       overflow: hidden;
       position: relative;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .spells-table:hover {
-      border-color: rgba(255, 255, 255, 0.1);
+      border-color: var(--border-hover);
       transform: translateY(-2px);
-      box-shadow: 0 32px 64px -12px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
     }
 
     .spells-table::before {
@@ -412,27 +362,32 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       opacity: 0.8;
     }
 
     .table-header {
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.02);
       padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--border-color);
       position: relative;
     }
 
     .table-title {
-      font-size: 1.375rem;
+      font-size: 1.25rem;
       font-weight: 800;
       color: var(--text-primary);
       text-align: center;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-transform: uppercase;
     }
 
     .spells-container {
@@ -461,7 +416,9 @@
       top: 0;
       bottom: 0;
       width: 0;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -470,7 +427,7 @@
     }
 
     .spell-row:hover {
-      background: rgba(107, 70, 193, 0.08);
+      background: rgba(124, 58, 237, 0.08);
       transform: translateX(8px);
     }
 
@@ -488,22 +445,21 @@
       border: 2px solid var(--border-color);
       object-fit: cover;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     }
 
     .spell-icon:hover {
       border-color: var(--accent-color);
       transform: scale(1.1);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
     }
 
     .spell-name {
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
       color: var(--text-primary);
       text-decoration: none;
       transition: all 0.3s ease;
-      letter-spacing: -0.01em;
     }
 
     .spell-name:hover {
@@ -515,8 +471,8 @@
       padding: 0.5rem 1rem;
       border-radius: 20px;
       font-weight: 800;
-      font-size: 0.875rem;
-      min-width: 80px;
+      font-size: 0.8rem;
+      min-width: 75px;
       text-align: center;
       transition: all 0.3s ease;
       border: 2px solid transparent;
@@ -530,17 +486,16 @@
     .ticks-badge.has-ticks {
       background: var(--success-color);
       color: white;
-      box-shadow: 0 0 25px var(--success-glow);
+      box-shadow: 0 0 20px var(--success-glow);
       animation: pulse-glow 3s ease-in-out infinite;
-      border-color: rgba(16, 185, 129, 0.3);
     }
 
     @keyframes pulse-glow {
       0%, 100% {
-        box-shadow: 0 0 25px var(--success-glow);
+        box-shadow: 0 0 20px var(--success-glow);
       }
       50% {
-        box-shadow: 0 0 35px var(--success-glow), 0 0 45px rgba(16, 185, 129, 0.2);
+        box-shadow: 0 0 30px var(--success-glow);
         transform: scale(1.02);
       }
     }
@@ -565,26 +520,29 @@
     .breakpoint-maxed {
       color: var(--success-color);
       font-weight: 800;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-shadow: 0 0 10px var(--success-glow);
     }
 
     .progress-container {
       width: 140px;
-      height: 10px;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      border-radius: 5px;
+      height: 8px;
+      background: var(--card-bg);
+      border-radius: 4px;
       overflow: hidden;
       position: relative;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
     }
 
     .progress-bar {
       height: 100%;
-      background: var(--gradient-shadow);
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       width: 0%;
-      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-      border-radius: 5px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 3px;
       position: relative;
     }
 
@@ -604,21 +562,44 @@
       100% { transform: translateX(100%); }
     }
 
-    @media (max-width: 1024px) {
-      .main-content {
+    @media (max-width: 1200px) {
+      .haste-main-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
       }
-      
-      .left-panel {
+
+      .haste-left-panel {
         position: static;
         flex-direction: row;
         gap: 1rem;
       }
-      
+
       .input-card,
       .result-card {
         flex: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .haste-container {
+        padding: 1.5rem 1rem;
+      }
+
+      .haste-header h1 {
+        font-size: 1.75rem;
+      }
+
+      .haste-header p {
+        font-size: 0.9rem;
+      }
+
+      .haste-left-panel {
+        flex-direction: column;
+      }
+
+      .input-row {
+        flex-direction: column;
+        gap: 0.75rem;
       }
 
       .input-card {
@@ -628,217 +609,37 @@
       .result-card {
         padding: 1.5rem;
       }
-    }
 
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem 0.5rem;
-        gap: 1rem;
-      }
-      
-      .header h1 {
-        font-size: 2rem;
-      }
-      
-      .header p {
-        font-size: 1rem;
-      }
-      
-      .left-panel {
-        flex-direction: column;
-      }
-      
-      .input-row {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-      
-      .toggle-buttons {
-        width: 100%;
-      }
-
-      .main-content {
-        gap: 1rem;
-      }
-      
       .spell-row {
         grid-template-columns: 1fr;
         gap: 1rem;
         text-align: center;
         padding: 1.25rem 1.5rem;
       }
-      
+
       .spell-info {
         justify-content: center;
         flex-wrap: nowrap;
       }
 
-      .spell-name {
-        font-size: 0.9rem;
-      }
-
-      .ticks-badge {
-        min-width: 70px;
-        padding: 0.4rem 0.7rem;
-        font-size: 0.8rem;
-      }
-      
       .breakpoint-info {
         text-align: center;
         align-items: center;
       }
-      
+
       .progress-container {
         width: 120px;
       }
     }
-
-    /* Scrollbar styling */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--secondary-bg);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-hover);
-    }
-    /* Top Navigation Bar */
-.top-nav {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 1000;
-  background: rgba(26, 29, 41, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.nav-container {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 64px;
-  width: 100%;
-}
-
-.nav-links {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  list-style: none;
-}
-
-.nav-links a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: #e5e7eb;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid transparent;
-}
-
-.nav-links a:hover {
-  background: rgba(124, 58, 237, 0.1);
-  color: #a78bfa;
-  border-color: rgba(124, 58, 237, 0.3);
-  transform: translateY(-1px);
-}
-
-.nav-links a.active {
-  background: #7c3aed;
-  color: #ffffff;
-  border-color: #7c3aed;
-}
-
-.mobile-menu-toggle {
-  display: none;
-  background: transparent;
-  border: 2px solid #7c3aed;
-  color: #a78bfa;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.25rem;
-  transition: all 0.2s ease;
-}
-
-.mobile-menu-toggle:hover {
-  background: rgba(124, 58, 237, 0.1);
-  border-color: #8b5cf6;
-}
-
-.nav-icon {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
-}
-
-@media (max-width: 768px) {
-  .nav-container {
-    padding: 0 1rem;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 64px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    background: rgba(26, 29, 41, 0.98);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0;
-    gap: 0.5rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
-
-  .nav-links.mobile-open {
-    max-height: 400px;
-    padding: 1rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  }
-
-  .nav-links a {
-    width: 100%;
-    justify-content: center;
-    padding: 0.875rem 1rem;
-  }
-}
   </style>
 </head>
 <body>
-    <nav class="top-nav">
+  <nav class="top-nav">
     <div class="nav-container">   
       <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
         ☰
       </button>
-      
+
       <ul class="nav-links" id="navLinks">
         <li>
           <a href="/">
@@ -886,64 +687,92 @@
       </ul>
     </div>
   </nav>
-  <div class="container">
-    <div class="header">
-      <h1>Shadow Priest Haste Calculator</h1>
-      <p>Optimize your DoT breakpoints and maximize your damage potential in Mists of Pandaria Classic</p>
-    </div>
 
-    <div class="main-content">
-      <div class="left-panel">
-        <div class="input-card">
-          <div class="input-section">
-            <div class="input-row">
-              <div class="toggle-buttons">
-                <button class="toggle-btn active" data-mode="rating">Haste Rating</button>
-                <button class="toggle-btn" data-mode="percentage">Haste %</button>
-              </div>
-              <input
-                type="number"
-                id="hasteInput"
-                class="haste-input"
-                min="0"
-                max="20000"
-                step="1"
-                placeholder="0"
-              />
-            </div>
-            
-            <div class="race-selection">
-              <label class="race-toggle">
-                <input type="checkbox" id="goblinRacial" class="race-checkbox">
-                <span class="race-switch"></span>
-                <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
-                <span class="race-text">Goblin (+1% haste)</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="result-card">
-          <div class="result-label">Effective Haste</div>
-          <div class="result-value" id="hasteResult">5.00%</div>
-          <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
-          <div id="gcdWarning"></div>
-        </div>
+  <div class="unified-container">
+    <div class="haste-container">
+      <div class="haste-header">
+        <h1>Shadow Priest Haste Calculator</h1>
+        <p>Optimize your DoT breakpoints and maximize your damage potential in Mists of Pandaria Classic</p>
       </div>
 
-      <div class="right-panel">
-        <div class="spells-table">
-          <div class="table-header">
-            <h2 class="table-title">DoT Breakpoint Analysis</h2>
+      <div class="haste-main-content">
+        <div class="haste-left-panel">
+          <div class="input-card">
+            <div class="input-section">
+              <div class="input-row">
+                <div class="toggle-buttons">
+                  <button class="toggle-btn active" data-mode="rating">Haste Rating</button>
+                  <button class="toggle-btn" data-mode="percentage">Haste %</button>
+                </div>
+                <input
+                  type="number"
+                  id="hasteInput"
+                  class="haste-input"
+                  min="0"
+                  max="20000"
+                  step="1"
+                  placeholder="0"
+                />
+              </div>
+
+              <div class="race-selection">
+                <label class="race-toggle">
+                  <input type="checkbox" id="goblinRacial" class="race-checkbox">
+                  <span class="race-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
+                  <span class="race-text">Goblin (+1% haste)</span>
+                </label>
+              </div>
+            </div>
           </div>
-          <div class="spells-container" id="spellsContainer"></div>
+
+          <div class="result-card">
+            <div class="result-label">Effective Haste</div>
+            <div class="result-value" id="hasteResult">5.00%</div>
+            <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
+            <div id="gcdWarning"></div>
+          </div>
+        </div>
+
+        <div class="haste-right-panel">
+          <div class="spells-table">
+            <div class="table-header">
+              <h2 class="table-title">DoT Breakpoint Analysis</h2>
+            </div>
+            <div class="spells-container" id="spellsContainer"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // MoP Classic spell data with corrected URLs
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (mobileMenuToggle && navLinks) {
+      mobileMenuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('mobile-open');
+        mobileMenuToggle.textContent = navLinks.classList.contains('mobile-open') ? '✕' : '☰';
+      });
+
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('mobile-open');
+          mobileMenuToggle.textContent = '☰';
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.top-nav')) {
+          navLinks.classList.remove('mobile-open');
+          mobileMenuToggle.textContent = '☰';
+        }
+      });
+    }
+
+    // MoP Classic spell data
     const breakpoints = {
       "Shadow Word: Pain": {
         id: 589,
@@ -965,7 +794,7 @@
       }
     };
 
-    let inputMode = 'rating'; // 'rating' or 'percentage'
+    let inputMode = 'rating';
     const hasteInput = document.getElementById('hasteInput');
 
     // Toggle between input modes
@@ -973,9 +802,9 @@
       btn.addEventListener('click', function() {
         document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-        
+
         inputMode = this.dataset.mode;
-        
+
         if (inputMode === 'rating') {
           hasteInput.placeholder = '0';
           hasteInput.setAttribute('max', '38450');
@@ -990,13 +819,13 @@
           hasteInput.type = 'text';
           hasteInput.inputMode = 'decimal';
         }
-        
+
         hasteInput.value = '';
         calculateHaste();
       });
     });
 
-    function calculateHaste() {
+function calculateHaste() {
       let inputValue = parseFloat(hasteInput.value) || 0;
       const isGoblin = document.getElementById('goblinRacial').checked;
       
@@ -1005,8 +834,6 @@
       
       if (inputMode === 'rating') {
         rating = Math.min(inputValue, 20000);
-        
-        // Shadowform passive 5% haste
         const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
         effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
       } else {
@@ -1179,32 +1006,6 @@
 
     // Initialize on load
     calculateHaste();
-  </script>
-<script>
-    // Mobile menu toggle
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const navLinks = document.getElementById('navLinks');
-
-    if (mobileMenuToggle && navLinks) {
-      mobileMenuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('mobile-open');
-        mobileMenuToggle.textContent = navLinks.classList.contains('mobile-open') ? '✕' : '☰';
-      });
-
-      navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          navLinks.classList.remove('mobile-open');
-          mobileMenuToggle.textContent = '☰';
-        });
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.top-nav')) {
-          navLinks.classList.remove('mobile-open');
-          mobileMenuToggle.textContent = '☰';
-        }
-      });
-    }
   </script>
 </body>
 </html>
