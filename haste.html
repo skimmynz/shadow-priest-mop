@@ -18,13 +18,16 @@
 
   <style>
     :root {
-      --primary-bg: #0a0a15;
-      --secondary-bg: #141428;
-      --card-bg: #1a1a35;
-      --surface-bg: #232340;
-      --accent-color: #6366f1;
-      --accent-hover: #7c3aed;
-      --accent-glow: rgba(99, 102, 241, 0.25);
+      --primary-bg: #0f1117;
+      --secondary-bg: #1a1d29;
+      --card-bg: #1e2130;
+      --surface-bg: #23263a;
+      --hover-bg: #2a2d42;
+    
+      /* Accent colors */
+      --accent-color: #7c3aed;
+      --accent-hover: #8b5cf6;
+      --accent-glow: rgba(124, 58, 237, 0.3);
       --success-color: #10b981;
       --success-glow: rgba(16, 185, 129, 0.3);
       --warning-color: #f59e0b;
@@ -41,12 +44,6 @@
       --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       --glass-bg: rgba(255, 255, 255, 0.03);
       --glass-border: rgba(255, 255, 255, 0.06);
-      --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --gradient-accent: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      --gradient-shadow: linear-gradient(135deg, #6b46c1 0%, #7c3aed 100%);
-      --gradient-bg: radial-gradient(circle at 20% 80%, rgba(107, 70, 193, 0.12) 0%, transparent 50%),
-                      radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                      radial-gradient(circle at 40% 40%, rgba(124, 58, 237, 0.08) 0%, transparent 50%);
     }
 
     * {
@@ -56,14 +53,13 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--primary-bg);
       color: var(--text-primary);
-      line-height: 1.5;
-      min-height: 100vh;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
       font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-      background-image: var(--gradient-bg);
-      background-attachment: fixed;
+      line-height: 1.6;
+      padding: 0;
+      min-height: 100vh;
       overflow-x: hidden;
     }
 
