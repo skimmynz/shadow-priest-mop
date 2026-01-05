@@ -3,287 +3,632 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Shadow Priest Addons & WeakAuras – MoP Classic</title>
-  
+  <title>Shadow Priest Haste Calculator</title>
+
   <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://wow.zamimg.com/widgets/power.js"></script>
+
   <style>
-    .addons-container {
-      max-width: 1400px;
-      margin: 2rem auto;
-      padding: 0 2rem;
+    /* Additional styles specific to haste calculator */
+    .haste-container {
+      padding: 2rem 2.5rem;
     }
 
-    .page-header {
+    .haste-header {
       text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .page-header h1 {
-      margin-bottom: 1rem;
-    }
-
-    .page-header .subtitle {
-      color: var(--text-muted);
-      font-size: 1.125rem;
       margin-bottom: 2rem;
     }
 
-    .ui-settings {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      flex-wrap: wrap;
-    }
-
-    .ui-setting {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .ui-setting-label {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .ui-setting-value {
-      color: var(--accent-color);
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 3rem 0 1.5rem 0;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--border-color);
-    }
-
-    .section-header h2 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+    .haste-header h1 {
+      margin: 0 0 0.75rem 0;
+      font-size: clamp(2rem, 3vw, 2.75rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin: 0;
+      letter-spacing: 0.1em;
+      line-height: 1.1;
+      text-transform: uppercase;
     }
 
-    .section-count {
-      background: var(--accent-color);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 700;
+    .haste-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 400;
+      opacity: 0.9;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
     }
 
-    .items-grid {
+    .haste-main-content {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
+      grid-template-columns: 400px 1fr;
+      gap: 2rem;
+      align-items: start;
+      max-width: 100%;
     }
 
-    .item-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    .haste-left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      position: sticky;
+      top: 2rem;
+    }
+
+    .input-card,
+    .result-card {
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
       position: relative;
       overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .item-card::before {
+    .input-card:hover,
+    .result-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .input-card::before,
+    .result-card::before {
       content: '';
       position: absolute;
       top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
-      transition: left 0.5s ease;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
+      opacity: 0.8;
     }
 
-    .item-card:hover {
-      border-color: var(--accent-color);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+    .input-card {
+      padding: 2rem;
     }
 
-    .item-card:hover::before {
-      left: 100%;
-    }
-
-    .item-name {
-      font-size: 1.125rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.75rem;
-      line-height: 1.3;
-    }
-
-    .item-description {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
-      font-style: italic;
-    }
-
-    .item-preview {
-      width: 100%;
-      height: 160px;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      object-fit: cover;
-      border: 1px solid var(--border-color);
-      transition: all 0.3s ease;
-    }
-
-    .item-preview:hover {
-      border-color: var(--accent-color);
-      transform: scale(1.02);
-    }
-
-    .item-links {
+    .input-section {
       display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
-    .item-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--accent-color);
-      color: white;
-      text-decoration: none;
+    .input-row {
+      display: flex;
+      gap: 0.75rem;
+      align-items: stretch;
+    }
+
+    .toggle-buttons {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 6px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      flex: 1;
+      position: relative;
+    }
+
+    .toggle-btn {
+      padding: 0.875rem 1rem;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
       border-radius: 8px;
+      cursor: pointer;
       font-weight: 600;
       font-size: 0.875rem;
-      transition: all 0.2s ease;
+      font-family: inherit;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
       flex: 1;
+      z-index: 2;
+    }
+
+    .toggle-btn.active {
+      background: var(--accent-color);
+      color: white;
+      box-shadow: 0 4px 12px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+
+    .haste-input {
+      flex: 1;
+      min-width: 120px;
+      padding: 0.875rem 1rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-primary);
+      text-align: center;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+      -moz-appearance: textfield;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .haste-input::-webkit-outer-spin-button,
+    .haste-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .haste-input:focus {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+
+    .haste-input:hover {
+      border-color: var(--border-hover);
+    }
+
+    .haste-input::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+      font-weight: 500;
+    }
+
+    .race-selection {
+      display: flex;
       justify-content: center;
-      min-width: fit-content;
+      align-items: center;
     }
 
-    .item-link:hover {
-      background: var(--accent-hover);
-      transform: translateX(2px);
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
-    }
-
-    .item-link.secondary {
-      background: var(--secondary-bg);
+    .race-toggle {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      user-select: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: var(--card-bg);
       border: 1px solid var(--border-color);
+    }
+
+    .race-toggle:hover {
+      background: var(--hover-bg);
+      transform: translateY(-1px);
+      border-color: var(--border-hover);
+    }
+
+    .race-checkbox {
+      display: none;
+    }
+
+    .goblin-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .race-checkbox:checked ~ .goblin-icon {
+      border-color: var(--accent-color);
+      box-shadow: 0 0 12px var(--accent-glow);
+      transform: scale(1.05);
+    }
+
+    .race-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+
+    .race-switch::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--border-color);
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .race-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background-color: 
+#ffffff;
+      border-radius: 50%;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .race-checkbox:checked + .race-switch::before {
+      background: var(--accent-color);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .race-checkbox:checked + .race-switch::after {
+      transform: translateX(22px);
+    }
+
+    .race-text {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .race-checkbox:checked ~ .race-text {
       color: var(--text-primary);
     }
 
-    .item-link.secondary:hover {
-      background: var(--hover-bg);
-      border-color: var(--accent-color);
-    }
-
-    .item-link svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .faq-section {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
+    .result-card {
       padding: 2rem;
-      margin-top: 3rem;
+      text-align: center;
+      position: relative;
     }
 
-    .faq-section h2 {
-      font-size: 1.75rem;
+    .result-label {
+      color: var(--text-accent);
+      font-size: 0.75rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .result-value {
+      font-size: 2.25rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
+      line-height: 1;
     }
 
-    .faq-links {
+    .conversion-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .gcd-warning {
+      background: var(--warning-color);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 0.8rem;
+      box-shadow: 0 4px 12px var(--warning-glow);
+    }
+
+    .haste-right-panel {
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .spells-table {
+      background: var(--secondary-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .spells-table:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .spells-table::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
+      opacity: 0.8;
+    }
+
+    .table-header {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .table-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      text-align: center;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-transform: uppercase;
+    }
+
+    .spells-container {
+      background: transparent;
+    }
+
+    .spell-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      gap: 1.5rem;
+    }
+
+    .spell-row:last-child {
+      border-bottom: none;
+    }
+
+    .spell-row::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 0;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .spell-row:hover::before {
+      width: 4px;
+    }
+
+    .spell-row:hover {
+      background: rgba(124, 58, 237, 0.08);
+      transform: translateX(8px);
+    }
+
+    .spell-info {
       display: flex;
+      align-items: center;
       gap: 1rem;
       flex-wrap: wrap;
     }
 
-    .faq-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      background: var(--secondary-bg);
+    .spell-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 2px solid var(--border-color);
+      object-fit: cover;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .spell-icon:hover {
+      border-color: var(--accent-color);
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .spell-name {
+      font-weight: 700;
+      font-size: 0.95rem;
       color: var(--text-primary);
       text-decoration: none;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      font-weight: 600;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
     }
 
-    .faq-link:hover {
-      border-color: var(--accent-color);
-      background: var(--hover-bg);
-      transform: translateY(-2px);
+    .spell-name:hover {
+      color: var(--accent-color);
+      text-shadow: 0 0 10px var(--accent-glow);
     }
 
-    .faq-link svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .last-updated-footer {
+    .ticks-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      min-width: 75px;
       text-align: center;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 1px solid var(--border-color);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
     }
 
-    @media (max-width: 768px) {
-      .addons-container {
-        padding: 0 1rem;
-      }
+    .ticks-badge.no-ticks {
+      background: var(--border-color);
+      color: var(--text-muted);
+    }
 
-      .items-grid {
+    .ticks-badge.has-ticks {
+      background: var(--success-color);
+      color: white;
+      box-shadow: 0 0 20px var(--success-glow);
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% {
+        box-shadow: 0 0 20px var(--success-glow);
+      }
+      50% {
+        box-shadow: 0 0 30px var(--success-glow);
+        transform: scale(1.02);
+      }
+    }
+
+    .breakpoint-info {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+      min-width: 140px;
+    }
+
+    .breakpoint-text {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .breakpoint-maxed {
+      color: var(--success-color);
+      font-weight: 800;
+      font-size: 0.9rem;
+      text-shadow: 0 0 10px var(--success-glow);
+    }
+
+    .progress-container {
+      width: 140px;
+      height: 8px;
+      background: var(--card-bg);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(135deg, 
+#a78bfa 0%, 
+#7c3aed 100%);
+      width: 0%;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 3px;
+      position: relative;
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @media (max-width: 1200px) {
+      .haste-main-content {
         grid-template-columns: 1fr;
-      }
-
-      .ui-settings {
         gap: 1.5rem;
       }
 
-      .section-header h2 {
-        font-size: 1.5rem;
+      .haste-left-panel {
+        position: static;
+        flex-direction: row;
+        gap: 1rem;
+      }
+
+      .input-card,
+      .result-card {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .haste-container {
+        padding: 1.5rem 1rem;
+      }
+
+      .haste-header h1 {
+        font-size: 1.75rem;
+      }
+
+      .haste-header p {
+        font-size: 0.9rem;
+      }
+
+      .haste-left-panel {
+        flex-direction: column;
+      }
+
+      .input-row {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .input-card {
+        padding: 1.5rem;
+      }
+
+      .result-card {
+        padding: 1.5rem;
+      }
+
+      .spell-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.25rem 1.5rem;
+      }
+
+      .spell-info {
+        justify-content: center;
+        flex-wrap: nowrap;
+      }
+
+      .breakpoint-info {
+        text-align: center;
+        align-items: center;
+      }
+
+      .progress-container {
+        width: 120px;
       }
     }
   </style>
@@ -315,7 +660,7 @@
           </a>
         </li>
         <li>
-          <a href="/haste">
+          <a href="/haste" class="active">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12 6 12 12 16 14"/>
@@ -324,7 +669,7 @@
           </a>
         </li>
         <li>
-          <a href="/addons" class="active">
+          <a href="/addons">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
               <line x1="9" y1="3" x2="9" y2="21"/>
@@ -351,115 +696,65 @@
       </ul>
     </div>
   </nav>
+  <div class="unified-container">
+    <div class="haste-container">
+      <div class="haste-header">
+        <h1>Shadow Priest Haste Calculator</h1>
+        <p>Optimize your DoT breakpoints and maximize your damage potential in Mists of Pandaria Classic</p>
+      </div>
 
-  <div class="addons-container">
-    <div class="page-header">
-      <h1>ADDONS & WEAKAURAS</h1>
-      <div class="subtitle">Last Updated: 5th January 2026</div>
-      
-      <div class="ui-settings">
-        <div class="ui-setting">
-          <div class="ui-setting-label">Resolution</div>
-          <div class="ui-setting-value">1920 × 1080</div>
+      <div class="haste-main-content">
+        <div class="haste-left-panel">
+          <div class="input-card">
+            <div class="input-section">
+              <div class="input-row">
+                <div class="toggle-buttons">
+                  <button class="toggle-btn active" data-mode="rating">Haste Rating</button>
+                  <button class="toggle-btn" data-mode="percentage">Haste %</button>
+                </div>
+                <input
+                  type="number"
+                  id="hasteInput"
+                  class="haste-input"
+                  min="0"
+                  max="20000"
+                  step="1"
+                  placeholder="0"
+                />
+              </div>
+
+              <div class="race-selection">
+                <label class="race-toggle">
+                  <input type="checkbox" id="goblinRacial" class="race-checkbox">
+                  <span class="race-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
+                  <span class="race-text">Goblin (+1% haste)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-label">Effective Haste</div>
+            <div class="result-value" id="hasteResult">5.00%</div>
+            <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
+            <div id="gcdWarning"></div>
+          </div>
         </div>
-        <div class="ui-setting">
-          <div class="ui-setting-label">UI Scale</div>
-          <div class="ui-setting-value">65%</div>
+
+        <div class="haste-right-panel">
+          <div class="spells-table">
+            <div class="table-header">
+              <h2 class="table-title">DoT Breakpoint Analysis</h2>
+            </div>
+            <div class="spells-container" id="spellsContainer"></div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Addons Section -->
-    <div class="section-header">
-      <h2>Addons</h2>
-      <span class="section-count">15</span>
-    </div>
-    
-    <div class="items-grid" id="addons-grid"></div>
-
-    <!-- WeakAuras Section -->
-    <div class="section-header">
-      <h2>WeakAuras</h2>
-      <span class="section-count">11</span>
-    </div>
-    
-    <div class="items-grid" id="weakauras-grid"></div>
-
   </div>
 
   <script>
-    // Data
-    const addons = [
-      { name: "AdvancedInterfaceOptions", url: "https://www.curseforge.com/wow/addons/advancedinterfaceoptions", description: "Restore missing interface options" },
-      { name: "Auctionator", url: "https://www.curseforge.com/wow/addons/auctionator", description: "Auction house enhancement" },
-      { name: "Bagnon", url: "https://www.curseforge.com/wow/addons/bagnon", description: "All-in-one bag management" },
-      { name: "Details", url: "https://www.curseforge.com/wow/addons/details", description: "Advanced combat meters" },
-      { name: "FojjiCore", url: "https://www.curseforge.com/wow/addons/fojjicore", description: "Required for Fojji WeakAuras" },
-      { name: "Leatrix Plus", url: "https://www.curseforge.com/wow/addons/leatrix-plus", description: "Quality of life improvements" },
-      { name: "OmniCC", url: "https://www.curseforge.com/wow/addons/omni-cc", description: "Cooldown timer overlays" },
-      { name: "Plater Nameplates", url: "https://www.curseforge.com/wow/addons/plater-nameplates", description: "Advanced nameplate customization", profileUrl: "https://wago.io/pfxpBonVW" },
-      { name: "Questie", url: "https://www.curseforge.com/wow/addons/questie", description: "Quest helper and tracker" },
-      { name: "RCLootCouncil Classic", url: "https://www.curseforge.com/wow/addons/rclootcouncil-classic", description: "Guild loot distribution" },
-      { name: "ReforgeLite Classic", url: "https://www.curseforge.com/wow/addons/reforgelite-classic", description: "Optimize gear reforging" },
-      { name: "Shadowed Unit Frames", url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames/files/7062045", description: "Customizable unit frames", profileUrl: "https://wago.io/3K-eb06qt" },
-      { name: "TrufiGCD", url: "https://www.curseforge.com/wow/addons/trufigcd", description: "GCD tracker for raid analysis" },
-      { name: "WeakAuras 2", url: "https://www.curseforge.com/wow/addons/weakauras-2", description: "Essential for all WeakAuras below" },
-      { name: "WowSimsExporter", url: "https://www.curseforge.com/wow/addons/wowsimsexporter", description: "Export character for simulations" }
-    ];
-
-    const weakauras = [
-      { name: "Fojji - Shadow Priest UI [MoP] | skimmy edit", url: "https://wago.io/ri2lfOS8b", description: "Complete UI package", preview: "https://media.wago.io/screenshots/ri2lfOS8b/675ae4e3d535cb06abeaa1ea.gif" },
-      { name: "DragonKarsh CastBars | skimmy edit", url: "https://wago.io/dnDdk1mhh", description: "Enhanced cast bars", preview: "https://media.wago.io/screenshots/dnDdk1mhh/675aede6d535cb06abeb2e0d.gif" },
-      { name: "Shadow Priest Fake Queue", url: "https://wago.io/Ikku0mWwO", description: "Queue simulation overlay", preview: "https://media.wago.io/screenshots/Ikku0mWwO/675aee4bd535cb06abeb364a.png" },
-      { name: "DragonKarsh Mind Flay Clip Delay", url: "https://wago.io/zqC8i_vfS", description: "Mind Flay optimization", preview: "https://media.wago.io/screenshots/zqC8i_vfS/675aee5ed535cb06abeb38dd.gif" },
-      { name: "Fojji - Boss Kill Times", url: "https://wago.io/FojjiBossKillTimes", description: "Track boss kill timers", preview: "https://media.wago.io/screenshots/FojjiBossKillTimes/675aeea5d535cb06abeb44f4.png" },
-      { name: "Fojji - Class Pack Anchors", url: "https://wago.io/FojjiClassAnchors", description: "Position UI elements", preview: "https://media.wago.io/screenshots/FojjiClassAnchors/675aeedcd535cb06abeb4d73.png" },
-      { name: "Fojji - Item & Trinket Tracker", url: "https://wago.io/us-DiWYP7", description: "Track trinket cooldowns", preview: "https://media.wago.io/screenshots/us-DiWYP7/675aef0bd535cb06abeb5373.gif" },
-      { name: "Fojji - Pull Timers & Range Radar", url: "https://wago.io/Fojji_PullTimers", description: "Pull countdown and range", preview: "https://media.wago.io/screenshots/Fojji_PullTimers/675aef2bd535cb06abeb5953.gif" },
-      { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", description: "Execute range indicator", preview: "https://media.wago.io/screenshots/UWa_HeEta/675aef76d535cb06abeb6b63.gif" },
-      { name: "Halo Range Checker", url: "https://wago.io/Zcbxhfgrl", description: "Optimal Halo range", preview: "https://media.wago.io/screenshots/Zcbxhfgrl/675aef90d535cb06abeb70c8.gif" },
-      { name: "Auto Accept Role Check Sign Up", url: "https://wago.io/0PSqIgG2d", description: "Auto-accept LFG roles", preview: "https://media.wago.io/screenshots/0PSqIgG2d/675aefaed535cb06abeb765c.png" },
-      { name: "ModernCharacterFrame | Plaffs edition", url: "https://wago.io/mm6cuMmYc", description: "Updated character pane", preview: "https://media.wago.io/screenshots/mm6cuMmYc/675aefc3d535cb06abeb7b73.png" },
-      { name: "Shadow Priest Haste Breakpoints T14", url: "https://wago.io/7m5gdIAts", description: "Haste breakpoint tracker", preview: "https://media.wago.io/screenshots/7m5gdIAts/675aefdcd535cb06abeb8123.png" },
-      { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", description: "Track UVLS trinket stacks", preview: "https://media.wago.io/screenshots/8Xgm0DEZW/675aeff2d535cb06abeb8619.png" }
-    ];
-
-    // Render items
-    function renderItems(items, containerId) {
-      const container = document.getElementById(containerId);
-      const isWeakAura = containerId === 'weakauras-grid';
-      
-      container.innerHTML = items.map(item => `
-        <div class="item-card">
-          ${item.preview ? `<img src="${item.preview}" alt="${item.name} preview" class="item-preview" loading="lazy" onerror="this.style.display='none'">` : ''}
-          <div class="item-name">${item.name}</div>
-          ${item.description ? `<div class="item-description">${item.description}</div>` : ''}
-          <div class="item-links">
-            <a href="${item.url}" target="_blank" rel="noopener" class="item-link">
-              ${isWeakAura ? 'Import' : 'Download'}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-            </a>
-            ${item.profileUrl ? `
-              <a href="${item.profileUrl}" target="_blank" rel="noopener" class="item-link secondary">
-                Profile
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
-              </a>
-            ` : ''}
-          </div>
-        </div>
-      `).join('');
-    }
-
-    renderItems(addons, 'addons-grid');
-    renderItems(weakauras, 'weakauras-grid');
-
     // Mobile menu toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const navLinks = document.getElementById('navLinks');
@@ -484,6 +779,241 @@
         }
       });
     }
+
+    // MoP Classic spell data
+    const breakpoints = {
+      "Shadow Word: Pain": {
+        id: 589,
+        points: [8.32, 24.97, 41.68],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
+        url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
+      },
+      "Vampiric Touch": {
+        id: 34914,
+        points: [9.99, 30.01, 49.95],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
+        url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
+      },
+      "Devouring Plague": {
+        id: 2944,
+        points: [8.28, 24.92, 41.74],
+        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
+        url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
+      }
+    };
+
+    let inputMode = 'rating';
+    const hasteInput = document.getElementById('hasteInput');
+
+    // Toggle between input modes
+    document.querySelectorAll('.toggle-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        inputMode = this.dataset.mode;
+
+        if (inputMode === 'rating') {
+          hasteInput.placeholder = '0';
+          hasteInput.setAttribute('max', '38450');
+          hasteInput.setAttribute('maxlength', '5');
+          hasteInput.setAttribute('step', '1');
+          hasteInput.type = 'number';
+        } else {
+          hasteInput.placeholder = '0.00%';
+          hasteInput.removeAttribute('max');
+          hasteInput.removeAttribute('step');
+          hasteInput.removeAttribute('maxlength');
+          hasteInput.type = 'text';
+          hasteInput.inputMode = 'decimal';
+        }
+
+        hasteInput.value = '';
+        calculateHaste();
+      });
+    });
+
+function calculateHaste() {
+      let inputValue = parseFloat(hasteInput.value) || 0;
+      const isGoblin = document.getElementById('goblinRacial').checked;
+      
+      let effectiveHaste;
+      let rating;
+      
+      if (inputMode === 'rating') {
+        rating = Math.min(inputValue, 20000);
+        const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
+        effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
+      } else {
+        // Input is percentage, calculate rating
+        inputValue = Math.min(inputValue, 99.99);
+        effectiveHaste = inputValue;
+        rating = calculateRatingFromPercent(inputValue, isGoblin);
+      }
+
+      document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
+      
+      // Show conversion
+      const conversionText = document.getElementById('conversionText');
+      if (inputMode === 'rating') {
+        if (rating > 0) {
+          const base = isGoblin ? 6 : 5;
+          conversionText.textContent = `${Math.round(rating).toLocaleString()} rating + ${base}% base`;
+        } else {
+          const base = isGoblin ? 6 : 5;
+          conversionText.textContent = `Base: ${base}% ${isGoblin ? '(5% Shadowform + 1% Goblin)' : 'Shadowform'}`;
+        }
+      } else {
+        conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
+      }
+
+      // GCD Cap warning
+      const gcdCap = isGoblin ? 17614 : 18215;
+      const warningElement = document.getElementById('gcdWarning');
+      
+      if (rating >= gcdCap) {
+        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating)</div>`;
+      } else {
+        warningElement.innerHTML = '';
+      }
+
+      updateSpellTable(effectiveHaste, isGoblin);
+    }
+    
+    function handleInput(e) {
+      if (inputMode === 'percentage') {
+        let value = e.target.value;
+        // Remove all non-digit characters
+        let digits = value.replace(/\D/g, '');
+        
+        // Limit to 4 digits
+        digits = digits.substring(0, 4);
+
+        // Insert decimal point after the second digit
+        if (digits.length > 2) {
+          e.target.value = digits.slice(0, 2) + '.' + digits.slice(2);
+        } else {
+          e.target.value = digits;
+        }
+      }
+      calculateHaste();
+    }
+
+    function updateSpellTable(effectiveHaste, isGoblin) {
+      let spellsHTML = '';
+      
+      for (const [spell, data] of Object.entries(breakpoints)) {
+        let extraTicks = 0;
+        let nextBP = 'Maxed';
+        let nextBPValue = null;
+
+        for (let i = 0; i < data.points.length; i++) {
+          if (effectiveHaste >= data.points[i]) {
+            extraTicks++;
+          } else {
+            nextBPValue = data.points[i];
+            nextBP = `${nextBPValue}% (${calculateRatingFromPercent(nextBPValue, isGoblin).toLocaleString()} rating)`;
+            break;
+          }
+        }
+
+        let progressPercent = 100;
+        if (nextBPValue !== null) {
+          const prevBP = data.points[extraTicks - 1] ?? 0;
+          progressPercent = Math.min(
+            100,
+            Math.max(0, ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100)
+          );
+        }
+
+        const isMaxed = nextBP === 'Maxed';
+        const ticksClass = extraTicks > 0 ? 'has-ticks' : 'no-ticks';
+
+        spellsHTML += `
+          <div class="spell-row">
+            <div class="spell-info">
+              <a href="${data.url}"
+                  target="_blank"
+                  class="spell-name"
+                  data-wowhead="spell=${data.id}&domain=mop-classic">
+                <img src="${data.icon}" alt="${spell}" class="spell-icon">
+              </a>
+              <a href="${data.url}"
+                  target="_blank"
+                  class="spell-name"
+                  data-wowhead="spell=${data.id}&domain=mop-classic">
+                ${spell}
+              </a>
+              <div class="ticks-badge ${ticksClass}">+${extraTicks} tick${extraTicks !== 1 ? 's' : ''}</div>
+            </div>
+            
+            <div class="breakpoint-info">
+              <div class="breakpoint-text-container">
+                <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
+                  ${nextBP}
+                </div>
+              </div>
+              ${!isMaxed ? `
+                <div class="progress-container">
+                  <div class="progress-bar" style="width: ${progressPercent}%"></div>
+                </div>
+              ` : ''}
+            </div>
+          </div>`;
+      }
+      
+      document.getElementById('spellsContainer').innerHTML = spellsHTML;
+
+      // Refresh Wowhead tooltips
+      if (typeof $WowheadPower !== 'undefined') {
+        $WowheadPower.refreshLinks();
+      }
+    }
+
+    // Calculate rating from percentage
+    function calculateRatingFromPercent(targetPercent, isGoblin = false) {
+      const targetHasteDecimal = targetPercent / 100;
+      const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
+      return Math.max(0, Math.round(42500 * ((1 + targetHasteDecimal) / baseMultiplier - 1)));
+    }
+
+    // Event listeners
+    hasteInput.addEventListener('input', handleInput);
+    hasteInput.addEventListener('paste', handleInput);
+    hasteInput.addEventListener('keydown', function(e) {
+      // For rating mode, prevent non-numeric keys (except allowed keys)
+      if (inputMode === 'rating') {
+        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+        const isNumericKey = e.key >= '0' && e.key <= '9';
+        const isControlKey = e.ctrlKey || e.metaKey;
+        
+        // Allow control keys and allowed keys
+        if (allowedKeys.includes(e.key) || isControlKey) {
+          return;
+        }
+        
+        // Prevent non-numeric keys
+        if (!isNumericKey) {
+          e.preventDefault();
+          return;
+        }
+        
+        // Check if text is selected
+        const hasSelection = this.selectionStart !== this.selectionEnd;
+        
+        // Prevent input if already at 5 digits and no text is selected
+        if (this.value.length >= 5 && !hasSelection) {
+          e.preventDefault();
+        }
+      }
+    });
+    document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
+    hasteInput.addEventListener('focus', function() {
+      this.select();
+    });
+
+    // Initialize on load
+    calculateHaste();
   </script>
 </body>
 </html>
