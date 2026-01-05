@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow Priest Addons & WeakAuras – MoP Classic</title>
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    .addons-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      margin-bottom: 1rem;
+    }
+
+    .page-header .subtitle {
+      color: var(--text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+    }
+
+    .ui-settings {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .ui-setting {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .ui-setting-label {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .ui-setting-value {
+      color: var(--accent-color);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 3rem 0 1.5rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .section-header h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0;
+    }
+
+    .section-count {
+      background: var(--accent-color);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .item-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .item-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .item-card:hover {
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
+    }
+
+    .item-card:hover::before {
+      left: 100%;
+    }
+
+    .item-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .item-description {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .item-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .item-link:hover {
+      background: var(--accent-hover);
+      transform: translateX(2px);
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.4);
+    }
+
+    .item-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .faq-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .faq-section h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1.5rem;
+    }
+
+    .faq-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .faq-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--secondary-bg);
+      color: var(--text-primary);
+      text-decoration: none;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .faq-link:hover {
+      border-color: var(--accent-color);
+      background: var(--hover-bg);
+      transform: translateY(-2px);
+    }
+
+    .faq-link svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .last-updated-footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    @media (max-width: 768px) {
+      .addons-container {
+        padding: 0 1rem;
+      }
+
+      .items-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ui-settings {
+        gap: 1.5rem;
+      }
+
+      .section-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">   
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        ☰
+      </button>
+      
+      <ul class="nav-links" id="navLinks">
+        <li>
+          <a href="/">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=LH5aODSFQ1o">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Guide
+          </a>
+        </li>
+        <li>
+          <a href="/haste">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Haste Calculator
+          </a>
+        </li>
+        <li>
+          <a href="/addons" class="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="3" x2="9" y2="21"/>
+            </svg>
+            Addons & WAs
+          </a>
+        </li>
+        <li>
+          <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube
+          </a>
+        </li>
+        <li>
+          <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+            </svg>
+            Twitch
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="addons-container">
+    <div class="page-header">
+      <h1>ADDONS & WEAKAURAS</h1>
+      <div class="subtitle">Complete Shadow Priest UI Setup for MoP Classic</div>
+      
+      <div class="ui-settings">
+        <div class="ui-setting">
+          <div class="ui-setting-label">Resolution</div>
+          <div class="ui-setting-value">1920 × 1080</div>
+        </div>
+        <div class="ui-setting">
+          <div class="ui-setting-label">UI Scale</div>
+          <div class="ui-setting-value">65%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Addons Section -->
+    <div class="section-header">
+      <h2>Addons</h2>
+      <span class="section-count">15</span>
+    </div>
+    
+    <div class="items-grid" id="addons-grid"></div>
+
+    <!-- WeakAuras Section -->
+    <div class="section-header">
+      <h2>WeakAuras</h2>
+      <span class="section-count">13</span>
+    </div>
+    
+    <div class="items-grid" id="weakauras-grid"></div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h2>Need Help?</h2>
+      <div class="faq-links">
+        <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" class="faq-link">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          YouTube Guides
+        </a>
+        <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" class="faq-link">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+          </svg>
+          Ask on Twitch
+        </a>
+      </div>
+    </div>
+
+    <div class="last-updated-footer">
+      Last updated: 1st Jan 2026
+    </div>
+  </div>
+
+  <script>
+    // Data
+    const addons = [
+      { name: "AdvancedInterfaceOptions", url: "https://www.curseforge.com/wow/addons/advancedinterfaceoptions", description: "Restore missing interface options" },
+      { name: "Auctionator", url: "https://www.curseforge.com/wow/addons/auctionator", description: "Auction house enhancement" },
+      { name: "Bagnon", url: "https://www.curseforge.com/wow/addons/bagnon", description: "All-in-one bag management" },
+      { name: "Details", url: "https://www.curseforge.com/wow/addons/details", description: "Advanced combat meters" },
+      { name: "FojjiCore", url: "https://www.curseforge.com/wow/addons/fojjicore", description: "Required for Fojji WeakAuras" },
+      { name: "Leatrix Plus", url: "https://www.curseforge.com/wow/addons/leatrix-plus", description: "Quality of life improvements" },
+      { name: "OmniCC", url: "https://www.curseforge.com/wow/addons/omni-cc", description: "Cooldown timer overlays" },
+      { name: "Plater Nameplates", url: "https://www.curseforge.com/wow/addons/plater-nameplates", description: "Advanced nameplate customization" },
+      { name: "Questie", url: "https://www.curseforge.com/wow/addons/questie", description: "Quest helper and tracker" },
+      { name: "RCLootCouncil Classic", url: "https://www.curseforge.com/wow/addons/rclootcouncil-classic", description: "Guild loot distribution" },
+      { name: "ReforgeLite Classic", url: "https://www.curseforge.com/wow/addons/reforgelite-classic", description: "Optimize gear reforging" },
+      { name: "Shadowed Unit Frames", url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames/files/7062045", description: "Customizable unit frames" },
+      { name: "TrufiGCD", url: "https://www.curseforge.com/wow/addons/trufigcd", description: "GCD tracker for raid analysis" },
+      { name: "WeakAuras 2", url: "https://www.curseforge.com/wow/addons/weakauras-2", description: "Essential for all WeakAuras below" },
+      { name: "WowSimsExporter", url: "https://www.curseforge.com/wow/addons/wowsimsexporter", description: "Export character for simulations" }
+    ];
+
+    const weakauras = [
+      { name: "Fojji - Shadow Priest UI [MoP] | skimmy edit", url: "https://wago.io/ri2lfOS8b", description: "Complete UI package" },
+      { name: "DragonKarsh CastBars | skimmy edit", url: "https://wago.io/dnDdk1mhh", description: "Enhanced cast bars" },
+      { name: "Shadow Priest Fake Queue", url: "https://wago.io/Ikku0mWwO", description: "Queue simulation overlay" },
+      { name: "DragonKarsh Mind Flay Clip Delay", url: "https://wago.io/zqC8i_vfS", description: "Mind Flay optimization" },
+      { name: "Fojji - Boss Kill Times", url: "https://wago.io/FojjiBossKillTimes", description: "Track boss kill timers" },
+      { name: "Fojji - Class Pack Anchors", url: "https://wago.io/FojjiClassAnchors", description: "Position UI elements" },
+      { name: "Fojji - Item & Trinket Tracker", url: "https://wago.io/us-DiWYP7", description: "Track trinket cooldowns" },
+      { name: "Plater Profile", url: "https://wago.io/pfxpBonVW", description: "Nameplate configuration" },
+      { name: "Fojji - Pull Timers & Range Radar", url: "https://wago.io/Fojji_PullTimers", description: "Pull countdown and range" },
+      { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", description: "Execute range indicator" },
+      { name: "Halo Range Checker", url: "https://wago.io/Zcbxhfgrl", description: "Optimal Halo range" },
+      { name: "Auto Accept Role Check Sign Up", url: "https://wago.io/0PSqIgG2d", description: "Auto-accept LFG roles" },
+      { name: "SUF Profile", url: "https://wago.io/3K-eb06qt", description: "Unit frames profile" },
+      { name: "ModernCharacterFrame | Plaffs edition", url: "https://wago.io/mm6cuMmYc", description: "Updated character pane" },
+      { name: "Shadow Priest Haste Breakpoints T14", url: "https://wago.io/7m5gdIAts", description: "Haste breakpoint tracker" },
+      { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", description: "Track UVLS trinket stacks" }
+    ];
+
+    // Render items
+    function renderItems(items, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = items.map(item => `
+        <div class="item-card">
+          <div class="item-name">${item.name}</div>
+          ${item.description ? `<div class="item-description">${item.description}</div>` : ''}
+          <a href="${item.url}" target="_blank" rel="noopener" class="item-link">
+            Download
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </a>
+        </div>
+      `).join('');
+    }
+
+    renderItems(addons, 'addons-grid');
+    renderItems(weakauras, 'weakauras-grid');
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const navLinks = document.getElementById('navLinks');
+
+    if (mobileMenuToggle && navLinks) {
+      mobileMenuToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('mobile-open');
+        mobileMenuToggle.textContent = navLinks.classList.contains('mobile-open') ? '✕' : '☰';
+      });
+
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('mobile-open');
+          mobileMenuToggle.textContent = '☰';
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.top-nav')) {
+          navLinks.classList.remove('mobile-open');
+          mobileMenuToggle.textContent = '☰';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
