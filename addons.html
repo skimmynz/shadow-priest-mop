@@ -143,13 +143,6 @@
       line-height: 1.3;
     }
 
-    .item-description {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
-      font-style: italic;
-    }
-
     .item-preview {
       width: 100%;
       height: 160px;
@@ -380,7 +373,7 @@
     <!-- WeakAuras Section -->
     <div class="section-header">
       <h2>WeakAuras</h2>
-      <span class="section-count">11</span>
+      <span class="section-count">14</span>
     </div>
     
     <div class="items-grid" id="weakauras-grid"></div>
@@ -412,38 +405,38 @@
   <script>
     // Data
     const addons = [
-      { name: "AdvancedInterfaceOptions", url: "https://www.curseforge.com/wow/addons/advancedinterfaceoptions", description: "Restore missing interface options" },
-      { name: "Auctionator", url: "https://www.curseforge.com/wow/addons/auctionator", description: "Auction house enhancement" },
-      { name: "Bagnon", url: "https://www.curseforge.com/wow/addons/bagnon", description: "All-in-one bag management" },
-      { name: "Details", url: "https://www.curseforge.com/wow/addons/details", description: "Advanced combat meters" },
-      { name: "FojjiCore", url: "https://www.curseforge.com/wow/addons/fojjicore", description: "Required for Fojji WeakAuras" },
-      { name: "Leatrix Plus", url: "https://www.curseforge.com/wow/addons/leatrix-plus", description: "Quality of life improvements" },
-      { name: "OmniCC", url: "https://www.curseforge.com/wow/addons/omni-cc", description: "Cooldown timer overlays" },
-      { name: "Plater Nameplates", url: "https://www.curseforge.com/wow/addons/plater-nameplates", description: "Advanced nameplate customization", profileUrl: "https://wago.io/pfxpBonVW" },
-      { name: "Questie", url: "https://www.curseforge.com/wow/addons/questie", description: "Quest helper and tracker" },
-      { name: "RCLootCouncil Classic", url: "https://www.curseforge.com/wow/addons/rclootcouncil-classic", description: "Guild loot distribution" },
-      { name: "ReforgeLite Classic", url: "https://www.curseforge.com/wow/addons/reforgelite-classic", description: "Optimize gear reforging" },
-      { name: "Shadowed Unit Frames", url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames/files/7062045", description: "Customizable unit frames", profileUrl: "https://wago.io/3K-eb06qt" },
-      { name: "TrufiGCD", url: "https://www.curseforge.com/wow/addons/trufigcd", description: "GCD tracker for raid analysis" },
-      { name: "WeakAuras 2", url: "https://www.curseforge.com/wow/addons/weakauras-2", description: "Essential for all WeakAuras below" },
-      { name: "WowSimsExporter", url: "https://www.curseforge.com/wow/addons/wowsimsexporter", description: "Export character for simulations" }
+      { name: "AdvancedInterfaceOptions", url: "https://www.curseforge.com/wow/addons/advancedinterfaceoptions" },
+      { name: "Auctionator", url: "https://www.curseforge.com/wow/addons/auctionator" },
+      { name: "Bagnon", url: "https://www.curseforge.com/wow/addons/bagnon" },
+      { name: "Details", url: "https://www.curseforge.com/wow/addons/details" },
+      { name: "FojjiCore", url: "https://www.curseforge.com/wow/addons/fojjicore" },
+      { name: "Leatrix Plus", url: "https://www.curseforge.com/wow/addons/leatrix-plus" },
+      { name: "OmniCC", url: "https://www.curseforge.com/wow/addons/omni-cc" },
+      { name: "Plater Nameplates", url: "https://www.curseforge.com/wow/addons/plater-nameplates", profileUrl: "https://wago.io/pfxpBonVW" },
+      { name: "Questie", url: "https://www.curseforge.com/wow/addons/questie" },
+      { name: "RCLootCouncil Classic", url: "https://www.curseforge.com/wow/addons/rclootcouncil-classic" },
+      { name: "ReforgeLite Classic", url: "https://www.curseforge.com/wow/addons/reforgelite-classic" },
+      { name: "Shadowed Unit Frames", url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames/files/7062045", profileUrl: "https://wago.io/3K-eb06qt" },
+      { name: "TrufiGCD", url: "https://www.curseforge.com/wow/addons/trufigcd" },
+      { name: "WeakAuras 2", url: "https://www.curseforge.com/wow/addons/weakauras-2" },
+      { name: "WowSimsExporter", url: "https://www.curseforge.com/wow/addons/wowsimsexporter" }
     ];
 
     const weakauras = [
-      { name: "Fojji - Shadow Priest UI [MoP] | skimmy edit", url: "https://wago.io/ri2lfOS8b", description: "Complete UI package", preview: "https://media.wago.io/screenshots/ri2lfOS8b/688dc81ab1debd7388acf2da.gif" },
-      { name: "DragonKarsh CastBars | skimmy edit", url: "https://wago.io/dnDdk1mhh", description: "Enhanced cast bars", preview: "" },
-      { name: "Shadow Priest Fake Queue", url: "https://wago.io/Ikku0mWwO", description: "Queue simulation overlay", preview: "" },
-      { name: "DragonKarsh Mind Flay Clip Delay", url: "https://wago.io/zqC8i_vfS", description: "Mind Flay optimization", preview: "" },
-      { name: "Fojji - Boss Kill Times", url: "https://wago.io/FojjiBossKillTimes", description: "Track boss kill timers", preview: "" },
-      { name: "Fojji - Class Pack Anchors", url: "https://wago.io/FojjiClassAnchors", description: "Position UI elements", preview: "" },
-      { name: "Fojji - Item & Trinket Tracker", url: "https://wago.io/us-DiWYP7", description: "Track trinket cooldowns", preview: "" },
-      { name: "Fojji - Pull Timers & Range Radar", url: "https://wago.io/Fojji_PullTimers", description: "Pull countdown and range", preview: "" },
-      { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", description: "Execute range indicator", preview: "" },
-      { name: "Halo Range Checker", url: "https://wago.io/Zcbxhfgrl", description: "Optimal Halo range", preview: "" },
-      { name: "Auto Accept Role Check Sign Up", url: "https://wago.io/0PSqIgG2d", description: "Auto-accept LFG roles", preview: "" },
-      { name: "ModernCharacterFrame | Plaffs edition", url: "https://wago.io/mm6cuMmYc", description: "Updated character pane", preview: "" },
-      { name: "Shadow Priest Haste Breakpoints T14", url: "https://wago.io/7m5gdIAts", description: "Haste breakpoint tracker", preview: "" },
-      { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", description: "Track UVLS trinket stacks", preview: "" }
+      { name: "Fojji - Shadow Priest UI [MoP] | skimmy edit", url: "https://wago.io/ri2lfOS8b", preview: "https://media.wago.io/screenshots/ri2lfOS8b/688dc81ab1debd7388acf2da.gif" },
+      { name: "DragonKarsh CastBars | skimmy edit", url: "https://wago.io/dnDdk1mhh", preview: "https://media.wago.io/screenshots/dnDdk1mhh/688483a02acbf36327ec9c9e.gif" },
+      { name: "Shadow Priest Fake Queue", url: "https://wago.io/Ikku0mWwO", preview: "" },
+      { name: "DragonKarsh Mind Flay Clip Delay", url: "https://wago.io/zqC8i_vfS", preview: "" },
+      { name: "Fojji - Boss Kill Times", url: "https://wago.io/FojjiBossKillTimes", preview: "" },
+      { name: "Fojji - Class Pack Anchors", url: "https://wago.io/FojjiClassAnchors", preview: "" },
+      { name: "Fojji - Item & Trinket Tracker", url: "https://wago.io/us-DiWYP7", preview: "" },
+      { name: "Fojji - Pull Timers & Range Radar", url: "https://wago.io/Fojji_PullTimers", preview: "" },
+      { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", preview: "https://media.wago.io/screenshots/UWa_HeEta/68846df1a40570447822e19e.gif" },
+      { name: "Halo Range Checker", url: "https://wago.io/Zcbxhfgrl", preview: "https://media.wago.io/screenshots/Zcbxhfgrl/683b19f81cf76ccd508485fe.png" },
+      { name: "Auto Accept Role Check Sign Up", url: "https://wago.io/0PSqIgG2d", preview: "https://media.wago.io/screenshots/0PSqIgG2d/611836f4f3c4235c1209eba1.png" },
+      { name: "ModernCharacterFrame | Plaffs edition", url: "https://wago.io/mm6cuMmYc", preview: "https://media.wago.io/screenshots/mm6cuMmYc/665f6b5f9fda7c214b8d976d.png" },
+      { name: "Shadow Priest Haste Breakpoints T14", url: "https://wago.io/7m5gdIAts", preview: "https://media.wago.io/screenshots/7m5gdIAts/68c93ea45c24f25b2318eee9.gif" },
+      { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", preview: "https://media.wago.io/screenshots/8Xgm0DEZW/6957a8af80c45a851e6499b2.gif" }
     ];
 
     // Render items
@@ -455,7 +448,6 @@
         <div class="item-card">
           ${item.preview ? `<img src="${item.preview}" alt="${item.name} preview" class="item-preview" loading="lazy" onerror="this.style.display='none'">` : ''}
           <div class="item-name">${item.name}</div>
-          ${item.description ? `<div class="item-description">${item.description}</div>` : ''}
           <div class="item-links">
             <a href="${item.url}" target="_blank" rel="noopener" class="item-link">
               ${isWeakAura ? 'Import' : 'Download'}
