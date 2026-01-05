@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UI Test</title>
+  <title>UI Breakdown</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
     body {
       margin: 0;
       padding: 20px;
@@ -29,18 +37,19 @@
     /* Custom tooltip */
     .tooltip {
       position: absolute;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.95);
       color: #fff;
-      padding: 12px 16px;
+      padding: 10px 16px;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s ease;
       z-index: 1000;
       border: 2px solid #7c3aed;
       white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     .tooltip.show {
@@ -57,6 +66,16 @@
             data-tooltip="DragonKarsh CastBars | skimmy edit" 
             href="https://wago.io/dnDdk1mhh" 
             coords="840,797,1079,828" 
+            shape="rect">
+      <area target="_blank" 
+            data-tooltip="Fojji - Shadow Priest UI [MoP] | skimmy edit" 
+            href="https://wago.io/ri2lfOS8b" 
+            coords="846,531,1061,774" 
+            shape="rect">
+      <area target="_blank" 
+            data-tooltip="Shadowed Unit Frames" 
+            href="https://wago.io/3K-eb06qt" 
+            coords="1209,483,1546,655" 
             shape="rect">
     </map>
 
