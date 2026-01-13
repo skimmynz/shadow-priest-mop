@@ -397,13 +397,13 @@
 
     .spell-row {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: 1fr auto auto;
       align-items: center;
       padding: 1.5rem 2rem;
       border-bottom: 1px solid var(--border-color);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      gap: 1.5rem;
+      gap: 1rem;
     }
 
     .spell-row:last-child {
@@ -414,7 +414,7 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
     }
 
     .spell-icon {
