@@ -816,9 +816,10 @@
 
       navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-          navLinks.classList.remove('mobile-open');
-          mobileMenuToggle.textContent = '☰';Continue9:49 AM    });
-  });
+                  navLinks.classList.remove('mobile-open');
+                  mobileMenuToggle.textContent = '☰';
+                });
+              });
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.top-nav')) {
