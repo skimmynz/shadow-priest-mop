@@ -54,22 +54,22 @@
 
     .haste-main-content {
       display: grid;
-      grid-template-columns: 400px 1fr;
+      grid-template-columns: 320px 1fr 320px;
       gap: 2rem;
       align-items: start;
       max-width: 100%;
     }
 
-    .haste-left-panel {
+    .haste-left-panel,
+    .haste-right-panel {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-      position: sticky;
-      top: 2rem;
     }
 
     .input-card,
-    .result-card {
+    .result-card,
+    .settings-card {
       background: var(--secondary-bg);
       border-radius: 16px;
       border: 1px solid var(--border-color);
@@ -80,14 +80,16 @@
     }
 
     .input-card:hover,
-    .result-card:hover {
+    .result-card:hover,
+    .settings-card:hover {
       border-color: var(--border-hover);
       transform: translateY(-2px);
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
     }
 
     .input-card::before,
-    .result-card::before {
+    .result-card::before,
+    .settings-card::before {
       content: '';
       position: absolute;
       top: 0;
@@ -98,7 +100,9 @@
       opacity: 0.8;
     }
 
-    .input-card {
+    .input-card,
+    .result-card,
+    .settings-card {
       padding: 2rem;
     }
 
@@ -110,6 +114,7 @@
 
     .input-row {
       display: flex;
+      flex-direction: column;
       gap: 0.75rem;
       align-items: stretch;
     }
@@ -121,7 +126,6 @@
       padding: 6px;
       border: 1px solid var(--border-color);
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-      flex: 1;
       position: relative;
     }
 
@@ -149,8 +153,7 @@
     }
 
     .haste-input {
-      flex: 1;
-      min-width: 120px;
+      width: 100%;
       padding: 0.875rem 1rem;
       font-size: 1.125rem;
       font-weight: 700;
@@ -188,12 +191,7 @@
       font-weight: 500;
     }
 
-    .race-selection {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
+    .race-selection,
     .buffs-section {
       display: flex;
       flex-direction: column;
@@ -329,9 +327,7 @@
     }
 
     .result-card {
-      padding: 2rem;
       text-align: center;
-      position: relative;
     }
 
     .result-label {
@@ -372,7 +368,7 @@
       box-shadow: 0 4px 12px var(--warning-glow);
     }
 
-    .haste-right-panel {
+    .haste-center-panel {
       min-height: 0;
       overflow: hidden;
     }
@@ -560,20 +556,27 @@
       position: relative;
     }
 
+    @media (max-width: 1400px) {
+      .haste-main-content {
+        grid-template-columns: 280px 1fr 280px;
+      }
+    }
+
     @media (max-width: 1200px) {
       .haste-main-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
       }
 
-      .haste-left-panel {
-        position: static;
+      .haste-left-panel,
+      .haste-right-panel {
         flex-direction: row;
         gap: 1rem;
       }
 
       .input-card,
-      .result-card {
+      .result-card,
+      .settings-card {
         flex: 1;
       }
     }
@@ -591,7 +594,8 @@
         font-size: 0.9rem;
       }
 
-      .haste-left-panel {
+      .haste-left-panel,
+      .haste-right-panel {
         flex-direction: column;
       }
 
@@ -600,11 +604,9 @@
         gap: 0.75rem;
       }
 
-      .input-card {
-        padding: 1.5rem;
-      }
-
-      .result-card {
+      .input-card,
+      .result-card,
+      .settings-card {
         padding: 1.5rem;
       }
 
@@ -702,6 +704,7 @@
       </div>
 
       <div class="haste-main-content">
+        <!-- LEFT PANEL: Input & Result -->
         <div class="haste-left-panel">
           <div class="input-card">
             <div class="input-section">
@@ -720,66 +723,6 @@
                   placeholder="0"
                 />
               </div>
-
-              <div class="race-selection">
-                <div class="buffs-header">Race Selection</div>
-                <div class="buffs-grid">
-                  <label class="buff-toggle">
-                    <input type="checkbox" id="goblinRacial" class="race-checkbox buff-checkbox">
-                    <span class="buff-switch"></span>
-                    <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="buff-icon">
-                    <div class="buff-info">
-                      <span class="buff-name">Goblin</span>
-                      <span class="buff-description">+1% passive haste</span>
-                    </div>
-                  </label>
-
-                  <label class="buff-toggle">
-                    <input type="checkbox" id="trollRacial" class="race-checkbox buff-checkbox">
-                    <span class="buff-switch"></span>
-                    <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="Troll" class="buff-icon">
-                    <div class="buff-info">
-                      <span class="buff-name">Troll</span>
-                      <span class="buff-description">Berserking racial available</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
-
-              <div class="buffs-section">
-                <div class="buffs-header">Active Buffs</div>
-                <div class="buffs-grid">
-                  <label class="buff-toggle">
-                    <input type="checkbox" id="powerInfusion" class="buff-checkbox">
-                    <span class="buff-switch"></span>
-                    <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="Power Infusion" class="buff-icon">
-                    <div class="buff-info">
-                      <span class="buff-name">Power Infusion</span>
-                      <span class="buff-description">+20% spell haste</span>
-                    </div>
-                  </label>
-
-                  <label class="buff-toggle" id="berserkingToggle" style="display: none;">
-                    <input type="checkbox" id="berserking" class="buff-checkbox">
-                    <span class="buff-switch"></span>
-                    <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="Berserking" class="buff-icon">
-                    <div class="buff-info">
-                      <span class="buff-name">Berserking</span>
-                      <span class="buff-description">+20% spell haste</span>
-                    </div>
-                  </label>
-
-                  <label class="buff-toggle">
-                    <input type="checkbox" id="bloodlust" class="buff-checkbox">
-                    <span class="buff-switch"></span>
-                    <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="Bloodlust" class="buff-icon">
-                    <div class="buff-info">
-                      <span class="buff-name">Bloodlust / Heroism</span>
-                      <span class="buff-description">+30% spell haste</span>
-                    </div>
-                  </label>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -791,12 +734,80 @@
           </div>
         </div>
 
-        <div class="haste-right-panel">
+        <!-- CENTER PANEL: DoT Breakpoint Analysis -->
+        <div class="haste-center-panel">
           <div class="spells-table">
             <div class="table-header">
               <h2 class="table-title">DoT Breakpoint Analysis</h2>
             </div>
             <div class="spells-container" id="spellsContainer"></div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: Race & Buffs -->
+        <div class="haste-right-panel">
+          <div class="settings-card">
+            <div class="race-selection">
+              <div class="buffs-header">Race Selection</div>
+              <div class="buffs-grid">
+                <label class="buff-toggle">
+                  <input type="checkbox" id="goblinRacial" class="race-checkbox buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Goblin</span>
+                    <span class="buff-description">+1% passive haste</span>
+                  </div>
+                </label>
+
+                <label class="buff-toggle">
+                  <input type="checkbox" id="trollRacial" class="race-checkbox buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="Troll" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Troll</span>
+                    <span class="buff-description">Berserking racial available</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="buffs-section">
+              <div class="buffs-header">Active Buffs</div>
+              <div class="buffs-grid">
+                <label class="buff-toggle">
+                  <input type="checkbox" id="powerInfusion" class="buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="Power Infusion" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Power Infusion</span>
+                    <span class="buff-description">+20% spell haste</span>
+                  </div>
+                </label>
+
+                <label class="buff-toggle" id="berserkingToggle" style="display: none;">
+                  <input type="checkbox" id="berserking" class="buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="Berserking" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Berserking</span>
+                    <span class="buff-description">+20% spell haste</span>
+                  </div>
+                </label>
+
+                <label class="buff-toggle">
+                  <input type="checkbox" id="bloodlust" class="buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="Bloodlust" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Bloodlust / Heroism</span>
+                    <span class="buff-description">+30% spell haste</span>
+                  </div>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -807,19 +818,17 @@
     // Mobile menu toggle
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
     const navLinks = document.getElementById('navLinks');
-
-    if (mobileMenuToggle && navLinks) {
-      mobileMenuToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('mobile-open');
-        mobileMenuToggle.textContent = navLinks.classList.contains('mobile-open') ? '✕' : '☰';
-      });
-
-      navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-                  navLinks.classList.remove('mobile-open');
-                  mobileMenuToggle.textContent = '☰';
-                });
-              });
+	if (mobileMenuToggle && navLinks) {
+	mobileMenuToggle.addEventListener('click', () => {
+	navLinks.classList.toggle('mobile-open');
+	mobileMenuToggle.textContent = navLinks.classList.contains('mobile-open') ? '✕' : '☰';
+	});
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('mobile-open');
+      mobileMenuToggle.textContent = '☰';
+    });
+  });
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.top-nav')) {
