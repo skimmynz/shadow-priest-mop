@@ -33,9 +33,7 @@
       margin: 0 0 0.75rem 0;
       font-size: clamp(2rem, 3vw, 2.75rem);
       font-weight: 800;
-      background: linear-gradient(135deg, 
-#a78bfa 0%, 
-#7c3aed 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -96,9 +94,7 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(135deg, 
-#a78bfa 0%, 
-#7c3aed 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       opacity: 0.8;
     }
 
@@ -194,56 +190,82 @@
 
     .race-selection {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
-    .race-toggle {
+    .buffs-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .buffs-header {
+      color: var(--text-accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+
+    .buffs-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .buff-toggle {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
       cursor: pointer;
       user-select: none;
-      padding: 1rem 1.5rem;
+      padding: 0.875rem 1rem;
       border-radius: 12px;
       transition: all 0.3s ease;
       background: var(--card-bg);
       border: 1px solid var(--border-color);
     }
 
-    .race-toggle:hover {
+    .buff-toggle:hover {
       background: var(--hover-bg);
       transform: translateY(-1px);
       border-color: var(--border-hover);
     }
 
-    .race-checkbox {
+    .race-checkbox,
+    .buff-checkbox {
       display: none;
     }
 
-    .goblin-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
+    .buff-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
       border: 2px solid var(--border-color);
       transition: all 0.3s ease;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
     }
 
-    .race-checkbox:checked ~ .goblin-icon {
+    .race-checkbox:checked ~ .buff-icon,
+    .buff-checkbox:checked ~ .buff-icon {
       border-color: var(--accent-color);
       box-shadow: 0 0 12px var(--accent-glow);
       transform: scale(1.05);
     }
 
-    .race-switch {
+    .buff-switch {
       position: relative;
       display: inline-block;
-      width: 48px;
-      height: 24px;
+      width: 42px;
+      height: 22px;
+      flex-shrink: 0;
     }
 
-    .race-switch::before {
+    .buff-switch::before {
       content: '';
       position: absolute;
       top: 0;
@@ -251,42 +273,59 @@
       width: 100%;
       height: 100%;
       background-color: var(--border-color);
-      border-radius: 12px;
+      border-radius: 11px;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .race-switch::after {
+    .buff-switch::after {
       content: '';
       position: absolute;
       top: 2px;
       left: 2px;
-      width: 20px;
-      height: 20px;
-      background-color: 
-#ffffff;
+      width: 18px;
+      height: 18px;
+      background-color: #ffffff;
       border-radius: 50%;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .race-checkbox:checked + .race-switch::before {
+    .race-checkbox:checked + .buff-switch::before,
+    .buff-checkbox:checked + .buff-switch::before {
       background: var(--accent-color);
       box-shadow: 0 0 15px var(--accent-glow);
     }
 
-    .race-checkbox:checked + .race-switch::after {
-      transform: translateX(22px);
+    .race-checkbox:checked + .buff-switch::after,
+    .buff-checkbox:checked + .buff-switch::after {
+      transform: translateX(20px);
     }
 
-    .race-text {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      font-weight: 600;
+    .buff-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .buff-name {
+      color: var(--text-primary);
+      font-size: 0.875rem;
+      font-weight: 700;
       transition: color 0.3s ease;
     }
 
-    .race-checkbox:checked ~ .race-text {
-      color: var(--text-primary);
+    .race-checkbox:checked ~ .buff-info .buff-name,
+    .buff-checkbox:checked ~ .buff-info .buff-name {
+      color: var(--accent-color);
+    }
+
+    .buff-description {
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.3;
     }
 
     .result-card {
@@ -307,9 +346,7 @@
     .result-value {
       font-size: 2.25rem;
       font-weight: 900;
-      background: linear-gradient(135deg, 
-#a78bfa 0%, 
-#7c3aed 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -363,9 +400,7 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(135deg, 
-#a78bfa 0%, 
-#7c3aed 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       opacity: 0.8;
     }
 
@@ -382,9 +417,7 @@
       color: var(--text-primary);
       text-align: center;
       letter-spacing: 0.05em;
-      background: linear-gradient(135deg, 
-#a78bfa 0%, 
-#7c3aed 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -408,6 +441,10 @@
 
     .spell-row:last-child {
       border-bottom: none;
+    }
+
+    .spell-row:hover {
+      background: rgba(124, 58, 237, 0.08);
     }
 
     .spell-info {
@@ -516,9 +553,7 @@
 
     .progress-bar {
       height: 100%;
-      background: linear-gradient(135deg, 
-#a78bfa 0%, 
-#7c3aed 100%);
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
       width: 0%;
       transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
       border-radius: 3px;
@@ -687,12 +722,63 @@
               </div>
 
               <div class="race-selection">
-                <label class="race-toggle">
-                  <input type="checkbox" id="goblinRacial" class="race-checkbox">
-                  <span class="race-switch"></span>
-                  <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="goblin-icon">
-                  <span class="race-text">Goblin (+1% haste)</span>
-                </label>
+                <div class="buffs-header">Race Selection</div>
+                <div class="buffs-grid">
+                  <label class="buff-toggle">
+                    <input type="checkbox" id="goblinRacial" class="race-checkbox buff-checkbox">
+                    <span class="buff-switch"></span>
+                    <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="Goblin" class="buff-icon">
+                    <div class="buff-info">
+                      <span class="buff-name">Goblin</span>
+                      <span class="buff-description">+1% passive haste</span>
+                    </div>
+                  </label>
+
+                  <label class="buff-toggle">
+                    <input type="checkbox" id="trollRacial" class="race-checkbox buff-checkbox">
+                    <span class="buff-switch"></span>
+                    <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="Troll" class="buff-icon">
+                    <div class="buff-info">
+                      <span class="buff-name">Troll</span>
+                      <span class="buff-description">Berserking racial available</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div class="buffs-section">
+                <div class="buffs-header">Active Buffs</div>
+                <div class="buffs-grid">
+                  <label class="buff-toggle">
+                    <input type="checkbox" id="powerInfusion" class="buff-checkbox">
+                    <span class="buff-switch"></span>
+                    <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="Power Infusion" class="buff-icon">
+                    <div class="buff-info">
+                      <span class="buff-name">Power Infusion</span>
+                      <span class="buff-description">+20% spell haste</span>
+                    </div>
+                  </label>
+
+                  <label class="buff-toggle" id="berserkingToggle" style="display: none;">
+                    <input type="checkbox" id="berserking" class="buff-checkbox">
+                    <span class="buff-switch"></span>
+                    <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="Berserking" class="buff-icon">
+                    <div class="buff-info">
+                      <span class="buff-name">Berserking</span>
+                      <span class="buff-description">+20% spell haste</span>
+                    </div>
+                  </label>
+
+                  <label class="buff-toggle">
+                    <input type="checkbox" id="bloodlust" class="buff-checkbox">
+                    <span class="buff-switch"></span>
+                    <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="Bloodlust" class="buff-icon">
+                    <div class="buff-info">
+                      <span class="buff-name">Bloodlust / Heroism</span>
+                      <span class="buff-description">+30% spell haste</span>
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -731,253 +817,314 @@
       navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
           navLinks.classList.remove('mobile-open');
-          mobileMenuToggle.textContent = '☰';
-        });
-      });
+          mobileMenuToggle.textContent = '☰';Continue9:49 AM    });
+  });
 
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.top-nav')) {
-          navLinks.classList.remove('mobile-open');
-          mobileMenuToggle.textContent = '☰';
-        }
-      });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.top-nav')) {
+      navLinks.classList.remove('mobile-open');
+      mobileMenuToggle.textContent = '☰';
+    }
+  });
+}
+
+// MoP Classic spell data
+const breakpoints = {
+  "Shadow Word: Pain": {
+    id: 589,
+    points: [8.32, 24.97, 41.68],
+    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
+    url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
+  },
+  "Vampiric Touch": {
+    id: 34914,
+    points: [9.99, 30.01, 49.95],
+    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
+    url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
+  },
+  "Devouring Plague": {
+    id: 2944,
+    points: [8.28, 24.92, 41.74],
+    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
+    url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
+  }
+};
+
+let inputMode = 'rating';
+const hasteInput = document.getElementById('hasteInput');
+
+// Toggle between input modes
+document.querySelectorAll('.toggle-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+
+    inputMode = this.dataset.mode;
+
+    if (inputMode === 'rating') {
+      hasteInput.placeholder = '0';
+      hasteInput.setAttribute('max', '38450');
+      hasteInput.setAttribute('maxlength', '5');
+      hasteInput.setAttribute('step', '1');
+      hasteInput.type = 'number';
+    } else {
+      hasteInput.placeholder = '0.00%';
+      hasteInput.removeAttribute('max');
+      hasteInput.removeAttribute('step');
+      hasteInput.removeAttribute('maxlength');
+      hasteInput.type = 'text';
+      hasteInput.inputMode = 'decimal';
     }
 
-    // MoP Classic spell data
-    const breakpoints = {
-      "Shadow Word: Pain": {
-        id: 589,
-        points: [8.32, 24.97, 41.68],
-        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
-        url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
-      },
-      "Vampiric Touch": {
-        id: 34914,
-        points: [9.99, 30.01, 49.95],
-        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
-        url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
-      },
-      "Devouring Plague": {
-        id: 2944,
-        points: [8.28, 24.92, 41.74],
-        icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
-        url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
-      }
-    };
+    hasteInput.value = '';
+    calculateHaste();
+  });
+});
 
-    let inputMode = 'rating';
-    const hasteInput = document.getElementById('hasteInput');
-
-    // Toggle between input modes
-    document.querySelectorAll('.toggle-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-
-        inputMode = this.dataset.mode;
-
-        if (inputMode === 'rating') {
-          hasteInput.placeholder = '0';
-          hasteInput.setAttribute('max', '38450');
-          hasteInput.setAttribute('maxlength', '5');
-          hasteInput.setAttribute('step', '1');
-          hasteInput.type = 'number';
-        } else {
-          hasteInput.placeholder = '0.00%';
-          hasteInput.removeAttribute('max');
-          hasteInput.removeAttribute('step');
-          hasteInput.removeAttribute('maxlength');
-          hasteInput.type = 'text';
-          hasteInput.inputMode = 'decimal';
-        }
-
-        hasteInput.value = '';
-        calculateHaste();
-      });
-    });
+// Handle race selection and Berserking visibility
+function handleRaceSelection() {
+  const trollRacial = document.getElementById('trollRacial');
+  const goblinRacial = document.getElementById('goblinRacial');
+  const berserkingToggle = document.getElementById('berserkingToggle');
+  const berserkingCheckbox = document.getElementById('berserking');
+  
+  // Make races mutually exclusive
+  trollRacial.addEventListener('change', function() {
+    if (this.checked) {
+      goblinRacial.checked = false;
+      berserkingToggle.style.display = 'flex';
+    } else {
+      berserkingToggle.style.display = 'none';
+      berserkingCheckbox.checked = false;
+    }
+    calculateHaste();
+  });
+  
+  goblinRacial.addEventListener('change', function() {
+    if (this.checked) {
+      trollRacial.checked = false;
+      berserkingToggle.style.display = 'none';
+      berserkingCheckbox.checked = false;
+    }
+    calculateHaste();
+  });
+}
 
 function calculateHaste() {
-      let inputValue = parseFloat(hasteInput.value) || 0;
-      const isGoblin = document.getElementById('goblinRacial').checked;
-      
-      let effectiveHaste;
-      let rating;
-      
-      if (inputMode === 'rating') {
-        rating = Math.min(inputValue, 20000);
-        const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
-        effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
-      } else {
-        // Input is percentage, calculate rating
-        inputValue = Math.min(inputValue, 99.99);
-        effectiveHaste = inputValue;
-        rating = calculateRatingFromPercent(inputValue, isGoblin);
-      }
+  let inputValue = parseFloat(hasteInput.value) || 0;
+  const isGoblin = document.getElementById('goblinRacial').checked;
+  const hasPowerInfusion = document.getElementById('powerInfusion').checked;
+  const hasBerserking = document.getElementById('berserking').checked;
+  const hasBloodlust = document.getElementById('bloodlust').checked;
+  
+  let effectiveHaste;
+  let rating;
+  
+  if (inputMode === 'rating') {
+    rating = Math.min(inputValue, 20000);
+    // Base multiplier: 5% Shadowform + 1% Goblin (if applicable)
+    let baseMultiplier = 1.05 * (isGoblin ? 1.01 : 1);
+    
+    // Add multiplicative haste buffs
+    if (hasPowerInfusion) baseMultiplier *= 1.20;
+    if (hasBerserking) baseMultiplier *= 1.20;
+    if (hasBloodlust) baseMultiplier *= 1.30;
+    
+    effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
+  } else {
+    // Input is percentage, calculate rating
+    inputValue = Math.min(inputValue, 99.99);
+    effectiveHaste = inputValue;
+    rating = calculateRatingFromPercent(inputValue, isGoblin, hasPowerInfusion, hasBerserking, hasBloodlust);
+  }
 
-      document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
+  document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
+  
+  // Show conversion
+  const conversionText = document.getElementById('conversionText');
+  if (inputMode === 'rating') {
+    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust) {
+      let parts = [];
+      if (rating > 0) parts.push(`${Math.round(rating).toLocaleString()} rating`);
       
-      // Show conversion
-      const conversionText = document.getElementById('conversionText');
-      if (inputMode === 'rating') {
-        if (rating > 0) {
-          const base = isGoblin ? 6 : 5;
-          conversionText.textContent = `${Math.round(rating).toLocaleString()} rating + ${base}% base`;
-        } else {
-          const base = isGoblin ? 6 : 5;
-          conversionText.textContent = `Base: ${base}% ${isGoblin ? '(5% Shadowform + 1% Goblin)' : 'Shadowform'}`;
-        }
-      } else {
-        conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
-      }
-
-      // GCD Cap warning
-      const gcdCap = isGoblin ? 17614 : 18215;
-      const warningElement = document.getElementById('gcdWarning');
+      let basePercent = 5;
+      if (isGoblin) basePercent += 1;
+      if (basePercent > 0) parts.push(`${basePercent}% base`);
       
-      if (rating >= gcdCap) {
-        warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating)</div>`;
-      } else {
-        warningElement.innerHTML = '';
-      }
+      let buffs = [];
+      if (hasPowerInfusion) buffs.push('PI');
+      if (hasBerserking) buffs.push('Berserk');
+      if (hasBloodlust) buffs.push('Lust');
+      if (buffs.length > 0) parts.push(buffs.join(', '));
+      
+      conversionText.textContent = parts.join(' + ');
+    } else {
+      conversionText.textContent = `Base: 5% Shadowform`;
+    }
+  } else {
+    conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
+  }
 
-      updateSpellTable(effectiveHaste, isGoblin);
+  // GCD Cap warning
+  const gcdCap = isGoblin ? 17614 : 18215;
+  const warningElement = document.getElementById('gcdWarning');
+  
+  if (rating >= gcdCap) {
+    warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating)</div>`;
+  } else {
+    warningElement.innerHTML = '';
+  }
+
+  updateSpellTable(effectiveHaste, isGoblin);
+}
+
+function handleInput(e) {
+  if (inputMode === 'percentage') {
+    let value = e.target.value;
+    // Remove all non-digit characters
+    let digits = value.replace(/\D/g, '');
+    
+    // Limit to 4 digits
+    digits = digits.substring(0, 4);
+
+    // Insert decimal point after the second digit
+    if (digits.length > 2) {
+      e.target.value = digits.slice(0, 2) + '.' + digits.slice(2);
+    } else {
+      e.target.value = digits;
+    }
+  }
+  calculateHaste();
+}
+
+function updateSpellTable(effectiveHaste, isGoblin) {
+  let spellsHTML = '';
+  
+  for (const [spell, data] of Object.entries(breakpoints)) {
+    let extraTicks = 0;
+    let nextBP = 'Maxed';
+    let nextBPValue = null;
+
+    for (let i = 0; i < data.points.length; i++) {
+      if (effectiveHaste >= data.points[i]) {
+        extraTicks++;
+      } else {
+        nextBPValue = data.points[i];
+        nextBP = `${nextBPValue}% (${calculateRatingFromPercent(nextBPValue, isGoblin).toLocaleString()} rating)`;
+        break;
+      }
+    }
+
+    let progressPercent = 100;
+    if (nextBPValue !== null) {
+      const prevBP = data.points[extraTicks - 1] ?? 0;
+      progressPercent = Math.min(
+        100,
+        Math.max(0, ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100)
+      );
+    }
+
+    const isMaxed = nextBP === 'Maxed';
+    const ticksClass = extraTicks > 0 ? 'has-ticks' : 'no-ticks';
+
+    spellsHTML += `
+      <div class="spell-row">
+        <div class="spell-info">
+          <a href="${data.url}"
+              target="_blank"
+              class="spell-name"
+              data-wowhead="spell=${data.id}&domain=mop-classic">
+            <img src="${data.icon}" alt="${spell}" class="spell-icon">
+          </a>
+          <a href="${data.url}"
+              target="_blank"
+              class="spell-name"
+              data-wowhead="spell=${data.id}&domain=mop-classic">
+            ${spell}
+          </a>
+        </div>
+        
+        <div class="ticks-badge ${ticksClass}">+${extraTicks} tick${extraTicks !== 1 ? 's' : ''}</div>
+        
+        <div class="breakpoint-info">
+          <div class="breakpoint-text-container">
+            <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
+              ${nextBP}
+            </div>
+          </div>
+          ${!isMaxed ? `
+            <div class="progress-container">
+              <div class="progress-bar" style="width: ${progressPercent}%"></div>
+            </div>
+          ` : ''}
+        </div>
+      </div>`;
+  }
+  
+  document.getElementById('spellsContainer').innerHTML = spellsHTML;
+
+  // Refresh Wowhead tooltips
+  if (typeof $WowheadPower !== 'undefined') {
+    $WowheadPower.refreshLinks();
+  }
+}
+
+// Calculate rating from percentage
+function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInfusion = false, hasBerserking = false, hasBloodlust = false) {
+  const targetHasteDecimal = targetPercent / 100;
+  let baseMultiplier = 1.05 * (isGoblin ? 1.01 : 1);
+  
+  if (hasPowerInfusion) baseMultiplier *= 1.20;
+  if (hasBerserking) baseMultiplier *= 1.20;
+  if (hasBloodlust) baseMultiplier *= 1.30;
+  
+  return Math.max(0, Math.round(42500 * ((1 + targetHasteDecimal) / baseMultiplier - 1)));
+}
+
+// Event listeners
+hasteInput.addEventListener('input', handleInput);
+hasteInput.addEventListener('paste', handleInput);
+hasteInput.addEventListener('keydown', function(e) {
+  // For rating mode, prevent non-numeric keys (except allowed keys)
+  if (inputMode === 'rating') {
+    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    const isNumericKey = e.key >= '0' && e.key <= '9';
+    const isControlKey = e.ctrlKey || e.metaKey;
+    
+    // Allow control keys and allowed keys
+    if (allowedKeys.includes(e.key) || isControlKey) {
+      return;
     }
     
-    function handleInput(e) {
-      if (inputMode === 'percentage') {
-        let value = e.target.value;
-        // Remove all non-digit characters
-        let digits = value.replace(/\D/g, '');
-        
-        // Limit to 4 digits
-        digits = digits.substring(0, 4);
-
-        // Insert decimal point after the second digit
-        if (digits.length > 2) {
-          e.target.value = digits.slice(0, 2) + '.' + digits.slice(2);
-        } else {
-          e.target.value = digits;
-        }
-      }
-      calculateHaste();
+    // Prevent non-numeric keys
+    if (!isNumericKey) {
+      e.preventDefault();
+      return;
     }
-
-    function updateSpellTable(effectiveHaste, isGoblin) {
-      let spellsHTML = '';
-      
-      for (const [spell, data] of Object.entries(breakpoints)) {
-        let extraTicks = 0;
-        let nextBP = 'Maxed';
-        let nextBPValue = null;
-
-        for (let i = 0; i < data.points.length; i++) {
-          if (effectiveHaste >= data.points[i]) {
-            extraTicks++;
-          } else {
-            nextBPValue = data.points[i];
-            nextBP = `${nextBPValue}% (${calculateRatingFromPercent(nextBPValue, isGoblin).toLocaleString()} rating)`;
-            break;
-          }
-        }
-
-        let progressPercent = 100;
-        if (nextBPValue !== null) {
-          const prevBP = data.points[extraTicks - 1] ?? 0;
-          progressPercent = Math.min(
-            100,
-            Math.max(0, ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100)
-          );
-        }
-
-        const isMaxed = nextBP === 'Maxed';
-        const ticksClass = extraTicks > 0 ? 'has-ticks' : 'no-ticks';
-
-        spellsHTML += `
-          <div class="spell-row">
-            <div class="spell-info">
-              <a href="${data.url}"
-                  target="_blank"
-                  class="spell-name"
-                  data-wowhead="spell=${data.id}&domain=mop-classic">
-                <img src="${data.icon}" alt="${spell}" class="spell-icon">
-              </a>
-              <a href="${data.url}"
-                  target="_blank"
-                  class="spell-name"
-                  data-wowhead="spell=${data.id}&domain=mop-classic">
-                ${spell}
-              </a>
-            </div>
-            
-            <div class="ticks-badge ${ticksClass}">+${extraTicks} tick${extraTicks !== 1 ? 's' : ''}</div>
-            
-            <div class="breakpoint-info">
-              <div class="breakpoint-text-container">
-                <div class="breakpoint-text ${isMaxed ? 'breakpoint-maxed' : ''}">
-                  ${nextBP}
-                </div>
-              </div>
-              ${!isMaxed ? `
-                <div class="progress-container">
-                  <div class="progress-bar" style="width: ${progressPercent}%"></div>
-                </div>
-              ` : ''}
-            </div>
-          </div>`;
-      }
-      
-      document.getElementById('spellsContainer').innerHTML = spellsHTML;
-
-      // Refresh Wowhead tooltips
-      if (typeof $WowheadPower !== 'undefined') {
-        $WowheadPower.refreshLinks();
-      }
+    
+    // Check if text is selected
+    const hasSelection = this.selectionStart !== this.selectionEnd;
+    
+    // Prevent input if already at 5 digits and no text is selected
+    if (this.value.length >= 5 && !hasSelection) {
+      e.preventDefault();
     }
+  }
+});
 
-    // Calculate rating from percentage
-    function calculateRatingFromPercent(targetPercent, isGoblin = false) {
-      const targetHasteDecimal = targetPercent / 100;
-      const baseMultiplier = 1.05 + (isGoblin ? 0.01 : 0);
-      return Math.max(0, Math.round(42500 * ((1 + targetHasteDecimal) / baseMultiplier - 1)));
-    }
+// Initialize race selection handler
+handleRaceSelection();
 
-    // Event listeners
-    hasteInput.addEventListener('input', handleInput);
-    hasteInput.addEventListener('paste', handleInput);
-    hasteInput.addEventListener('keydown', function(e) {
-      // For rating mode, prevent non-numeric keys (except allowed keys)
-      if (inputMode === 'rating') {
-        const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-        const isNumericKey = e.key >= '0' && e.key <= '9';
-        const isControlKey = e.ctrlKey || e.metaKey;
-        
-        // Allow control keys and allowed keys
-        if (allowedKeys.includes(e.key) || isControlKey) {
-          return;
-        }
-        
-        // Prevent non-numeric keys
-        if (!isNumericKey) {
-          e.preventDefault();
-          return;
-        }
-        
-        // Check if text is selected
-        const hasSelection = this.selectionStart !== this.selectionEnd;
-        
-        // Prevent input if already at 5 digits and no text is selected
-        if (this.value.length >= 5 && !hasSelection) {
-          e.preventDefault();
-        }
-      }
-    });
-    document.getElementById('goblinRacial').addEventListener('change', calculateHaste);
-    hasteInput.addEventListener('focus', function() {
-      this.select();
-    });
+document.getElementById('powerInfusion').addEventListener('change', calculateHaste);
+document.getElementById('berserking').addEventListener('change', calculateHaste);
+document.getElementById('bloodlust').addEventListener('change', calculateHaste);
 
-    // Initialize on load
-    calculateHaste();
+hasteInput.addEventListener('focus', function() {
+  this.select();
+});
+
+// Initialize on load
+calculateHaste();
   </script>
 </body>
 </html>
