@@ -300,15 +300,7 @@ async function loadDropdownContent(dropdown, reportId, fightId) {
       '<div class="info-section">' +
         '<h4>Fight Details</h4>' +
         '<div class="info-row"><span class="info-label">Duration:</span><span class="info-value">' + duration + '</span></div>' +
-        '<div class="info-row"><span class="info-label">Fight ID:</span><span class="info-value">' + fightId + '</span></div>' +
         '<div class="info-row"><span class="info-label">Report:</span><span class="info-value"><a href="' + reportUrl + '" target="_blank" rel="noopener">' + reportId + '</a></span></div>' +
-        '<div class="info-row"><span class="info-label">Raid Size:</span><span class="info-value">' + raidSize + '</span></div>' +
-      '</div>' +
-      '<div class="info-section">' +
-        '<h4>Player Info</h4>' +
-        '<div class="info-row"><span class="info-label">Server:</span><span class="info-value">' + serverInfo + '</span></div>' +
-        '<div class="info-row"><span class="info-label">Guild:</span><span class="info-value">' + guildName + '</span></div>' +
-        '<div class="info-row"><span class="info-label">Faction:</span><span class="info-value">' + faction + '</span></div>' +
         '<div class="info-row"><span class="info-label">Item Level:</span><span class="info-value">' + itemLevel + '</span></div>' +
       '</div>' +
     '</div>' +
