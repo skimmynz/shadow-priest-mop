@@ -621,6 +621,55 @@ a.wowhead del {
   text-shadow: 0 0 10px var(--shadow-glow);
 }
 
+/* Compact inline info section */
+.info-section-compact {
+  grid-column: 1 / -1; /* Span full width */
+  margin-bottom: 0;
+}
+
+.info-row-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-row-inline .info-label {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  min-width: auto;
+  flex-shrink: 0;
+}
+
+.info-row-inline .info-value {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-right: 0.5rem;
+  text-align: left;
+}
+
+.info-row-inline .info-value:not(:last-child)::after {
+  content: "•";
+  color: var(--text-muted);
+  margin-left: 0.75rem;
+  font-weight: 400;
+}
+
+.info-row-inline .info-value a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.info-row-inline .info-value a:hover {
+  color: var(--accent-hover);
+}
+
 /* Gear Display */
 .gear-grid {
   display: grid;
