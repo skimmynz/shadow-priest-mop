@@ -178,13 +178,15 @@ class OptimizedRenderer {
     if (this.renderCache.has(cacheKey)) {
       return this.renderCache.get(cacheKey);
     }
-
+  
     const reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
     const dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
     const playerName = (r && r.name) ? r.name : 'Unknown';
     const perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
     const entryId = 'entry-' + index + '-' + r.reportID + '-' + r.fightID;
-
+    const duration = formatDuration(r.duration);
+    const itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
+  
     const html =
       '<div class="rank-entry">' +
       '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
@@ -192,6 +194,7 @@ class OptimizedRenderer {
       (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
       '</div>' +
       '<div class="header-right">' +
+      '<span class="fight-summary">' + duration + ' - ' + itemLevel + ' iLvl</span>' +
       perPlayerTalents +
       '<span class="expand-icon">▼</span>' +
       '</div>' +
@@ -200,7 +203,7 @@ class OptimizedRenderer {
       this.renderDropdownContent(r, reportUrl) +
       '</div>' +
       '</div>';
-
+  
     this.renderCache.set(cacheKey, html);
     return html;
   }
