@@ -558,6 +558,18 @@
       position: relative;
     }
 
+    .settings-card a[href*="wago.io"] img:hover {
+      border-color: var(--accent-color);
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+    }
+
+    .settings-card a[href*="wago.io"]:last-of-type:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--accent-glow);
+    }
+
     @media (max-width: 1400px) {
       .haste-main-content {
         grid-template-columns: 280px 1fr 280px;
@@ -776,6 +788,23 @@
           </div>
 
           <div class="settings-card">
+            <div class="race-selection">
+              <div class="buffs-header">Set Bonus</div>
+              <div class="buffs-grid">
+                <label class="buff-toggle">
+                  <input type="checkbox" id="t14Bonus" class="race-checkbox buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/inv_shoulder_robe_raidpriest_j_01.jpg" alt="T14 4pc" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">T14 4pc Bonus</span>
+                    <span class="buff-description">Extended DoT durations</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
             <div class="buffs-section">
               <div class="buffs-header">Active Buffs</div>
               <div class="buffs-grid">
@@ -808,6 +837,53 @@
                     <span class="buff-description">+30% spell haste</span>
                   </div>
                 </label>
+
+                <label class="buff-toggle">
+                  <input type="checkbox" id="tempusRepit" class="buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/spell_arcane_blink.jpg" alt="Tempus Repit" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Tempus Repit</span>
+                    <span class="buff-description">+30% spell haste</span>
+                  </div>
+                </label>
+
+                <label class="buff-toggle">
+                  <input type="checkbox" id="sinisterPrimal" class="buff-checkbox">
+                  <span class="buff-switch"></span>
+                  <img src="https://wow.zamimg.com/images/wow/icons/large/inv_misc_metagem_b.jpg" alt="Sinister Primal Diamond" class="buff-icon">
+                  <div class="buff-info">
+                    <span class="buff-name">Sinister Primal Diamond</span>
+                    <span class="buff-description">+30% spell haste proc</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="race-selection">
+              <div class="buffs-header">Import WeakAura</div>
+              <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                <a href="https://wago.io/7m5gdIAts" target="_blank" rel="noopener" style="width: 100%;">
+                  <img src="https://media.wago.io/screenshots/7m5gdIAts/6967395d359f134f4939ccd7.gif" 
+                       alt="Haste Breakpoint WeakAura" 
+                       style="width: 100%; border-radius: 12px; border: 2px solid var(--border-color); transition: all 0.3s ease;">
+                </a>
+                <a href="https://wago.io/7m5gdIAts" 
+                   target="_blank" 
+                   rel="noopener"
+                   style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 1.5rem; background: var(--accent-color); color: white; text-decoration: none; border-radius: 10px; font-weight: 700; font-size: 0.875rem; transition: all 0.3s ease; box-shadow: 0 4px 12px var(--accent-glow); width: 100%; justify-content: center;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  Import Haste Breakpoint WA
+                </a>
+                <p style="color: var(--text-muted); font-size: 0.75rem; text-align: center; margin: 0; line-height: 1.4;">
+                  Track your haste breakpoints in real-time with this WeakAura
+                </p>
               </div>
             </div>
           </div>
@@ -842,23 +918,45 @@
 
 // MoP Classic spell data
 const breakpoints = {
-  "Shadow Word: Pain": {
-    id: 589,
-    points: [8.32, 24.97, 41.68],
-    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
-    url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
+  normal: {
+    "Shadow Word: Pain": {
+      id: 589,
+      points: [8.32, 24.97, 41.68],
+      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
+      url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
+    },
+    "Vampiric Touch": {
+      id: 34914,
+      points: [9.99, 30.01, 49.95],
+      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
+      url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
+    },
+    "Devouring Plague": {
+      id: 2944,
+      points: [8.28, 24.92, 41.74],
+      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
+      url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
+    }
   },
-  "Vampiric Touch": {
-    id: 34914,
-    points: [9.99, 30.01, 49.95],
-    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
-    url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
-  },
-  "Devouring Plague": {
-    id: 2944,
-    points: [8.28, 24.92, 41.74],
-    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
-    url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
+  t14: {
+    "Shadow Word: Pain": {
+      id: 589,
+      points: [7.14, 21.43, 35.71],
+      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
+      url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
+    },
+    "Vampiric Touch": {
+      id: 34914,
+      points: [8.32, 24.97, 41.68],
+      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
+      url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
+    },
+    "Devouring Plague": {
+      id: 2944,
+      points: [8.28, 24.92, 41.74],
+      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
+      url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
+    }
   }
 };
 
@@ -928,6 +1026,8 @@ function calculateHaste() {
   const hasPowerInfusion = document.getElementById('powerInfusion').checked;
   const hasBerserking = document.getElementById('berserking').checked;
   const hasBloodlust = document.getElementById('bloodlust').checked;
+  const hasTempusRepit = document.getElementById('tempusRepit').checked;
+  const hasSinisterPrimal = document.getElementById('sinisterPrimal').checked;
   
   let effectiveHaste;
   let rating;
@@ -941,13 +1041,15 @@ function calculateHaste() {
     if (hasPowerInfusion) baseMultiplier *= 1.20;
     if (hasBerserking) baseMultiplier *= 1.20;
     if (hasBloodlust) baseMultiplier *= 1.30;
+    if (hasTempusRepit) baseMultiplier *= 1.30;
+    if (hasSinisterPrimal) baseMultiplier *= 1.30;
     
     effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
   } else {
     // Input is percentage, calculate rating
     inputValue = Math.min(inputValue, 99.99);
     effectiveHaste = inputValue;
-    rating = calculateRatingFromPercent(inputValue, isGoblin, hasPowerInfusion, hasBerserking, hasBloodlust);
+    rating = calculateRatingFromPercent(inputValue, isGoblin, hasPowerInfusion, hasBerserking, hasBloodlust, hasTempusRepit, hasSinisterPrimal);
   }
 
   document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
@@ -955,7 +1057,7 @@ function calculateHaste() {
   // Show conversion
   const conversionText = document.getElementById('conversionText');
   if (inputMode === 'rating') {
-    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust) {
+    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust || hasTempusRepit || hasSinisterPrimal) {
       let parts = [];
       if (rating > 0) parts.push(`${Math.round(rating).toLocaleString()} rating`);
       
@@ -967,6 +1069,8 @@ function calculateHaste() {
       if (hasPowerInfusion) buffs.push('PI');
       if (hasBerserking) buffs.push('Berserk');
       if (hasBloodlust) buffs.push('Lust');
+      if (hasTempusRepit) buffs.push('Tempus');
+      if (hasSinisterPrimal) buffs.push('SPD');
       if (buffs.length > 0) parts.push(buffs.join(', '));
       
       conversionText.textContent = parts.join(' + ');
@@ -1010,9 +1114,12 @@ function handleInput(e) {
 }
 
 function updateSpellTable(effectiveHaste, isGoblin) {
+  const hasT14 = document.getElementById('t14Bonus').checked;
+  const activeBreakpoints = hasT14 ? breakpoints.t14 : breakpoints.normal;
+  
   let spellsHTML = '';
   
-  for (const [spell, data] of Object.entries(breakpoints)) {
+  for (const [spell, data] of Object.entries(activeBreakpoints)) {
     let extraTicks = 0;
     let nextBP = 'Maxed';
     let nextBPValue = null;
@@ -1082,13 +1189,15 @@ function updateSpellTable(effectiveHaste, isGoblin) {
 }
 
 // Calculate rating from percentage
-function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInfusion = false, hasBerserking = false, hasBloodlust = false) {
+function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInfusion = false, hasBerserking = false, hasBloodlust = false, hasTempusRepit = false, hasSinisterPrimal = false) {
   const targetHasteDecimal = targetPercent / 100;
   let baseMultiplier = 1.05 * (isGoblin ? 1.01 : 1);
   
   if (hasPowerInfusion) baseMultiplier *= 1.20;
   if (hasBerserking) baseMultiplier *= 1.20;
   if (hasBloodlust) baseMultiplier *= 1.30;
+  if (hasTempusRepit) baseMultiplier *= 1.30;
+  if (hasSinisterPrimal) baseMultiplier *= 1.30;
   
   return Math.max(0, Math.round(42500 * ((1 + targetHasteDecimal) / baseMultiplier - 1)));
 }
@@ -1115,7 +1224,7 @@ hasteInput.addEventListener('keydown', function(e) {
     }
     
     // Check if text is selected
-    const hasSelection = this.selectionStart !== this.selectionEnd;
+    const hasSelection = this.selectionStart !== this.selselectionEnd;
     
     // Prevent input if already at 5 digits and no text is selected
     if (this.value.length >= 5 && !hasSelection) {
@@ -1130,6 +1239,9 @@ handleRaceSelection();
 document.getElementById('powerInfusion').addEventListener('change', calculateHaste);
 document.getElementById('berserking').addEventListener('change', calculateHaste);
 document.getElementById('bloodlust').addEventListener('change', calculateHaste);
+document.getElementById('tempusRepit').addEventListener('change', calculateHaste);
+document.getElementById('sinisterPrimal').addEventListener('change', calculateHaste);
+document.getElementById('t14Bonus').addEventListener('change', calculateHaste);
 
 hasteInput.addEventListener('focus', function() {
   this.select();
