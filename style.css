@@ -510,6 +510,14 @@ a.wowhead del {
   flex-shrink: 0;
 }
 
+.fight-summary {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Expand Icon */
 .expand-icon {
   color: var(--text-muted);
@@ -996,6 +1004,9 @@ a.wowhead del {
   .header-right {
     width: 100%;
     justify-content: space-between;
+  }
+  .fight-summary {
+    font-size: 0.75rem;
   }
 }
 
