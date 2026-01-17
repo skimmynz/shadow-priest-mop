@@ -1016,7 +1016,6 @@ function calculateHaste() {
   const hasPowerInfusion = document.getElementById('powerInfusion').checked;
   const hasBerserking = document.getElementById('berserking').checked;
   const hasBloodlust = document.getElementById('bloodlust').checked;
-  const hasTempusRepit = document.getElementById('tempusRepit').checked;
   const hasSinisterPrimal = document.getElementById('sinisterPrimal').checked;
   
   let effectiveHaste;
@@ -1031,7 +1030,6 @@ function calculateHaste() {
     if (hasPowerInfusion) baseMultiplier *= 1.20;
     if (hasBerserking) baseMultiplier *= 1.20;
     if (hasBloodlust) baseMultiplier *= 1.30;
-    if (hasTempusRepit) baseMultiplier *= 1.30;
     if (hasSinisterPrimal) baseMultiplier *= 1.30;
     
     effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
@@ -1039,7 +1037,7 @@ function calculateHaste() {
     // Input is percentage, calculate rating
     inputValue = Math.min(inputValue, 99.99);
     effectiveHaste = inputValue;
-    rating = calculateRatingFromPercent(inputValue, isGoblin, hasPowerInfusion, hasBerserking, hasBloodlust, hasTempusRepit, hasSinisterPrimal);
+    rating = calculateRatingFromPercent(inputValue, isGoblin, hasPowerInfusion, hasBerserking, hasBloodlust, hasSinisterPrimal);
   }
 
   document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
@@ -1047,7 +1045,7 @@ function calculateHaste() {
   // Show conversion
   const conversionText = document.getElementById('conversionText');
   if (inputMode === 'rating') {
-    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust || hasTempusRepit || hasSinisterPrimal) {
+    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust || hasSinisterPrimal) {
       let parts = [];
       if (rating > 0) parts.push(`${Math.round(rating).toLocaleString()} rating`);
       
@@ -1059,7 +1057,6 @@ function calculateHaste() {
       if (hasPowerInfusion) buffs.push('PI');
       if (hasBerserking) buffs.push('Berserk');
       if (hasBloodlust) buffs.push('Lust');
-      if (hasTempusRepit) buffs.push('Tempus');
       if (hasSinisterPrimal) buffs.push('SPD');
       if (buffs.length > 0) parts.push(buffs.join(', '));
       
@@ -1179,14 +1176,13 @@ function updateSpellTable(effectiveHaste, isGoblin) {
 }
 
 // Calculate rating from percentage
-function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInfusion = false, hasBerserking = false, hasBloodlust = false, hasTempusRepit = false, hasSinisterPrimal = false) {
+function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInfusion = false, hasBerserking = false, hasBloodlust = false, hasSinisterPrimal = false) {
   const targetHasteDecimal = targetPercent / 100;
   let baseMultiplier = 1.05 * (isGoblin ? 1.01 : 1);
   
   if (hasPowerInfusion) baseMultiplier *= 1.20;
   if (hasBerserking) baseMultiplier *= 1.20;
   if (hasBloodlust) baseMultiplier *= 1.30;
-  if (hasTempusRepit) baseMultiplier *= 1.30;
   if (hasSinisterPrimal) baseMultiplier *= 1.30;
   
   return Math.max(0, Math.round(42500 * ((1 + targetHasteDecimal) / baseMultiplier - 1)));
@@ -1229,7 +1225,6 @@ handleRaceSelection();
 document.getElementById('powerInfusion').addEventListener('change', calculateHaste);
 document.getElementById('berserking').addEventListener('change', calculateHaste);
 document.getElementById('bloodlust').addEventListener('change', calculateHaste);
-document.getElementById('tempusRepit').addEventListener('change', calculateHaste);
 document.getElementById('sinisterPrimal').addEventListener('change', calculateHaste);
 document.getElementById('t14Bonus').addEventListener('change', calculateHaste);
 
