@@ -291,25 +291,10 @@ async function loadDropdownContent(dropdown, reportId, fightId) {
   if (!entry) return;
 
   const reportUrl = 'https://classic.warcraftlogs.com/reports/' + reportId + '?fight=' + fightId + '&type=damage-done';
-  const duration = formatDuration(entry.duration);
-  const itemLevel = (entry.itemLevel != null) ? entry.itemLevel : 'N/A';
 
   const content =
-    '<div class="info-grid">' +
-      '<div class="info-section info-section-compact">' +
-        '<h4>Fight Details</h4>' +
-        '<div class="info-row-inline">' +
-          '<span class="info-label">Duration:</span>' +
-          '<span class="info-value">' + duration + '</span>' +
-          '<span class="info-label">Report:</span>' +
-          '<span class="info-value"><a href="' + reportUrl + '" target="_blank" rel="noopener">' + reportId + '</a></span>' +
-          '<span class="info-label">Item Level:</span>' +
-          '<span class="info-value">' + itemLevel + '</span>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
     '<div class="info-section">' +
-      '<h4>Gear & Equipment</h4>' +
+      '<h4>Gear & Equipment <span class="report-link-inline">Report: <a href="' + reportUrl + '" target="_blank" rel="noopener">' + reportId + '</a></span></h4>' +
       '<div class="gear-grid">' +
       buildGearDisplay(entry.gear) +
       '</div>' +
