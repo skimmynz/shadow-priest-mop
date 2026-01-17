@@ -589,6 +589,26 @@ a.wowhead del {
   border-bottom: 2px solid var(--border-hover);
   padding-bottom: 0.5rem;
 }
+.report-link-inline {
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: transparent;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+  margin-left: 1rem;
+}
+
+.report-link-inline a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.report-link-inline a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
 .info-row {
   display: flex;
   justify-content: space-between;
