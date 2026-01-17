@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shadow Priest Haste Calculator | skimmynz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://wow.zamimg.com/widgets/power.js"></script>
+  <style>
+    :root {
+      --primary-bg: #0f172a;
+      --secondary-bg: #1e293b;
+      --card-bg: #0f172a;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-color: #7c3aed;
+      --accent-glow: rgba(124, 58, 237, 0.3);
+      --border-color: #334155;
+      --border-hover: #475569;
+      --success-color: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.2);
+      --warning-color: #f59e0b;
+    }
+
+    body {
+      background-color: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .haste-container {
+      padding: 2rem 1rem;
+      max-width: 1200px; /* Reduced from 1600px to prevent stretching */
+      margin: 0 auto;
+    }
+
+    .haste-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .haste-header h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Main Layout Grid */
+    .haste-main-content {
+      display: grid;
+      grid-template-columns: 320px 1fr; /* Two columns is more efficient than three */
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .haste-left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--secondary-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, #a78bfa, #7c3aed);
+      border-radius: 12px 12px 0 0;
+    }
+
+    /* Input Styling */
+    .toggle-buttons {
+      display: flex;
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 0.5rem;
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.8rem;
+      border-radius: 6px;
+    }
+
+    .toggle-btn.active {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .haste-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: white;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+      box-sizing: border-box;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #a78bfa;
+      text-align: center;
+      display: block;
+    }
+
+    .result-label {
+      text-align: center;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-secondary);
+    }
+
+    /* Buffs & Settings */
+    .section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 1rem;
+      display: block;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .buff-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .buff-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--card-bg);
+      padding: 0.6rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: 0.2s;
+    }
+
+    .buff-item:hover { border-color: var(--accent-color); }
+
+    .buff-icon { width: 32px; height: 32px; border-radius: 4px; }
+
+    .buff-info { flex: 1; }
+    .buff-name { display: block; font-size: 0.85rem; font-weight: 600; }
+    .buff-desc { font-size: 0.7rem; color: var(--text-muted); }
+
+    /* Spell Table */
+    .spell-row {
+      display: grid;
+      grid-template-columns: 50px 1fr 100px 150px;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      gap: 1rem;
+    }
+
+    .spell-row:last-child { border-bottom: none; }
+
+    .ticks-badge {
+      background: var(--success-color);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .progress-bg { height: 6px; background: var(--card-bg); border-radius: 3px; margin-top: 4px; }
+    .progress-fill { height: 100%; background: var(--accent-color); border-radius: 3px; }
+
+    @media (max-width: 900px) {
+      .haste-main-content { grid-template-columns: 1fr; }
+      .spell-row { grid-template-columns: 40px 1fr 80px; }
+      .breakpoint-info { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="haste-container">
+    <header class="haste-header">
+      <h1>Shadow Priest Haste Calculator</h1>
+      <p>Mists of Pandaria Classic DoT Breakpoints</p>
+    </header>
+
+    <div class="haste-main-content">
+      <aside class="haste-left-column">
+        <section class="card">
+          <div class="toggle-buttons">
+            <button class="toggle-btn active" id="mode-rating">Rating</button>
+            <button class="toggle-btn" id="mode-percent">Percent</button>
+          </div>
+          <input type="number" id="hasteInput" class="haste-input" placeholder="0">
+          <div style="margin-top: 1.5rem;">
+            <span class="result-label">Effective Haste</span>
+            <span class="result-value" id="hasteResult">5.00%</span>
+            <p id="conversionText" style="text-align:center; font-size:0.75rem; color:var(--text-muted);">Base: 5% Shadowform</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <span class="section-title">Race & Set Bonus</span>
+          <div class="buff-grid">
+            <label class="buff-item"><input type="checkbox" id="goblinRacial"> <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" class="buff-icon"> <div class="buff-info"><span class="buff-name">Goblin</span><span class="buff-desc">+1% Haste</span></div></label>
+            <label class="buff-item"><input type="checkbox" id="t14Bonus"> <img src="https://wow.zamimg.com/images/wow/icons/large/inv_helmet_cloth_challengepriest_d_01.jpg" class="buff-icon"> <div class="buff-info"><span class="buff-name">T14 4pc</span><span class="buff-desc">Longer DoTs</span></div></label>
+          </div>
+        </section>
+
+        <section class="card">
+          <span class="section-title">Active Buffs</span>
+          <div class="buff-grid">
+            <label class="buff-item"><input type="checkbox" id="bloodlust"> <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" class="buff-icon"> <div class="buff-info"><span class="buff-name">Lust/Hero</span><span class="buff-desc">+30% Haste</span></div></label>
+            <label class="buff-item"><input type="checkbox" id="powerInfusion"> <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" class="buff-icon"> <div class="buff-info"><span class="buff-name">PI</span><span class="buff-desc">+20% Haste</span></div></label>
+          </div>
+        </section>
+      </aside>
+
+      <main class="card" style="padding:0;">
+        <div style="padding: 1rem; border-bottom: 1px solid var(--border-color);">
+          <h2 style="margin:0; font-size: 1.1rem;">DoT Breakpoint Analysis</h2>
+        </div>
+        <div id="spellsContainer">
+            </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Simplified logic based on provided calculator
+    const hasteInput = document.getElementById('hasteInput');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    
+    function update() {
+        let rating = parseFloat(hasteInput.value) || 0;
+        let isGoblin = document.getElementById('goblinRacial').checked;
+        let lust = document.getElementById('bloodlust').checked;
+        let pi = document.getElementById('powerInfusion').checked;
+        
+        let multiplier = 1.05; // Shadowform
+        if (isGoblin) multiplier *= 1.01;
+        if (lust) multiplier *= 1.30;
+        if (pi) multiplier *= 1.20;
+        
+        let effective = ((1 + rating / 42500) * multiplier - 1) * 100;
+        document.getElementById('hasteResult').textContent = effective.toFixed(2) + '%';
+        
+        renderSpells(effective);
+    }
+
+    function renderSpells(haste) {
+        const dots = [
+            { name: "Shadow Word: Pain", bp: [8.33, 25.0, 41.67], icon: "spell_shadow_shadowwordpain" },
+            { name: "Vampiric Touch", bp: [10.0, 30.0, 50.0], icon: "spell_holy_stoicism" },
+            { name: "Devouring Plague", bp: [8.28, 24.9, 41.7], icon: "spell_shadow_devouringplague" }
+        ];
+
+        let html = '';
+        dots.forEach(dot => {
+            let next = dot.bp.find(b => b > haste) || "Maxed";
+            let ticks = dot.bp.filter(b => b <= haste).length;
+            let progress = typeof next === 'number' ? (haste / next) * 100 : 100;
+
+            html += `
+            <div class="spell-row">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/${dot.icon}.jpg" class="buff-icon">
+                <div>
+                    <span class="buff-name">${dot.name}</span>
+                    <div class="progress-bg"><div class="progress-fill" style="width:${progress}%"></div></div>
+                </div>
+                <div class="ticks-badge">+${ticks} Ticks</div>
+                <div class="breakpoint-info" style="text-align:right">
+                    <span class="buff-desc">Next: ${typeof next === 'number' ? next.toFixed(2) + '%' : next}</span>
+                </div>
+            </div>`;
+        });
+        document.getElementById('spellsContainer').innerHTML = html;
+    }
+
+    hasteInput.addEventListener('input', update);
+    checkboxes.forEach(c => c.addEventListener('change', update));
+    update();
+  </script>
+</body>
+</html>
