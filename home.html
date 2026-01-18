@@ -113,6 +113,18 @@
       margin-bottom: 1.5rem;
       padding-bottom: 1rem;
       border-bottom: 2px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    a .section-header:hover {
+      border-color: var(--accent-color);
+    }
+
+    a .section-header:hover .section-title {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .section-icon {
@@ -413,12 +425,14 @@
   <div class="content-grid">
     <!-- Twitch Stream -->
     <div class="section-card">
-      <div class="section-header">
-        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
-        </svg>
-        <h2 class="section-title">Live on Twitch</h2>
-      </div>
+      <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+          </svg>
+          <h2 class="section-title">Live on Twitch</h2>
+        </div>
+      </a>
       <div class="stream-container">
         <iframe 
           src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=localhost"
@@ -438,12 +452,14 @@
 
     <!-- YouTube Stream -->
     <div class="section-card">
-      <div class="section-header">
-        <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-        </svg>
-        <h2 class="section-title">Latest on YouTube</h2>
-      </div>
+      <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <h2 class="section-title">Latest on YouTube</h2>
+        </div>
+      </a>
       <div class="stream-container">
         <iframe 
           src="https://www.youtube.com/embed?listType=user_uploads&list=skimmynz"
@@ -544,14 +560,21 @@
       return `https://assets.rpglogs.com/img/warcraft/abilities/${key}.jpg`;
     }
 
-    // Featured bosses to showcase
+    // Featured bosses to showcase - All Throne of Thunder
     const featuredBosses = [
-      { name: "Lei Shen", id: 51579, icon: 1579 },
-      { name: "Ra-den", id: 51580, icon: 1580 },
+      { name: "Jin'rokh the Breaker", id: 51577, icon: 1577 },
+      { name: "Horridon", id: 51575, icon: 1575 },
+      { name: "Council of Elders", id: 51570, icon: 1570 },
+      { name: "Tortos", id: 51565, icon: 1565 },
+      { name: "Megaera", id: 51578, icon: 1578 },
+      { name: "Ji-Kun", id: 51573, icon: 1573 },
+      { name: "Durumu the Forgotten", id: 51572, icon: 1572 },
+      { name: "Primordius", id: 51574, icon: 1574 },
+      { name: "Dark Animus", id: 51576, icon: 1576 },
       { name: "Iron Qon", id: 51559, icon: 1559 },
       { name: "Twin Consorts", id: 51560, icon: 1560 },
-      { name: "Dark Animus", id: 51576, icon: 1576 },
-      { name: "Durumu the Forgotten", id: 51572, icon: 1572 }
+      { name: "Lei Shen", id: 51579, icon: 1579 },
+      { name: "Ra-den", id: 51580, icon: 1580 }
     ];
 
     function bossIconUrl(iconId) {
