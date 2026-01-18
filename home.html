@@ -421,7 +421,7 @@
       </div>
       <div class="stream-container">
         <iframe 
-          src="https://player.twitch.tv/?channel=skimmynz&parent=localhost&parent=yourdomain.com&parent=netlify.app"
+          src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=localhost"
           allowfullscreen>
         </iframe>
       </div>
@@ -446,7 +446,7 @@
       </div>
       <div class="stream-container">
         <iframe 
-          src="https://www.youtube.com/embed/live_stream?channel=skimmynz"
+          src="https://www.youtube.com/embed?listType=user_uploads&list=skimmynz"
           allowfullscreen>
         </iframe>
       </div>
@@ -680,6 +680,21 @@
     // Load trends on page load
     document.addEventListener('DOMContentLoaded', () => {
       loadTalentTrends();
+      
+      // Initialize YouTube embed with latest video
+      // You can manually update this with your latest video ID
+      const latestVideoId = 'LH5aODSFQ1o'; // Your guide video
+      const youtubeFrame = document.querySelector('.section-card:nth-child(2) .stream-container iframe');
+      if (youtubeFrame && latestVideoId) {
+        youtubeFrame.src = `https://www.youtube.com/embed/${latestVideoId}`;
+      }
+      
+      // Update status indicators
+      const twitchStatus = document.getElementById('twitch-status-text');
+      const youtubeStatus = document.getElementById('youtube-status-text');
+      
+      if (twitchStatus) twitchStatus.textContent = 'Stream offline';
+      if (youtubeStatus) youtubeStatus.textContent = 'Latest video';
     });
   </script>
 </body>
