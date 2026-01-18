@@ -99,6 +99,7 @@
     <div class="haste-container">
       <header class="haste-header">
         <h1>Shadow Priest Haste Calculator</h1>
+        <p>Optimise your DoT breakpoints and maximize your damage potential in Mists of Pandaria Classic</p>
       </header>
 
       <!-- NEW: Top Controls Section -->
@@ -210,21 +211,24 @@
         </div>
       </section>
 
-      <!-- Result Card -->
-      <section class="result-card" aria-live="polite">
-        <div class="result-label">Effective Haste</div>
-        <div class="result-value" id="hasteResult">5.00%</div>
-        <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
-        <div id="gcdWarning"></div>
-      </section>
+      <!-- Two Column Layout: Result + Breakpoints -->
+      <div class="haste-results-layout">
+        <!-- Left: Result Card -->
+        <section class="result-card" aria-live="polite">
+          <div class="result-label">Effective Haste</div>
+          <div class="result-value" id="hasteResult">5.00%</div>
+          <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
+          <div id="gcdWarning"></div>
+        </section>
 
-      <!-- DoT Breakpoint Table -->
-      <section class="spells-table">
-        <div class="table-header">
-          <h2 class="table-title">DoT Breakpoint Analysis</h2>
-        </div>
-        <div class="spells-container" id="spellsContainer" role="region" aria-label="Spell breakpoints"></div>
-      </section>
+        <!-- Right: DoT Breakpoint Table -->
+        <section class="spells-table">
+          <div class="table-header">
+            <h2 class="table-title">DoT Breakpoint Analysis</h2>
+          </div>
+          <div class="spells-container" id="spellsContainer" role="region" aria-label="Spell breakpoints"></div>
+        </section>
+      </div>
 
     </div>
   </div>
