@@ -548,7 +548,10 @@
     const featuredBosses = [
       { name: "Lei Shen", id: 51579, icon: 1579 },
       { name: "Ra-den", id: 51580, icon: 1580 },
-      { name: "Iron Qon", id: 51559, icon: 1559 }
+      { name: "Iron Qon", id: 51559, icon: 1559 },
+      { name: "Twin Consorts", id: 51560, icon: 1560 },
+      { name: "Dark Animus", id: 51576, icon: 1576 },
+      { name: "Durumu the Forgotten", id: 51572, icon: 1572 }
     ];
 
     function bossIconUrl(iconId) {
@@ -559,7 +562,8 @@
       const container = document.getElementById('talent-trends');
       
       try {
-        const trends = [];
+        // Combine all cached boss data
+        const allRankings = [];
         
         for (const boss of featuredBosses) {
           const cacheKey = `spriest_rankings_${boss.id}`;
@@ -568,20 +572,18 @@
           if (cached) {
             const data = JSON.parse(cached);
             const rankings = data.data?.rankings || [];
-            const analysis = analyzeTalents(rankings);
-            trends.push({ boss: boss, analysis: analysis });
+            allRankings.push(...rankings);
           }
         }
 
-        if (trends.length === 0) {
+        if (allRankings.length === 0) {
           container.innerHTML = '<div class="loading"><p>No cached data available. Visit the <a href="/rankings.html" style="color: var(--accent-color);">Rankings page</a> to load data.</p></div>';
           return;
         }
 
-        let html = '';
-        for (const trend of trends) {
-          html += renderBossTalents(trend.boss, trend.analysis);
-        }
+        // Analyze combined data
+        const analysis = analyzeTalents(allRankings);
+        const html = renderCombinedTalents(analysis, allRankings.length);
         
         container.innerHTML = html;
 
@@ -631,15 +633,14 @@
       return { tierCounts, totalPerTier };
     }
 
-    function renderBossTalents(boss, analysis) {
+    function renderCombinedTalents(analysis, totalPlayers) {
       const { tierCounts, totalPerTier } = analysis;
       const TIER_ORDER = [15, 30, 45, 60, 75, 90];
       
       let html = `
         <div class="boss-talent-section">
-          <div class="boss-header">
-            <img src="${bossIconUrl(boss.icon)}" alt="${boss.name}" class="boss-icon" loading="lazy">
-            <h3 class="boss-name">${boss.name}</h3>
+          <div class="boss-header" style="justify-content: center;">
+            <h3 class="boss-name">Combined Meta Analysis - ${totalPlayers} Top Performers</h3>
           </div>
       `;
 
@@ -649,7 +650,7 @@
           const count = tierCounts[tier][name] || 0;
           const percent = total > 0 ? ((count / total) * 100).toFixed(1) : '0.0';
           const spellId = talentSpellIds[name];
-          return { name, percent: parseFloat(percent), spellId };
+          return { name, percent: parseFloat(percent), spellId, count };
         });
 
         const maxPercent = Math.max(...talents.map(t => t.percent));
@@ -662,7 +663,8 @@
           html += `
             <a class="talent-link wowhead ${isTop ? 'is-top' : ''}" 
                href="https://www.wowhead.com/mop-classic/spell=${talent.spellId}" 
-               target="_blank" rel="noopener">
+               target="_blank" rel="noopener"
+               title="${talent.name}: ${talent.count}/${total} players">
               <img class="talent-icon-img" loading="lazy" 
                    src="${talentIconUrl(talent.name)}" 
                    alt="${talent.name}" />
