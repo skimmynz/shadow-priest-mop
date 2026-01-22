@@ -613,18 +613,18 @@ const PARSING_RULES = {
   1506: { title: "Lei Shi", rules: ["Damage done to Animated Protectors is removed."] },
   1431: { title: "Sha of Fear", rules: ["Sha of Fear is removed from Damage ASP."] },
   51577: { title: "Jin'rokh the Breaker", rules: ["No rules."] },
-  51575: { title: "Horridon", rules: ["No rules."] },
-  51570: { title: "Council of Elders", rules: ["No rules."] },
-  51565: { title: "Tortos", rules: ["No rules."] },
-  51578: { title: "Megaera", rules: ["No rules."] },
-  51573: { title: "Ji-Kun", rules: ["No rules."] },
-  51572: { title: "Durumu the Forgotten", rules: ["No rules."] },
-  51574: { title: "Primordius", rules: ["No rules."] },
-  51576: { title: "Dark Animus", rules: ["No rules."] },
-  51559: { title: "Iron Qon", rules: ["No rules."] },
-  51560: { title: "Twin Consorts", rules: ["No rules."] },
-  51579: { title: "Lei Shen", rules: ["No rules."] },
-  51580: { title: "Ra-den", rules: ["No rules."] }
+  51575: { title: "Horridon", rules: ["Horridon is removed from Damage All Star Points."] },
+  51570: { title: "Council of Elders", rules: ["Damage done to Living Sand is removed."] },
+  51565: { title: "Tortos", rules: ["Damage done to Humming Crystal is removed.","Heroic Only: Damage done to Vampiric Cave Bat is removed.","Only damage done to Whirl Turtles that cast Shell Concussion (which they do when kicked) counts."] },
+  51578: { title: "Megaera", rules: ["Damage done to heads that don't die is removed.","25m Heroic: Damage done to Nether Wyrm is removed."] },
+  51573: { title: "Ji-Kun", rules: ["Ji-Kun is removed from Damage All Star Points."] },
+  51572: { title: "Durumu the Forgotten", rules: ["Damage done to Wandering Eye is removed."] },
+  51574: { title: "Primordius", rules: ["Primordius is removed from Damage and Healing All Star Points."] },
+  51576: { title: "Dark Animus", rules: ["Heroic: Damage to Large Anima Golem and Massive Anima Golem is removed.","Only count damage done to Anima Golems that die."] },
+  51559: { title: "Iron Qon", rules: ["Damage done to Ice Tomb is removed."] },
+  51560: { title: "Twin Empyreans", rules: ["Damage done to Lurker in the Night is removed."] },
+  51579: { title: "Lei Shen", rules: ["Damage done to Unharnessed Power, Lesser Diffused Lightning, Greater Diffused Lightning, and Diffused Lightning is removed."] },
+  51580: { title: "Ra-den", rules: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."] }
 };
 function renderParsingRules(encounterId) {
   const rules = PARSING_RULES[encounterId];
