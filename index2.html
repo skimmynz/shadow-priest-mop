@@ -548,17 +548,82 @@
 
   <script src="js/nav.js"></script>
   <script>
-    // Load Recent Rankings
+    // T15 Throne of Thunder boss IDs
+    const T15_BOSS_IDS = [
+      { id: 51577, name: "Jin'rokh the Breaker" },
+      { id: 51575, name: "Horridon" },
+      { id: 51570, name: "Council of Elders" },
+      { id: 51565, name: "Tortos" },
+      { id: 51578, name: "Megaera" },
+      { id: 51573, name: "Ji-Kun" },
+      { id: 51572, name: "Durumu the Forgotten" },
+      { id: 51574, name: "Primordius" },
+      { id: 51576, name: "Dark Animus" },
+      { id: 51559, name: "Iron Qon" },
+      { id: 51560, name: "Twin Consorts" },
+      { id: 51579, name: "Lei Shen" },
+      { id: 51580, name: "Ra-den" }
+    ];
+
+    // Load Recent Rankings from cached data or fresh fetch
     async function loadRecentRankings() {
       const container = document.getElementById('rankings-preview');
       
       try {
-        // Fetch from a popular boss (Lei Shen - 51579)
-        // You can change this to any boss ID you want to feature
-        const response = await fetch('/.netlify/functions/getLogs?encounterId=51579');
-        const data = await response.json();
+        const allRankings = [];
         
-        if (!data || !data.rankings || data.rankings.length === 0) {
+        // Try to load from localStorage cache first
+        for (const boss of T15_BOSS_IDS) {
+          const cacheKey = 'spriest_rankings_' + boss.id;
+          const cached = localStorage.getItem(cacheKey);
+          
+          if (cached) {
+            try {
+              const parsedCache = JSON.parse(cached);
+              const cachedAt = parsedCache.cachedAt || (parsedCache.data && parsedCache.data.cachedAt);
+              const cacheAge = Date.now() - Date.parse(cachedAt);
+              
+              // Use cache if less than 5 minutes old
+              if (cacheAge < 300000) {
+                const rankings = parsedCache.data.rankings || [];
+                if (rankings.length > 0) {
+                  allRankings.push({
+                    ...rankings[0], // Get rank 1 from each boss
+                    bossName: boss.name,
+                    bossId: boss.id
+                  });
+                }
+                continue;
+              }
+            } catch (e) {
+              console.error('Cache parse error:', e);
+            }
+          }
+          
+          // If not in cache or stale, fetch it
+          try {
+            const response = await fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`);
+            const data = await response.json();
+            
+            if (data && data.rankings && data.rankings.length > 0) {
+              allRankings.push({
+                ...data.rankings[0],
+                bossName: boss.name,
+                bossId: boss.id
+              });
+              
+              // Cache for future use
+              localStorage.setItem(cacheKey, JSON.stringify({
+                data: data,
+                cachedAt: new Date().toISOString()
+              }));
+            }
+          } catch (fetchError) {
+            console.error(`Failed to fetch boss ${boss.id}:`, fetchError);
+          }
+        }
+        
+        if (allRankings.length === 0) {
           container.innerHTML = `
             <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
               No recent rankings available
@@ -567,18 +632,21 @@
           return;
         }
 
-        // Get top 5 rankings
-        const topRankings = data.rankings.slice(0, 5);
+        // Sort by DPS and take top 5
+        const topRankings = allRankings
+          .sort((a, b) => b.total - a.total)
+          .slice(0, 5);
 
         const rankingsHTML = topRankings.map((log, index) => {
           const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+          const bossSlug = log.bossName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
           
           return `
-            <a href="/rankings.html#lei-shen-51579" class="ranking-item">
+            <a href="/rankings.html#${bossSlug}-${log.bossId}" class="ranking-item">
               <div class="rank-number ${rankClass}">${index + 1}</div>
               <div class="player-info">
                 <div class="player-name">${log.name || 'Unknown'}</div>
-                <div class="boss-name">Lei Shen • Throne of Thunder</div>
+                <div class="boss-name">${log.bossName} • Throne of Thunder</div>
               </div>
               <div class="dps-value">${log.total ? Math.round(log.total).toLocaleString() : '—'}</div>
             </a>
