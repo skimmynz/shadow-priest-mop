@@ -64,7 +64,7 @@
     .hero-section {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 4rem 2rem 2rem;
+      padding: 2rem 2rem 1rem;
       text-align: center;
     }
 
@@ -89,7 +89,7 @@
     .content-grid {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 1rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
@@ -100,7 +100,7 @@
       backdrop-filter: blur(12px);
       border-radius: 20px;
       border: 1px solid var(--glass-border);
-      padding: 2rem;
+      padding: 0.5rem;
       box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
       transition: all 0.3s ease;
     }
@@ -119,22 +119,11 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid var(--border-color);
-      transition: all 0.3s ease;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    a .section-header:hover {
-      border-color: var(--accent-color);
-    }
-
-    a .section-header:hover .section-title {
-      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
 
     .section-icon {
       width: 32px;
@@ -242,7 +231,7 @@
 
     .cta-button {
       display: inline-block;
-      padding: 1rem 2rem;
+      padding: 1rem 1rem;
       background: var(--accent-color);
       color: white;
       text-decoration: none;
@@ -361,7 +350,7 @@
 
     .loading {
       text-align: center;
-      padding: 2rem;
+      padding: 1rem;
       color: var(--text-muted);
     }
 
@@ -484,67 +473,43 @@
     </div>
   </nav>
 
-  <div class="hero-section">
-    <h1 class="hero-title">SHADOW PRIEST HUB</h1>
-    <p class="hero-subtitle">MoP Classic Rankings, Guides, and Weekly Talent Meta</p>
-  </div>
-
   <div class="content-grid">
-    <!-- Twitch Stream -->
-    <div class="section-card">
-      <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
-        <div class="section-header">
-          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
-          </svg>
-          <h2 class="section-title">Live on Twitch</h2>
-        </div>
-      </a>
-      <div class="stream-container">
-        <iframe 
-          src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com"
-          allowfullscreen>
-        </iframe>
-      </div>
+  <div class="section-card">
+    <div class="stream-container">
+      <iframe 
+        src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com"
+        allowfullscreen
+        loading="lazy"
+        title="SkimmyNZ Twitch Stream">
+      </iframe>
     </div>
+  </div>
 
-    <!-- YouTube Stream -->
-    <div class="section-card">
-      <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
-        <div class="section-header">
-          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-          </svg>
-          <h2 class="section-title">Latest on YouTube</h2>
-        </div>
-      </a>
-      <div class="stream-container">
-        <iframe 
-          src="https://www.youtube.com/embed/LH5aODSFQ1o"
-          allowfullscreen>
-        </iframe>
-      </div>
+  <div class="section-card">
+    <div class="stream-container">
+      <iframe 
+        src="https://www.youtube.com/embed/LH5aODSFQ1o"
+        allowfullscreen
+        loading="lazy"
+        title="Shadow Priest MoP Classic PvE Guide – SkimmyNZ">
+      </iframe>
     </div>
+  </div>
 
-    <!-- Recent Rankings Preview -->
-    <div class="section-card full-width">
-      <div class="section-header">
-        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="8.5" cy="7" r="4"/>
-          <polyline points="17 11 19 13 23 9"/>
-        </svg>
-        <h2 class="section-title">Recent Top Performances</h2>
-      </div>
-      
-      <div id="rankings-preview">
-        <div class="loading">
-          <div class="loader"></div>
-          <div>Loading recent rankings...</div>
-        </div>
+  <!-- Recent Rankings Preview -->
+  <div class="section-card full-width">
+    <div class="section-header">
+      <h2 class="section-title">Recent Top Performances</h2>
+    </div>
+    
+    <div id="rankings-preview">
+      <div class="loading">
+        <div class="loader"></div>
+        <div>Loading recent rankings...</div>
       </div>
     </div>
   </div>
+</div>
 
   <script src="js/nav.js"></script>
   <script>
@@ -641,14 +606,14 @@
         
         if (allRankings.length === 0) {
           container.innerHTML = `
-            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+            <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
               No recent rankings available
             </div>
           `;
           return;
         }
 
-        // Sort ALL rankings by DPS and take top 3 overall
+        // Sort by DPS and take top 3
         const topRankings = allRankings
           .sort((a, b) => b.total - a.total)
           .slice(0, 3);
@@ -680,7 +645,7 @@
       } catch (error) {
         console.error('Error loading rankings:', error);
         container.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+          <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
             Unable to load rankings. Please try again later.
           </div>
         `;
