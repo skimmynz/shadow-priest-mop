@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google-adsense-account" content="ca-pub-5698535707794768">
+  <meta name="description" content="Your complete Shadow Priest resource for Mists of Pandaria Classic. Rankings, guides, haste calculator, addons, and live streams.">
+  <meta name="keywords" content="shadow priest, MoP Classic, guide, rankings, haste calculator, World of Warcraft, skimmynz">
+  
+  <title>Shadow Priest Hub | MoP Classic | skimmynz</title>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5698535707794768"
+     crossorigin="anonymous"></script>
+  
+  <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="canonical" href="https://skimmynz.com/">
+  
+  <script>
+    window.whTooltips = { colorLinks: true, iconizeLinks: false, renameLinks: false };
+  </script>
+  <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
+  
+  <style>
+    :root {
+      --primary-bg: #0f1117;
+      --secondary-bg: #1a1d29;
+      --card-bg: #1e2130;
+      --surface-bg: #23263a;
+      --hover-bg: #2a2d42;
+      --accent-color: #7c3aed;
+      --accent-hover: #8b5cf6;
+      --text-primary: #ffffff;
+      --text-secondary: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-color: #2d3142;
+      --glass-bg: rgba(26, 29, 41, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --success-color: #10b981;
+      --gold-color: #fbbf24;
+      --live-color: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .hero-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2rem;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      font-weight: 500;
+    }
+
+    .content-grid {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .section-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      padding: 2rem;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    .section-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      transition: all 0.3s ease;
+    }
+
+    a .section-header:hover {
+      border-color: var(--accent-color);
+    }
+
+    a .section-header:hover .section-title {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-icon {
+      width: 32px;
+      height: 32px;
+      fill: var(--accent-color);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stream-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .stream-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .stream-status {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .stream-status-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stream-live-text {
+      font-weight: 700;
+      color: var(--live-color);
+    }
+
+    .stream-offline-text {
+      color: var(--text-muted);
+    }
+
+    .stream-viewers {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    .stream-game {
+      color: var(--accent-color);
+      font-size: 0.85rem;
+    }
+
+    .status-indicator {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .status-indicator.live::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--live-color);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #6b7280;
+      position: relative;
+      z-index: 1;
+    }
+
+    .status-dot.live {
+      background: var(--live-color);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0; transform: scale(1.5); }
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: var(--accent-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      border: 2px solid var(--accent-color);
+    }
+
+    .cta-button:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
+    }
+
+    /* Rankings Preview Styles */
+    .rankings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .ranking-item {
+      background: var(--surface-bg);
+      border-radius: 10px;
+      padding: 1rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .ranking-item:hover {
+      border-color: var(--accent-color);
+      transform: translateX(4px);
+    }
+
+    .rank-number {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--accent-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .rank-number.gold {
+      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    }
+
+    .rank-number.silver {
+      background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+      color: #1f2937;
+    }
+
+    .rank-number.bronze {
+      background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+    }
+
+    .player-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .player-name {
+      font-weight: 700;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .boss-name {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dps-value {
+      font-weight: 700;
+      color: var(--accent-color);
+      font-size: 1.1rem;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .view-all-link {
+      display: block;
+      text-align: center;
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .view-all-link:hover {
+      background: var(--hover-bg);
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+
+    .loader {
+      border: 3px solid var(--border-color);
+      border-top: 3px solid var(--accent-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 0.5rem;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1024px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 1rem 1rem;
+      }
+
+      .content-grid {
+        padding: 1rem;
+        gap: 1rem;
+      }
+
+      .section-card {
+        padding: 1.5rem;
+      }
+
+      .stream-status {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .player-info {
+        max-width: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">   
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+      
+      <ul class="nav-links" id="navLinks">
+        <li>
+          <a href="/" class="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/rankings.html">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="8.5" cy="7" r="4"/>
+              <polyline points="17 11 19 13 23 9"/>
+            </svg>
+            Rankings
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=LH5aODSFQ1o">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Guide
+          </a>
+        </li>
+        <li>
+          <a href="/haste">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Haste Calculator
+          </a>
+        </li>
+        <li>
+          <a href="/addons">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="9" y1="3" x2="9" y2="21"/>
+            </svg>
+            Addons & WAs
+          </a>
+        </li>
+        <li>
+          <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            YouTube
+          </a>
+        </li>
+        <li>
+          <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+            </svg>
+            Twitch
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="hero-section">
+    <h1 class="hero-title">SHADOW PRIEST HUB</h1>
+    <p class="hero-subtitle">MoP Classic Rankings, Guides, and Weekly Talent Meta</p>
+  </div>
+
+  <div class="content-grid">
+    <!-- Twitch Stream -->
+    <div class="section-card">
+      <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+          </svg>
+          <h2 class="section-title">Live on Twitch</h2>
+        </div>
+      </a>
+      <div class="stream-container">
+        <iframe 
+          src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <!-- YouTube Stream -->
+    <div class="section-card">
+      <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <h2 class="section-title">Latest on YouTube</h2>
+        </div>
+      </a>
+      <div class="stream-container">
+        <iframe 
+          src="https://www.youtube.com/embed/LH5aODSFQ1o"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Recent Rankings Preview -->
+    <div class="section-card full-width">
+      <div class="section-header">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <polyline points="17 11 19 13 23 9"/>
+        </svg>
+        <h2 class="section-title">Recent Top Performances</h2>
+      </div>
+      
+      <div id="rankings-preview">
+        <div class="loading">
+          <div class="loader"></div>
+          <div>Loading recent rankings...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/nav.js"></script>
+  <script>
+    // Load Recent Rankings
+    async function loadRecentRankings() {
+      const container = document.getElementById('rankings-preview');
+      
+      try {
+        const response = await fetch('/.netlify/functions/getRecentRankings');
+        const data = await response.json();
+        
+        if (!data || !data.rankings || data.rankings.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+              No recent rankings available
+            </div>
+          `;
+          return;
+        }
+
+        const rankingsHTML = data.rankings.map((log, index) => {
+          const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+          
+          return `
+            <a href="/rankings.html" class="ranking-item">
+              <div class="rank-number ${rankClass}">${index + 1}</div>
+              <div class="player-info">
+                <div class="player-name">${log.name || 'Unknown'}</div>
+                <div class="boss-name">${log.encounterName || 'Unknown Boss'}</div>
+              </div>
+              <div class="dps-value">${log.total ? Math.round(log.total).toLocaleString() : '—'}</div>
+            </a>
+          `;
+        }).join('');
+        
+        container.innerHTML = `
+          <div class="rankings-list">
+            ${rankingsHTML}
+          </div>
+          <a href="/rankings.html" class="view-all-link">
+            View All Rankings →
+          </a>
+        `;
+      } catch (error) {
+        console.error('Error loading rankings:', error);
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+            Unable to load rankings. Please try again later.
+          </div>
+        `;
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadRecentRankings();
+    });
+  </script>
+</body>
+</html>
