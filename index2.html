@@ -553,7 +553,9 @@
       const container = document.getElementById('rankings-preview');
       
       try {
-        const response = await fetch('/.netlify/functions/getRecentRankings');
+        // Fetch from a popular boss (Lei Shen - 51579)
+        // You can change this to any boss ID you want to feature
+        const response = await fetch('/.netlify/functions/getLogs?encounterId=51579');
         const data = await response.json();
         
         if (!data || !data.rankings || data.rankings.length === 0) {
@@ -565,15 +567,18 @@
           return;
         }
 
-        const rankingsHTML = data.rankings.map((log, index) => {
+        // Get top 5 rankings
+        const topRankings = data.rankings.slice(0, 5);
+
+        const rankingsHTML = topRankings.map((log, index) => {
           const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
           
           return `
-            <a href="/rankings.html" class="ranking-item">
+            <a href="/rankings.html#lei-shen-51579" class="ranking-item">
               <div class="rank-number ${rankClass}">${index + 1}</div>
               <div class="player-info">
                 <div class="player-name">${log.name || 'Unknown'}</div>
-                <div class="boss-name">${log.encounterName || 'Unknown Boss'}</div>
+                <div class="boss-name">Lei Shen • Throne of Thunder</div>
               </div>
               <div class="dps-value">${log.total ? Math.round(log.total).toLocaleString() : '—'}</div>
             </a>
