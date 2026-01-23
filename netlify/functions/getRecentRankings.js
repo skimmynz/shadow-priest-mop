@@ -108,6 +108,8 @@ exports.handler = async function(event, context) {
   }
 
   try {
+    console.log('Starting to fetch rankings from', BOSS_IDS.length, 'bosses');
+    
     // Fetch top 3 rankings from each boss
     const fetchPromises = BOSS_IDS.map(async (encounterId) => {
       const url = `https://www.warcraftlogs.com/v1/rankings/encounter/${encounterId}?metric=dps&size=3&difficulty=4&class=7&spec=3&api_key=${apiKey}`;
@@ -118,9 +120,13 @@ exports.handler = async function(event, context) {
           headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' }
         });
         
-        if (!response.ok) return null;
+        if (!response.ok) {
+          console.log(`Encounter ${encounterId} returned status ${response.status}`);
+          return null;
+        }
         
         const data = await response.json();
+        console.log(`Encounter ${encounterId}: ${data.rankings?.length || 0} rankings`);
         return data.rankings || [];
       } catch (error) {
         console.error(`Failed to fetch encounter ${encounterId}:`, error.message);
@@ -133,15 +139,22 @@ exports.handler = async function(event, context) {
     // Flatten and filter out nulls
     const allRankings = results
       .filter(result => result !== null)
-      .flat()
-      .filter(ranking => ranking && ranking.total);
+      .flat();
+
+    console.log(`Total rankings before filtering: ${allRankings.length}`);
+
+    // Filter rankings that have DPS data
+    const validRankings = allRankings.filter(ranking => ranking && ranking.total > 0);
+    
+    console.log(`Valid rankings with DPS > 0: ${validRankings.length}`);
 
     // Sort by DPS (total) descending and take top 5
-    const topRankings = allRankings
+    const topRankings = validRankings
       .sort((a, b) => b.total - a.total)
       .slice(0, 5);
 
     console.log(`Successfully fetched ${topRankings.length} recent top rankings`);
+    console.log('Top DPS values:', topRankings.map(r => r.total));
 
     return {
       statusCode: 200,
