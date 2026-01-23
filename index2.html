@@ -64,7 +64,7 @@
     .hero-section {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 2rem 2rem 1rem;
+      padding: 4rem 2rem 2rem;
       text-align: center;
     }
 
@@ -89,7 +89,7 @@
     .content-grid {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 2rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
@@ -100,7 +100,7 @@
       backdrop-filter: blur(12px);
       border-radius: 20px;
       border: 1px solid var(--glass-border);
-      padding: 0.5rem;
+      padding: 2rem;
       box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
       transition: all 0.3s ease;
     }
@@ -119,11 +119,22 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      transition: all 0.3s ease;
     }
 
+    a .section-header:hover {
+      border-color: var(--accent-color);
+    }
+
+    a .section-header:hover .section-title {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
     .section-icon {
       width: 32px;
@@ -231,7 +242,7 @@
 
     .cta-button {
       display: inline-block;
-      padding: 1rem 1rem;
+      padding: 1rem 2rem;
       background: var(--accent-color);
       color: white;
       text-decoration: none;
@@ -350,7 +361,7 @@
 
     .loading {
       text-align: center;
-      padding: 1rem;
+      padding: 2rem;
       color: var(--text-muted);
     }
 
@@ -473,43 +484,67 @@
     </div>
   </nav>
 
+  <div class="hero-section">
+    <h1 class="hero-title">SHADOW PRIEST HUB</h1>
+    <p class="hero-subtitle">MoP Classic Rankings, Guides, and Weekly Talent Meta</p>
+  </div>
+
   <div class="content-grid">
-  <div class="section-card">
-    <div class="stream-container">
-      <iframe 
-        src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com"
-        allowfullscreen
-        loading="lazy"
-        title="SkimmyNZ Twitch Stream">
-      </iframe>
+    <!-- Twitch Stream -->
+    <div class="section-card">
+      <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/>
+          </svg>
+          <h2 class="section-title">Live on Twitch</h2>
+        </div>
+      </a>
+      <div class="stream-container">
+        <iframe 
+          src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com"
+          allowfullscreen>
+        </iframe>
+      </div>
     </div>
-  </div>
 
-  <div class="section-card">
-    <div class="stream-container">
-      <iframe 
-        src="https://www.youtube.com/embed/LH5aODSFQ1o"
-        allowfullscreen
-        loading="lazy"
-        title="Shadow Priest MoP Classic PvE Guide – SkimmyNZ">
-      </iframe>
+    <!-- YouTube Stream -->
+    <div class="section-card">
+      <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" style="text-decoration: none;">
+        <div class="section-header">
+          <svg class="section-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <h2 class="section-title">Latest on YouTube</h2>
+        </div>
+      </a>
+      <div class="stream-container">
+        <iframe 
+          src="https://www.youtube.com/embed/LH5aODSFQ1o"
+          allowfullscreen>
+        </iframe>
+      </div>
     </div>
-  </div>
 
-  <!-- Recent Rankings Preview -->
-  <div class="section-card full-width">
-    <div class="section-header">
-      <h2 class="section-title">Recent Top Performances</h2>
-    </div>
-    
-    <div id="rankings-preview">
-      <div class="loading">
-        <div class="loader"></div>
-        <div>Loading recent rankings...</div>
+    <!-- Recent Rankings Preview -->
+    <div class="section-card full-width">
+      <div class="section-header">
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="8.5" cy="7" r="4"/>
+          <polyline points="17 11 19 13 23 9"/>
+        </svg>
+        <h2 class="section-title">Recent Top Performances</h2>
+      </div>
+      
+      <div id="rankings-preview">
+        <div class="loading">
+          <div class="loader"></div>
+          <div>Loading recent rankings...</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <script src="js/nav.js"></script>
   <script>
@@ -533,14 +568,17 @@
     // Load Recent Rankings from cached data or fresh fetch
     async function loadRecentRankings() {
       const container = document.getElementById('rankings-preview');
+      const CACHE_DURATION = 3600000; // 1 hour in milliseconds
       
       try {
         const allRankings = [];
+        const fetchPromises = [];
         
-        // Try to load from localStorage cache first
+        // Check cache and prepare fetch promises for all bosses at once
         for (const boss of T15_BOSS_IDS) {
           const cacheKey = 'spriest_rankings_' + boss.id;
           const cached = localStorage.getItem(cacheKey);
+          let needsFetch = true;
           
           if (cached) {
             try {
@@ -548,59 +586,72 @@
               const cachedAt = parsedCache.cachedAt || (parsedCache.data && parsedCache.data.cachedAt);
               const cacheAge = Date.now() - Date.parse(cachedAt);
               
-              // Use cache if less than 5 minutes old
-              if (cacheAge < 300000) {
+              // Use cache if less than 1 hour old
+              if (cacheAge < CACHE_DURATION) {
                 const rankings = parsedCache.data.rankings || [];
-                if (rankings.length > 0) {
+                // Get top 3 from each boss
+                rankings.slice(0, 3).forEach(ranking => {
                   allRankings.push({
-                    ...rankings[0], // Get rank 1 from each boss
+                    ...ranking,
                     bossName: boss.name,
                     bossId: boss.id
                   });
-                }
-                continue;
+                });
+                needsFetch = false;
               }
             } catch (e) {
               console.error('Cache parse error:', e);
             }
           }
           
-          // If not in cache or stale, fetch it
-          try {
-            const response = await fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`);
-            const data = await response.json();
-            
-            if (data && data.rankings && data.rankings.length > 0) {
-              allRankings.push({
-                ...data.rankings[0],
-                bossName: boss.name,
-                bossId: boss.id
-              });
-              
-              // Cache for future use
-              localStorage.setItem(cacheKey, JSON.stringify({
-                data: data,
-                cachedAt: new Date().toISOString()
-              }));
-            }
-          } catch (fetchError) {
-            console.error(`Failed to fetch boss ${boss.id}:`, fetchError);
+          // If not in cache or stale, add to fetch queue
+          if (needsFetch) {
+            fetchPromises.push(
+              fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`)
+                .then(response => response.json())
+                .then(data => {
+                  if (data && data.rankings && data.rankings.length > 0) {
+                    // Get top 3 from this boss
+                    data.rankings.slice(0, 3).forEach(ranking => {
+                      allRankings.push({
+                        ...ranking,
+                        bossName: boss.name,
+                        bossId: boss.id
+                      });
+                    });
+                    
+                    // Cache for future use
+                    localStorage.setItem(cacheKey, JSON.stringify({
+                      data: data,
+                      cachedAt: new Date().toISOString()
+                    }));
+                  }
+                })
+                .catch(error => {
+                  console.error(`Failed to fetch boss ${boss.id}:`, error);
+                })
+            );
           }
+        }
+        
+        // Wait for all fetches to complete in parallel
+        if (fetchPromises.length > 0) {
+          await Promise.all(fetchPromises);
         }
         
         if (allRankings.length === 0) {
           container.innerHTML = `
-            <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
+            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
               No recent rankings available
             </div>
           `;
           return;
         }
 
-        // Sort by DPS and take top 5
+        // Sort ALL rankings by DPS and take top 3 overall
         const topRankings = allRankings
           .sort((a, b) => b.total - a.total)
-          .slice(0, 5);
+          .slice(0, 3);
 
         const rankingsHTML = topRankings.map((log, index) => {
           const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
@@ -629,7 +680,7 @@
       } catch (error) {
         console.error('Error loading rankings:', error);
         container.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
+          <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
             Unable to load rankings. Please try again later.
           </div>
         `;
