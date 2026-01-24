@@ -24,7 +24,7 @@ html {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   letter-spacing: 0.1em;
-  line-height: 1.1;
+  line-height: 1.1; 
   text-transform: uppercase;
 }
 
@@ -293,31 +293,6 @@ html {
   margin-bottom: 0;
 }
 
-.result-label {
-  color: var(--text-accent);
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.result-value {
-  font-size: 3rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.875rem;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
 .result-card {
   text-align: center;
   background: var(--secondary-bg);
@@ -336,6 +311,30 @@ html {
 .result-card:hover {
   border-color: var(--border-hover);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.result-label {
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.result-value {
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.875rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .conversion-text {
@@ -396,7 +395,6 @@ html {
 .table-title {
   font-size: 1.35rem;
   font-weight: 800;
-  color: var(--text-primary);
   text-align: center;
   letter-spacing: 0.05em;
   background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
