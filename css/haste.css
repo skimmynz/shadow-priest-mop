@@ -293,21 +293,6 @@ html {
   margin-bottom: 0;
 }
 
-/* Result Card - Left Column */
-.result-card {
-  text-align: center;
-  background: var(--secondary-bg);
-  border-radius: 16px;
-  border: 1px solid var(--border-color);
-  border-top: 3px solid var(--accent-color);
-  padding: 2rem 1.5rem;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: fit-content;
-  position: sticky;
-  top: 80px;
-}
-
 .result-label {
   color: var(--text-accent);
   font-size: 0.8rem;
@@ -315,6 +300,10 @@ html {
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 2px;
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .result-value {
@@ -327,6 +316,26 @@ html {
   margin-bottom: 0.875rem;
   line-height: 1;
   letter-spacing: -0.02em;
+}
+
+.result-card {
+  text-align: center;
+  background: var(--secondary-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  border-top: 3px solid var(--accent-color);
+  padding: 2rem 1.5rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: fit-content;
+  position: sticky;
+  top: 80px;
+}
+
+.result-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .conversion-text {
