@@ -511,150 +511,146 @@
 </div>
 
   <script src="js/nav.js"></script>
-  <script>
-    // T15 Throne of Thunder boss IDs
-    const T15_BOSS_IDS = [
-      { id: 51577, name: "Jin'rokh the Breaker" },
-      { id: 51575, name: "Horridon" },
-      { id: 51570, name: "Council of Elders" },
-      { id: 51565, name: "Tortos" },
-      { id: 51578, name: "Megaera" },
-      { id: 51573, name: "Ji-Kun" },
-      { id: 51572, name: "Durumu the Forgotten" },
-      { id: 51574, name: "Primordius" },
-      { id: 51576, name: "Dark Animus" },
-      { id: 51559, name: "Iron Qon" },
-      { id: 51560, name: "Twin Consorts" },
-      { id: 51579, name: "Lei Shen" },
-      { id: 51580, name: "Ra-den" }
-    ];
+<script>
+// T15 Throne of Thunder boss IDs
+const T15_BOSS_IDS = [
+  { id: 51577, name: "Jin'rokh the Breaker" },
+  { id: 51575, name: "Horridon" },
+  { id: 51570, name: "Council of Elders" },
+  { id: 51565, name: "Tortos" },
+  { id: 51578, name: "Megaera" },
+  { id: 51573, name: "Ji-Kun" },
+  { id: 51572, name: "Durumu the Forgotten" },
+  { id: 51574, name: "Primordius" },
+  { id: 51576, name: "Dark Animus" },
+  { id: 51559, name: "Iron Qon" },
+  { id: 51560, name: "Twin Consorts" },
+  { id: 51579, name: "Lei Shen" },
+  { id: 51580, name: "Ra-den" }
+];
 
-    // Load Recent Rankings from cached data or fresh fetch
-    async function loadRecentRankings() {
-      const container = document.getElementById('rankings-preview');
-      const CACHE_DURATION = 3600000; // 1 hour in milliseconds
+// Load Recent Rankings - Optimized version
+async function loadRecentRankings() {
+  const container = document.getElementById('rankings-preview');
+  const CACHE_DURATION = 3600000; // 1 hour
+  
+  try {
+    const allRankings = [];
+    const toFetch = [];
+    
+    // Quick cache check - parallel processing
+    for (const boss of T15_BOSS_IDS) {
+      const cacheKey = 'spriest_rankings_' + boss.id;
+      const cached = localStorage.getItem(cacheKey);
       
-      try {
-        const allRankings = [];
-        const fetchPromises = [];
-        
-        // Check cache and prepare fetch promises for all bosses at once
-        for (const boss of T15_BOSS_IDS) {
-          const cacheKey = 'spriest_rankings_' + boss.id;
-          const cached = localStorage.getItem(cacheKey);
-          let needsFetch = true;
+      if (cached) {
+        try {
+          const parsedCache = JSON.parse(cached);
+          const cachedAt = parsedCache.cachedAt || parsedCache.data?.cachedAt;
           
-          if (cached) {
-            try {
-              const parsedCache = JSON.parse(cached);
-              const cachedAt = parsedCache.cachedAt || (parsedCache.data && parsedCache.data.cachedAt);
-              const cacheAge = Date.now() - Date.parse(cachedAt);
-              
-              // Use cache if less than 1 hour old
-              if (cacheAge < CACHE_DURATION) {
-                const rankings = parsedCache.data.rankings || [];
-                // Get top 3 from each boss
-                rankings.slice(0, 3).forEach(ranking => {
-                  allRankings.push({
-                    ...ranking,
-                    bossName: boss.name,
-                    bossId: boss.id
-                  });
-                });
-                needsFetch = false;
+          if (cachedAt && (Date.now() - Date.parse(cachedAt)) < CACHE_DURATION) {
+            const rankings = parsedCache.data?.rankings || [];
+            rankings.slice(0, 3).forEach(ranking => {
+              allRankings.push({ ...ranking, bossName: boss.name, bossId: boss.id });
+            });
+            continue;
+          }
+        } catch (e) {
+          // Invalid cache, will refetch
+        }
+      }
+      
+      toFetch.push(boss);
+    }
+    
+    // If we have enough cached data, render immediately
+    if (allRankings.length >= 3) {
+      renderRankings(allRankings.sort((a, b) => b.total - a.total).slice(0, 3));
+    }
+    
+    // Fetch missing data in parallel (if needed)
+    if (toFetch.length > 0) {
+      const fetchedRankings = await Promise.all(
+        toFetch.map(boss =>
+          fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`)
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+              if (data?.rankings?.length > 0) {
+                // Cache immediately
+                localStorage.setItem('spriest_rankings_' + boss.id, JSON.stringify({
+                  data: data,
+                  cachedAt: new Date().toISOString()
+                }));
+                
+                return data.rankings.slice(0, 3).map(ranking => ({
+                  ...ranking,
+                  bossName: boss.name,
+                  bossId: boss.id
+                }));
               }
-            } catch (e) {
-              console.error('Cache parse error:', e);
-            }
-          }
-          
-          // If not in cache or stale, add to fetch queue
-          if (needsFetch) {
-            fetchPromises.push(
-              fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`)
-                .then(response => response.json())
-                .then(data => {
-                  if (data && data.rankings && data.rankings.length > 0) {
-                    // Get top 3 from this boss
-                    data.rankings.slice(0, 3).forEach(ranking => {
-                      allRankings.push({
-                        ...ranking,
-                        bossName: boss.name,
-                        bossId: boss.id
-                      });
-                    });
-                    
-                    // Cache for future use
-                    localStorage.setItem(cacheKey, JSON.stringify({
-                      data: data,
-                      cachedAt: new Date().toISOString()
-                    }));
-                  }
-                })
-                .catch(error => {
-                  console.error(`Failed to fetch boss ${boss.id}:`, error);
-                })
-            );
-          }
-        }
-        
-        // Wait for all fetches to complete in parallel
-        if (fetchPromises.length > 0) {
-          await Promise.all(fetchPromises);
-        }
-        
-        if (allRankings.length === 0) {
-          container.innerHTML = `
-            <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
-              No recent rankings available
-            </div>
-          `;
-          return;
-        }
-
-        // Sort by DPS and take top 3
-        const topRankings = allRankings
-          .sort((a, b) => b.total - a.total)
-          .slice(0, 3);
-
-        const rankingsHTML = topRankings.map((log, index) => {
-          const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-          const bossSlug = log.bossName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-          
-          return `
-            <a href="/rankings.html#${bossSlug}-${log.bossId}" class="ranking-item">
-              <div class="rank-number ${rankClass}">${index + 1}</div>
-              <div class="player-info">
-                <div class="player-name">${log.name || 'Unknown'}</div>
-                <div class="boss-name">${log.bossName} • Throne of Thunder</div>
-              </div>
-              <div class="dps-value">${log.total ? Math.round(log.total).toLocaleString() : '—'}</div>
-            </a>
-          `;
-        }).join('');
-        
-        container.innerHTML = `
-          <div class="rankings-list">
-            ${rankingsHTML}
-          </div>
-          <a href="/rankings.html" class="view-all-link">
-            View All Rankings →
-          </a>
-        `;
-      } catch (error) {
-        console.error('Error loading rankings:', error);
-        container.innerHTML = `
-          <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
-            Unable to load rankings. Please try again later.
-          </div>
-        `;
+              return [];
+            })
+            .catch(() => [])
+        )
+      );
+      
+      // Flatten and add to allRankings
+      fetchedRankings.forEach(rankings => allRankings.push(...rankings));
+      
+      // Re-render with updated data
+      if (allRankings.length > 0) {
+        renderRankings(allRankings.sort((a, b) => b.total - a.total).slice(0, 3));
       }
     }
+    
+    if (allRankings.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
+          No recent rankings available
+        </div>
+      `;
+    }
+  } catch (error) {
+    console.error('Error loading rankings:', error);
+    container.innerHTML = `
+      <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
+        Unable to load rankings. Please try again later.
+      </div>
+    `;
+  }
+}
 
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', () => {
-      loadRecentRankings();
-    });
-  </script>
+function renderRankings(topRankings) {
+  const container = document.getElementById('rankings-preview');
+  
+  const rankingsHTML = topRankings.map((log, index) => {
+    const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+    const bossSlug = log.bossName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    
+    return `
+      <a href="/rankings.html#${bossSlug}-${log.bossId}" class="ranking-item">
+        <div class="rank-number ${rankClass}">${index + 1}</div>
+        <div class="player-info">
+          <div class="player-name">${log.name || 'Unknown'}</div>
+          <div class="boss-name">${log.bossName} • Throne of Thunder</div>
+        </div>
+        <div class="dps-value">${log.total ? Math.round(log.total).toLocaleString() : '—'}</div>
+      </a>
+    `;
+  }).join('');
+  
+  container.innerHTML = `
+    <div class="rankings-list">
+      ${rankingsHTML}
+    </div>
+    <a href="/rankings.html" class="view-all-link">
+      View All Rankings →
+    </a>
+  `;
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', loadRecentRankings);
+</script>
 </body>
 </html>
