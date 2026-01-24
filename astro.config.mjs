@@ -1,20 +1,23 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
-import node from '@astrojs/node';        // Required for SSR/API routes
+import node from '@astrojs/node';
 import arcjet from '@arcjet/astro';
 
 export default defineConfig({
-  output: 'server',                       // or 'hybrid' if you want some static pages
+  output: 'server',  // Explicitly enable SSR/on-demand rendering – required for Arcjet
   adapter: node({
-    mode: 'standalone'                    // Works well on Netlify/Vercel/etc.
+    mode: 'standalone'  // Good choice for Netlify, Vercel, or any Node host
   }),
   env: {
-    validateSecrets: true                 // Errors early if ARCJET_KEY is missing
+    validateSecrets: true  // Excellent – errors on startup if ARCJET_KEY missing/wrong
   },
   integrations: [
     arcjet({
-      // Optional: Add global rules here later
-      // rules: [ /* e.g. shield({ mode: 'LIVE' }) */ ]
+      // Optional: Add global rules here for all requests (recommended to start)
+      // rules: [
+      //   shield({ mode: 'LIVE' }),  // Blocks common attacks/WAF-style
+      //   detectBot({ mode: 'LIVE' }),  // Blocks automated traffic
+      // ]
     })
   ],
 });
