@@ -308,11 +308,6 @@ html {
   top: 80px;
 }
 
-.result-card:hover {
-  border-color: var(--border-hover);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-}
-
 .result-label {
   color: var(--text-accent);
   font-size: 0.8rem;
