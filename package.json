@@ -1,20 +1,15 @@
 {
   "name": "shadow-priest-mop",
   "version": "1.0.0",
-  "description": "Shadow Priest Rankings site using Astro and Netlify",
+  "description": "Shadow Priest Rankings site using Netlify Functions",
   "type": "module",
+  "main": "index.js",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "start": "netlify dev"
   },
   "dependencies": {
-    "@arcjet/astro": "^1.0.0",
-    "@astrojs/netlify": "^6.6.4",
-    "astro": "^5.0.0",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "^2.6.7",
+    "@arcjet/node": "^1.0.0-beta"
   },
   "license": "MIT"
 }
