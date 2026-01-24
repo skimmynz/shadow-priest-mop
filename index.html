@@ -374,7 +374,7 @@
       }
     }
 
-    @media (max-width: 768px) {
+@media (max-width: 768px) {
       .hero-section {
         padding: 2rem 1rem 1rem;
       }
@@ -385,7 +385,7 @@
       }
 
       .section-card {
-        padding: 1.5rem;
+        padding: 0.5rem;
       }
 
       .stream-status {
@@ -394,8 +394,78 @@
         gap: 0.5rem;
       }
 
+      .ranking-item {
+        padding: 0.75rem;
+        gap: 0.75rem;
+      }
+
+      .rank-number {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+
+      .player-name {
+        font-size: 0.9rem;
+      }
+
+      .boss-name {
+        font-size: 0.8rem;
+      }
+
+      .dps-value {
+        font-size: 1rem;
+      }
+
+      .view-all-link {
+        font-size: 0.95rem;
+        padding: 0.65rem;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+      }
+
+      .section-header {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ranking-item {
+        flex-wrap: wrap;
+        padding: 0.65rem;
+      }
+
+      .rank-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+
       .player-info {
-        max-width: 150px;
+        flex: 1;
+        min-width: 120px;
+      }
+
+      .player-name {
+        font-size: 0.85rem;
+      }
+
+      .boss-name {
+        font-size: 0.75rem;
+      }
+
+      .dps-value {
+        font-size: 0.95rem;
+        width: 100%;
+        text-align: right;
+        margin-top: 0.25rem;
+      }
+
+      .section-title {
+        font-size: 1.1rem;
       }
     }
   </style>
