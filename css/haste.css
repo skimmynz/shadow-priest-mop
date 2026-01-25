@@ -298,7 +298,7 @@ html {
   background: var(--secondary-bg);
   border-radius: 16px;
   border: 1px solid var(--border-color);
-  padding: 2rem 1.5rem;
+  padding: 1rem 1rem;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
