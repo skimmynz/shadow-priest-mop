@@ -134,30 +134,28 @@ function calculateHaste() {
 
   document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
   
-  // Show conversion
+  // Show conversion with icons
   const conversionText = document.getElementById('conversionText');
+  const baseTextSpan = conversionText.querySelector('span');
+  const activeBuffsDisplay = document.getElementById('activeBuffsDisplay');
+  
   if (inputMode === 'rating') {
-    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust || hasSinisterPrimal) {
-      let parts = [];
-      if (rating > 0) parts.push(`${Math.round(rating).toLocaleString()} rating`);
-      
+    if (rating > 0 || isGoblin) {
       let basePercent = 5;
       if (isGoblin) basePercent += 1;
-      if (basePercent > 0) parts.push(`${basePercent}% base`);
-      
-      let buffs = [];
-      if (hasPowerInfusion) buffs.push('PI');
-      if (hasBerserking) buffs.push('Berserk');
-      if (hasBloodlust) buffs.push('Lust');
-      if (hasSinisterPrimal) buffs.push('SPD');
-      if (buffs.length > 0) parts.push(buffs.join(', '));
-      
-      conversionText.textContent = parts.join(' + ');
+      baseTextSpan.textContent = `${basePercent}% base`;
+      if (rating > 0) {
+        baseTextSpan.textContent += ` + ${Math.round(rating).toLocaleString()} rating`;
+      }
     } else {
-      conversionText.textContent = `Base: 5% Shadowform`;
+      baseTextSpan.textContent = '5% base';
     }
+    
+    // Update active buff icons
+    updateActiveBuffsDisplay(hasPowerInfusion, hasBerserking, hasBloodlust, hasSinisterPrimal);
   } else {
-    conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
+    baseTextSpan.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
+    activeBuffsDisplay.innerHTML = '';
   }
 
   // GCD Cap warning
@@ -171,6 +169,50 @@ function calculateHaste() {
   }
 
   updateSpellTable(effectiveHaste, isGoblin);
+}
+
+function updateActiveBuffsDisplay(hasPowerInfusion, hasBerserking, hasBloodlust, hasSinisterPrimal) {
+  const activeBuffsDisplay = document.getElementById('activeBuffsDisplay');
+  const buffs = [];
+  
+  if (hasPowerInfusion) {
+    buffs.push({
+      name: 'Power Infusion',
+      icon: 'https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg'
+    });
+  }
+  
+  if (hasBerserking) {
+    buffs.push({
+      name: 'Berserking',
+      icon: 'https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg'
+    });
+  }
+  
+  if (hasBloodlust) {
+    buffs.push({
+      name: 'Bloodlust / Heroism',
+      icon: 'https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg'
+    });
+  }
+  
+  if (hasSinisterPrimal) {
+    buffs.push({
+      name: 'Sinister Primal Diamond',
+      icon: 'https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg'
+    });
+  }
+  
+  if (buffs.length > 0) {
+    activeBuffsDisplay.innerHTML = buffs.map(buff => 
+      `<img src="${buff.icon}" 
+            alt="${buff.name}" 
+            title="${buff.name}"
+            class="buff-icon-small">`
+    ).join('');
+  } else {
+    activeBuffsDisplay.innerHTML = '';
+  }
 }
 
 function handleInput(e) {
