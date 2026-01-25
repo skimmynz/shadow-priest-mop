@@ -675,7 +675,10 @@ html {
     width: 28px;
     height: 28px;
   }
-  .conversion-text {
+} 
+
+.conversion-text {
+  color: var(--text-muted);
   color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: 500;
