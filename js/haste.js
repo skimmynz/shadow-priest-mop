@@ -147,9 +147,9 @@ function calculateHaste() {
       
       let buffs = [];
       if (hasPowerInfusion) buffs.push('PI');
-      if (hasBerserking) buffs.push('Berserk');
+      if (hasBerserking) buffs.push('Berserking');
       if (hasBloodlust) buffs.push('Lust');
-      if (hasSinisterPrimal) buffs.push('SPD');
+      if (hasSinisterPrimal) buffs.push('Meta Gem');
       if (buffs.length > 0) parts.push(buffs.join(', '));
       
       conversionText.textContent = parts.join(' + ');
