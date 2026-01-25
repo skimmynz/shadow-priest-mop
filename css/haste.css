@@ -196,7 +196,6 @@ html {
 }
 
 .buff-icon {
-  display: none;
   width: 28px;
   height: 28px;
   border-radius: 7px;
@@ -304,6 +303,8 @@ html {
   transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: fit-content;
+  position: sticky;
+  top: 80px;
 }
 
 .result-card:hover {
@@ -329,6 +330,14 @@ html {
   margin-bottom: 0.875rem;
   line-height: 1;
   letter-spacing: -0.02em;
+}
+
+.conversion-text {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.4;
+  min-height: 1.5rem;
 }
 
 .gcd-warning {
@@ -666,9 +675,7 @@ html {
     width: 28px;
     height: 28px;
   }
-} 
-
-.conversion-text {
+  .conversion-text {
   color: var(--text-muted);
   font-size: 0.9rem;
   font-weight: 500;
@@ -758,4 +765,5 @@ html {
   color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 500;
-  }
+}
+}
