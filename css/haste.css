@@ -304,6 +304,7 @@ html {
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: fit-content;
   position: relative;
+  align-self: start;
 }
 
 .result-card:hover {
@@ -419,6 +420,7 @@ html {
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   height: fit-content;
+  align-self: start;
 }
 
 .spells-table:hover {
