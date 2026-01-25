@@ -332,14 +332,6 @@ html {
   letter-spacing: -0.02em;
 }
 
-.conversion-text {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  font-weight: 500;
-  line-height: 1.4;
-  min-height: 1.5rem;
-}
-
 .gcd-warning {
   background: var(--warning-color);
   color: white;
