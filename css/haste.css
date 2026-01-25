@@ -289,7 +289,7 @@ html {
   display: grid;
   grid-template-columns: 380px 1fr;
   gap: 1.5rem;
-  align-items: start;
+  align-items: stretch;
   margin-bottom: 0;
 }
 
@@ -302,9 +302,8 @@ html {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
               box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: fit-content;
+  height: 100%;
   position: relative;
-  align-self: start;
 }
 
 .result-card:hover {
@@ -419,8 +418,7 @@ html {
   overflow: hidden;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  height: fit-content;
-  align-self: start;
+  height: 100%;
 }
 
 .spells-table:hover {
