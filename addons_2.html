@@ -293,7 +293,7 @@
     }
 
     .tooltip {
-      position: absolute;
+      position: fixed;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
       border: 2px solid #7c3aed;
       border-radius: 8px;
@@ -616,9 +616,11 @@
     const BASE_HEIGHT = 1080;
 
     function createHotspots() {
-      // Clear existing hotspots
-      const existingHotspots = wrapper.querySelectorAll('.hotspot, .tooltip');
+      // Clear existing hotspots and tooltips
+      const existingHotspots = wrapper.querySelectorAll('.hotspot');
+      const existingTooltips = document.querySelectorAll('.tooltip');
       existingHotspots.forEach(el => el.remove());
+      existingTooltips.forEach(el => el.remove());
 
       hotspots.forEach((spot, index) => {
         const hotspot = document.createElement('div');
@@ -627,19 +629,28 @@
         
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
+        tooltip.dataset.index = index;
         tooltip.innerHTML = `
           <span class="tooltip-text">${spot.name}</span>
           <span class="tooltip-hint">Click to open</span>
         `;
         
-        hotspot.appendChild(tooltip);
+        document.body.appendChild(tooltip);
         wrapper.appendChild(hotspot);
         
         updateHotspotPosition(hotspot, spot.coords);
         
-        hotspot.addEventListener('mouseenter', () => {
+        hotspot.addEventListener('mouseenter', (e) => {
+          const allTooltips = document.querySelectorAll('.tooltip');
+          allTooltips.forEach(t => t.classList.remove('show'));
           tooltip.classList.add('show');
-          positionTooltip(tooltip, hotspot);
+          positionTooltip(tooltip, hotspot, e);
+        });
+        
+        hotspot.addEventListener('mousemove', (e) => {
+          if (tooltip.classList.contains('show')) {
+            positionTooltip(tooltip, hotspot, e);
+          }
         });
         
         hotspot.addEventListener('mouseleave', () => {
@@ -668,23 +679,24 @@
       hotspot.style.height = `${height}px`;
     }
 
-    function positionTooltip(tooltip, hotspot) {
-      const wrapperRect = wrapper.getBoundingClientRect();
+    function positionTooltip(tooltip, hotspot, mouseEvent) {
+      const hotspotRect = hotspot.getBoundingClientRect();
       const tooltipRect = tooltip.getBoundingClientRect();
       
-      // Position below the hotspot by default
-      let left = (hotspot.offsetLeft + hotspot.offsetWidth / 2) - (tooltipRect.width / 2);
-      let top = hotspot.offsetTop + hotspot.offsetHeight + 10;
+      // Position below the mouse cursor
+      let left = mouseEvent.clientX - (tooltipRect.width / 2);
+      let top = hotspotRect.bottom + 10;
       
-      // Adjust if tooltip goes off screen
-      if (left < 0) left = 10;
-      if (left + tooltipRect.width > wrapperRect.width) {
-        left = wrapperRect.width - tooltipRect.width - 10;
+      // Adjust if tooltip goes off screen horizontally
+      const padding = 10;
+      if (left < padding) left = padding;
+      if (left + tooltipRect.width > window.innerWidth - padding) {
+        left = window.innerWidth - tooltipRect.width - padding;
       }
       
-      // If tooltip would go off bottom, position above instead
-      if (top + tooltipRect.height > wrapperRect.height) {
-        top = hotspot.offsetTop - tooltipRect.height - 10;
+      // If tooltip would go off bottom, position above the hotspot
+      if (top + tooltipRect.height > window.innerHeight - padding) {
+        top = hotspotRect.top - tooltipRect.height - 10;
       }
       
       tooltip.style.left = `${left}px`;
