@@ -73,7 +73,7 @@ function calculateHaste() {
 
   // GCD Cap warning
   const gcdCap = isGoblin ? 17614 : 18215;
-  const warningElement = document.getElementById('gcdWarning');
+  const warningElement = document.getElementById('gcdWarningInput');
   
   if (rating >= gcdCap) {
     warningElement.innerHTML = `<div class="gcd-warning">⚠️ GCD Cap Reached (${gcdCap.toLocaleString()} rating)</div>`;
@@ -199,7 +199,6 @@ hasteInput.addEventListener('keydown', function(e) {
     return;
   }
   
-  const hasSelection = this.selectionStart !== this.selectionEnd;
   const selectionLength = this.selectionEnd - this.selectionStart;
   const valueLength = this.value.length;
   
