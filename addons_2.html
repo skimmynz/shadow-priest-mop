@@ -674,3 +674,41 @@
       
       // Position below the hotspot by default
       let left = (hotspot.offsetLeft + hotspot.offsetWidth / 2) - (tooltipRect.width / 2);
+      let top = hotspot.offsetTop + hotspot.offsetHeight + 10;
+      
+      // Adjust if tooltip goes off screen
+      if (left < 0) left = 10;
+      if (left + tooltipRect.width > wrapperRect.width) {
+        left = wrapperRect.width - tooltipRect.width - 10;
+      }
+      
+      // If tooltip would go off bottom, position above instead
+      if (top + tooltipRect.height > wrapperRect.height) {
+        top = hotspot.offsetTop - tooltipRect.height - 10;
+      }
+      
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    }
+
+    function updateAllHotspots() {
+      const hotspotElements = wrapper.querySelectorAll('.hotspot');
+      hotspotElements.forEach((hotspot, index) => {
+        updateHotspotPosition(hotspot, hotspots[index].coords);
+      });
+    }
+
+    // Initialize on load
+    image.addEventListener('load', createHotspots);
+    if (image.complete) createHotspots();
+
+    // Update on resize with debounce
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateAllHotspots, 100);
+    });
+  </script>
+  <script src="js/nav.js"></script>
+</body>
+</html>
