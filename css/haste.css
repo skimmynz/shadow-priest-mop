@@ -300,7 +300,8 @@ html {
 
 .gcd-warning {
   background: var(--warning-color);
-  color: black;
+  color: white;
+  -webkit-text-stroke: 1px black;
   padding: 0.875rem 0.75rem;
   border-radius: 12px;
   margin-top: 0.5rem;
