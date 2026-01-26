@@ -306,7 +306,7 @@ html {
   border-radius: 12px;
   margin-top: 0.5rem;
   font-weight: 600;
-  font-size: 0.75rem;
+  font-size: 1rem;
   box-shadow: 0 4px 12px var(--warning-glow);
   text-align: center;
   line-height: 1.3;
