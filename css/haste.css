@@ -301,12 +301,11 @@ html {
 .gcd-warning {
   background: var(--warning-color);
   color: white;
-  -webkit-text-stroke: 1px black;
   padding: 0.875rem 0.75rem;
   border-radius: 12px;
   margin-top: 0.5rem;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.9rem;
   box-shadow: 0 4px 12px var(--warning-glow);
   text-align: center;
   line-height: 1.3;
