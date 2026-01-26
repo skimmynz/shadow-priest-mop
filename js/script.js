@@ -403,7 +403,7 @@ if (!lastUpdatedEl) {
 /* --------------------------------------------------------------------------------
    Cache & API
    -------------------------------------------------------------------------------- */
-const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const CACHE_KEY = (encounterId) => 'spriest_rankings_' + encounterId;
 const API_URL = (encounterId) => '/.netlify/functions/getLogs?encounterId=' + encounterId;
 
@@ -644,8 +644,7 @@ function renderParsingRules(encounterId) {
 /* --------------------------------------------------------------------------------
    Main fetch & display
    -------------------------------------------------------------------------------- */
-async function fetchAndDisplayRankings(name, encounterId, opts) {
-  const force = opts && opts.force ? opts.force : false;
+async function fetchAndDisplayRankings(name, encounterId) {
   const startTime = performance.now();
 
   if (currentController) currentController.abort();
@@ -696,7 +695,7 @@ async function fetchAndDisplayRankings(name, encounterId, opts) {
     const cached = readCache(encounterId);
     const cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
 
-    if (cached && isFresh(cachedAt) && !force) {
+if (cached && isFresh(cachedAt)) {
       updateLastUpdated(cachedAt);
       await renderContentAndAttachListeners(cached.data);
       return;
