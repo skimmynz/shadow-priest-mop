@@ -1,77 +1,25 @@
-// MoP Classic spell data
 const breakpoints = {
-  normal: {
-    "Shadow Word: Pain": {
-      id: 589,
-      points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69, 208.48],
-      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
-      url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
-    },
-    "Vampiric Touch": {
-      id: 34914,
-      points: [9.99, 30.01, 49.95, 70.02, 90.05, 110.01, 129.97, 150.10, 169.91, 190.00, 210.08],
-      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
-      url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
-    },
-    "Devouring Plague": {
-      id: 2944,
-      points: [8.28, 24.92, 41.74, 58.35, 74.98, 91.75, 108.55, 124.97, 141.84, 158.06, 175.10, 191.97, 208.17, 225.20, 241.88, 257.78],
-      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
-      url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
-    }
+  "Shadow Word: Pain": {
+    id: 589,
+    points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69, 208.48],
+    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
+    url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
   },
-  t14: {
-    "Shadow Word: Pain": {
-      id: 589,
-      points: [7.14, 21.43, 35.71, 50.04, 64.25, 78.62, 92.86],
-      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
-      url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
-    },
-    "Vampiric Touch": {
-      id: 34914,
-      points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41],
-      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
-      url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
-    },
-    "Devouring Plague": {
-      id: 2944,
-      points: [8.28, 24.92, 41.74],
-      icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
-      url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
-    }
+  "Vampiric Touch": {
+    id: 34914,
+    points: [9.99, 30.01, 49.95, 70.02, 90.05, 110.01, 129.97, 150.10, 169.91, 190.00, 210.08],
+    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
+    url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
+  },
+  "Devouring Plague": {
+    id: 2944,
+    points: [8.28, 24.92, 41.74, 58.35, 74.98, 91.75, 108.55, 124.97, 141.84, 158.06, 175.10, 191.97, 208.17, 225.20, 241.88, 257.78],
+    icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
+    url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
   }
 };
 
-let inputMode = 'rating';
 const hasteInput = document.getElementById('hasteInput');
-
-// Toggle between input modes
-document.querySelectorAll('.toggle-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
-
-    inputMode = this.dataset.mode;
-
-    if (inputMode === 'rating') {
-      hasteInput.placeholder = '0';
-      hasteInput.setAttribute('max', '38450');
-      hasteInput.setAttribute('maxlength', '5');
-      hasteInput.setAttribute('step', '1');
-      hasteInput.type = 'number';
-    } else {
-      hasteInput.placeholder = '0.00%';
-      hasteInput.removeAttribute('max');
-      hasteInput.removeAttribute('step');
-      hasteInput.removeAttribute('maxlength');
-      hasteInput.type = 'text';
-      hasteInput.inputMode = 'decimal';
-    }
-
-    hasteInput.value = '';
-    calculateHaste();
-  });
-});
 
 // Handle race selection and Berserking visibility
 function handleRaceSelection() {
@@ -103,34 +51,23 @@ function handleRaceSelection() {
 }
 
 function calculateHaste() {
-  let inputValue = parseFloat(hasteInput.value) || 0;
+  let rating = Math.min(parseFloat(hasteInput.value) || 0, 20000);
   const isGoblin = document.getElementById('goblinRacial').checked;
   const hasPowerInfusion = document.getElementById('powerInfusion').checked;
   const hasBerserking = document.getElementById('berserking').checked;
   const hasBloodlust = document.getElementById('bloodlust').checked;
   const hasSinisterPrimal = document.getElementById('sinisterPrimal').checked;
   
-  let effectiveHaste;
-  let rating;
+  // Base multiplier: 5% Shadowform + 1% Goblin (if applicable)
+  let baseMultiplier = 1.05 * (isGoblin ? 1.01 : 1);
   
-  if (inputMode === 'rating') {
-    rating = Math.min(inputValue, 20000);
-    // Base multiplier: 5% Shadowform + 1% Goblin (if applicable)
-    let baseMultiplier = 1.05 * (isGoblin ? 1.01 : 1);
-    
-    // Add multiplicative haste buffs
-    if (hasPowerInfusion) baseMultiplier *= 1.20;
-    if (hasBerserking) baseMultiplier *= 1.20;
-    if (hasBloodlust) baseMultiplier *= 1.30;
-    if (hasSinisterPrimal) baseMultiplier *= 1.30;
-    
-    effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
-  } else {
-    // Input is percentage, calculate rating
-    inputValue = Math.min(inputValue, 99.99);
-    effectiveHaste = inputValue;
-    rating = calculateRatingFromPercent(inputValue, isGoblin, hasPowerInfusion, hasBerserking, hasBloodlust, hasSinisterPrimal);
-  }
+  // Add multiplicative haste buffs
+  if (hasPowerInfusion) baseMultiplier *= 1.20;
+  if (hasBerserking) baseMultiplier *= 1.20;
+  if (hasBloodlust) baseMultiplier *= 1.30;
+  if (hasSinisterPrimal) baseMultiplier *= 1.30;
+  
+  let effectiveHaste = ((1 + rating / 42500) * baseMultiplier - 1) * 100;
 
   document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
 
@@ -148,31 +85,20 @@ function calculateHaste() {
 }
 
 function handleInput(e) {
-  if (inputMode === 'percentage') {
-    let value = e.target.value;
-    // Remove all non-digit characters
-    let digits = value.replace(/\D/g, '');
-    
-    // Limit to 4 digits
-    digits = digits.substring(0, 4);
-
-    // Insert decimal point after the second digit
-    if (digits.length > 2) {
-      e.target.value = digits.slice(0, 2) + '.' + digits.slice(2);
-    } else {
-      e.target.value = digits;
-    }
-  }
   calculateHaste();
 }
 
 function updateSpellTable(effectiveHaste, isGoblin) {
-  const hasT14 = document.getElementById('t14Bonus').checked;
-  const activeBreakpoints = hasT14 ? breakpoints.t14 : breakpoints.normal;
+  // Define base ticks for each spell
+  const baseTicks = {
+    "Shadow Word: Pain": 6,
+    "Vampiric Touch": 5,
+    "Devouring Plague": 6
+  };
   
   let spellsHTML = '';
   
-  for (const [spell, data] of Object.entries(activeBreakpoints)) {
+  for (const [spell, data] of Object.entries(breakpoints)) {
     let extraTicks = 0;
     let nextBP = 'Maxed';
     let nextBPValue = null;
@@ -216,6 +142,8 @@ function updateSpellTable(effectiveHaste, isGoblin) {
           </a>
         </div>
         
+        <div class="base-ticks">${baseTicks[spell]} ticks base</div>
+        
         <div class="ticks-badge ${ticksClass}">+${extraTicks} tick${extraTicks !== 1 ? 's' : ''}</div>
         
         <div class="breakpoint-info">
@@ -258,30 +186,23 @@ function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInf
 hasteInput.addEventListener('input', handleInput);
 hasteInput.addEventListener('paste', handleInput);
 hasteInput.addEventListener('keydown', function(e) {
-  // For rating mode, prevent non-numeric keys (except allowed keys)
-  if (inputMode === 'rating') {
-    const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
-    const isNumericKey = e.key >= '0' && e.key <= '9';
-    const isControlKey = e.ctrlKey || e.metaKey;
-    
-    // Allow control keys and allowed keys
-    if (allowedKeys.includes(e.key) || isControlKey) {
-      return;
-    }
-    
-    // Prevent non-numeric keys
-    if (!isNumericKey) {
-      e.preventDefault();
-      return;
-    }
-    
-    // Check if text is selected
-    const hasSelection = this.selectionStart !== this.selectionEnd;
-    
-    // Prevent input if already at 5 digits and no text is selected
-    if (this.value.length >= 5 && !hasSelection) {
-      e.preventDefault();
-    }
+  const allowedKeys = ['Backspace', 'Delete', 'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+  const isNumericKey = e.key >= '0' && e.key <= '9';
+  const isControlKey = e.ctrlKey || e.metaKey;
+  
+  if (allowedKeys.includes(e.key) || isControlKey) {
+    return;
+  }
+  
+  if (!isNumericKey) {
+    e.preventDefault();
+    return;
+  }
+  
+  const hasSelection = this.selectionStart !== this.selectionEnd;
+  
+  if (this.value.length >= 5 && !hasSelection) {
+    e.preventDefault();
   }
 });
 
@@ -292,7 +213,6 @@ document.getElementById('powerInfusion').addEventListener('change', calculateHas
 document.getElementById('berserking').addEventListener('change', calculateHaste);
 document.getElementById('bloodlust').addEventListener('change', calculateHaste);
 document.getElementById('sinisterPrimal').addEventListener('change', calculateHaste);
-document.getElementById('t14Bonus').addEventListener('change', calculateHaste);
 
 hasteInput.addEventListener('focus', function() {
   this.select();
