@@ -190,10 +190,12 @@ hasteInput.addEventListener('keydown', function(e) {
   const isNumericKey = e.key >= '0' && e.key <= '9';
   const isControlKey = e.ctrlKey || e.metaKey;
   
+  // Always allow control keys and special keys
   if (allowedKeys.includes(e.key) || isControlKey) {
     return;
   }
   
+  // Block non-numeric keys
   if (!isNumericKey) {
     e.preventDefault();
     return;
@@ -202,11 +204,16 @@ hasteInput.addEventListener('keydown', function(e) {
   const selectionLength = this.selectionEnd - this.selectionStart;
   const valueLength = this.value.length;
   
-  // Calculate what the length would be after this key press
-  const futureLength = valueLength - selectionLength + 1;
+  // If there's a selection, allow the key (it will replace the selection)
+  if (selectionLength > 0) {
+    const futureLength = valueLength - selectionLength + 1;
+    if (futureLength <= 5) {
+      return; // Allow the keystroke
+    }
+  }
   
-  // Only prevent if we'd exceed 5 digits
-  if (futureLength > 5) {
+  // No selection - check if adding would exceed limit
+  if (valueLength >= 5) {
     e.preventDefault();
   }
 });
