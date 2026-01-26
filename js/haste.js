@@ -200,8 +200,14 @@ hasteInput.addEventListener('keydown', function(e) {
   }
   
   const hasSelection = this.selectionStart !== this.selectionEnd;
+  const selectionLength = this.selectionEnd - this.selectionStart;
+  const valueLength = this.value.length;
   
-  if (this.value.length >= 5 && !hasSelection) {
+  // Calculate what the length would be after this key press
+  const futureLength = valueLength - selectionLength + 1;
+  
+  // Only prevent if we'd exceed 5 digits
+  if (futureLength > 5) {
     e.preventDefault();
   }
 });
