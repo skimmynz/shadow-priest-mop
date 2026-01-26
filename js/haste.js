@@ -133,32 +133,6 @@ function calculateHaste() {
   }
 
   document.getElementById('hasteResult').textContent = `${effectiveHaste.toFixed(2)}%`;
-  
-  // Show conversion
-  const conversionText = document.getElementById('conversionText');
-  if (inputMode === 'rating') {
-    if (rating > 0 || isGoblin || hasPowerInfusion || hasBerserking || hasBloodlust || hasSinisterPrimal) {
-      let parts = [];
-      if (rating > 0) parts.push(`${Math.round(rating).toLocaleString()} rating`);
-      
-      let basePercent = 5;
-      if (isGoblin) basePercent += 1;
-      if (basePercent > 0) parts.push(`${basePercent}% base`);
-      
-      let buffs = [];
-      if (hasPowerInfusion) buffs.push('PI');
-      if (hasBerserking) buffs.push('Berserking');
-      if (hasBloodlust) buffs.push('Lust');
-      if (hasSinisterPrimal) buffs.push('Meta Gem');
-      if (buffs.length > 0) parts.push(buffs.join(', '));
-      
-      conversionText.textContent = parts.join(' + ');
-    } else {
-      conversionText.textContent = `Base: 5% Shadowform`;
-    }
-  } else {
-    conversionText.textContent = rating > 0 ? `≈ ${Math.round(rating).toLocaleString()} haste rating` : '';
-  }
 
   // GCD Cap warning
   const gcdCap = isGoblin ? 17614 : 18215;
