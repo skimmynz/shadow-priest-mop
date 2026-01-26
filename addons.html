@@ -15,273 +15,13 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/addons.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="canonical" href="https://skimmynz.com/addons">
   
-  <style>
-    /* Additional styles specific to addons page */
-    .addons-container {
-      padding: 2rem 2.5rem;
-    }
-
-    .page-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .page-header h1 {
-      margin: 0 0 0.75rem 0;
-      font-size: clamp(2rem, 3vw, 2.75rem);
-      font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 0.1em;
-      line-height: 1.1;
-      text-transform: uppercase;
-    }
-
-    .page-header .last-updated {
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      font-weight: 400;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .ui-settings {
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: center;
-      gap: 3rem;
-      flex-wrap: wrap;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .ui-settings:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-    }
-
-    .ui-setting {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .ui-setting-label {
-      color: var(--text-muted);
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .ui-setting-value {
-      color: var(--accent-color);
-      font-size: 1.25rem;
-      font-weight: 700;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin: 3rem 0 1.5rem 0;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--border-color);
-    }
-
-    .section-header h2 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin: 0;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .section-count {
-      background: var(--accent-color);
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.875rem;
-      font-weight: 700;
-    }
-
-    .items-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .item-card {
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.25rem;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .item-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .item-card:hover {
-      border-color: var(--accent-color);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.3);
-    }
-
-    .item-card:hover::before {
-      opacity: 0.8;
-    }
-
-    .item-name {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.75rem;
-      line-height: 1.3;
-      min-height: 2.6rem;
-    }
-
-    .item-preview {
-      width: 100%;
-      height: 160px;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      object-fit: cover;
-      border: 1px solid var(--border-color);
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    }
-
-    .item-preview:hover {
-      border-color: var(--accent-color);
-      transform: scale(1.02);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    }
-
-    .item-preview-placeholder {
-      width: 100%;
-      height: 160px;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      border: 1px solid var(--border-color);
-      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(167, 139, 250, 0.1) 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-    }
-
-    .item-preview-placeholder svg {
-      width: 48px;
-      height: 48px;
-      opacity: 0.3;
-    }
-
-    .item-links {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: auto;
-    }
-
-    .item-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.625rem 1rem;
-      background: var(--accent-color);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-      flex: 1;
-      justify-content: center;
-      min-width: fit-content;
-      box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
-    }
-
-    .item-link:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.5);
-    }
-
-    .item-link.secondary {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    }
-
-    .item-link.secondary:hover {
-      background: var(--hover-bg);
-      border-color: var(--accent-color);
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
-    }
-
-    .item-link svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    @media (max-width: 768px) {
-      .addons-container {
-        padding: 1.5rem 1rem;
-      }
-
-      .items-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .ui-settings {
-        gap: 1.5rem;
-      }
-
-      .section-header h2 {
-        font-size: 1.25rem;
-      }
-
-      .page-header h1 {
-        font-size: 1.75rem;
-      }
-    }
-  </style>
 </head>
 <body>
   <nav class="top-nav">
@@ -290,7 +30,7 @@
         ☰
       </button>
       
-<ul class="nav-links" id="navLinks">
+      <ul class="nav-links" id="navLinks">
         <li>
           <a href="/">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -362,19 +102,12 @@
       <div class="page-header">
         <h1>ADDONS & WEAKAURAS</h1>
         <div class="last-updated" id="last-updated">
-          Last updated: 5th January 2026
+          Last updated: 26th January 2026<br>
+          Resolution: 1920 x 1080 • UI Scale: 65%
         </div>
-        
-        <div class="ui-settings">
-          <div class="ui-setting">
-            <div class="ui-setting-label">Resolution</div>
-            <div class="ui-setting-value">1920 × 1080</div>
-          </div>
-          <div class="ui-setting">
-            <div class="ui-setting-label">UI Scale</div>
-            <div class="ui-setting-value">65%</div>
-          </div>
-        </div>
+
+      <div class="ui-map-wrapper" id="uiMapWrapper">
+        <img src="img/ui.jpg" alt="Shadow Priest UI" id="uiImage">
       </div>
 
       <!-- Addons Section -->
@@ -389,13 +122,14 @@
         <h2>WeakAuras</h2>
       </div>
       <div class="items-grid" id="weakauras-grid"></div>
+    </div>
   </div>
 
   <script>
     // Data
     const addons = [
       { name: "Plater Nameplates", url: "https://www.curseforge.com/wow/addons/plater-nameplates", profileUrl: "https://wago.io/pfxpBonVW", preview: "https://media.wago.io/screenshots/pfxpBonVW/674874e2db2a2863b9d60ecd.png" },
-      { name: "Shadowed Unit Frames", url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames/files/7062045", profileUrl: "https://wago.io/3K-eb06qt", preview: "https://media.wago.io/screenshots/3K-eb06qt/688e04f139d99bcfd0194af7.gif"},
+      { name: "Shadowed Unit Frames", url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames", profileUrl: "https://wago.io/3K-eb06qt", preview: "https://media.wago.io/screenshots/3K-eb06qt/688e04f139d99bcfd0194af7.gif"},
     ];
 
     const weakauras = [
@@ -406,6 +140,50 @@
       { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", preview: "https://media.wago.io/screenshots/8Xgm0DEZW/69672ac8309543a4f7f46443.gif" },
       { name: "Halo Range Checker", url: "https://wago.io/Zcbxhfgrl", preview: "https://media.wago.io/screenshots/Zcbxhfgrl/683b19f81cf76ccd508485fe.png" },
       { name: "ModernCharacterFrame | Plaffs edition", url: "https://wago.io/mm6cuMmYc", preview: "https://media.wago.io/screenshots/mm6cuMmYc/665f6b5f9fda7c214b8d976d.png" }
+    ];
+
+    // Interactive UI Map Hotspots
+    const hotspots = [
+      {
+        name: "Fojji - Shadow Priest UI [MoP] | skimmy edit",
+        url: "https://wago.io/ri2lfOS8b",
+        coords: { x1: 857, y1: 598, x2: 1064, y2: 773 }
+      },
+      {
+        name: "DragonKarsh CastBars | skimmy edit",
+        url: "https://wago.io/dnDdk1mhh",
+        coords: { x1: 841, y1: 795, x2: 1078, y2: 827 }
+      },
+      {
+        name: "TrufiGCD",
+        url: "https://www.curseforge.com/wow/addons/trufigcd",
+        coords: { x1: 870, y1: 856, x2: 1013, y2: 891 }
+      },
+      {
+        name: "Shadowed Unit Frames",
+        url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames",
+        coords: { x1: 1210, y1: 479, x2: 1593, y2: 522 }
+      },
+      {
+        name: "Plater Nameplates",
+        url: "https://www.curseforge.com/wow/addons/plater-nameplates",
+        coords: { x1: 876, y1: 361, x2: 1059, y2: 450 }
+      },
+      {
+        name: "[Merfin] Equipped Items (MoP)",
+        url: "https://wago.io/equippeditemsmop/",
+        coords: { x1: 736, y1: 638, x2: 819, y2: 692 }
+      },
+      {
+        name: "Fojji - Easy Talents & Glyphs",
+        url: "https://wago.io/FojjiEasyTalents-MoP",
+        coords: { x1: 5, y1: 0, x2: 196, y2: 207 }
+      },
+      {
+        name: "Fojji - Time to Kill",
+        url: "https://wago.io/6HpAByX3d",
+        coords: { x1: 1118, y1: 676, x2: 1172, y2: 700 }
+      }
     ];
 
     // Render items
@@ -451,7 +229,120 @@
     renderItems(addons, 'addons-grid');
     renderItems(weakauras, 'weakauras-grid');
 
+    // Interactive UI Map functionality
+    const wrapper = document.getElementById('uiMapWrapper');
+    const image = document.getElementById('uiImage');
+
+    // Base dimensions of the original image
+    const BASE_WIDTH = 1920;
+    const BASE_HEIGHT = 1080;
+
+    function createHotspots() {
+      // Clear existing hotspots and tooltips
+      const existingHotspots = wrapper.querySelectorAll('.hotspot');
+      const existingTooltips = document.querySelectorAll('.tooltip');
+      existingHotspots.forEach(el => el.remove());
+      existingTooltips.forEach(el => el.remove());
+
+      hotspots.forEach((spot, index) => {
+        const hotspot = document.createElement('div');
+        hotspot.className = 'hotspot';
+        hotspot.dataset.index = index;
+        
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.dataset.index = index;
+        tooltip.innerHTML = `
+          <span class="tooltip-text">${spot.name}</span>
+          <span class="tooltip-hint">Click to open</span>
+        `;
+        
+        document.body.appendChild(tooltip);
+        wrapper.appendChild(hotspot);
+        
+        updateHotspotPosition(hotspot, spot.coords);
+        
+        hotspot.addEventListener('mouseenter', (e) => {
+          const allTooltips = document.querySelectorAll('.tooltip');
+          allTooltips.forEach(t => t.classList.remove('show'));
+          tooltip.classList.add('show');
+          positionTooltip(tooltip, hotspot, e);
+        });
+        
+        hotspot.addEventListener('mousemove', (e) => {
+          if (tooltip.classList.contains('show')) {
+            positionTooltip(tooltip, hotspot, e);
+          }
+        });
+        
+        hotspot.addEventListener('mouseleave', () => {
+          tooltip.classList.remove('show');
+        });
+        
+        hotspot.addEventListener('click', () => {
+          window.open(spot.url, '_blank', 'noopener');
+        });
+      });
+    }
+
+    function updateHotspotPosition(hotspot, coords) {
+      const rect = image.getBoundingClientRect();
+      const scaleX = rect.width / BASE_WIDTH;
+      const scaleY = rect.height / BASE_HEIGHT;
+      
+      const left = coords.x1 * scaleX;
+      const top = coords.y1 * scaleY;
+      const width = (coords.x2 - coords.x1) * scaleX;
+      const height = (coords.y2 - coords.y1) * scaleY;
+      
+      hotspot.style.left = `${left}px`;
+      hotspot.style.top = `${top}px`;
+      hotspot.style.width = `${width}px`;
+      hotspot.style.height = `${height}px`;
+    }
+
+    function positionTooltip(tooltip, hotspot, mouseEvent) {
+      const hotspotRect = hotspot.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      
+      // Position below the mouse cursor
+      let left = mouseEvent.clientX - (tooltipRect.width / 2);
+      let top = hotspotRect.bottom + 10;
+      
+      // Adjust if tooltip goes off screen horizontally
+      const padding = 10;
+      if (left < padding) left = padding;
+      if (left + tooltipRect.width > window.innerWidth - padding) {
+        left = window.innerWidth - tooltipRect.width - padding;
+      }
+      
+      // If tooltip would go off bottom, position above the hotspot
+      if (top + tooltipRect.height > window.innerHeight - padding) {
+        top = hotspotRect.top - tooltipRect.height - 10;
+      }
+      
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    }
+
+    function updateAllHotspots() {
+      const hotspotElements = wrapper.querySelectorAll('.hotspot');
+      hotspotElements.forEach((hotspot, index) => {
+        updateHotspotPosition(hotspot, hotspots[index].coords);
+      });
+    }
+
+    // Initialize on load
+    image.addEventListener('load', createHotspots);
+    if (image.complete) createHotspots();
+
+    // Update on resize with debounce
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateAllHotspots, 100);
+    });
   </script>
-<script src="js/nav.js"></script>
+  <script src="js/nav.js"></script>
 </body>
 </html>
