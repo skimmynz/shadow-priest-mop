@@ -89,7 +89,6 @@ function handleInput(e) {
 }
 
 function updateSpellTable(effectiveHaste, isGoblin) {
-  // Define base ticks for each spell
   const baseTicks = {
     "Shadow Word: Pain": 6,
     "Vampiric Touch": 5,
@@ -123,7 +122,13 @@ function updateSpellTable(effectiveHaste, isGoblin) {
     }
 
     const isMaxed = nextBP === 'Maxed';
-    const ticksClass = extraTicks > 0 ? 'has-ticks' : 'no-ticks';
+    
+    let ticksClass = 'no-ticks';
+    if (extraTicks > 3) {
+      ticksClass = 'high-ticks';
+    } else if (extraTicks > 0) {
+      ticksClass = 'has-ticks';
+    }
 
     spellsHTML += `
       <div class="spell-row">
@@ -163,12 +168,10 @@ function updateSpellTable(effectiveHaste, isGoblin) {
   
   document.getElementById('spellsContainer').innerHTML = spellsHTML;
 
-  // Refresh Wowhead tooltips
   if (typeof $WowheadPower !== 'undefined') {
     $WowheadPower.refreshLinks();
   }
 }
-
 // Calculate rating from percentage
 function calculateRatingFromPercent(targetPercent, isGoblin = false, hasPowerInfusion = false, hasBerserking = false, hasBloodlust = false, hasSinisterPrimal = false) {
   const targetHasteDecimal = targetPercent / 100;
