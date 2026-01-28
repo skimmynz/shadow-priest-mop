@@ -16,7 +16,7 @@ class TimeSlicing {
   }
 }
 
-// Optimized DOM batch updates (no reliance on fragment.children)
+// Optimized DOM batch updates
 class DOMBatcher {
   constructor() {
     this.pendingUpdates = new Map();
@@ -30,7 +30,6 @@ class DOMBatcher {
     }
   }
   flush() {
-    // Just run the queued update functions; they write to the DOM themselves.
     this.pendingUpdates.forEach(updateFn => {
       try { updateFn(); } catch (e) { console.error('DOMBatcher update failed:', e); }
     });
@@ -78,13 +77,11 @@ function createDebounced(fn, delay = 100, immediate = false) {
 /* --------------------------------------------------------------------------------
    Boss icon helpers (Throne of Thunder normalization)
    -------------------------------------------------------------------------------- */
-// ToT assets use 15xx icon IDs, not 515xx encounter IDs.
-// Normalize: 51559–51580 -> 1559–1580; otherwise return unchanged.
 function getBossIconId(encounterId) {
   if (encounterId >= 51559 && encounterId <= 51580) {
-    return encounterId - 50000; // e.g., 51577 -> 1577
+    return encounterId - 50000;
   }
-  return encounterId; // T14 etc. already match asset icon IDs
+  return encounterId;
 }
 function bossIconUrl(encounterId) {
   const iconId = getBossIconId(encounterId);
@@ -101,7 +98,6 @@ async function analyzeTalentsOptimized(rankings) {
   const tierCounts = {};
   const totalPerTier = {};
 
-  // Initialize structures
   for (const tier of TIER_ORDER) {
     tierCounts[tier] = {};
     totalPerTier[tier] = 0;
@@ -129,8 +125,8 @@ async function analyzeTalentsOptimized(rankings) {
         return entry;
       });
     },
-    25, // Smaller chunk size for better yielding
-    2   // Yield more frequently
+    25,
+    2
   );
 
   return { tierCounts, totalPerTier };
@@ -149,21 +145,12 @@ class OptimizedRenderer {
     const rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     const visibleRankings = rankings.slice(0, 100);
 
-    // Pre-calculate colors
-    const rankColors = new Map();
-    for (let i = 0; i < visibleRankings.length; i++) {
-      const rank = i + 1;
-      if (rank === 1) rankColors.set(i, '#e5cc80');
-      else if (rank >= 2 && rank <= 25) rankColors.set(i, '#e268a8');
-      else rankColors.set(i, '#ff8000');
-    }
-
     const renderedEntries = await TimeSlicing.processInChunks(
       visibleRankings,
       async (chunk) => {
         return chunk.map((r) => {
           const globalIndex = visibleRankings.indexOf(r);
-          return this.renderSingleEntry(r, globalIndex, rankColors.get(globalIndex), topByTier);
+          return this.renderSingleEntry(r, globalIndex, topByTier);
         });
       },
       10,
@@ -173,41 +160,39 @@ class OptimizedRenderer {
     return renderedEntries.join('');
   }
 
-renderSingleEntry(r, index, color, topByTier) {
-  const cacheKey = (r.reportID + '-' + r.fightID + '-' + index);
-  if (this.renderCache.has(cacheKey)) {
-    return this.renderCache.get(cacheKey);
+  renderSingleEntry(r, index, topByTier) {
+    const cacheKey = (r.reportID + '-' + r.fightID + '-' + index);
+    if (this.renderCache.has(cacheKey)) {
+      return this.renderCache.get(cacheKey);
+    }
+
+    const reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
+    const dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
+    const playerName = (r && r.name) ? r.name : 'Unknown';
+    const perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
+    const entryId = 'entry-' + index + '-' + r.reportID + '-' + r.fightID;
+    const duration = formatDuration(r.duration);
+    const itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
+    const rank = index + 1;
+
+    const html =
+      '<div class="rank-entry">' +
+      '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
+      '<div class="rank-number">' + rank + '</div>' +
+      '<div class="name-wrapper">' + playerName + '</div>' +
+      '<div class="dps-display">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS</div>' +
+      '<span class="fight-summary">' + duration + ' • ' + itemLevel + ' iLvl</span>' +
+      perPlayerTalents +
+      '<span class="expand-icon">▼</span>' +
+      '</div>' +
+      '<div class="dropdown-content" id="' + entryId + '">' +
+      this.renderDropdownContent(r, reportUrl) +
+      '</div>' +
+      '</div>';
+
+    this.renderCache.set(cacheKey, html);
+    return html;
   }
-
-  const reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
-  const dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
-  const playerName = (r && r.name) ? r.name : 'Unknown';
-  const perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
-  const entryId = 'entry-' + index + '-' + r.reportID + '-' + r.fightID;
-  const duration = formatDuration(r.duration);
-  const itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
-  const rank = index + 1; // Add this line
-
-  const html =
-    '<div class="rank-entry">' +
-    '<div class="ranking-header" data-rank="' + rank + '" onclick="toggleDropdown(\'' + entryId + '\')">' + // Add data-rank attribute
-    '<div class="name-wrapper" style="color:' + color + '">' +
-    playerName + ' <span class="dps-display">— ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS</span>' +
-    '</div>' +
-    '<div class="header-right">' +
-    '<span class="fight-summary">' + duration + ' - ' + itemLevel + ' iLvl</span>' +
-    perPlayerTalents +
-    '<span class="expand-icon">▼</span>' +
-    '</div>' +
-    '</div>' +
-    '<div class="dropdown-content" id="' + entryId + '">' +
-    this.renderDropdownContent(r, reportUrl) +
-    '</div>' +
-    '</div>';
-
-  this.renderCache.set(cacheKey, html);
-  return html;
-}
 
   renderDropdownContent(r, reportUrl) {
     return (
@@ -404,7 +389,7 @@ if (!lastUpdatedEl) {
 /* --------------------------------------------------------------------------------
    Cache & API
    -------------------------------------------------------------------------------- */
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+const CACHE_TTL_MS = 60 * 60 * 1000;
 const CACHE_KEY = (encounterId) => 'spriest_rankings_' + encounterId;
 const API_URL = (encounterId) => '/.netlify/functions/getLogs?encounterId=' + encounterId;
 
@@ -696,7 +681,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
     const cached = readCache(encounterId);
     const cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
 
-if (cached && isFresh(cachedAt)) {
+    if (cached && isFresh(cachedAt)) {
       updateLastUpdated(cachedAt);
       await renderContentAndAttachListeners(cached.data);
       return;
@@ -744,11 +729,11 @@ if (cached && isFresh(cachedAt)) {
    -------------------------------------------------------------------------------- */
 function slugify(str) {
   return String(str).normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')       // strip diacritics
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')           // non-alphanum -> dash
-    .replace(/^-+|-+$/g, '')               // trim leading/trailing dashes
-    .replace(/--+/g, '-');                 // collapse multiple dashes
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/--+/g, '-');
 }
 function hashFor(name, encounterId) { return '#' + slugify(name) + '-' + encounterId; }
 function updateHash(name, encounterId) { try { history.replaceState(null, '', hashFor(name, encounterId)); } catch {} }
@@ -766,7 +751,6 @@ function createTierMenu() {
 
   const fragment = document.createDocumentFragment();
 
-  // Tier toggle buttons (instead of dropdown)
   const tierToggleContainer = document.createElement('div');
   tierToggleContainer.className = 'tier-toggle-container';
 
@@ -782,33 +766,32 @@ function createTierMenu() {
       button.classList.add('active');
     }
 
-  button.addEventListener('click', (e) => {
-    const newTierKey = e.currentTarget.dataset.tierKey;
-    if (currentTierKey === newTierKey) return;
-  
-    currentTierKey = newTierKey;
-    createTierMenu();
-  
-    const raids = TIERS[newTierKey].raids;
-    const firstRaidKey = Object.keys(raids)[0];
-  
-    currentRaidKey = firstRaidKey;
-    selectActiveRaid(firstRaidKey);
-    buildBossButtonsForRaid(firstRaidKey);
-  
-    const entries = Object.entries(raids[firstRaidKey].encounters);
-    if (entries.length > 0) {
-      const firstBoss = entries[0];
-      fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
-    }
-  });
+    button.addEventListener('click', (e) => {
+      const newTierKey = e.currentTarget.dataset.tierKey;
+      if (currentTierKey === newTierKey) return;
+    
+      currentTierKey = newTierKey;
+      createTierMenu();
+    
+      const raids = TIERS[newTierKey].raids;
+      const firstRaidKey = Object.keys(raids)[0];
+    
+      currentRaidKey = firstRaidKey;
+      selectActiveRaid(firstRaidKey);
+      buildBossButtonsForRaid(firstRaidKey);
+    
+      const entries = Object.entries(raids[firstRaidKey].encounters);
+      if (entries.length > 0) {
+        const firstBoss = entries[0];
+        fetchAndDisplayRankings(firstBoss[0], firstBoss[1]);
+      }
+    });
 
     tierToggleContainer.appendChild(button);
   }
 
   fragment.appendChild(tierToggleContainer);
 
-  // Raid buttons
   const raidButtonsContainer = document.createElement('div');
   raidButtonsContainer.id = 'raid-buttons-container';
   raidButtonsContainer.className = 'raid-buttons-container';
@@ -886,7 +869,7 @@ function buildBossButtonsForRaid(raidKey) {
     button.dataset.bossName = name;
 
     const img = document.createElement('img');
-    img.src = bossIconUrl(id); // normalized for ToT
+    img.src = bossIconUrl(id);
     img.alt = name;
     img.className = 'boss-icon';
     img.loading = 'lazy';
