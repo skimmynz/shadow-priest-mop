@@ -509,37 +509,13 @@ html {
 .ticks-badge.has-ticks {
   background: var(--success-color);
   color: white;
-  box-shadow: 0 0 20px var(--success-glow);
-  animation: pulse-glow 3s ease-in-out infinite;
   border-color: rgba(16, 185, 129, 0.5);
 }
 
 .ticks-badge.high-ticks {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   color: white;
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-  animation: pulse-glow-gold 3s ease-in-out infinite;
   border-color: rgba(251, 191, 36, 0.5);
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px var(--success-glow);
-  }
-  50% {
-    box-shadow: 0 0 30px var(--success-glow);
-    transform: scale(1.02);
-  }
-}
-
-@keyframes pulse-glow-gold {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);
-    transform: scale(1.02);
-  }
 }
 
 .breakpoint-info {
