@@ -820,7 +820,7 @@ function createTierMenu() {
     btn.dataset.raidKey = key;
 
     const img = document.createElement('img');
-    img.src = 'public/images/' + key + '.webp';
+    img.src = 'img/' + key + '.webp';
     img.alt = raid.name;
     img.className = 'raid-icon';
     img.loading = 'lazy';
