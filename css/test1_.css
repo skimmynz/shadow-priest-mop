@@ -99,10 +99,11 @@
   font-weight: 700;
 }
 
+/* FIXED: Better grid layout for items */
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.25rem;
   margin-bottom: 2rem;
 }
 
@@ -119,12 +120,14 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* FIXED: Better responsive handling for instruction cards */
 .item-card.has-instructions {
-  grid-column: span 2;
+  grid-column: 1 / -1; /* Span all columns */
   display: grid;
-  grid-template-columns: 320px 1fr;
+  grid-template-columns: 340px 1fr;
   grid-template-rows: auto auto 1fr;
-  gap: 1.25rem;
+  gap: 1.5rem;
+  align-items: start;
 }
 
 .item-card.has-instructions .item-preview,
@@ -138,16 +141,19 @@
 .item-card.has-instructions .item-name {
   grid-column: 2;
   grid-row: 1;
+  align-self: start;
 }
 
 .item-card.has-instructions .item-links {
   grid-column: 2;
   grid-row: 2;
+  align-self: start;
 }
 
 .item-card.has-instructions .item-instructions {
   grid-column: 2;
   grid-row: 3;
+  align-self: start;
 }
 
 .item-card::before {
@@ -178,12 +184,12 @@
   color: var(--text-primary);
   margin-bottom: 0.75rem;
   line-height: 1.3;
-  min-height: 2.6rem;
+  min-height: fit-content;
 }
 
 .item-preview {
   width: 100%;
-  height: 160px;
+  height: 180px;
   border-radius: 8px;
   margin-bottom: 1rem;
   object-fit: cover;
@@ -200,7 +206,7 @@
 
 .item-preview-placeholder {
   width: 100%;
-  height: 160px;
+  height: 180px;
   border-radius: 8px;
   margin-bottom: 1rem;
   border: 1px solid var(--border-color);
@@ -272,8 +278,8 @@
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 10px;
-  padding: 1.25rem;
-  margin-top: auto;
+  padding: 1.5rem;
+  margin: 0;
 }
 
 .instructions-header h4 {
@@ -289,12 +295,12 @@
 
 .instructions-content {
   display: grid;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .instruction-section h5 {
-  margin: 0 0 0.5rem 0;
-  font-size: 0.875rem;
+  margin: 0 0 0.625rem 0;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
@@ -302,14 +308,15 @@
 .instruction-section ul,
 .instruction-section ol {
   margin: 0;
-  padding-left: 1.25rem;
+  padding-left: 1.5rem;
   color: var(--text-muted);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
 }
 
 .instruction-section li {
-  margin-bottom: 0.375rem;
-  line-height: 1.5;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
 }
 
 .instruction-section li:last-child {
@@ -329,10 +336,10 @@
 
 .instruction-section code {
   background: var(--secondary-bg);
-  padding: 0.125rem 0.375rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--accent-color);
   border: 1px solid var(--border-color);
 }
@@ -349,7 +356,7 @@
   background: rgba(124, 58, 237, 0.1);
   border: 1px solid rgba(124, 58, 237, 0.3);
   border-radius: 8px;
-  padding: 0.875rem;
+  padding: 1rem;
   margin-top: 0.5rem;
 }
 
@@ -363,9 +370,9 @@
 
 .instruction-note p {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .instruction-note strong {
@@ -460,7 +467,14 @@
   font-weight: 500;
 }
 
-@media (max-width: 768px) {
+/* FIXED: Better responsive breakpoints */
+@media (max-width: 1200px) {
+  .item-card.has-instructions {
+    grid-template-columns: 300px 1fr;
+  }
+}
+
+@media (max-width: 900px) {
   .addons-container {
     padding: 1.5rem 1rem;
   }
@@ -472,28 +486,34 @@
   .item-card.has-instructions {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
+    gap: 1rem;
   }
 
   .item-card.has-instructions .item-preview,
   .item-card.has-instructions .item-preview-placeholder {
     grid-row: 1;
     grid-column: 1;
-    height: 200px;
-    min-height: 200px;
+    height: 220px;
+    min-height: 220px;
   }
 
   .item-card.has-instructions .item-name {
     grid-row: 2;
+    grid-column: 1;
   }
 
   .item-card.has-instructions .item-links {
     grid-row: 3;
+    grid-column: 1;
   }
 
   .item-card.has-instructions .item-instructions {
     grid-row: 4;
+    grid-column: 1;
   }
+}
 
+@media (max-width: 768px) {
   .ui-settings {
     gap: 1.5rem;
   }
@@ -514,5 +534,24 @@
 
   .ui-map-wrapper {
     margin: 1rem auto;
+  }
+
+  .items-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .instruction-section ul,
+  .instruction-section ol {
+    padding-left: 1.25rem;
+    font-size: 0.8125rem;
+  }
+
+  .item-card.has-instructions .item-preview,
+  .item-card.has-instructions .item-preview-placeholder {
+    height: 180px;
+    min-height: 180px;
   }
 }
