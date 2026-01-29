@@ -99,11 +99,10 @@
   font-weight: 700;
 }
 
-/* FIXED: Better grid layout for items */
 .items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -120,40 +119,9 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* FIXED: Better responsive handling for instruction cards */
+/* Remove the special grid layout for has-instructions */
 .item-card.has-instructions {
-  grid-column: 1 / -1; /* Span all columns */
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  grid-template-rows: auto auto 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.item-card.has-instructions .item-preview,
-.item-card.has-instructions .item-preview-placeholder {
-  grid-row: 1 / 4;
-  grid-column: 1;
-  height: 100%;
-  min-height: 280px;
-}
-
-.item-card.has-instructions .item-name {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: start;
-}
-
-.item-card.has-instructions .item-links {
-  grid-column: 2;
-  grid-row: 2;
-  align-self: start;
-}
-
-.item-card.has-instructions .item-instructions {
-  grid-column: 2;
-  grid-row: 3;
-  align-self: start;
+  /* Keep normal card layout */
 }
 
 .item-card::before {
@@ -184,12 +152,12 @@
   color: var(--text-primary);
   margin-bottom: 0.75rem;
   line-height: 1.3;
-  min-height: fit-content;
+  min-height: 2.6rem;
 }
 
 .item-preview {
   width: 100%;
-  height: 180px;
+  height: 160px;
   border-radius: 8px;
   margin-bottom: 1rem;
   object-fit: cover;
@@ -206,7 +174,7 @@
 
 .item-preview-placeholder {
   width: 100%;
-  height: 180px;
+  height: 160px;
   border-radius: 8px;
   margin-bottom: 1rem;
   border: 1px solid var(--border-color);
@@ -273,36 +241,78 @@
   height: 16px;
 }
 
-/* Instructions Styles */
+/* Instructions as separate box below the card */
 .item-instructions {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 1.5rem;
-  margin: 0;
+  margin-top: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.item-instructions:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.instructions-header {
+  margin-bottom: 1.25rem;
 }
 
 .instructions-header h4 {
-  margin: 0 0 1rem 0;
-  font-size: 1rem;
+  margin: 0;
+  font-size: 1.125rem;
   font-weight: 700;
   color: var(--accent-color);
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  padding-bottom: 0.75rem;
   border-bottom: 2px solid var(--border-color);
-  padding-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instructions-header h4::before {
+  content: "📋";
+  font-size: 1.25rem;
 }
 
 .instructions-content {
   display: grid;
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.instruction-section {
+  background: var(--secondary-bg);
+  padding: 1.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.instruction-section:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
 }
 
 .instruction-section h5 {
-  margin: 0 0 0.625rem 0;
+  margin: 0 0 0.75rem 0;
   font-size: 0.9375rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.instruction-section h5::before {
+  content: "▸";
+  color: var(--accent-color);
+  font-size: 1rem;
 }
 
 .instruction-section ul,
@@ -311,12 +321,12 @@
   padding-left: 1.5rem;
   color: var(--text-muted);
   font-size: 0.875rem;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .instruction-section li {
   margin-bottom: 0.5rem;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .instruction-section li:last-child {
@@ -327,6 +337,7 @@
   color: var(--accent-color);
   text-decoration: none;
   transition: color 0.2s ease;
+  font-weight: 500;
 }
 
 .instruction-section a:hover {
@@ -335,13 +346,14 @@
 }
 
 .instruction-section code {
-  background: var(--secondary-bg);
+  background: var(--card-bg);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
   font-size: 0.875rem;
   color: var(--accent-color);
   border: 1px solid var(--border-color);
+  font-weight: 600;
 }
 
 .instruction-section strong {
@@ -350,6 +362,7 @@
 }
 
 .instruction-note {
+  grid-column: 1 / -1;
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
@@ -467,14 +480,7 @@
   font-weight: 500;
 }
 
-/* FIXED: Better responsive breakpoints */
-@media (max-width: 1200px) {
-  .item-card.has-instructions {
-    grid-template-columns: 300px 1fr;
-  }
-}
-
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .addons-container {
     padding: 1.5rem 1rem;
   }
@@ -483,37 +489,10 @@
     grid-template-columns: 1fr;
   }
 
-  .item-card.has-instructions {
+  .instructions-content {
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto;
-    gap: 1rem;
   }
 
-  .item-card.has-instructions .item-preview,
-  .item-card.has-instructions .item-preview-placeholder {
-    grid-row: 1;
-    grid-column: 1;
-    height: 220px;
-    min-height: 220px;
-  }
-
-  .item-card.has-instructions .item-name {
-    grid-row: 2;
-    grid-column: 1;
-  }
-
-  .item-card.has-instructions .item-links {
-    grid-row: 3;
-    grid-column: 1;
-  }
-
-  .item-card.has-instructions .item-instructions {
-    grid-row: 4;
-    grid-column: 1;
-  }
-}
-
-@media (max-width: 768px) {
   .ui-settings {
     gap: 1.5rem;
   }
@@ -534,24 +513,5 @@
 
   .ui-map-wrapper {
     margin: 1rem auto;
-  }
-
-  .items-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .instruction-section ul,
-  .instruction-section ol {
-    padding-left: 1.25rem;
-    font-size: 0.8125rem;
-  }
-
-  .item-card.has-instructions .item-preview,
-  .item-card.has-instructions .item-preview-placeholder {
-    height: 180px;
-    min-height: 180px;
   }
 }
