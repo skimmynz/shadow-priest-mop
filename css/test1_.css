@@ -292,6 +292,7 @@
   color: var(--text-muted);
   font-size: 0.875rem;
   line-height: 1.6;
+  text-align: left;
 }
 
 .tab-content li {
