@@ -241,15 +241,17 @@
   height: 16px;
 }
 
-/* Instructions as separate box below the card */
+/* Instructions as separate box below the card - SPANS FULL WIDTH */
 .item-instructions {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   padding: 1.5rem;
-  margin-top: 1rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  grid-column: 1 / -1; /* Span all columns */
 }
 
 .item-instructions:hover {
