@@ -1,89 +1,8 @@
-html {
-  margin: 0;
-  padding: 0;
-  scrollbar-gutter: stable; 
-}
 /* =================================================================
-   Theme Variables
+   Rankings Page Specific Styles
    ================================================================= */
-:root {
-  --primary-bg: #0f1117;
-  --secondary-bg: #1a1d29;
-  --card-bg: #1e2130;
-  --surface-bg: #23263a;
-  --hover-bg: #2a2d42;
 
-  /* Accent colors */
-  --accent-color: #7c3aed;
-  --accent-hover: #8b5cf6;
-  --accent-glow: rgba(124, 58, 237, 0.3);
-
-  --success-color: #10b981;
-  --success-glow: rgba(16, 185, 129, 0.3);
-  --warning-color: #f59e0b;
-  --warning-glow: rgba(245, 158, 11, 0.3);
-
-  --shadow-color: #7c3aed;
-  --shadow-glow: rgba(124, 58, 237, 0.4);
-  --gold-color: #fbbf24;
-
-  --text-primary: #ffffff;
-  --text-secondary: #e5e7eb;
-  --text-muted: #9ca3af;
-  --text-accent: #a78bfa;
-
-  --border-color: #2d3142;
-  --border-hover: #3d4158;
-
-  --shadow-lg: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-
-  --glass-bg: rgba(26, 29, 41, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
-}
-
-/* =================================================================
-   Base & Layout Styles
-   ================================================================= */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--primary-bg);
-  color: var(--text-primary);
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  line-height: 1.6;
-  padding: 0;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Unified container */
-.unified-container {
-  max-width: 1800px;
-  margin: 2rem auto;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.unified-container:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
-}
-
+/* Main Grid Layout */
 .main-grid {
   display: grid;
   grid-template-columns: 280px 1fr 320px;
@@ -102,7 +21,9 @@ body {
   transition: none;
 }
 
-/* Sidebar */
+/* =================================================================
+   Sidebar
+   ================================================================= */
 .sidebar {
   padding: 2rem 1.5rem;
   border-right: 1px solid rgba(255, 255, 255, 0.06);
@@ -110,13 +31,12 @@ body {
   overflow-x: hidden;
   contain: layout paint;
   max-height: 100vh;
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
 .sidebar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
 
 /* Content area */
@@ -126,14 +46,14 @@ body {
   padding: 2rem 2.5rem;
   overflow-y: auto;
   max-height: 100vh;
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
 .content-area::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
 }
+
 /* Talent sidebar */
 .talent-sidebar {
   padding: 2rem 1.5rem;
@@ -143,7 +63,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Headings */
 .talent-sidebar h3 {
   margin: 0 0 1.5rem 0;
   font-size: 1rem;
@@ -153,20 +72,8 @@ body {
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
-h1 {
-  margin: 0 0 1rem 0;
-  font-size: clamp(2rem, 3vw, 2.75rem);
-  font-weight: 800;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-align: center;
-  letter-spacing: 0.1em;
-  line-height: 1.1;
-  position: relative;
-  text-transform: uppercase;
-}
+
+/* Header controls */
 .header-controls {
   display: flex;
   justify-content: center;
@@ -176,13 +83,6 @@ h1 {
   margin-bottom: 1.5rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-.last-updated {
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  text-align: center;
-  margin-bottom: 1.5rem;
 }
 
 /* Neutralize Wowhead injected styles */
@@ -195,8 +95,6 @@ a.wowhead del {
 /* =================================================================
    Navigation (Sidebar)
    ================================================================= */
-
-/* Raid menu wrapper containment */
 #raid-menu {
   width: 100%;
   max-width: 100%;
@@ -211,7 +109,7 @@ a.wowhead del {
   grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem;
   margin-bottom: 1rem;
-   padding: 0.25rem;
+  padding: 0.25rem;
 }
 
 .tier-toggle-button {
@@ -243,16 +141,17 @@ a.wowhead del {
   transform: translateY(0);
 }
 
-/* Raid Selection Buttons (MSV/HoF/ToES) */
+/* Raid Selection Buttons */
 #raid-buttons-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: 0.75rem;
   align-items: start;
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 1rem;
 }
+
 #raid-buttons-container button {
   background: var(--secondary-bg);
   color: var(--text-primary);
@@ -270,18 +169,20 @@ a.wowhead del {
   width: 100%;
   box-sizing: border-box;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
 #raid-buttons-container .raid-icon {
   width: 44px;
   height: 44px;
   object-fit: cover;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
   flex-shrink: 0;
   border: 2px solid transparent;
   transition: all 0.2s ease;
 }
+
 #raid-buttons-container button span {
   font-weight: 600;
   font-size: 0.75rem;
@@ -295,31 +196,36 @@ a.wowhead del {
   -webkit-box-orient: vertical;
   color: var(--text-secondary);
 }
+
 #raid-buttons-container button:hover {
   border-color: var(--accent-color);
   background: var(--hover-bg);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
+
 #raid-buttons-container button:hover .raid-icon {
   border-color: var(--accent-color);
   transform: scale(1.05);
 }
+
 #raid-buttons-container button.active {
   background: var(--accent-color);
   border-color: var(--accent-color);
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
 }
+
 #raid-buttons-container button.active span {
   color: #ffffff;
   font-weight: 700;
 }
+
 #raid-buttons-container button.active .raid-icon {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* =================================================================
-   Boss Buttons – Vertical Stack (Uniform cards + containment)
+   Boss Buttons
    ================================================================= */
 #boss-buttons {
   display: flex;
@@ -328,6 +234,7 @@ a.wowhead del {
   width: 100%;
   box-sizing: border-box;
 }
+
 #boss-buttons button {
   background: var(--secondary-bg);
   color: var(--text-primary);
@@ -338,28 +245,27 @@ a.wowhead del {
   font-size: 0.8125rem;
   font-weight: 600;
   font-family: inherit;
-
-  /* Uniform sizing */
   min-height: 52px;
   height: 52px;
   overflow: hidden;
-
-  /* Internal flex layout: icon + text */
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.625rem 0.875rem;
-
   width: 100%;
   box-sizing: border-box;
-
   position: relative;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
+
 #boss-buttons button::before {
   display: none;
 }
-#boss-buttons button > * { position: relative; z-index: 1; }
+
+#boss-buttons button > * {
+  position: relative;
+  z-index: 1;
+}
 
 .boss-icon {
   width: 36px;
@@ -371,27 +277,30 @@ a.wowhead del {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   object-fit: cover;
 }
+
 #boss-buttons button:hover {
   background: var(--hover-bg);
   border-color: var(--accent-color);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
 }
+
 #boss-buttons button:hover .boss-icon {
   border-color: var(--accent-color);
   transform: scale(1.05);
 }
+
 #boss-buttons button.active {
   background: var(--accent-color);
   border-color: var(--accent-color);
   color: #ffffff;
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
 }
+
 #boss-buttons button.active .boss-icon {
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Boss name text – single line ellipsis for uniform cards */
 #boss-buttons button span {
   display: block;
   white-space: nowrap;
@@ -400,6 +309,7 @@ a.wowhead del {
   line-height: 1.2;
   color: var(--text-secondary);
 }
+
 #boss-buttons button.active span {
   color: #ffffff;
 }
@@ -407,7 +317,10 @@ a.wowhead del {
 /* =================================================================
    Rankings & Talent Display
    ================================================================= */
-#rankings { margin-top: 0; min-height: 600px; }
+#rankings {
+  margin-top: 0;
+  min-height: 600px;
+}
 
 /* Talent Summary */
 .talent-summary,
@@ -419,6 +332,7 @@ a.wowhead del {
   border: none;
   box-shadow: none;
 }
+
 .talent-summary .talent-row,
 .talent-summary-content .talent-row {
   display: flex;
@@ -426,11 +340,15 @@ a.wowhead del {
   gap: 1rem;
   margin-bottom: 1.25rem;
 }
+
 .talent-summary .talent-row:last-child,
-.talent-summary-content .talent-row:last-child { margin-bottom: 0; }
+.talent-summary-content .talent-row:last-child {
+  margin-bottom: 0;
+}
+
 .talent-summary .talent-icon-img,
 .talent-summary-content .talent-icon-img {
-  width: 48px; 
+  width: 48px;
   height: 48px;
   border-radius: 10px;
   border: 2px solid var(--border-color);
@@ -438,6 +356,7 @@ a.wowhead del {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   will-change: transform, filter;
 }
+
 .talent-summary .talent-percent,
 .talent-summary-content .talent-percent {
   font-size: 0.8125rem;
@@ -463,9 +382,11 @@ a.wowhead del {
   contain: layout style paint;
   transform: translateZ(0);
 }
+
 .rank-entry::before {
   display: none;
 }
+
 .rank-entry:hover {
   background: var(--hover-bg);
   border-color: var(--border-hover);
@@ -483,7 +404,10 @@ a.wowhead del {
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.ranking-header:hover { background: rgba(124, 58, 237, 0.08); }
+
+.ranking-header:hover {
+  background: rgba(124, 58, 237, 0.08);
+}
 
 .ranking-header .name-wrapper {
   color: var(--text-primary);
@@ -495,14 +419,17 @@ a.wowhead del {
   font-size: 0.9375rem;
   min-width: 0;
 }
+
 .ranking-header .player-link {
   text-decoration: none;
   color: inherit;
   transition: color 0.2s ease;
 }
+
 .ranking-header .player-link:hover {
   color: var(--accent-hover);
 }
+
 .header-right {
   display: flex;
   align-items: center;
@@ -526,6 +453,7 @@ a.wowhead del {
   user-select: none;
   flex-shrink: 0;
 }
+
 .expand-icon.rotated {
   transform: rotate(180deg);
   color: var(--accent-color);
@@ -544,7 +472,7 @@ a.wowhead del {
 }
 
 .dropdown-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
 .dropdown-content.active {
@@ -563,6 +491,7 @@ a.wowhead del {
   width: 100%;
   min-width: 0;
 }
+
 .info-section {
   background: var(--secondary-bg);
   padding: 1.25rem;
@@ -573,11 +502,13 @@ a.wowhead del {
   min-width: 0;
   overflow: hidden;
 }
+
 .info-section:hover {
   border-color: var(--border-hover);
   transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
+
 .info-section h4 {
   margin: 0 0 1rem 0;
   background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
@@ -589,6 +520,7 @@ a.wowhead del {
   border-bottom: 2px solid var(--border-hover);
   padding-bottom: 0.5rem;
 }
+
 .report-link-inline {
   font-size: 0.875rem;
   font-weight: 500;
@@ -609,6 +541,7 @@ a.wowhead del {
   color: var(--accent-hover);
   text-decoration: underline;
 }
+
 .info-row {
   display: flex;
   justify-content: space-between;
@@ -619,10 +552,12 @@ a.wowhead del {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
 .info-row:last-child {
   margin-bottom: 0;
   border-bottom: none;
 }
+
 .info-label {
   font-weight: 600;
   color: var(--text-secondary);
@@ -630,6 +565,7 @@ a.wowhead del {
   flex-shrink: 0;
   font-size: 0.9rem;
 }
+
 .info-value {
   color: var(--text-primary);
   text-align: right;
@@ -638,12 +574,14 @@ a.wowhead del {
   min-width: 0;
   font-size: 0.9rem;
 }
+
 .info-value a {
   color: var(--text-accent);
   text-decoration: none;
   transition: color 0.3s ease;
   word-break: break-all;
 }
+
 .info-value a:hover {
   color: var(--accent-hover);
   text-shadow: 0 0 10px var(--shadow-glow);
@@ -651,7 +589,7 @@ a.wowhead del {
 
 /* Compact inline info section */
 .info-section-compact {
-  grid-column: 1 / -1; /* Span full width */
+  grid-column: 1 / -1;
   margin-bottom: 0;
 }
 
@@ -706,6 +644,7 @@ a.wowhead del {
   width: 100%;
   min-width: 0;
 }
+
 .gear-item {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -716,30 +655,40 @@ a.wowhead del {
   min-width: 0;
   overflow: hidden;
 }
+
 .gear-item:hover {
   border-color: var(--border-hover);
   transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
+
 .gear-header {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
 }
+
 .gear-icon {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border-radius: 6px;
   border: 2px solid var(--border-hover);
   flex-shrink: 0;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
 .gear-icon:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
-.gear-info { flex: 1; min-width: 0; }
+
+.gear-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .gear-name {
   font-weight: 600;
   margin-bottom: 0.25rem;
@@ -748,24 +697,50 @@ a.wowhead del {
   white-space: nowrap;
   font-size: 0.9rem;
 }
-.gear-name.poor      { color: #9d9d9d; }
-.gear-name.common    { color: #ffffff; }
-.gear-name.uncommon  { color: #1eff00; }
-.gear-name.rare      { color: #0070dd; }
-.gear-name.epic      { color: #a335ee; }
+
+.gear-name.poor { color: #9d9d9d; }
+.gear-name.common { color: #ffffff; }
+.gear-name.uncommon { color: #1eff00; }
+.gear-name.rare { color: #0070dd; }
+.gear-name.epic { color: #a335ee; }
 .gear-name.legendary { color: #ff8000; }
-.gear-slot { font-size: 0.8rem; color: var(--text-muted); }
-.gear-ilvl { font-weight: 700; color: var(--gold-color); font-size: 0.85rem; flex-shrink: 0; }
-.gem-enchant { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
-.gem, .enchant {
+
+.gear-slot {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.gear-ilvl {
+  font-weight: 700;
+  color: var(--gold-color);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.gem-enchant {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.gem,
+.enchant {
   font-size: 0.7rem;
   padding: 0.2rem 0.4rem;
   border-radius: 6px;
   background: var(--hover-bg);
   border: 1px solid var(--border-hover);
 }
-.gem { color: var(--success-color); }
-.enchant { color: var(--text-accent); }
+
+.gem {
+  color: var(--success-color);
+}
+
+.enchant {
+  color: var(--text-accent);
+}
+
 .no-gear {
   text-align: center;
   color: var(--text-muted);
@@ -777,14 +752,20 @@ a.wowhead del {
 }
 
 /* Talent icon hover & highlighting */
-.ranking-header .talent-row { display: flex; gap: 0.375rem; }
+.ranking-header .talent-row {
+  display: flex;
+  gap: 0.375rem;
+}
+
 .ranking-header .talent-icon-img {
-  width: 36px; height: 36px;
+  width: 36px;
+  height: 36px;
   border-radius: 8px;
   border: 2px solid var(--border-color);
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
+
 .ranking-header:hover .talent-icon-img {
   border-color: var(--accent-color);
   transform: scale(1.05);
@@ -799,16 +780,19 @@ a.wowhead del {
   color: inherit;
   transition: transform 0.2s ease;
 }
+
 .talent-link:hover .talent-icon-img {
   transform: translateY(-2px) scale(1.08);
   filter: brightness(1.15);
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
 }
+
 .talent-summary .talent-link.is-meta .talent-icon-img,
 .talent-summary-content .talent-link.is-meta .talent-icon-img {
   border-color: var(--gold-color);
   box-shadow: 0 0 0 2px var(--gold-color), 0 4px 16px rgba(251, 191, 36, 0.3);
 }
+
 .talent-summary .talent-link.is-top .talent-icon-img,
 .talent-summary-content .talent-link.is-top .talent-icon-img {
   transform: translateY(-1px) scale(1.03);
@@ -816,6 +800,7 @@ a.wowhead del {
   border-color: var(--success-color);
   animation: pulse-glow 2.5s infinite;
 }
+
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 0 2px var(--success-color), 0 4px 20px rgba(16, 185, 129, 0.4);
@@ -826,6 +811,7 @@ a.wowhead del {
     transform: translateY(-2px) scale(1.05);
   }
 }
+
 .talent-summary .talent-link.is-top .talent-percent,
 .talent-summary-content .talent-link.is-top .talent-percent {
   color: var(--success-color);
@@ -844,28 +830,32 @@ a.wowhead del {
   transition: all 0.3s ease;
   font-size: 0.9rem;
 }
+
 .rankings-gear-name:hover {
   color: var(--text-accent);
   text-shadow: 0 0 10px var(--shadow-glow);
 }
+
 .rankings-gear-image {
-  width: 28px; height: 28px;
+  width: 28px;
+  height: 28px;
   border-radius: 4px;
   border: 1px solid var(--border-hover);
   flex-shrink: 0;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
+
 .rankings-gear-name:hover .rankings-gear-image {
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
-/* Rarity colors */
-.rankings-gear-name.poor      { color: #9d9d9d; }
-.rankings-gear-name.common    { color: #ffffff; }
-.rankings-gear-name.uncommon  { color: #1eff00; }
-.rankings-gear-name.rare      { color: #0070dd; }
-.rankings-gear-name.epic      { color: #a335ee; }
+
+.rankings-gear-name.poor { color: #9d9d9d; }
+.rankings-gear-name.common { color: #ffffff; }
+.rankings-gear-name.uncommon { color: #1eff00; }
+.rankings-gear-name.rare { color: #0070dd; }
+.rankings-gear-name.epic { color: #a335ee; }
 .rankings-gear-name.legendary { color: #ff8000; }
 
 /* =================================================================
@@ -874,6 +864,7 @@ a.wowhead del {
 .parsing-rules-header-container {
   margin: 1rem 0;
 }
+
 .parsing-rules-content {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
   border: 2px solid var(--warning-color);
@@ -889,20 +880,24 @@ a.wowhead del {
   font-weight: bold;
   margin-right: 0.5rem;
 }
+
 .parsing-rules-content.active {
   display: block;
 }
+
 .parsing-rules-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 .parsing-rule-item {
   padding: 0.5rem 0;
   color: var(--text-secondary);
   font-size: 0.875rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
+
 .parsing-rule-item:last-child {
   border-bottom: none;
 }
@@ -914,11 +909,16 @@ a.wowhead del {
   border: 4px solid var(--border-color);
   border-top: 4px solid var(--accent-color);
   border-radius: 50%;
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   animation: spin 1s linear infinite;
   margin: 2rem auto 1rem;
 }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
 .loading-message {
   text-align: center;
@@ -927,7 +927,10 @@ a.wowhead del {
   font-size: 1rem;
   font-weight: 500;
 }
-.loading-message p { margin: 1rem 0; }
+
+.loading-message p {
+  margin: 1rem 0;
+}
 
 .error-message {
   text-align: center;
@@ -953,7 +956,7 @@ a.wowhead del {
   .main-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .sidebar,
   .talent-sidebar {
     border-right: none;
@@ -961,221 +964,81 @@ a.wowhead del {
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     max-height: none;
   }
-  
+
   .talent-sidebar {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-bottom: none;
   }
-  
+
   .content-area {
     max-height: none;
-  }
-  
-  h1 {
-    font-size: 2rem;
   }
 }
 
 @media (max-width: 768px) {
-  body {
-    padding: 1rem;
-  }
-  
-  .unified-container {
-    border-radius: 16px;
-  }
-  
   .sidebar,
   .content-area,
   .talent-sidebar {
     padding: 1.5rem 1rem;
   }
-  
-  h1 {
-    font-size: 1.75rem;
-    letter-spacing: 0.05em;
-  }
+
   #raid-buttons-container {
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
   }
+
   #raid-buttons-container button {
     min-height: 80px;
     padding: 0.5rem 0.25rem;
   }
+
   #raid-buttons-container .raid-icon {
     width: 36px;
     height: 36px;
   }
+
   #raid-buttons-container button span {
     font-size: 0.7rem;
   }
+
   .info-grid {
     grid-template-columns: 1fr;
   }
+
   .gear-grid {
     grid-template-columns: 1fr;
   }
+
   .ranking-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.75rem;
   }
+
   .header-right {
     width: 100%;
     justify-content: space-between;
   }
+
   .fight-summary {
     font-size: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
-  h1 {
-    font-size: 1.5rem;
-  }
   .talent-summary .talent-row,
   .talent-summary-content .talent-row {
     gap: 0.5rem;
   }
+
   .talent-summary .talent-icon-img,
   .talent-summary-content .talent-icon-img {
     width: 40px;
     height: 40px;
   }
+
   .ranking-header .talent-icon-img {
     width: 32px;
     height: 32px;
-  }
-}
-
-/* Top Navigation Bar */
-.top-nav {
-  position: sticky;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 1000;
-  background: rgba(26, 29, 41, 0.95);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.nav-container {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 64px;
-  width: 100%;
-}
-
-.nav-logo {
-  font-size: 1.25rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  list-style: none;
-}
-
-.nav-links a {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: #e5e7eb;
-  font-weight: 600;
-  font-size: 0.9375rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid transparent;
-}
-
-.nav-links a:hover {
-  background: rgba(124, 58, 237, 0.1);
-  color: #a78bfa;
-  border-color: rgba(124, 58, 237, 0.3);
-  transform: translateY(-1px);
-}
-
-.nav-links a.active {
-  background: #7c3aed;
-  color: #ffffff;
-  border-color: #7c3aed;
-}
-
-.mobile-menu-toggle {
-  display: none;
-  background: transparent;
-  border: 2px solid #7c3aed;
-  color: #a78bfa;
-  padding: 0.5rem 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.25rem;
-  transition: all 0.2s ease;
-}
-
-.mobile-menu-toggle:hover {
-  background: rgba(124, 58, 237, 0.1);
-  border-color: #8b5cf6;
-}
-
-.nav-icon {
-  width: 18px;
-  height: 18px;
-  fill: currentColor;
-}
-
-@media (max-width: 768px) {
-  .nav-container {
-    padding: 0 1rem;
-  }
-
-  .mobile-menu-toggle {
-    display: block;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 64px;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    background: rgba(26, 29, 41, 0.98);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 0;
-    gap: 0.5rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-  }
-
-  .nav-links.mobile-open {
-    max-height: 400px;
-    padding: 1rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-  }
-
-  .nav-links a {
-    width: 100%;
-    justify-content: center;
-    padding: 0.875rem 1rem;
   }
 }
