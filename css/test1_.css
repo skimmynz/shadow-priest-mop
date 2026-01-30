@@ -51,6 +51,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  height: fit-content;
 }
 
 .section-card:hover {
@@ -64,10 +65,10 @@ body {
 
 .section-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 1rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0;
   flex-shrink: 0;
@@ -233,7 +234,7 @@ body {
   font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 .back-button:hover {
