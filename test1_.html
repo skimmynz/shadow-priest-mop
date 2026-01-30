@@ -426,8 +426,8 @@
       
       <ul class="faq-list">
         <li class="faq-item"><strong>ABC</strong> - Always be casting</li>
-        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain Shadow Word: Pain and Vampiric Touch on all targets</li>
-        <li class="faq-item"><strong>Planned Movement</strong> - Use instant casts during movement phases</li>
+        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain 95%+ uptime on Shadow Word: Pain and Vampiric Touch</li>
+        <li class="faq-item"><strong>DOT Snapshots</strong> - Recast Shadow Word:Pain and Vampiric Touch when UVLS procs</li>
         <li class="faq-item"><strong>Snipe mobs</strong> - Use SWP/SWD on adds for Twist of Fate procs and Shadow Orbs</li>
         <li class="faq-item"><strong>Haste Breakpoints</strong> - Optimize gear to hit key haste thresholds for extra ticks</li>
       </ul>
@@ -599,6 +599,8 @@
     }
 
     async function selectBoss(bossId, bossName, btnElement) {
+      console.log('Selecting boss:', bossName, 'ID:', bossId);
+      
       // Update active state
       document.querySelectorAll('.boss-icon-btn').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
@@ -619,8 +621,11 @@
             const cachedAt = parsedCache.cachedAt || parsedCache.data?.cachedAt;
             const isRecent = cachedAt && (Date.now() - Date.parse(cachedAt)) < 3600000;
             
+            console.log('Cache found for', bossName, '- Recent:', isRecent);
+            
             if (isRecent && parsedCache.data) {
               data = parsedCache.data;
+              console.log('Using cached data, rankings count:', data.rankings?.length);
             }
           } catch (e) {
             console.error('Cache parse error:', e);
@@ -628,15 +633,20 @@
         }
         
         if (!data) {
+          console.log('Fetching from API for', bossName);
           const response = await fetch(`/.netlify/functions/getLogs?encounterId=${bossId}`);
+          console.log('API response status:', response.status);
+          
           if (!response.ok) {
-            // T14 bosses might not have data yet, show message
             throw new Error(`HTTP ${response.status}: Data not available`);
           }
+          
           data = await response.json();
+          console.log('API data received, rankings count:', data.rankings?.length);
           
           // Validate we have rankings
           if (!data || !data.rankings || data.rankings.length === 0) {
+            console.warn('No rankings in response');
             resultsDiv.innerHTML = '<div class="empty-state">No ranking data available for this boss yet.</div>';
             return;
           }
@@ -647,9 +657,10 @@
           }));
         }
         
+        console.log('Rendering talents for', bossName);
         renderTalents(data);
       } catch (error) {
-        console.error('Error loading talents:', error);
+        console.error('Error loading talents for', bossName, ':', error);
         
         // More user-friendly error messages
         if (error.message.includes('404')) {
