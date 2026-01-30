@@ -429,10 +429,13 @@
   </div>
   
   <script src="js/nav.js"></script>
-  <script type="module">
-    // Import the data structures from script.js (reuse existing logic)
-    // This avoids code duplication
-    
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+  <script>
     // Boss data (matching script.js TIERS structure)
     const TIERS = {
       t14: {
@@ -718,6 +721,10 @@
 
     // Tier toggle
     document.addEventListener('DOMContentLoaded', () => {
+      // Initial render
+      renderBossIcons();
+      
+      // Setup tier toggle buttons
       document.querySelectorAll('.tier-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
@@ -726,13 +733,14 @@
           currentTier = btn.dataset.tier;
           
           // Clear selection
-          document.getElementById('talent-results').innerHTML = '<div class="empty-state">Select a boss to view popular talent choices</div>';
+          const resultsDiv = document.getElementById('talent-results');
+          if (resultsDiv) {
+            resultsDiv.innerHTML = '<div class="empty-state">Select a boss to view popular talent choices</div>';
+          }
           
           // Re-render boss icons
           renderBossIcons();
         });
       });
-      
-      // Initial render
-      renderBossIcons();
     });
+  </script>
