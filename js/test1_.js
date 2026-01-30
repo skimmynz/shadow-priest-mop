@@ -377,11 +377,7 @@ function goBackToBossSelection() {
   if (bossGrid) bossGrid.classList.remove('hidden');
   if (tierToggle) tierToggle.classList.remove('hidden');
   if (resultsDiv) {
-    resultsDiv.innerHTML = '<div class="empty-state">Select a boss to view popular talent choices</div>';
-    resultsDiv.style.flex = '1';
-    resultsDiv.style.display = 'flex';
-    resultsDiv.style.alignItems = 'center';
-    resultsDiv.style.justifyContent = 'center';
+    resultsDiv.innerHTML = '';
   }
   
   // Clear active boss
@@ -409,11 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bossGrid) bossGrid.classList.remove('hidden');
       if (tierToggle) tierToggle.classList.remove('hidden');
       if (resultsDiv) {
-        resultsDiv.innerHTML = '<div class="empty-state">Select a boss to view popular talent choices</div>';
-        resultsDiv.style.flex = '1';
-        resultsDiv.style.display = 'flex';
-        resultsDiv.style.alignItems = 'center';
-        resultsDiv.style.justifyContent = 'center';
+        resultsDiv.innerHTML = '';
       }
       
       // Re-render boss icons
