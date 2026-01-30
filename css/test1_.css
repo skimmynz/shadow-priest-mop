@@ -64,6 +64,7 @@ body {
 .section-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
@@ -140,10 +141,11 @@ body {
 /* Boss Icons Grid */
 .boss-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(4, 67px);
+  gap: 0.5rem;
   margin-top: 1rem;
   transition: all 0.3s ease;
+  justify-content: center;
 }
 
 .boss-grid.hidden {
@@ -383,7 +385,7 @@ body {
     padding: 1rem;
   }
   .boss-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 67px);
     gap: 0.5rem;
   }
   .tier-toggle {
