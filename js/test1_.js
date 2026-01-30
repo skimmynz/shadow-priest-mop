@@ -169,11 +169,14 @@ async function selectBoss(bossId, bossName, btnElement) {
   document.querySelectorAll('.boss-icon-btn').forEach(b => b.classList.remove('active'));
   btnElement.classList.add('active');
   
-  // Hide boss grid and tier toggle
+  // Hide boss grid and tier toggle, show back button
   const bossGrid = document.getElementById('boss-selection');
   const tierToggle = document.querySelector('.tier-toggle');
+  const backButton = document.getElementById('backButton');
+  
   if (bossGrid) bossGrid.classList.add('hidden');
   if (tierToggle) tierToggle.classList.add('hidden');
+  if (backButton) backButton.classList.remove('hidden');
   
   const resultsDiv = document.getElementById('talent-results');
   if (!resultsDiv) return;
@@ -343,20 +346,8 @@ function renderTalents(data, bossName) {
     });
   });
   
-  // Render with header
+  // Render talents only (no header)
   let html = '<div class="talent-display">';
-  
-  // Add header with just back button
-  html += `
-    <div class="talent-display-header">
-      <button class="back-button" onclick="goBackToBossSelection()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        Back to Boss Selection
-      </button>
-    </div>
-  `;
   
   Object.keys(talentTiers).sort((a, b) => Number(a) - Number(b)).forEach(tier => {
     const total = totalPerTier[tier] || 0;
@@ -410,10 +401,12 @@ function renderTalents(data, bossName) {
 function goBackToBossSelection() {
   const bossGrid = document.getElementById('boss-selection');
   const tierToggle = document.querySelector('.tier-toggle');
+  const backButton = document.getElementById('backButton');
   const resultsDiv = document.getElementById('talent-results');
   
   if (bossGrid) bossGrid.classList.remove('hidden');
   if (tierToggle) tierToggle.classList.remove('hidden');
+  if (backButton) backButton.classList.add('hidden');
   if (resultsDiv) {
     resultsDiv.innerHTML = '';
   }
@@ -508,6 +501,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (resultsDiv) {
         resultsDiv.innerHTML = '';
       }
+      
+      // Hide back button when switching tiers
+      const backButton = document.getElementById('backButton');
+      if (backButton) backButton.classList.add('hidden');
       
       // Re-render boss icons
       renderBossIcons();
