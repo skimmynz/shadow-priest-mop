@@ -154,8 +154,8 @@ body {
 }
 
 .boss-icon-btn {
-  width: 40px;
-  height: 40px;
+  width: 67px;
+  height: 67px;
   border: 2px solid var(--border-color);
   border-radius: 12px;
   background: var(--surface-bg);
