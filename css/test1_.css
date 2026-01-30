@@ -337,19 +337,9 @@ body {
 }
 
 .faq-list a {
-  color: var(--text-accent);
-  text-decoration: none;
-  text-shadow: 0 0 8px var(--accent-glow);
-  transition: text-shadow 0.3s ease;
+  color: #9400D3;
 }
 
-.faq-list a:hover {
-  text-shadow: 0 0 12px rgba(167, 139, 250, 0.8);
-}
-
-.faq-list a:visited {
-  color: var(--text-accent);
-}
 
 .faq-item {
   padding: 0.8rem;
