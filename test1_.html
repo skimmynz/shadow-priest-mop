@@ -197,12 +197,43 @@
       display: grid;
       gap: 0.5rem;
     }
+    .talent-display-header {
+      background: var(--surface-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .talent-display-boss {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: 0.25rem;
+    }
+    .talent-display-sample {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .talent-row-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .talent-tier-label {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      min-width: 30px;
+      text-align: right;
+    }
     .talent-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem;
       max-width: 240px;
-      margin: 0 auto;
+      flex: 1;
     }
     .talent-icon {
       position: relative;
@@ -426,10 +457,10 @@
       
       <ul class="faq-list">
         <li class="faq-item"><strong>ABC</strong> - Always be casting</li>
-        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain 95%+ uptime Shadow Word: Pain and Vampiric Touch</li>
+        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain Shadow Word: Pain and Vampiric Touch on all targets</li>
         <li class="faq-item"><strong>DOT Snapshots</strong> - Recast SW:P and VT when <a href="https://www.wowhead.com/mop-classic/item=96930/unerring-vision-of-lei-shen" class="wowhead" data-wowhead="item=96930&bonus=449" style="color: #a335ee; text-decoration: none; border-bottom: 1px dotted #a335ee;">UVLS</a> procs</li>
         <li class="faq-item"><strong>Snipe mobs</strong> - Use SWP/SWD on adds for Twist of Fate procs and Shadow Orbs</li>
-        <li class="faq-item"><strong>Haste Breakpoints</strong> - Hit key haste thresholds for extra DOT ticks</li>
+        <li class="faq-item"><strong>Haste Breakpoints</strong> - Optimize gear to hit key haste thresholds for extra ticks</li>
       </ul>
     </div>
   </div>
@@ -692,7 +723,7 @@
         }
         
         console.log('Rendering talents for', bossName);
-        renderTalents(data);
+        renderTalents(data, bossName);
       } catch (error) {
         console.error('Error loading talents for', bossName, ':', error);
         
@@ -707,8 +738,9 @@
       }
     }
 
-    function renderTalents(data) {
+    function renderTalents(data, bossName) {
       const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
+      const sampleSize = rankings.length;
       
       // Analyze talents (same logic as script.js)
       const tierCounts = {};
@@ -740,11 +772,22 @@
         });
       });
       
-      // Render
+      // Render with header
       let html = '<div class="talent-display">';
+      
+      // Add header
+      html += `
+        <div class="talent-display-header">
+          <div class="talent-display-boss">${bossName || 'Unknown Boss'}</div>
+          <div class="talent-display-sample">Based on ${sampleSize} log${sampleSize !== 1 ? 's' : ''}</div>
+        </div>
+      `;
       
       Object.keys(talentTiers).sort((a, b) => Number(a) - Number(b)).forEach(tier => {
         const total = totalPerTier[tier] || 0;
+        
+        html += '<div class="talent-row-container">';
+        html += `<div class="talent-tier-label">${tier}</div>`;
         html += '<div class="talent-row">';
         
         talentTiers[tier].forEach(talent => {
@@ -771,7 +814,8 @@
           `;
         });
         
-        html += '</div>';
+        html += '</div>'; // close talent-row
+        html += '</div>'; // close talent-row-container
       });
       
       html += '</div>';
