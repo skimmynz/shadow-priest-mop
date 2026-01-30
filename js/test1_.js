@@ -418,7 +418,7 @@ function goBackToBossSelection() {
 // Prefetch popular bosses in the background
 async function prefetchPopularBosses() {
   // Wait a bit before prefetching to not interfere with initial page load
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 800));
   
   // Prefetch first 4 bosses of current tier (most likely to be clicked)
   const tierData = TIERS[currentTier];
