@@ -306,11 +306,9 @@ function renderTalents(data, bossName) {
   // Render with header
   let html = '<div class="talent-display">';
   
-  // Add header
+  // Add header with just back button
   html += `
     <div class="talent-display-header">
-      <div class="talent-display-boss">${bossName || 'Unknown Boss'}</div>
-      <div class="talent-display-sample">Based on Top ${sampleSize} Global Log${sampleSize !== 1 ? 's' : ''}</div>
       <button class="back-button" onclick="goBackToBossSelection()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
