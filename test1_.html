@@ -395,7 +395,7 @@
     </div>
     
     <!-- Talent Selector -->
-    <div class="section-card full-width">
+    <div class="section-card">
       <div class="section-header">
         <h2 class="section-title">Popular Talents by Boss</h2>
       </div>
@@ -413,7 +413,7 @@
     </div>
     
     <!-- Shadow Priest FAQ -->
-    <div class="section-card full-width">
+    <div class="section-card">
       <div class="section-header">
         <h2 class="section-title">Shadow Priest FAQ</h2>
       </div>
@@ -429,8 +429,11 @@
   </div>
   
   <script src="js/nav.js"></script>
-  <script>
-    // Boss data
+  <script type="module">
+    // Import the data structures from script.js (reuse existing logic)
+    // This avoids code duplication
+    
+    // Boss data (matching script.js TIERS structure)
     const TIERS = {
       t14: {
         msv: {
@@ -475,7 +478,7 @@
       }
     };
 
-    // Talent data
+    // Talent data (matching script.js)
     const talentTiers = {
       15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
       30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -533,7 +536,6 @@
     };
 
     let currentTier = 't15';
-    let selectedBoss = null;
 
     function getBossIconId(encounterId) {
       if (encounterId >= 51559 && encounterId <= 51580) {
@@ -558,6 +560,8 @@
 
     function renderBossIcons() {
       const container = document.getElementById('boss-selection');
+      if (!container) return;
+      
       const tierData = TIERS[currentTier];
       
       let html = '';
@@ -590,47 +594,52 @@
       document.querySelectorAll('.boss-icon-btn').forEach(b => b.classList.remove('active'));
       btnElement.classList.add('active');
       
-      selectedBoss = bossId;
-      
       const resultsDiv = document.getElementById('talent-results');
-      resultsDiv.innerHTML = '<div class="loading-state"><div class="loader"></div><p>Loading talent data...</p></div>';
+      if (!resultsDiv) return;
+      
+      resultsDiv.innerHTML = '<div class="loading-state"><div style="margin: 0 auto 0.5rem; border: 3px solid var(--border-color); border-top: 3px solid var(--accent-color); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;"></div><p>Loading...</p></div>';
       
       try {
-        const cached = localStorage.getItem(`spriest_rankings_${bossId}`);
+        const CACHE_KEY = `spriest_rankings_${bossId}`;
+        const cached = localStorage.getItem(CACHE_KEY);
         let data;
         
         if (cached) {
-          const parsedCache = JSON.parse(cached);
-          const cachedAt = parsedCache.cachedAt || parsedCache.data?.cachedAt;
-          const isRecent = cachedAt && (Date.now() - Date.parse(cachedAt)) < 3600000;
-          
-          if (isRecent) {
-            data = parsedCache.data;
+          try {
+            const parsedCache = JSON.parse(cached);
+            const cachedAt = parsedCache.cachedAt || parsedCache.data?.cachedAt;
+            const isRecent = cachedAt && (Date.now() - Date.parse(cachedAt)) < 3600000;
+            
+            if (isRecent && parsedCache.data) {
+              data = parsedCache.data;
+            }
+          } catch (e) {
+            console.error('Cache parse error:', e);
           }
         }
         
         if (!data) {
           const response = await fetch(`/.netlify/functions/getLogs?encounterId=${bossId}`);
-          if (!response.ok) throw new Error('Failed to fetch');
+          if (!response.ok) throw new Error('HTTP ' + response.status);
           data = await response.json();
           
-          localStorage.setItem(`spriest_rankings_${bossId}`, JSON.stringify({
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
             data: data,
             cachedAt: new Date().toISOString()
           }));
         }
         
-        renderTalents(data, bossName);
+        renderTalents(data);
       } catch (error) {
         console.error('Error loading talents:', error);
         resultsDiv.innerHTML = '<div class="empty-state">Failed to load talent data. Please try again.</div>';
       }
     }
 
-    function renderTalents(data, bossName) {
-      const rankings = data.rankings || [];
+    function renderTalents(data) {
+      const rankings = Array.isArray(data?.rankings) ? data.rankings : [];
       
-      // Analyze talents
+      // Analyze talents (same logic as script.js)
       const tierCounts = {};
       const totalPerTier = {};
       
@@ -644,7 +653,7 @@
       
       rankings.forEach(entry => {
         const seenTiers = new Set();
-        const talents = entry.talents || [];
+        const talents = Array.isArray(entry?.talents) ? entry.talents : [];
         
         talents.forEach(t => {
           const displayName = getTalentDisplayName(t.name);
@@ -696,7 +705,10 @@
       
       html += '</div>';
       
-      document.getElementById('talent-results').innerHTML = html;
+      const resultsDiv = document.getElementById('talent-results');
+      if (resultsDiv) {
+        resultsDiv.innerHTML = html;
+      }
       
       // Refresh Wowhead tooltips
       if (window.$WowheadPower) {
@@ -705,9 +717,22 @@
     }
 
     // Tier toggle
-    document.querySelectorAll('.tier-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        currentTier = btn.
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tier-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          currentTier = btn.dataset.tier;
+          
+          // Clear selection
+          document.getElementById('talent-results').innerHTML = '<div class="empty-state">Select a boss to view popular talent choices</div>';
+          
+          // Re-render boss icons
+          renderBossIcons();
+        });
+      });
+      
+      // Initial render
+      renderBossIcons();
+    });
