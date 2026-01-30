@@ -426,8 +426,8 @@
       
       <ul class="faq-list">
         <li class="faq-item"><strong>ABC</strong> - Always be casting</li>
-        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain 95%+ uptime on Shadow Word: Pain and Vampiric Touch</li>
-        <li class="faq-item"><strong>DOT Snapshots</strong> - Recast Shadow Word:Pain and Vampiric Touch when UVLS procs</li>
+        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain Shadow Word: Pain and Vampiric Touch on all targets</li>
+        <li class="faq-item"><strong>Planned Movement</strong> - Use instant casts during movement phases</li>
         <li class="faq-item"><strong>Snipe mobs</strong> - Use SWP/SWD on adds for Twist of Fate procs and Shadow Orbs</li>
         <li class="faq-item"><strong>Haste Breakpoints</strong> - Optimize gear to hit key haste thresholds for extra ticks</li>
       </ul>
@@ -651,10 +651,44 @@
             return;
           }
           
-          localStorage.setItem(CACHE_KEY, JSON.stringify({
-            data: data,
-            cachedAt: new Date().toISOString()
-          }));
+          // Try to cache, but don't fail if quota exceeded
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+              data: data,
+              cachedAt: new Date().toISOString()
+            }));
+          } catch (storageError) {
+            console.warn('Failed to cache data (quota exceeded):', storageError);
+            // Clear some old cache entries to make room
+            try {
+              const keys = Object.keys(localStorage);
+              const cacheKeys = keys.filter(k => k.startsWith('spriest_rankings_'));
+              
+              // Sort by age and remove oldest entries
+              const entries = cacheKeys.map(key => {
+                try {
+                  const data = JSON.parse(localStorage.getItem(key));
+                  return { key, time: Date.parse(data.cachedAt) || 0 };
+                } catch {
+                  return { key, time: 0 };
+                }
+              }).sort((a, b) => a.time - b.time);
+              
+              // Remove oldest 5 entries
+              for (let i = 0; i < Math.min(5, entries.length); i++) {
+                localStorage.removeItem(entries[i].key);
+                console.log('Removed old cache:', entries[i].key);
+              }
+              
+              // Try to save again
+              localStorage.setItem(CACHE_KEY, JSON.stringify({
+                data: data,
+                cachedAt: new Date().toISOString()
+              }));
+            } catch (cleanupError) {
+              console.warn('Cache cleanup also failed, continuing without cache');
+            }
+          }
         }
         
         console.log('Rendering talents for', bossName);
