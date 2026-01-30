@@ -202,16 +202,20 @@
     
     /* Talent Display */
     .talent-display {
-      display: grid;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 0.5rem;
     }
     .talent-display-header {
       background: var(--surface-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 1rem;
-      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
       text-align: center;
+      width: 100%;
+      max-width: 400px;
     }
     .talent-display-boss {
       font-size: 1.25rem;
@@ -222,7 +226,7 @@
     .talent-display-sample {
       font-size: 0.875rem;
       color: var(--text-muted);
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.5rem;
     }
     .back-button {
       display: inline-flex;
@@ -237,7 +241,6 @@
       font-size: 0.875rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-top: 0.5rem;
     }
     .back-button:hover {
       background: var(--accent-hover);
@@ -251,22 +254,18 @@
     .talent-row-container {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      justify-content: center;
+      gap: 0.5rem;
       margin-bottom: 0.5rem;
     }
     .talent-tier-label {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      min-width: 30px;
-      text-align: right;
+      display: none;
     }
     .talent-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 0.5rem;
-      max-width: 240px;
-      flex: 1;
+      width: fit-content;
     }
     .talent-icon {
       position: relative;
