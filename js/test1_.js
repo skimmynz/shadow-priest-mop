@@ -101,6 +101,8 @@ const talentNameMap = {
 };
 
 let currentTier = 't15';
+let fetchController = null; // For canceling in-flight requests
+const fetchCache = new Map(); // In-memory cache for faster access
 
 function getBossIconId(encounterId) {
   if (encounterId >= 51559 && encounterId <= 51580) {
@@ -157,6 +159,12 @@ function renderBossIcons() {
 async function selectBoss(bossId, bossName, btnElement) {
   console.log('Selecting boss:', bossName, 'ID:', bossId);
   
+  // Cancel any in-flight requests
+  if (fetchController) {
+    fetchController.abort();
+  }
+  fetchController = new AbortController();
+  
   // Update active state
   document.querySelectorAll('.boss-icon-btn').forEach(b => b.classList.remove('active'));
   btnElement.classList.add('active');
@@ -174,88 +182,120 @@ async function selectBoss(bossId, bossName, btnElement) {
   
   try {
     const CACHE_KEY = `spriest_rankings_${bossId}`;
-    const cached = localStorage.getItem(CACHE_KEY);
     let data;
     
-    if (cached) {
+    // Check in-memory cache first (fastest)
+    if (fetchCache.has(CACHE_KEY)) {
+      const cached = fetchCache.get(CACHE_KEY);
+      const isRecent = (Date.now() - cached.timestamp) < 3600000; // 1 hour
+      
+      if (isRecent) {
+        console.log('Using in-memory cache for', bossName);
+        data = cached.data;
+        renderTalents(data, bossName);
+        return;
+      }
+    }
+    
+    // Check localStorage cache (still fast)
+    const localCached = localStorage.getItem(CACHE_KEY);
+    if (localCached) {
       try {
-        const parsedCache = JSON.parse(cached);
+        const parsedCache = JSON.parse(localCached);
         const cachedAt = parsedCache.cachedAt || parsedCache.data?.cachedAt;
         const isRecent = cachedAt && (Date.now() - Date.parse(cachedAt)) < 3600000;
         
-        console.log('Cache found for', bossName, '- Recent:', isRecent);
-        
         if (isRecent && parsedCache.data) {
+          console.log('Using localStorage cache for', bossName);
           data = parsedCache.data;
-          console.log('Using cached data, rankings count:', data.rankings?.length);
+          
+          // Store in memory cache for next time
+          fetchCache.set(CACHE_KEY, {
+            data: data,
+            timestamp: Date.now()
+          });
+          
+          renderTalents(data, bossName);
+          return;
         }
       } catch (e) {
         console.error('Cache parse error:', e);
       }
     }
     
-    if (!data) {
-      console.log('Fetching from API for', bossName);
-      const response = await fetch(`/.netlify/functions/getLogs?encounterId=${bossId}`);
-      console.log('API response status:', response.status);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Data not available`);
-      }
-      
-      data = await response.json();
-      console.log('API data received, rankings count:', data.rankings?.length);
-      
-      // Validate we have rankings
-      if (!data || !data.rankings || data.rankings.length === 0) {
-        console.warn('No rankings in response');
-        resultsDiv.innerHTML = '<div class="empty-state">No ranking data available for this boss yet.</div>';
-        return;
-      }
-      
-      // Try to cache, but don't fail if quota exceeded
+    // Fetch from API
+    console.log('Fetching from API for', bossName);
+    const response = await fetch(`/.netlify/functions/getLogs?encounterId=${bossId}`, {
+      signal: fetchController.signal
+    });
+    console.log('API response status:', response.status);
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Data not available`);
+    }
+    
+    data = await response.json();
+    console.log('API data received, rankings count:', data.rankings?.length);
+    
+    // Validate we have rankings
+    if (!data || !data.rankings || data.rankings.length === 0) {
+      console.warn('No rankings in response');
+      resultsDiv.innerHTML = '<div class="empty-state">No ranking data available for this boss yet.</div>';
+      return;
+    }
+    
+    // Store in both caches
+    const cacheData = {
+      data: data,
+      cachedAt: new Date().toISOString()
+    };
+    
+    // Memory cache
+    fetchCache.set(CACHE_KEY, {
+      data: data,
+      timestamp: Date.now()
+    });
+    
+    // localStorage cache
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+    } catch (storageError) {
+      console.warn('Failed to cache data (quota exceeded):', storageError);
+      // Clear old cache entries
       try {
-        localStorage.setItem(CACHE_KEY, JSON.stringify({
-          data: data,
-          cachedAt: new Date().toISOString()
-        }));
-      } catch (storageError) {
-        console.warn('Failed to cache data (quota exceeded):', storageError);
-        // Clear some old cache entries to make room
-        try {
-          const keys = Object.keys(localStorage);
-          const cacheKeys = keys.filter(k => k.startsWith('spriest_rankings_'));
-          
-          // Sort by age and remove oldest entries
-          const entries = cacheKeys.map(key => {
-            try {
-              const data = JSON.parse(localStorage.getItem(key));
-              return { key, time: Date.parse(data.cachedAt) || 0 };
-            } catch {
-              return { key, time: 0 };
-            }
-          }).sort((a, b) => a.time - b.time);
-          
-          // Remove oldest 5 entries
-          for (let i = 0; i < Math.min(5, entries.length); i++) {
-            localStorage.removeItem(entries[i].key);
-            console.log('Removed old cache:', entries[i].key);
+        const keys = Object.keys(localStorage);
+        const cacheKeys = keys.filter(k => k.startsWith('spriest_rankings_'));
+        
+        const entries = cacheKeys.map(key => {
+          try {
+            const data = JSON.parse(localStorage.getItem(key));
+            return { key, time: Date.parse(data.cachedAt) || 0 };
+          } catch {
+            return { key, time: 0 };
           }
-          
-          // Try to save again
-          localStorage.setItem(CACHE_KEY, JSON.stringify({
-            data: data,
-            cachedAt: new Date().toISOString()
-          }));
-        } catch (cleanupError) {
-          console.warn('Cache cleanup also failed, continuing without cache');
+        }).sort((a, b) => a.time - b.time);
+        
+        // Remove oldest 5 entries
+        for (let i = 0; i < Math.min(5, entries.length); i++) {
+          localStorage.removeItem(entries[i].key);
         }
+        
+        // Try to save again
+        localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
+      } catch (cleanupError) {
+        console.warn('Cache cleanup also failed, continuing without cache');
       }
     }
     
     console.log('Rendering talents for', bossName);
     renderTalents(data, bossName);
   } catch (error) {
+    // Don't show error if request was aborted
+    if (error.name === 'AbortError') {
+      console.log('Request aborted');
+      return;
+    }
+    
     console.error('Error loading talents for', bossName, ':', error);
     
     // More user-friendly error messages
@@ -382,10 +422,73 @@ function goBackToBossSelection() {
   document.querySelectorAll('.boss-icon-btn').forEach(b => b.classList.remove('active'));
 }
 
+// Prefetch popular bosses in the background
+async function prefetchPopularBosses() {
+  // Wait a bit before prefetching to not interfere with initial page load
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Prefetch first 4 bosses of current tier (most likely to be clicked)
+  const tierData = TIERS[currentTier];
+  const bossesToPrefetch = [];
+  
+  for (const raid in tierData) {
+    for (const [name, id] of Object.entries(tierData[raid])) {
+      bossesToPrefetch.push({ id, name });
+      if (bossesToPrefetch.length >= 4) break;
+    }
+    if (bossesToPrefetch.length >= 4) break;
+  }
+  
+  // Fetch all bosses in parallel
+  const prefetchPromises = bossesToPrefetch.map(async (boss) => {
+    const CACHE_KEY = `spriest_rankings_${boss.id}`;
+    
+    // Skip if already cached
+    if (fetchCache.has(CACHE_KEY)) return;
+    if (localStorage.getItem(CACHE_KEY)) return;
+    
+    try {
+      console.log('Prefetching', boss.name);
+      const response = await fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        if (data && data.rankings && data.rankings.length > 0) {
+          // Store in both caches
+          fetchCache.set(CACHE_KEY, {
+            data: data,
+            timestamp: Date.now()
+          });
+          
+          try {
+            localStorage.setItem(CACHE_KEY, JSON.stringify({
+              data: data,
+              cachedAt: new Date().toISOString()
+            }));
+            console.log('Prefetched and cached', boss.name);
+          } catch (e) {
+            console.warn('Failed to cache prefetched data for', boss.name);
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Prefetch failed for', boss.name, error);
+    }
+  });
+  
+  // Wait for all prefetch requests to complete
+  await Promise.allSettled(prefetchPromises);
+  console.log('Prefetching complete');
+}
+
 // Tier toggle
 document.addEventListener('DOMContentLoaded', () => {
   // Initial render
   renderBossIcons();
+  
+  // Start prefetching popular bosses in the background
+  prefetchPopularBosses();
   
   // Setup tier toggle buttons
   document.querySelectorAll('.tier-btn').forEach(btn => {
