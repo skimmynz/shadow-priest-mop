@@ -32,19 +32,11 @@
       --primary-bg: #0f1117;
       --secondary-bg: #1a1d29;
       --card-bg: #1e2130;
-      --surface-bg: #23263a;
-      --hover-bg: #2a2d42;
       --accent-color: #7c3aed;
       --accent-hover: #8b5cf6;
       --text-primary: #ffffff;
-      --text-secondary: #e5e7eb;
-      --text-muted: #9ca3af;
-      --border-color: #2d3142;
       --glass-bg: rgba(26, 29, 41, 0.6);
       --glass-border: rgba(255, 255, 255, 0.08);
-      --success-color: #10b981;
-      --gold-color: #fbbf24;
-      --live-color: #ef4444;
     }
 
     * {
@@ -59,31 +51,6 @@
       font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
       line-height: 1.6;
       min-height: 100vh;
-    }
-
-    .hero-section {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 2rem 2rem 1rem;
-      text-align: center;
-    }
-
-    .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 1rem;
-      letter-spacing: 0.05em;
-    }
-
-    .hero-subtitle {
-      font-size: 1.25rem;
-      color: var(--text-secondary);
-      margin-bottom: 3rem;
-      font-weight: 500;
     }
 
     .content-grid {
@@ -110,35 +77,6 @@
       box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
     }
 
-    .section-card.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-
-    .section-icon {
-      width: 32px;
-      height: 32px;
-      fill: var(--accent-color);
-    }
-
-    .section-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
     .stream-container {
       position: relative;
       padding-bottom: 56.25%;
@@ -156,229 +94,13 @@
       border: 0;
     }
 
-    .stream-status {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.9rem;
-    }
-
-    .stream-status-details {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .stream-live-text {
-      font-weight: 700;
-      color: var(--live-color);
-    }
-
-    .stream-offline-text {
-      color: var(--text-muted);
-    }
-
-    .stream-viewers {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-    }
-
-    .stream-game {
-      color: var(--accent-color);
-      font-size: 0.85rem;
-    }
-
-    .status-indicator {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--card-bg);
-      position: relative;
-      flex-shrink: 0;
-    }
-
-    .status-indicator.live::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--live-color);
-      animation: pulse 2s infinite;
-    }
-
-    .status-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #6b7280;
-      position: relative;
-      z-index: 1;
-    }
-
-    .status-dot.live {
-      background: var(--live-color);
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.3; transform: scale(1); }
-      50% { opacity: 0; transform: scale(1.5); }
-    }
-
-    .cta-button {
-      display: inline-block;
-      padding: 1rem 1rem;
-      background: var(--accent-color);
-      color: white;
-      text-decoration: none;
-      border-radius: 12px;
-      font-weight: 600;
-      font-size: 1.1rem;
-      transition: all 0.3s ease;
-      border: 2px solid var(--accent-color);
-    }
-
-    .cta-button:hover {
-      background: var(--accent-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(124, 58, 237, 0.4);
-    }
-
-    /* Rankings Preview Styles */
-    .rankings-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-
-    .ranking-item {
-      background: var(--surface-bg);
-      border-radius: 10px;
-      padding: 1rem;
-      border: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      transition: all 0.3s ease;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .ranking-item:hover {
-      border-color: var(--accent-color);
-      transform: translateX(4px);
-    }
-
-    .rank-number {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: var(--accent-color);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    .rank-number.gold {
-      background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    }
-
-    .rank-number.silver {
-      background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
-      color: #1f2937;
-    }
-
-    .rank-number.bronze {
-      background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
-    }
-
-    .player-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .player-name {
-      font-weight: 700;
-      font-size: 1rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .boss-name {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .dps-value {
-      font-weight: 700;
-      color: var(--accent-color);
-      font-size: 1.1rem;
-      font-variant-numeric: tabular-nums;
-      flex-shrink: 0;
-    }
-
-    .view-all-link {
-      display: block;
-      text-align: center;
-      margin-top: 1rem;
-      padding: 0.75rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-primary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .view-all-link:hover {
-      background: var(--hover-bg);
-      border-color: var(--accent-color);
-      transform: translateY(-2px);
-    }
-
-    .loading {
-      text-align: center;
-      padding: 1rem;
-      color: var(--text-muted);
-    }
-
-    .loader {
-      border: 3px solid var(--border-color);
-      border-top: 3px solid var(--accent-color);
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 0.5rem;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
     @media (max-width: 1024px) {
       .content-grid {
         grid-template-columns: 1fr;
       }
     }
 
-@media (max-width: 768px) {
-      .hero-section {
-        padding: 2rem 1rem 1rem;
-      }
-
+    @media (max-width: 768px) {
       .content-grid {
         padding: 1rem;
         gap: 1rem;
@@ -386,86 +108,6 @@
 
       .section-card {
         padding: 0.5rem;
-      }
-
-      .stream-status {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-      }
-
-      .ranking-item {
-        padding: 0.75rem;
-        gap: 0.75rem;
-      }
-
-      .rank-number {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-      }
-
-      .player-name {
-        font-size: 0.9rem;
-      }
-
-      .boss-name {
-        font-size: 0.8rem;
-      }
-
-      .dps-value {
-        font-size: 1rem;
-      }
-
-      .view-all-link {
-        font-size: 0.95rem;
-        padding: 0.65rem;
-      }
-
-      .section-title {
-        font-size: 1.25rem;
-      }
-
-      .section-header {
-        margin-bottom: 0.5rem;
-        padding-bottom: 0.5rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .ranking-item {
-        flex-wrap: wrap;
-        padding: 0.65rem;
-      }
-
-      .rank-number {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-      }
-
-      .player-info {
-        flex: 1;
-        min-width: 120px;
-      }
-
-      .player-name {
-        font-size: 0.85rem;
-      }
-
-      .boss-name {
-        font-size: 0.75rem;
-      }
-
-      .dps-value {
-        font-size: 0.95rem;
-        width: 100%;
-        text-align: right;
-        margin-top: 0.25rem;
-      }
-
-      .section-title {
-        font-size: 1.1rem;
       }
     }
   </style>
@@ -543,184 +185,29 @@
   </nav>
 
   <div class="content-grid">
-  <div class="section-card">
-    <div class="stream-container">
-      <iframe
+    <div class="section-card">
+      <div class="stream-container">
+        <iframe
           src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=www.skimmynz.com"
           height="480"
           width="854"
           allowfullscreen>
-      </iframe>
+        </iframe>
+      </div>
     </div>
-  </div>
 
-  <div class="section-card">
-    <div class="stream-container">
-      <iframe 
-        src="https://www.youtube.com/embed/NaYavDBjAqo"
-        allowfullscreen
-        loading="lazy"
-        title="RANK 1 SHADOW PRIEST → MEGAERA 25M HEROIC">
-      </iframe>
-    </div>
-  </div>
-
-  <!-- Recent Rankings Preview -->
-  <div class="section-card full-width">
-    <div class="section-header">
-      <h2 class="section-title">Recent Top Performances</h2>
-    </div>
-    
-    <div id="rankings-preview">
-      <div class="loading">
-        <div class="loader"></div>
-        <div>Loading recent rankings...</div>
+    <div class="section-card">
+      <div class="stream-container">
+        <iframe 
+          src="https://www.youtube.com/embed/NaYavDBjAqo"
+          allowfullscreen
+          loading="lazy"
+          title="RANK 1 SHADOW PRIEST → MEGAERA 25M HEROIC">
+        </iframe>
       </div>
     </div>
   </div>
-</div>
 
   <script src="js/nav.js"></script>
-<script>
-// T15 Throne of Thunder boss IDs
-const T15_BOSS_IDS = [
-  { id: 51577, name: "Jin'rokh the Breaker" },
-  { id: 51575, name: "Horridon" },
-  { id: 51570, name: "Council of Elders" },
-  { id: 51565, name: "Tortos" },
-  { id: 51578, name: "Megaera" },
-  { id: 51573, name: "Ji-Kun" },
-  { id: 51572, name: "Durumu the Forgotten" },
-  { id: 51574, name: "Primordius" },
-  { id: 51576, name: "Dark Animus" },
-  { id: 51559, name: "Iron Qon" },
-  { id: 51560, name: "Twin Consorts" },
-  { id: 51579, name: "Lei Shen" },
-  { id: 51580, name: "Ra-den" }
-];
-
-// Load Recent Rankings - Optimized version
-async function loadRecentRankings() {
-  const container = document.getElementById('rankings-preview');
-  const CACHE_DURATION = 3600000; // 1 hour
-  
-  try {
-    const allRankings = [];
-    const toFetch = [];
-    
-    // Quick cache check - parallel processing
-    for (const boss of T15_BOSS_IDS) {
-      const cacheKey = 'spriest_rankings_' + boss.id;
-      const cached = localStorage.getItem(cacheKey);
-      
-      if (cached) {
-        try {
-          const parsedCache = JSON.parse(cached);
-          const cachedAt = parsedCache.cachedAt || parsedCache.data?.cachedAt;
-          
-          if (cachedAt && (Date.now() - Date.parse(cachedAt)) < CACHE_DURATION) {
-            const rankings = parsedCache.data?.rankings || [];
-            rankings.slice(0, 3).forEach(ranking => {
-              allRankings.push({ ...ranking, bossName: boss.name, bossId: boss.id });
-            });
-            continue;
-          }
-        } catch (e) {
-          // Invalid cache, will refetch
-        }
-      }
-      
-      toFetch.push(boss);
-    }
-    
-    // If we have enough cached data, render immediately
-    if (allRankings.length >= 3) {
-      renderRankings(allRankings.sort((a, b) => b.total - a.total).slice(0, 3));
-    }
-    
-    // Fetch missing data in parallel (if needed)
-    if (toFetch.length > 0) {
-      const fetchedRankings = await Promise.all(
-        toFetch.map(boss =>
-          fetch(`/.netlify/functions/getLogs?encounterId=${boss.id}`)
-            .then(r => r.ok ? r.json() : null)
-            .then(data => {
-              if (data?.rankings?.length > 0) {
-                // Cache immediately
-                localStorage.setItem('spriest_rankings_' + boss.id, JSON.stringify({
-                  data: data,
-                  cachedAt: new Date().toISOString()
-                }));
-                
-                return data.rankings.slice(0, 3).map(ranking => ({
-                  ...ranking,
-                  bossName: boss.name,
-                  bossId: boss.id
-                }));
-              }
-              return [];
-            })
-            .catch(() => [])
-        )
-      );
-      
-      // Flatten and add to allRankings
-      fetchedRankings.forEach(rankings => allRankings.push(...rankings));
-      
-      // Re-render with updated data
-      if (allRankings.length > 0) {
-        renderRankings(allRankings.sort((a, b) => b.total - a.total).slice(0, 3));
-      }
-    }
-    
-    if (allRankings.length === 0) {
-      container.innerHTML = `
-        <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
-          No recent rankings available
-        </div>
-      `;
-    }
-  } catch (error) {
-    console.error('Error loading rankings:', error);
-    container.innerHTML = `
-      <div style="text-align: center; color: var(--text-muted); padding: 1rem;">
-        Unable to load rankings. Please try again later.
-      </div>
-    `;
-  }
-}
-
-function renderRankings(topRankings) {
-  const container = document.getElementById('rankings-preview');
-  
-  const rankingsHTML = topRankings.map((log, index) => {
-    const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
-    const bossSlug = log.bossName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    
-    return `
-      <a href="/rankings.html#${bossSlug}-${log.bossId}" class="ranking-item">
-        <div class="rank-number ${rankClass}">${index + 1}</div>
-        <div class="player-info">
-          <div class="player-name">${log.name || 'Unknown'}</div>
-          <div class="boss-name">${log.bossName} • Throne of Thunder</div>
-        </div>
-        <div class="dps-value">${log.total ? Math.round(log.total).toLocaleString() : '—'}</div>
-      </a>
-    `;
-  }).join('');
-  
-  container.innerHTML = `
-    <div class="rankings-list">
-      ${rankingsHTML}
-    </div>
-    <a href="/rankings.html" class="view-all-link">
-      View All Rankings →
-    </a>
-  `;
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', loadRecentRankings);
-</script>
 </body>
 </html>
