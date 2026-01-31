@@ -16,16 +16,261 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   
   <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/test1_.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="canonical" href="https://skimmynz.com/">
   
   <script>
     window.whTooltips = { colorLinks: true, iconizeLinks: false, renameLinks: false };
   </script>
   <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
+  
+  <style>
+    :root {
+      --primary-bg: #0f1117;
+      --secondary-bg: #1a1d29;
+      --card-bg: #1e2130;
+      --accent-color: #7c3aed;
+      --accent-hover: #8b5cf6;
+      --text-primary: #ffffff;
+      --text-secondary: #e5e7eb;
+      --text-muted: #9ca3af;
+      --glass-bg: rgba(26, 29, 41, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .content-grid {
+      max-width: 1800px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .section-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      padding: 0.5rem;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    .stream-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .stream-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .boss-tips-container {
+      max-width: 1800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .boss-tips-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      padding: 2rem;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .boss-tips-card:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 2rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .boss-tabs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .boss-tab {
+      background: rgba(30, 33, 48, 0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .boss-tab:hover {
+      background: rgba(124, 58, 237, 0.1);
+      border-color: rgba(124, 58, 237, 0.3);
+      color: #a78bfa;
+      transform: translateY(-2px);
+    }
+
+    .boss-tab.active {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: #ffffff;
+    }
+
+    .tips-content {
+      background: rgba(30, 33, 48, 0.3);
+      border-radius: 12px;
+      padding: 2rem;
+      min-height: 300px;
+    }
+
+    .boss-section {
+      display: none;
+    }
+
+    .boss-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .boss-section h3 {
+      color: #a78bfa;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .boss-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      border: 2px solid #7c3aed;
+    }
+
+    .tips-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-list li {
+      padding: 0.75rem 0;
+      padding-left: 1.5rem;
+      position: relative;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .tips-list li:before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: #7c3aed;
+      font-weight: bold;
+    }
+
+    @media (max-width: 1024px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .content-grid {
+        padding: 1rem;
+        gap: 1rem;
+      }
+
+      .section-card {
+        padding: 0.5rem;
+      }
+
+      .boss-tips-container {
+        margin: 1rem auto;
+      }
+
+      .boss-tips-card {
+        padding: 1.5rem;
+      }
+
+      .boss-tabs {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 0.4rem;
+      }
+
+      .boss-tab {
+        padding: 0.6rem 0.75rem;
+        font-size: 0.8rem;
+      }
+
+      .tips-content {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <nav class="top-nav">
@@ -98,9 +343,8 @@
       </ul>
     </div>
   </nav>
-  
+
   <div class="content-grid">
-    <!-- Twitch Stream -->
     <div class="section-card">
       <div class="stream-container">
         <iframe
@@ -111,57 +355,238 @@
         </iframe>
       </div>
     </div>
-    
-    <!-- YouTube Video -->
+
     <div class="section-card">
       <div class="stream-container">
         <iframe 
-          src="https://www.youtube.com/embed/NaYavDBjAqo"
+          src="https://www.youtube.com/embed/NaYavDBjAqo?autoplay=1&mute=1"
           allowfullscreen
           loading="lazy"
           title="RANK 1 SHADOW PRIEST → MEGAERA 25M HEROIC">
         </iframe>
       </div>
     </div>
-    
-    <!-- Talent Selector -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="tier-toggle">
-          <button class="tier-btn" data-tier="t14">T14 Boss Talents</button>
-          <button class="tier-btn active" data-tier="t15">T15 Boss Talents</button>
-        </div>
-        
-        <button class="back-button hidden" id="backButton" onclick="goBackToBossSelection()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
-          </svg>
-          Back
-        </button>
-      </div>
+  </div>
+
+  <div class="boss-tips-container">
+    <div class="boss-tips-card">
+      <h2>Throne of Thunder Boss Tips</h2>
       
-      <div id="boss-selection" class="boss-grid"></div>
+      <div class="boss-tabs" id="bossTabs"></div>
       
-      <div id="talent-results"></div>
-    </div>
-    
-    <!-- Shadow Priest FAQ -->
-    <div class="section-card">
-      <div class="section-header">
-        <h2 class="section-title">Shadow Priest FAQ</h2>
-      </div>
-      
-      <ul class="faq-list">
-        <li class="faq-item"><strong>ABC</strong> - Always be casting</li>
-        <li class="faq-item"><strong>DOT Uptime</strong> - Maintain 95%+ uptime on <a href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain" class="wowhead">SW:P</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch" class="wowhead">VT</a></li>
-        <li class="faq-item"><strong>DOT Snapshots</strong> - Recast <a href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain" class="wowhead">SW:P</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch" class="wowhead">VT</a> when <a href="https://www.wowhead.com/mop-classic/item=96930/unerring-vision-of-lei-shen" class="wowhead">UVLS</a> procs</li>
-        <li class="faq-item"><strong>Snipe mobs</strong> - Cast <a href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain" class="wowhead">SWP</a> & SWD on adds for <a href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate" class="wowhead">Twist of Fate</a> procs and <a href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs" class="wowhead">Shadow Orbs</a></li>
-        <li class="faq-item"><strong>Haste Breakpoints</strong> - Optimise your stats to gain extra DOT ticks</li>
-      </ul>
+      <div class="tips-content" id="tipsContent"></div>
     </div>
   </div>
-  
+
   <script src="js/nav.js"></script>
-  <script src="js/test1_.js"></script>
+  
+  <script>
+    const bosses = [
+      {
+        id: 'jinrokh',
+        name: "Jin'rokh the Breaker",
+        icon: 1577,
+        tips: [
+          "Stand in Conductive Water pools during Focused Lightning to increase DPS",
+          "Move out of water when Electrified (debuff) to avoid raid damage",
+          "Use defensive cooldowns for Ionization stacks",
+          "Spread out to avoid chaining Static Burst damage",
+          "Save major DPS cooldowns for water phases"
+        ]
+      },
+      {
+        id: 'horridon',
+        name: "Horridon",
+        icon: 1575,
+        tips: [
+          "Focus damage on Direhorn adds during door phases",
+          "Use Mass Dispel on Dinomancers to remove damage buffs",
+          "Position yourself to avoid Charge from Horridon",
+          "Stack for Dread Thrash and use raid cooldowns",
+          "Save cooldowns for final burn phase after all doors"
+        ]
+      },
+      {
+        id: 'council',
+        name: "Council of Elders",
+        icon: 1570,
+        tips: [
+          "Kill order: Kazra'jin → Sul → Frost King → High Priestess Mar'li",
+          "Dispel Quicksand on allies immediately",
+          "Move out of Sandstorm when it appears",
+          "Stack behind boss for Frigid Assault cleave",
+          "Interrupt Shadowed Loa Spirit casts when possible"
+        ]
+      },
+      {
+        id: 'tortos',
+        name: "Tortos",
+        icon: 1565,
+        tips: [
+          "Kick Whirl Turtle shells at boss to interrupt Furious Stone Breath",
+          "Clear Crystal Shell debuff before it expires",
+          "Save personal cooldowns for high Furious Stone Breath stacks",
+          "Position away from other ranged to avoid battering spread",
+          "Use DoT multi-dotting on bats during Heroic mode"
+        ]
+      },
+      {
+        id: 'megaera',
+        name: "Megaera",
+        icon: 1578,
+        tips: [
+          "Kill heads in order: Flaming → Frozen → Venomous → Arcane",
+          "Move out of Cinders ground effect immediately",
+          "Stack for Arctic Freeze and use immunities/cooldowns",
+          "Spread for Acid Rain to minimize damage overlap",
+          "Save Shadowfiend/Mindbender for final burn phase"
+        ]
+      },
+      {
+        id: 'jikun',
+        name: "Ji-Kun",
+        icon: 1573,
+        tips: [
+          "Collect green food from nests to gain Primal Nutriment buff (massive DPS increase)",
+          "Use Levitate/slowfall when jumping between platforms",
+          "Kill Young Egg priority on lower nests",
+          "Pool insanity before flying to nests for burst",
+          "Use Dispersion for Talon Rake if needed"
+        ]
+      },
+      {
+        id: 'durumu',
+        name: "Durumu the Forgotten",
+        icon: 1572,
+        tips: [
+          "Multi-dot Crimson, Azure, and Amber Fog Beasts during maze",
+          "Follow your color beam during Light Spectrum phase",
+          "Use instant casts while moving during Disintegration Beam",
+          "Disperse can be used to survive missed mechanics",
+          "Stack tightly for Force of Will knockback"
+        ]
+      },
+      {
+        id: 'primordius',
+        name: "Primordius",
+        icon: 1574,
+        tips: [
+          "Collect beneficial mutations (red pools) for DPS buffs",
+          "Avoid harmful mutations (blue pools)",
+          "Use 4pc bonus Mind Blast procs during high buff stacks",
+          "Pool resources before Primordial Strike damage increases",
+          "Dispersion can save you from Evolution overlaps"
+        ]
+      },
+      {
+        id: 'darkanimus',
+        name: "Dark Animus",
+        icon: 1576,
+        tips: [
+          "Kill Small Golems → Medium Golems → Large Golems in order",
+          "Use Shadow Word: Death on low health adds for efficiency",
+          "Save cooldowns for Large Anima Golem and Dark Animus",
+          "Spread for Interrupting Jolt to avoid multiple interrupts",
+          "Use Dispersion for high Anima Font stacks"
+        ]
+      },
+      {
+        id: 'ironqon',
+        name: "Iron Qon",
+        icon: 1559,
+        tips: [
+          "Maintain DoTs on both Qon and his current Quilen mount",
+          "Stack for Freeze during Ro'shak phase",
+          "Spread out during Dam'ren phase for Arcing Lightning",
+          "Use personal cooldowns for Unleashed Flame damage",
+          "Save hero/lust for final phase when all three spirits are active"
+        ]
+      },
+      {
+        id: 'consorts',
+        name: "Twin Consorts",
+        icon: 1560,
+        tips: [
+          "Kill Lu'lin first (moon), then Suen (sun)",
+          "Stand in Light of Day during moon phase for damage buff",
+          "Use defensive cooldowns for Nuclear Inferno (sun phase)",
+          "Multi-dot both bosses when they're both active",
+          "Move efficiently through Ice Comets to break them quickly"
+        ]
+      },
+      {
+        id: 'leishen',
+        name: "Lei Shen",
+        icon: 1579,
+        tips: [
+          "Transition at 70%, 40%, and 10% health on each platform",
+          "Kill Diffusion Chain conduits to reduce tank damage",
+          "Stack for Static Shock bounces between players",
+          "Use speed boosts to escape Overcharged zones quickly",
+          "Save major cooldowns for final platform burn"
+        ]
+      },
+      {
+        id: 'raden',
+        name: "Ra-den",
+        icon: 1580,
+        tips: [
+          "Balance Vita and Anima to prevent wipes (keep close to 50/50)",
+          "Kill Unstable Anima adds quickly with multi-dotting",
+          "Use Dispersion for Unstable Vita explosions",
+          "Move out of Crackling Stalker paths",
+          "Pool cooldowns for execute phase below 40%"
+        ]
+      }
+    ];
+
+    function getBossIconUrl(iconId) {
+      return `https://assets.rpglogs.com/img/warcraft/bosses/${iconId}-icon.jpg?v=2`;
+    }
+
+    function renderTabs() {
+      const tabsContainer = document.getElementById('bossTabs');
+      tabsContainer.innerHTML = bosses.map((boss, index) => 
+        `<button class="boss-tab ${index === 0 ? 'active' : ''}" data-boss="${boss.id}">
+          ${boss.name}
+        </button>`
+      ).join('');
+
+      tabsContainer.querySelectorAll('.boss-tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          const bossId = e.currentTarget.dataset.boss;
+          switchBoss(bossId);
+        });
+      });
+    }
+
+    function renderContent() {
+      const contentContainer = document.getElementById('tipsContent');
+      contentContainer.innerHTML = bosses.map((boss, index) => 
+        `<div class="boss-section ${index === 0 ? 'active' : ''}" data-boss="${boss.id}">
+          <h3>
+            <img src="${getBossIconUrl(boss.icon)}" alt="${boss.name}" class="boss-icon">
+            ${boss.name}
+          </h3>
+          <ul class="tips-list">
+            ${boss.tips.map(tip => `<li>${tip}</li>`).join('')}
+          </ul>
+        </div>`
+      ).join('');
+    }
+
+    function switchBoss(bossId) {
+      document.querySelectorAll('.boss-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.boss === bossId);
+      });
+
+      document.querySelectorAll('.boss-section').forEach(section => {
+        section.classList.toggle('active', section.dataset.boss === bossId);
+      });
+    }
+
+    renderTabs();
+    renderContent();
+  </script>
 </body>
 </html>
