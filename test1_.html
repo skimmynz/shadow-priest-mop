@@ -227,16 +227,6 @@
       font-size: 1.5rem;
       font-weight: 700;
       margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .boss-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      border: 2px solid #7c3aed;
     }
 
     .tips-list {
@@ -597,10 +587,7 @@
       const contentContainer = document.getElementById('tipsContent');
       contentContainer.innerHTML = bosses.map((boss, index) => 
         `<div class="boss-section ${index === 0 ? 'active' : ''}" data-boss="${boss.id}">
-          <h3>
-            <img src="${getBossIconUrl(boss.icon)}" alt="${boss.name}" class="boss-icon">
-            ${boss.name}
-          </h3>
+          <h3>${boss.name}</h3>
           <ul class="tips-list">
             ${boss.tips.map(tip => `<li>${tip}</li>`).join('')}
           </ul>
