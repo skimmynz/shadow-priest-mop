@@ -222,12 +222,7 @@
       }
     }
 
-    .boss-section h3 {
-      color: #a78bfa;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-    }
+
 
     .tips-list {
       list-style: none;
@@ -587,7 +582,6 @@
       const contentContainer = document.getElementById('tipsContent');
       contentContainer.innerHTML = bosses.map((boss, index) => 
         `<div class="boss-section ${index === 0 ? 'active' : ''}" data-boss="${boss.id}">
-          <h3>${boss.name}</h3>
           <ul class="tips-list">
             ${boss.tips.map(tip => `<li>${tip}</li>`).join('')}
           </ul>
