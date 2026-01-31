@@ -132,35 +132,67 @@
 
     .boss-tabs {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 0.5rem;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 1rem;
       margin-bottom: 2rem;
+      justify-items: center;
     }
 
     .boss-tab {
       background: rgba(30, 33, 48, 0.5);
-      border: 1px solid var(--glass-border);
-      border-radius: 10px;
-      padding: 0.75rem 1rem;
-      color: var(--text-secondary);
-      font-weight: 600;
-      font-size: 0.875rem;
+      border: 2px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 0.5rem;
       cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      width: 80px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .boss-tab:hover {
-      background: rgba(124, 58, 237, 0.1);
-      border-color: rgba(124, 58, 237, 0.3);
-      color: #a78bfa;
-      transform: translateY(-2px);
+      border-color: rgba(124, 58, 237, 0.6);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);
     }
 
     .boss-tab.active {
-      background: #7c3aed;
       border-color: #7c3aed;
-      color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3);
+      transform: scale(1.05);
+    }
+
+    .boss-tab-icon {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    .boss-tab-tooltip {
+      position: absolute;
+      bottom: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.95);
+      color: white;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 10;
+      border: 1px solid #7c3aed;
+    }
+
+    .boss-tab:hover .boss-tab-tooltip {
+      opacity: 1;
     }
 
     .tips-content {
@@ -253,13 +285,13 @@
       }
 
       .boss-tabs {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 0.4rem;
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 0.75rem;
       }
 
       .boss-tab {
-        padding: 0.6rem 0.75rem;
-        font-size: 0.8rem;
+        width: 70px;
+        height: 70px;
       }
 
       .tips-content {
@@ -548,7 +580,8 @@
       const tabsContainer = document.getElementById('bossTabs');
       tabsContainer.innerHTML = bosses.map((boss, index) => 
         `<button class="boss-tab ${index === 0 ? 'active' : ''}" data-boss="${boss.id}">
-          ${boss.name}
+          <img src="${getBossIconUrl(boss.icon)}" alt="${boss.name}" class="boss-tab-icon">
+          <span class="boss-tab-tooltip">${boss.name}</span>
         </button>`
       ).join('');
 
