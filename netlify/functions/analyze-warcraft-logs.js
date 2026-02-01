@@ -1,4 +1,5 @@
 // netlify/functions/analyze-warcraft-logs.js
+// NOT LIVE
 
 exports.handler = async (event, context) => {
   // Only allow POST requests
