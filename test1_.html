@@ -314,121 +314,117 @@
       51580: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."]
     };
 
-    var bosses = [
+var bosses = [
       {
         id: 'jinrokh', name: "Jin'rokh the Breaker", enc: 51577,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Pot</a> at 15s pull timer',
-          'Use CDs/Lust/2nd Pot with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a>',
-          'Pray for <a class="wowhead" href="https://www.wowhead.com/mop-classic/item=96558/unerring-vision-of-lei-shen">UVLS</a> proc',
-          'After removing <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138733/ionization?dd=6">Ionization</a>, briefly reenter <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a> and recast DOTs',
-          'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=137261/lightning-storm?dd=6">Lightning Storm</a> (and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=47585/dispersion">Dispersion</a> if necessary)'
+          '<b>Pre-pot:</b> <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Pot</a> at 15s pull timer.',
+          '<b>Burst:</b> Use CDs, Lust, and 2nd Pot while standing in <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a>.',
+          '<b>Snapshot:</b> After clearing <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138733/ionization?dd=6">Ionization</a>, briefly re-enter <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a> to recast DoTs.',
+          '<b>Utility:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=137261/lightning-storm?dd=6">Lightning Storm</a>; use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=47585/dispersion">Dispersion</a> if health is low.',
+          'Pray for an <a class="wowhead" href="https://www.wowhead.com/mop-classic/item=96558/unerring-vision-of-lei-shen">UVLS</a> proc.'
         ]
       },
       {
         id: 'horridon', name: "Horridon", enc: 51575,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> small adds, <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> marked elite adds',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> Direhorn Spirit for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138156/item-priest-t15-shadow-2p-bonus">T15 2pc knockback bonus</a>',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> when adds are stacked together',
-          'Multidot focus for high uptime on <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>',
-          'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a> on Horridon',
-          'Ignore War-God Jalak, and use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during a dangerous <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=136817/bestial-cry">Bestial Cry</a>'
+          '<b>Add Priority:</b> <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> small adds; <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> marked elite adds.',
+          '<b>T15 Bonus:</b> DoT the Direhorn Spirit for the <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138156/item-priest-t15-shadow-2p-bonus">T15 2pc knockback</a>.',
+          '<b>Resource Gen:</b> Multi-dot for high uptime on <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+          '<b>Cleave:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> when adds are stacked.',
+          '<b>Boss Burn:</b> Spend <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Insanity</a> on Horridon.',
+          '<b>Defensive:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">VE</a> during dangerous <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=136817/bestial-cry">Bestial Cry</a> casts.'
         ]
       },
       {
         id: 'council', name: "Council of Elders", enc: 51570,
         tips: [
-          'Stack in melee and use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on CD',
-          'Double dot all bosses and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a>'
+          '<b>Positioning:</b> Stack in melee to use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on cooldown.',
+          '<b>Cleave:</b> Maintain DoTs on all bosses and use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a>.'
         ]
       },
       {
         id: 'tortos', name: "Tortos", enc: 51565,
         tips: [
-          'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> on adds for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> uptime and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>',
-          'Maintain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> on a Humming Crystal',
-          'Spread out to avoid Whirl Turtles'
+          '<b>Sniping:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> on adds to proc <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and Orbs.',
+          '<b>Uptime:</b> Keep <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> active on a Humming Crystal.',
+          '<b>Movement:</b> Stay spread to avoid Whirl Turtles.'
         ]
       },
       {
         id: 'megaera', name: "Megaera", enc: 51578,
         tips: [
-          'Ignore Venomous Head',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> Nether Wyrms for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>',
-          'Consider <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> if the raid needs more healing'
+          '<b>Efficiency:</b> Ignore the Venomous Head.',
+          '<b>Orbs:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> on Nether Wyrms to generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+          '<b>Healing:</b> Switch to <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> if raid healing is required.'
         ]
       },
       {
         id: 'jikun', name: "Ji-Kun", enc: 51573,
         tips: [
-          'Use a feather charge (extra action button) to intercept Feed Young and gain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=112879/primal-nutriment">Primal Nutriment</a>',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> Nest Guardian',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> Hatchlings',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">VE</a> if needed during Quills',
-          'Pray your Fire Mages are good'
+          '<b>Buffs:</b> Use feather charges to intercept Feed Young for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=112879/primal-nutriment">Primal Nutriment</a>.',
+          '<b>Adds:</b> DoT the Nest Guardian; use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> on Hatchlings.',
+          '<b>Recovery:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">VE</a> during Quills.'
         ]
       },
       {
         id: 'durumu', name: "Durumu the Forgotten", enc: 51572,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> the adds in the fog for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>',
-          'Time <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> on the Ice Walls',
-          '2nd pot with 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=26297/berserking">Berserking</a>'
+          '<b>Fog Phase:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> on fog adds for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a>.',
+          '<b>Walls:</b> Time your <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and DoT the Ice Walls.',
+          '<b>Burst:</b> Sync your 2nd Pot with your 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=26297/berserking">Berserking</a>.'
         ]
       },
       {
         id: 'primordius', name: "Primordius", enc: 51574,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> all the Living Fluids (Focus boss instead if multiple Affliction Warlocks)',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on CD',
-          'Position camera to dodge moving puddles and debuffs'
+          '<b>Multi-Dot:</b> Maintain DoTs on all Living Fluids (unless Warlocks are handling them).',
+          '<b>Talents:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on cooldown.',
+          '<b>Positioning:</b> Watch camera angle to dodge puddles and debuffs.'
         ]
       },
       {
         id: 'darkanimus', name: "Dark Animus", enc: 51576,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> all the Anima Golems for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on CD',
-          'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a> on Dark Animus'
+          '<b>Orb Gen:</b> DoT all Anima Golems for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+          '<b>Efficiency:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on cooldown.',
+          '<b>ST Burn:</b> Direct <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">DP</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Insanity</a> into the boss.'
         ]
       },
       {
         id: 'ironqon', name: "Iron Qon", enc: 51559,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> Iron Qon when he becomes available between each Quillen (Ro\'shak → Quet\'zal → Dam\'ren)',
-          'Use CDs and 2nd pot in the final phase, with all 4 targets up',
-          'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during a dangerous Fist Smash'
+          '<b>Phasing:</b> DoT Iron Qon during mount transitions (Ro\'shak → Quet\'zal → Dam\'ren).',
+          '<b>Final Phase:</b> Save CDs and 2nd Pot for when all 4 targets are active.',
+          '<b>Utility:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">VE</a> during Fist Smash.'
         ]
       },
       {
         id: 'consorts', name: "Twin Empyreans", enc: 51560,
         tips: [
-          'Precast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> on Suen, then <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> before they disappear',
-          'Recast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> on Suen during Tears of the Sun',
-          'Help heal during Nuclear Inferno (Boss is immune)',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">VE</a> during high stacks of Blazing Radiance'
+          '<b>Pre-DoT:</b> Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> on Suen before she vanishes.',
+          '<b>Burn:</b> Recast DoTs on Suen during Tears of the Sun.',
+          '<b>Support:</b> Off-heal during Nuclear Inferno (Boss is immune); use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">VE</a> during high Blazing Radiance.'
         ]
       },
       {
         id: 'leishen', name: "Lei Shen", enc: 51579,
         tips: [
-          'Save 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=26297/berserking">Berserking</a>, and use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> when Ball Lightnings spawn followed by <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a>',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> adds for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>',
-          'Save 3rd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=26297/berserking">Berserking</a> and 2nd Pot for Bloodlust'
+          '<b>Adds:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> on Ball Lightnings.',
+          '<b>Sniping:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> on adds for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+          '<b>Execution:</b> Sync your 3rd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=26297/berserking">Berserking</a> and 2nd Pot with Bloodlust.'
         ]
       },
       {
         id: 'raden', name: "Ra-den", enc: 51580,
         tips: [
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">VT</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">SW:P</a> the Crackling Stalker, then <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a>',
-          '<a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a> the first Essence of Anima, <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">DP</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">MF: I</a> the rest',
-          'At 40% use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on CD to help healers',
-          'Use 2nd pot / CDs and focus boss'
+          '<b>Add Priority:</b> DoT the Crackling Stalker, then burst with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a>.',
+          '<b>Essences:</b> Snip the first Essence with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">SW:D</a>; burn others with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Insanity</a>.',
+          '<b>Sub-40%:</b> Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on CD to assist healers.'
         ]
       }
     ];
-
+    
     function parsingBlock(encId) {
       var rules = PARSING_RULES[encId];
       if (!rules) return '';
