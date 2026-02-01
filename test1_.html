@@ -222,8 +222,6 @@
       }
     }
 
-
-
     .tips-list {
       list-style: none;
       padding: 0;
@@ -243,6 +241,71 @@
       left: 0;
       color: #7c3aed;
       font-weight: bold;
+    }
+
+    .tips-list li a.wowhead {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: rgba(124, 58, 237, 0.5);
+      text-underline-offset: 3px;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .tips-list li a.wowhead:hover {
+      color: #a78bfa;
+      text-decoration-color: #a78bfa;
+    }
+
+    /* Parsing rules block */
+    .parsing-rules {
+      margin-top: 1.75rem;
+      background: rgba(124, 58, 237, 0.08);
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+    }
+
+    .parsing-rules-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .parsing-rules-header svg {
+      flex-shrink: 0;
+      color: #7c3aed;
+    }
+
+    .parsing-rules-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a78bfa;
+    }
+
+    .parsing-rules ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .parsing-rules ul li {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      padding: 0.25rem 0 0.25rem 1.25rem;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .parsing-rules ul li:before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: rgba(124, 58, 237, 0.5);
+      font-weight: 600;
     }
 
     @media (max-width: 1024px) {
@@ -402,19 +465,19 @@
       {
         id: 'jinrokh',
         name: "Jin'rokh the Breaker",
-        icon: 1577,
+        encounterId: 51577,
         tips: [
-          "Stand in Conductive Water pools during Focused Lightning to increase DPS",
-          "Move out of water when Electrified (debuff) to avoid raid damage",
-          "Use defensive cooldowns for Ionization stacks",
-          "Spread out to avoid chaining Static Burst damage",
-          "Save major DPS cooldowns for water phases"
+          'Pot at 15s pull timer',
+          'Use CDs / Lust / 2nd Pot with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a>',
+          'Pray for UVLS proc',
+          'After removing <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138733/ionization?dd=6">Ionization</a>, briefly reenter <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138470/conductive-water?dd=6">Conductive Water</a> and recast DOTs',
+          'Use Vampiric Embrace during <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=137261/lightning-storm?dd=6">Lightning Storm</a> (and Dispersion if necessary)'
         ]
       },
       {
         id: 'horridon',
         name: "Horridon",
-        icon: 1575,
+        encounterId: 51575,
         tips: [
           "Focus damage on Direhorn adds during door phases",
           "Use Mass Dispel on Dinomancers to remove damage buffs",
@@ -426,7 +489,7 @@
       {
         id: 'council',
         name: "Council of Elders",
-        icon: 1570,
+        encounterId: 51570,
         tips: [
           "Kill order: Kazra'jin → Sul → Frost King → High Priestess Mar'li",
           "Dispel Quicksand on allies immediately",
@@ -438,7 +501,7 @@
       {
         id: 'tortos',
         name: "Tortos",
-        icon: 1565,
+        encounterId: 51565,
         tips: [
           "Kick Whirl Turtle shells at boss to interrupt Furious Stone Breath",
           "Clear Crystal Shell debuff before it expires",
@@ -450,7 +513,7 @@
       {
         id: 'megaera',
         name: "Megaera",
-        icon: 1578,
+        encounterId: 51578,
         tips: [
           "Kill heads in order: Flaming → Frozen → Venomous → Arcane",
           "Move out of Cinders ground effect immediately",
@@ -462,7 +525,7 @@
       {
         id: 'jikun',
         name: "Ji-Kun",
-        icon: 1573,
+        encounterId: 51573,
         tips: [
           "Collect green food from nests to gain Primal Nutriment buff (massive DPS increase)",
           "Use Levitate/slowfall when jumping between platforms",
@@ -474,7 +537,7 @@
       {
         id: 'durumu',
         name: "Durumu the Forgotten",
-        icon: 1572,
+        encounterId: 51572,
         tips: [
           "Multi-dot Crimson, Azure, and Amber Fog Beasts during maze",
           "Follow your color beam during Light Spectrum phase",
@@ -486,7 +549,7 @@
       {
         id: 'primordius',
         name: "Primordius",
-        icon: 1574,
+        encounterId: 51574,
         tips: [
           "Collect beneficial mutations (red pools) for DPS buffs",
           "Avoid harmful mutations (blue pools)",
@@ -498,7 +561,7 @@
       {
         id: 'darkanimus',
         name: "Dark Animus",
-        icon: 1576,
+        encounterId: 51576,
         tips: [
           "Kill Small Golems → Medium Golems → Large Golems in order",
           "Use Shadow Word: Death on low health adds for efficiency",
@@ -510,7 +573,7 @@
       {
         id: 'ironqon',
         name: "Iron Qon",
-        icon: 1559,
+        encounterId: 51559,
         tips: [
           "Maintain DoTs on both Qon and his current Quilen mount",
           "Stack for Freeze during Ro'shak phase",
@@ -522,7 +585,7 @@
       {
         id: 'consorts',
         name: "Twin Consorts",
-        icon: 1560,
+        encounterId: 51560,
         tips: [
           "Kill Lu'lin first (moon), then Suen (sun)",
           "Stand in Light of Day during moon phase for damage buff",
@@ -534,7 +597,7 @@
       {
         id: 'leishen',
         name: "Lei Shen",
-        icon: 1579,
+        encounterId: 51579,
         tips: [
           "Transition at 70%, 40%, and 10% health on each platform",
           "Kill Diffusion Chain conduits to reduce tank damage",
@@ -546,7 +609,7 @@
       {
         id: 'raden',
         name: "Ra-den",
-        icon: 1580,
+        encounterId: 51580,
         tips: [
           "Balance Vita and Anima to prevent wipes (keep close to 50/50)",
           "Kill Unstable Anima adds quickly with multi-dotting",
@@ -557,15 +620,27 @@
       }
     ];
 
-    function getBossIconUrl(iconId) {
-      return `https://assets.rpglogs.com/img/warcraft/bosses/${iconId}-icon.jpg?v=2`;
+    function renderParsingBlock(encounterId) {
+      const pr = PARSING_RULES[encounterId];
+      if (!pr) return '';
+      return (
+        '<div class="parsing-rules">' +
+          '<div class="parsing-rules-header">' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">' +
+              '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>' +
+            '</svg>' +
+            '<span class="parsing-rules-title">Parsing Rules</span>' +
+          '</div>' +
+          '<ul>' + pr.rules.map(r => '<li>' + r + '</li>').join('') + '</ul>' +
+        '</div>'
+      );
     }
 
     function renderTabs() {
       const tabsContainer = document.getElementById('bossTabs');
       tabsContainer.innerHTML = bosses.map((boss, index) => 
         `<button class="boss-tab ${index === 0 ? 'active' : ''}" data-boss="${boss.id}">
-          <img src="${getBossIconUrl(boss.icon)}" alt="${boss.name}" class="boss-tab-icon">
+          <img src="${bossIconUrl(boss.encounterId)}" alt="${boss.name}" class="boss-tab-icon">
           <span class="boss-tab-tooltip">${boss.name}</span>
         </button>`
       ).join('');
@@ -585,8 +660,14 @@
           <ul class="tips-list">
             ${boss.tips.map(tip => `<li>${tip}</li>`).join('')}
           </ul>
+          ${renderParsingBlock(boss.encounterId)}
         </div>`
       ).join('');
+
+      // Refresh Wowhead tooltips after injecting links
+      if (window.$WowheadPower) {
+        window.$WowheadPower.refreshLinks();
+      }
     }
 
     function switchBoss(bossId) {
