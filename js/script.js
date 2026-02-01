@@ -372,7 +372,7 @@ const TIERS = {
           "Primordius": 51574,
           "Dark Animus": 51576,
           "Iron Qon": 51559,
-          "Twin Consorts": 51560,
+          "Twin Empyreans": 51560,
           "Lei Shen": 51579,
           "Ra-den": 51580
         }
