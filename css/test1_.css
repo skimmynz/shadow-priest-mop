@@ -41,7 +41,7 @@ body {
 }
 
 .section-card {
-  ground: var(--glass-bg);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   border-radius: 16px;
   border: 1px solid var(--glass-border);
@@ -198,100 +198,69 @@ body {
   opacity: 1;
 }
 
-/* Talent Display */
+/* =================================================================
+   Talent Display — bigger, responsive
+   ================================================================= */
 .talent-display {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
-  margin-top: 0;
-}
-
-.talent-display-header {
-  display: none;
-}
-
-.talent-display-boss {
-  display: none;
-}
-
-.talent-display-sample {
-  display: none;
-}
-
-.back-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem;
-  background: var(--accent-color);
-  color: white;
-  border: 2px solid var(--accent-color);
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 0;
-}
-
-.back-button:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  transform: translateY(-2px);
-}
-
-.back-button.hidden {
-  display: none;
-}
-
-.back-button svg {
-  width: 13px;
-  height: 13px;
-  fill: currentColor;
+  gap: 0.75rem;                 /* vertical gap between tier rows */
+  padding: 0.5rem 0;
 }
 
 .talent-row-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  margin-bottom: 0.4rem;
+  gap: 0.75rem;                 /* gap between tier label and icons */
+  width: 100%;
 }
 
+/* Tier label (15 / 30 / 45 … ) shown to the left of icons */
 .talent-tier-label {
-  display: none;
+  display: block;
+  min-width: 28px;
+  text-align: right;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
+/* The 3-icon row for one tier */
 .talent-row {
-  display: grid;
-  grid-template-columns: repeat(3, 54px);
-  gap: 0.4rem;
-  width: auto;
-  max-width: none;
+  display: flex;
+  gap: 0.6rem;                  /* horizontal gap between icons */
   justify-content: center;
 }
 
+/* Individual talent icon link */
 .talent-icon {
   position: relative;
+  /* fluid sizing: fills available space, max 96 px, min 64 px */
+  width: clamp(64px, 22vw, 96px);
   aspect-ratio: 1;
-  width: 100%;
   border: 2px solid var(--border-color);
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
   background: var(--surface-bg);
   transition: all 0.3s ease;
   display: block;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
 .talent-icon:hover {
   border-color: var(--accent-color);
-  transform: scale(1.05);
+  transform: scale(1.07);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4);
 }
 
 .talent-icon.is-top {
   border-color: var(--success-color);
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
 }
 
 .talent-icon img {
@@ -301,19 +270,22 @@ body {
   display: block;
 }
 
+/* Percentage overlay at bottom of each icon */
 .talent-percent {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(0, 0, 0, 0.82);
   color: white;
-  font-size: 0.52rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-align: center;
-  padding: 0.16rem;
+  padding: 0.22rem 0;
+  letter-spacing: 0.02em;
 }
 
+/* Loading / empty states */
 .loading-state {
   text-align: center;
   padding: 2rem;
@@ -329,7 +301,7 @@ body {
   margin-top: 1rem;
 }
 
-/* FAQ List */
+/* FAQ list (kept from original) */
 .faq-list {
   list-style: none;
   padding: 0;
@@ -340,7 +312,6 @@ body {
   color: #9400D3;
   text-decoration: none;
 }
-
 
 .faq-item {
   padding: 0.8rem;
@@ -363,16 +334,22 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
+  0%   { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
+/* =================================================================
+   Responsive breakpoints
+   ================================================================= */
+
+/* ≤ 1024 px — single-column streams */
 @media (max-width: 1024px) {
   .content-grid {
     grid-template-columns: 1fr;
   }
 }
 
+/* ≤ 768 px — tighter card padding, smaller boss tabs */
 @media (max-width: 768px) {
   .content-grid {
     padding: 0.8rem;
@@ -381,15 +358,45 @@ body {
   .section-card {
     padding: 0.5rem;
   }
+
   .boss-grid {
     grid-template-columns: repeat(4, 54px);
     gap: 0.4rem;
   }
+
   .tier-toggle {
     flex-direction: column;
   }
+
+  /* Talent icons scale down but stay readable */
+  .talent-icon {
+    width: clamp(56px, 20vw, 80px);
+  }
   .talent-row {
-    gap: 0.4rem;
-    max-width: 100%;
+    gap: 0.45rem;
+  }
+  .talent-row-container {
+    gap: 0.5rem;
+  }
+  .talent-percent {
+    font-size: 0.65rem;
+    padding: 0.18rem 0;
+  }
+}
+
+/* ≤ 480 px — mobile — icons shrink further, label hides to save width */
+@media (max-width: 480px) {
+  .talent-tier-label {
+    display: none;               /* reclaim horizontal space on tiny screens */
+  }
+  .talent-icon {
+    width: clamp(52px, 28vw, 72px);
+  }
+  .talent-row {
+    gap: 0.35rem;
+  }
+  .talent-percent {
+    font-size: 0.6rem;
+    padding: 0.16rem 0;
   }
 }
