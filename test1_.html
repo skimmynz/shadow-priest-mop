@@ -158,90 +158,13 @@
     }
     .boss-tab:hover .boss-tab-tooltip { opacity: 1; }
 
-    /* --- tips panel layout: talents left, tips right --- */
+    /* --- tips panel --- */
     .tips-content {
       background: rgba(30,33,48,0.3);
       border-radius: 12px;
       padding: 1.75rem;
       min-height: 220px;
     }
-    .tips-layout {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    /* --- talent column --- */
-    .talent-column {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      align-items: center;
-    }
-    .talent-column-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #a78bfa;
-      margin-bottom: 0.15rem;
-    }
-    .talent-tier-row {
-      display: flex;
-      gap: 0.35rem;
-      align-items: center;
-    }
-    .talent-tier-label {
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      width: 18px;
-      text-align: right;
-      flex-shrink: 0;
-    }
-    .talent-pick {
-      position: relative;
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      border: 2px solid rgba(255,255,255,0.15);
-      overflow: hidden;
-      background: rgba(30,33,48,0.6);
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .talent-pick:hover {
-      border-color: #7c3aed;
-      transform: scale(1.08);
-      box-shadow: 0 0 10px rgba(124,58,237,0.4);
-    }
-    .talent-pick img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .talent-pick .talent-pick-pct {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: rgba(0,0,0,0.75);
-      font-size: 0.5rem;
-      font-weight: 700;
-      text-align: center;
-      color: #fff;
-      padding: 0.1rem 0;
-      line-height: 1.2;
-    }
-    .talent-column-loading {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      font-style: italic;
-      text-align: center;
-      padding: 0.5rem 0;
-    }
-
-    /* --- tips column --- */
     .boss-section { display: none; }
     .boss-section.active {
       display: block;
@@ -325,19 +248,6 @@
       .boss-tabs { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 0.5rem; }
       .boss-tab { width: 65px; height: 65px; }
       .tips-content { padding: 1.25rem; }
-      .tips-layout {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-      }
-      .talent-column {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.4rem;
-      }
-      .talent-tier-row { gap: 0.25rem; }
-      .talent-tier-label { display: none; }
-      .talent-pick { width: 28px; height: 28px; }
       h2 { font-size: 1.4rem; }
     }
   </style>
@@ -361,7 +271,7 @@
   <div class="content-grid">
     <div class="section-card">
       <div class="stream-container">
-        <iframe src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=www.skimmynz.com" allowfullscreen></iframe>
+        <iframe src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=www.skimmynz.com&autoplay=true&muted=true" allowfullscreen></iframe>
       </div>
     </div>
     <div class="section-card">
@@ -380,6 +290,189 @@
   </div>
 
   <script src="js/nav.js"></script>
-  <script src="js/test1_.js"></script>
+  <script>
+  (function() {
+    // Icon URL: ToT encounters use 515xx IDs but assets are at 15xx
+    function iconUrl(encId) {
+      var id = (encId >= 51559 && encId <= 51580) ? encId - 50000 : encId;
+      return 'https://assets.rpglogs.com/img/warcraft/bosses/' + id + '-icon.jpg?v=2';
+    }
+
+    var PARSING_RULES = {
+      51577: ["No rules."],
+      51575: ["Horridon is removed from Damage All Star Points."],
+      51570: ["Damage done to Living Sand is removed."],
+      51565: ["Damage done to Humming Crystal is removed.","Heroic Only: Damage done to Vampiric Cave Bat is removed.","Only damage done to Whirl Turtles that cast Shell Concussion (which they do when kicked) counts."],
+      51578: ["Damage done to heads that don't die is removed.","25m Heroic: Damage done to Nether Wyrm is removed."],
+      51573: ["Ji-Kun is removed from Damage All Star Points."],
+      51572: ["Damage done to Wandering Eye is removed."],
+      51574: ["Primordius is removed from Damage and Healing All Star Points."],
+      51576: ["Heroic: Damage to Large Anima Golem and Massive Anima Golem is removed.","Only count damage done to Anima Golems that die."],
+      51559: ["Damage done to Ice Tomb is removed."],
+      51560: ["Damage done to Lurker in the Night is removed."],
+      51579: ["Damage done to Unharnessed Power, Lesser Diffused Lightning, Greater Diffused Lightning, and Diffused Lightning is removed."],
+      51580: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."]
+    };
+
+var bosses = [
+  {
+    id: 'jinrokh', name: "Jin'rokh the Breaker", enc: 51577,
+    tips: [
+      'Prepot <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a> at 15s and hold your cooldowns.',
+      'With <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust">Bloodlust</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a>, use your CDs and 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a>. RNG <a class="wowhead" href="https://www.wowhead.com/mop-classic/item=96558/unerring-vision-of-lei-shen">Unerring Vision of Lei Shen</a> procs.',
+      'After you clear <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138733/ionization?dd=6">Ionization</a>, get back into <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a> quickly and reapply your DoTs.',
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=137261/lightning-storm?dd=6">Lightning Storm</a>.'
+    ]
+  },
+  {
+    id: 'horridon', name: "Horridon", enc: 51575,
+    tips: [
+      'Apply <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> to small adds. Keep <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">Vampiric Touch</a> on marked elite adds.',
+      'Double DoT the Direhorn Spirit to benefit from the <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138156/item-priest-t15-shadow-2p-bonus">Tier 15 Shadow Priest 2P bonus</a>.',
+      'Spend <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a> on Horridon.',
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during high <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=136817/bestial-cry">Bestial Cry</a> stacks.'
+    ]
+  },
+  {
+    id: 'council', name: "Council of Elders", enc: 51570,
+    tips: [
+      'Stack in melee so you can hit multiple targets with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on cooldown.',
+      'Keep DoTs rolling on all bosses and fill with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a>.',
+      'Recast DoTs when <a class="wowhead" href="https://www.wowhead.com/mop-classic/item=96558/unerring-vision-of-lei-shen">Unerring Vision of Lei Shen</a> procs.'
+    ]
+  },
+  {
+    id: 'tortos', name: "Tortos", enc: 51565,
+    tips: [
+      'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> on adds to trigger <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+      'Maintain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> on a Humming Crystal for the shield.',
+      'Stay spread to reduce the chance of being knocked up by the Whirl Turtles.'
+    ]
+  },
+  {
+    id: 'megaera', name: "Megaera", enc: 51578,
+    tips: [
+      'Ignore the Venomous Head.',
+      'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> on Nether Wyrms to generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+      'Swap to <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> if your raid needs extra healing throughput.'
+    ]
+  },
+  {
+    id: 'jikun', name: "Ji-Kun", enc: 51573,
+    tips: [
+      'Use feather charges to intercept Feed Young and gain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=112879/primal-nutriment">Primal Nutriment</a>.',
+      'Cast DoTs on the Nest Guardian. Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> on Hatchlings.',
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during Quills if raid is low.'
+    ]
+  },
+  {
+    id: 'durumu', name: "Durumu the Forgotten", enc: 51572,
+    tips: [
+      'Snipe Crimson Fog adds with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> uptime and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+      'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and DoTs on the Ice Walls.',
+    ]
+  },
+  {
+    id: 'primordius', name: "Primordius", enc: 51574,
+    tips: [
+      'Keep DoTs on all Living Fluids (unless your Warlocks know how to play Affliction).',
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on cooldown.',
+      'Adjust your camera angle to help dodge puddles and avoid unwanted debuffs.'
+    ]
+  },
+  {
+    id: 'darkanimus', name: "Dark Animus", enc: 51576,
+    tips: [
+      'DoT as many Anima Golems as possible to maintain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a>.',
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on cooldown for efficient multi-target damage.',
+      'Focus your <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a> into the boss.'
+    ]
+  },
+  {
+    id: 'ironqon', name: "Iron Qon", enc: 51559,
+    tips: [
+      'Recast DoTs on Iron Qon during mount transitions (Ro\'shak → Quet\'zal → Dam\'ren).',
+      'Hold your 2nd cooldowns and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a> for the final phase, when all four targets are active.',
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during Fist Smash if raid is low.'
+    ]
+  },
+  {
+    id: 'consorts', name: "Twin Empyreans", enc: 51560,
+    tips: [
+      'Precast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">Vampiric Touch</a> on Suen then <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> before she vanishes.',
+      'Refresh DoTs on Suen during Tears of the Sun.',
+      'During Nuclear Inferno (boss immune), focus on off-healing. Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> when Blazing Radiance stacks get high.'
+    ]
+  },
+  {
+    id: 'leishen', name: "Lei Shen", enc: 51579,
+    tips: [
+      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> to handle Ball Lightnings.',
+      'Snipe low adds with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> to generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
+      'Save your CDs and 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a> for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust">Bloodlust</a>.'
+    ]
+  },
+  {
+    id: 'raden', name: "Ra-den", enc: 51580,
+    tips: [
+      'DoT the Crackling Stalker, then burst it with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a>.',
+      'Snipe the first Essence of Anima with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a>. Burn the remaining ones with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a>.',
+      'Sub 40%, use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on cooldown to help with the HPS check.'
+    ]
+  }
+];
+    
+    function parsingBlock(encId) {
+      var rules = PARSING_RULES[encId];
+      if (!rules) return '';
+      return '<div class="parsing-rules">' +
+        '<div class="parsing-rules-header">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
+          '<span class="parsing-rules-title">Parsing Rules</span>' +
+        '</div>' +
+        '<ul>' + rules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul>' +
+      '</div>';
+    }
+
+    function render() {
+      var tabsEl = document.getElementById('bossTabs');
+      var contentEl = document.getElementById('tipsContent');
+
+      tabsEl.innerHTML = bosses.map(function(b, i) {
+        return '<button class="boss-tab' + (i === 0 ? ' active' : '') + '" data-boss="' + b.id + '">' +
+          '<img src="' + iconUrl(b.enc) + '" alt="' + b.name + '">' +
+          '<span class="boss-tab-tooltip">' + b.name + '</span>' +
+        '</button>';
+      }).join('');
+
+      contentEl.innerHTML = bosses.map(function(b, i) {
+        return '<div class="boss-section' + (i === 0 ? ' active' : '') + '" data-boss="' + b.id + '">' +
+          '<ul class="tips-list">' + b.tips.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul>' +
+          parsingBlock(b.enc) +
+        '</div>';
+      }).join('');
+
+      // Attach tab click handlers
+      tabsEl.addEventListener('click', function(e) {
+        var tab = e.target.closest('.boss-tab');
+        if (!tab) return;
+        var id = tab.dataset.boss;
+        tabsEl.querySelectorAll('.boss-tab').forEach(function(t) {
+          t.classList.toggle('active', t.dataset.boss === id);
+        });
+        contentEl.querySelectorAll('.boss-section').forEach(function(s) {
+          s.classList.toggle('active', s.dataset.boss === id);
+        });
+      });
+
+      // Tell Wowhead to pick up the new links
+      if (window.$WowheadPower) {
+        window.$WowheadPower.refreshLinks();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  })();
+  </script>
 </body>
 </html>
