@@ -459,8 +459,18 @@
   </div>
 
   <script src="js/nav.js"></script>
+  <script src="js/script.js"></script>
   
   <script>
+  function initBossTips() {
+    if (typeof bossIconUrl !== 'function' || typeof PARSING_RULES === 'undefined') {
+      requestAnimationFrame(initBossTips);
+      return;
+    }
+    bossTipsMain();
+  }
+
+  function bossTipsMain() {
     const bosses = [
       {
         id: 'jinrokh',
