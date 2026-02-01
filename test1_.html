@@ -175,29 +175,31 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .tips-list { list-style: none; padding: 0; }
+    .tips-list { list-style: none; padding: 0; margin: 0; }
     .tips-list li {
-      padding: 0.6rem 0 0.6rem 1.4rem;
+      padding: 0.5rem 0 0.5rem 1.2rem;
       position: relative;
       color: var(--text-secondary);
-      line-height: 1.65;
+      line-height: 1.6;
+      font-size: 0.95rem;
     }
     .tips-list li::before {
       content: "▸";
       position: absolute;
       left: 0;
-      color: #7c3aed;
+      color: #a78bfa;
+      font-size: 1rem;
     }
     .tips-list li a.wowhead {
-      color: inherit;
-      text-decoration: underline;
-      text-decoration-color: rgba(124,58,237,0.5);
-      text-underline-offset: 3px;
+      color: #a78bfa;
+      text-decoration: none;
       cursor: pointer;
+      font-weight: 500;
+      transition: color 0.2s ease;
     }
     .tips-list li a.wowhead:hover {
-      color: #a78bfa;
-      text-decoration-color: #a78bfa;
+      color: #c4b5fd;
+      text-decoration: none;
     }
 
     /* --- parsing rules --- */
