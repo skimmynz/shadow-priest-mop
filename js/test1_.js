@@ -394,6 +394,11 @@
     var resultsDiv = document.getElementById('talent-results');
     if (resultsDiv) {
       resultsDiv.innerHTML = html;
+      
+      // Remove wowhead class from img tags to prevent Wowhead from modifying them
+      resultsDiv.querySelectorAll('.talent-icon img').forEach(function(img) {
+        img.classList.remove('wowhead');
+      });
     }
     
     if (window.$WowheadPower) {
@@ -480,11 +485,4 @@
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
-  } else {
-    render();
-  }
-
-  // Expose selectBoss globally for external access
-  window.selectBoss = selectBoss;
-})();
+    document.addEventListener('DOMContentLo
