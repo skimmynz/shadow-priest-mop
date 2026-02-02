@@ -33,18 +33,46 @@
   <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
   
   <style>
-    /* Prevent Wowhead from iconizing talent links */
+    /* Prevent Wowhead from iconizing talent links - MAXIMUM SPECIFICITY */
     .talent-icon ins,
-    .talent-icon del {
+    .talent-icon del,
+    .talent-icon ins *,
+    .talent-icon del *,
+    a.talent-icon ins,
+    a.talent-icon del {
+      display: none !important;
+      visibility: hidden !important;
+      position: absolute !important;
+      width: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      clip: rect(0,0,0,0) !important;
+      clip-path: inset(50%) !important;
+    }
+    
+    /* Only allow img and .talent-percent to be visible in talent icons */
+    .talent-icon > *:not(img):not(.talent-percent) {
       display: none !important;
     }
     
     /* Ensure talent icon images stay correct size */
+    .talent-icon img,
     .talent-icon img[style] {
-      width: 100% !important;
-      height: 100% !important;
-      max-width: none !important;
-      max-height: none !important;
+      width: 48px !important;
+      height: 48px !important;
+      max-width: 48px !important;
+      max-height: 48px !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      object-fit: cover !important;
+      display: block !important;
+    }
+    
+    .talent-icon .talent-percent {
+      display: block !important;
+      visibility: visible !important;
     }
   </style>
 </head>
