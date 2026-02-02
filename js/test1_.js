@@ -485,4 +485,11 @@
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLo
+    document.addEventListener('DOMContentLoaded', render);
+  } else {
+    render();
+  }
+
+  // Expose selectBoss globally for external access
+  window.selectBoss = selectBoss;
+})();
