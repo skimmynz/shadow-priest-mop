@@ -395,12 +395,54 @@
     var resultsDiv = document.getElementById('talent-results');
     if (resultsDiv) {
       resultsDiv.innerHTML = html;
+      
+      // Aggressively clean up any Wowhead icon injections
+      setTimeout(function() {
+        resultsDiv.querySelectorAll('.talent-icon').forEach(function(link) {
+          // Remove any injected elements
+          link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
+            el.remove();
+          });
+          
+          // Ensure only our img and percent div remain
+          var img = link.querySelector('img');
+          var percent = link.querySelector('.talent-percent');
+          
+          if (img && percent) {
+            // Clear and rebuild with only these elements
+            var href = link.href;
+            var classes = link.className;
+            link.innerHTML = '';
+            link.appendChild(img);
+            link.appendChild(percent);
+            link.href = href;
+            link.className = classes;
+          }
+        });
+      }, 150);
+      
+      // Run cleanup again after Wowhead processes
+      setTimeout(function() {
+        resultsDiv.querySelectorAll('.talent-icon ins, .talent-icon del, .talent-icon .wowhead-icon').forEach(function(el) {
+          el.remove();
+        });
+      }, 500);
     }
     
     // Refresh Wowhead tooltips after rendering
     if (window.$WowheadPower) {
       setTimeout(function() { 
         window.$WowheadPower.refreshLinks();
+        
+        // Final cleanup after Wowhead refresh
+        setTimeout(function() {
+          var resultsDiv = document.getElementById('talent-results');
+          if (resultsDiv) {
+            resultsDiv.querySelectorAll('.talent-icon ins, .talent-icon del, .talent-icon .wowhead-icon').forEach(function(el) {
+              el.remove();
+            });
+          }
+        }, 100);
       }, 100);
     }
   }
@@ -477,14 +519,57 @@
   }
 
   // ============================================================================
+  // WOWHEAD ICON PREVENTION
+  // ============================================================================
+  
+  // Create a MutationObserver to actively remove Wowhead icon injections from talent links
+  function preventWowheadIcons() {
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        mutation.addedNodes.forEach(function(node) {
+          // Check if this is an icon being added to a talent link
+          if (node.nodeType === 1) { // Element node
+            var talentIcon = node.closest('.talent-icon');
+            if (talentIcon) {
+              // Remove any ins, del, or icon elements
+              if (node.tagName === 'INS' || node.tagName === 'DEL' || node.classList.contains('wowhead-icon')) {
+                node.remove();
+              }
+            }
+          }
+        });
+        
+        // Also check for modified nodes
+        if (mutation.type === 'childList' && mutation.target.classList && mutation.target.classList.contains('talent-icon')) {
+          var target = mutation.target;
+          // Remove any injected elements
+          target.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
+            el.remove();
+          });
+        }
+      });
+    });
+    
+    // Start observing the document
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  // ============================================================================
   // INITIALIZATION
   // ============================================================================
   
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render);
+    document.addEventListener('DOMContentLoaded', function() {
+      render();
+      preventWowheadIcons();
+    });
   } else {
     render();
+    preventWowheadIcons();
   }
 
   // Expose selectBoss globally for external access
