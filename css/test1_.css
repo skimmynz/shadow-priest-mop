@@ -325,16 +325,25 @@ h2 {
   pointer-events: none;
 }
 
-/* Prevent Wowhead from distorting talent icons */
+/* CRITICAL: Prevent Wowhead from distorting talent icons */
 .talent-icon img[style] {
   width: 100% !important;
   height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: cover !important;
 }
 
-/* Hide any Wowhead-injected icons in talent links */
-.talent-icon .wowhead-icon,
-.talent-icon ins {
+/* Hide any Wowhead-injected elements in talent links */
+.talent-icon ins,
+.talent-icon del,
+.talent-icon .wowhead-icon {
   display: none !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 .talent-percent {
@@ -348,6 +357,8 @@ h2 {
   font-weight: 700;
   text-align: center;
   padding: 0.16rem;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .loading-state {
