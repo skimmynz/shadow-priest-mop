@@ -322,6 +322,13 @@ h2 {
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
+}
+
+/* Prevent Wowhead from distorting talent icons */
+.talent-icon img[style] {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .talent-percent {
