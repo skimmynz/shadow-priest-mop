@@ -23,9 +23,30 @@
   <link rel="canonical" href="https://skimmynz.com/">
   
   <script>
-    window.whTooltips = { colorLinks: true, iconizeLinks: true, renameLinks: false };
+    // Configure Wowhead tooltips BEFORE loading the script
+    window.whTooltips = { 
+      colorLinks: true, 
+      iconizeLinks: true, 
+      renameLinks: false 
+    };
   </script>
   <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
+  
+  <style>
+    /* Prevent Wowhead from iconizing talent links */
+    .talent-icon ins,
+    .talent-icon del {
+      display: none !important;
+    }
+    
+    /* Ensure talent icon images stay correct size */
+    .talent-icon img[style] {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: none !important;
+      max-height: none !important;
+    }
+  </style>
 </head>
 <body>
   <nav class="top-nav">
