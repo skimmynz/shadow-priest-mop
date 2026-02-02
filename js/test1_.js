@@ -379,7 +379,8 @@
         var color = parseFloat(percent) >= 75 ? '#10b981' : 
                    parseFloat(percent) <= 10 ? '#ef4444' : '#f59e0b';
         
-        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
+        // Use data-wh attribute instead of data-wowhead to prevent auto-detection
+        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wh="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
         html += '<img src="' + iconSrc + '" alt="' + talent + '" loading="lazy">';
         html += '<div class="talent-percent" style="color: ' + color + '">' + percent + '%</div>';
         html += '</a>';
@@ -394,24 +395,25 @@
     var resultsDiv = document.getElementById('talent-results');
     if (resultsDiv) {
       resultsDiv.innerHTML = html;
-      
-      // Manually attach Wowhead tooltips to talent icons without iconization
-      resultsDiv.querySelectorAll('.talent-icon[data-wowhead]').forEach(function(link) {
-        // Add wowhead class temporarily for tooltip attachment
-        link.classList.add('wowhead');
-      });
     }
     
     if (window.$WowheadPower) {
       setTimeout(function() { 
+        // First, refresh regular wowhead links (tips)
         window.$WowheadPower.refreshLinks();
         
-        // Remove wowhead class after tooltips are attached to prevent iconization
+        // Then manually attach tooltips to talent icons using their data-wh attribute
         var resultsDiv = document.getElementById('talent-results');
         if (resultsDiv) {
-          resultsDiv.querySelectorAll('.talent-icon.wowhead').forEach(function(link) {
-            link.classList.remove('wowhead');
+          resultsDiv.querySelectorAll('.talent-icon[data-wh]').forEach(function(link) {
+            var whData = link.getAttribute('data-wh');
+            link.setAttribute('data-wowhead', whData);
+            link.removeAttribute('data-wh');
           });
+          
+          // Refresh again to pick up the talent tooltips, but they won't be iconized
+          // because they don't have the wowhead class
+          window.$WowheadPower.refreshLinks();
         }
       }, 100);
     }
