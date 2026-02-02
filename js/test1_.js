@@ -379,7 +379,7 @@
         var color = parseFloat(percent) >= 75 ? '#10b981' : 
                    parseFloat(percent) <= 10 ? '#ef4444' : '#f59e0b';
         
-        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" class="talent-icon wowhead ' + (isTop ? 'is-top' : '') + '">';
+        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
         html += '<img src="' + iconSrc + '" alt="' + talent + '" loading="lazy">';
         html += '<div class="talent-percent" style="color: ' + color + '">' + percent + '%</div>';
         html += '</a>';
@@ -395,15 +395,24 @@
     if (resultsDiv) {
       resultsDiv.innerHTML = html;
       
-      // Remove wowhead class from img tags to prevent Wowhead from modifying them
-      resultsDiv.querySelectorAll('.talent-icon img').forEach(function(img) {
-        img.classList.remove('wowhead');
+      // Manually attach Wowhead tooltips to talent icons without iconization
+      resultsDiv.querySelectorAll('.talent-icon[data-wowhead]').forEach(function(link) {
+        // Add wowhead class temporarily for tooltip attachment
+        link.classList.add('wowhead');
       });
     }
     
     if (window.$WowheadPower) {
       setTimeout(function() { 
-        window.$WowheadPower.refreshLinks(); 
+        window.$WowheadPower.refreshLinks();
+        
+        // Remove wowhead class after tooltips are attached to prevent iconization
+        var resultsDiv = document.getElementById('talent-results');
+        if (resultsDiv) {
+          resultsDiv.querySelectorAll('.talent-icon.wowhead').forEach(function(link) {
+            link.classList.remove('wowhead');
+          });
+        }
       }, 100);
     }
   }
