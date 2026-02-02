@@ -379,8 +379,8 @@
         var color = parseFloat(percent) >= 75 ? '#10b981' : 
                    parseFloat(percent) <= 10 ? '#ef4444' : '#f59e0b';
         
-        // Use data-wh attribute instead of data-wowhead to prevent auto-detection
-        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wh="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
+        // Use rel="false" to prevent Wowhead from replacing the link content
+        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
         html += '<img src="' + iconSrc + '" alt="' + talent + '" loading="lazy">';
         html += '<div class="talent-percent" style="color: ' + color + '">' + percent + '%</div>';
         html += '</a>';
@@ -397,24 +397,10 @@
       resultsDiv.innerHTML = html;
     }
     
+    // Refresh Wowhead tooltips after rendering
     if (window.$WowheadPower) {
       setTimeout(function() { 
-        // First, refresh regular wowhead links (tips)
         window.$WowheadPower.refreshLinks();
-        
-        // Then manually attach tooltips to talent icons using their data-wh attribute
-        var resultsDiv = document.getElementById('talent-results');
-        if (resultsDiv) {
-          resultsDiv.querySelectorAll('.talent-icon[data-wh]').forEach(function(link) {
-            var whData = link.getAttribute('data-wh');
-            link.setAttribute('data-wowhead', whData);
-            link.removeAttribute('data-wh');
-          });
-          
-          // Refresh again to pick up the talent tooltips, but they won't be iconized
-          // because they don't have the wowhead class
-          window.$WowheadPower.refreshLinks();
-        }
       }, 100);
     }
   }
