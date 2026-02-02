@@ -325,44 +325,6 @@ h2 {
   pointer-events: none;
 }
 
-/* CRITICAL: Prevent Wowhead from distorting talent icons */
-.talent-icon {
-  pointer-events: auto !important;
-}
-
-.talent-icon img[style] {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: none !important;
-  max-height: none !important;
-  object-fit: cover !important;
-  display: block !important;
-}
-
-/* Hide ANY Wowhead-injected elements in talent links with maximum specificity */
-.talent-icon ins,
-.talent-icon del,
-.talent-icon .wowhead-icon,
-.talent-icon span[style*="background"],
-.talent-icon > *:not(img):not(.talent-percent) {
-  display: none !important;
-  visibility: hidden !important;
-  position: absolute !important;
-  width: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Ensure only our elements are visible */
-.talent-icon > img,
-.talent-icon > .talent-percent {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
 .talent-percent {
   position: absolute;
   bottom: 0;
