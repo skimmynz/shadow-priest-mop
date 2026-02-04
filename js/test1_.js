@@ -575,13 +575,26 @@
   // INITIALIZATION
   // ============================================================================
   
+  // Add CSS to prevent Wowhead icons on talent links
+  function addTalentIconStyles() {
+    var styleId = 'talent-icon-override';
+    if (!document.getElementById(styleId)) {
+      var style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = '.talent-icon { background-image: none !important; }';
+      document.head.appendChild(style);
+    }
+  }
+  
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
+      addTalentIconStyles();
       render();
       preventWowheadIcons();
     });
   } else {
+    addTalentIconStyles();
     render();
     preventWowheadIcons();
   }
