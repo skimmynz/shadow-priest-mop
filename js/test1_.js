@@ -402,6 +402,11 @@
           // Remove background-image added by Wowhead
           link.style.backgroundImage = 'none';
           
+          // Lock dimensions to prevent jiggle
+          link.style.width = '48px';
+          link.style.height = '48px';
+          link.style.display = 'block';
+          
           // Remove any injected elements
           link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
             el.remove();
@@ -434,6 +439,11 @@
             resultsDiv.querySelectorAll('.talent-icon').forEach(function(link) {
               // Remove background-image
               link.style.backgroundImage = 'none';
+              
+              // Lock dimensions
+              link.style.width = '48px';
+              link.style.height = '48px';
+              link.style.display = 'block';
               
               // Remove injected elements
               link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
