@@ -379,8 +379,8 @@
         var color = parseFloat(percent) >= 75 ? '#10b981' : 
                    parseFloat(percent) <= 10 ? '#ef4444' : '#f59e0b';
         
-        // Use rel="false" to prevent Wowhead from replacing the link content
-        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
+        // Add data-disable-wowhead-icon-links="true" to prevent icon injection
+        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" data-disable-wowhead-icon-links="true" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
         html += '<img src="' + iconSrc + '" alt="' + talent + '" loading="lazy">';
         html += '<div class="talent-percent" style="color: ' + color + '">' + percent + '%</div>';
         html += '</a>';
