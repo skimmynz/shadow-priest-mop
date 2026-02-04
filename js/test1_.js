@@ -524,55 +524,40 @@
   // WOWHEAD ICON PREVENTION
   // ============================================================================
   
-  // Create a MutationObserver to actively remove Wowhead icon injections from talent links
+  // Simple observer to remove Wowhead icon injections from talent links
   function preventWowheadIcons() {
+    var isProcessing = false;
+    
     var observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        mutation.addedNodes.forEach(function(node) {
-          // Check if this is an icon being added to a talent link
-          if (node.nodeType === 1) { // Element node
-            var talentIcon = node.closest('.talent-icon');
-            if (talentIcon) {
-              // Remove any ins, del, or icon elements
-              if (node.tagName === 'INS' || node.tagName === 'DEL' || node.classList.contains('wowhead-icon')) {
-                node.remove();
-              }
-            }
-          }
-        });
-        
-        // Check for style/class changes on talent icons
-        if (mutation.type === 'attributes' && mutation.target.classList && mutation.target.classList.contains('talent-icon')) {
-          var target = mutation.target;
-          
-          // Remove background-image
-          if (mutation.attributeName === 'style' && target.style.backgroundImage && target.style.backgroundImage !== 'none') {
-            target.style.backgroundImage = 'none';
+      if (isProcessing) return;
+      
+      isProcessing = true;
+      
+      setTimeout(function() {
+        var talentIcons = document.querySelectorAll('.talent-icon');
+        talentIcons.forEach(function(link) {
+          // Remove background-image if present
+          if (link.style.backgroundImage && link.style.backgroundImage !== 'none') {
+            link.style.backgroundImage = 'none';
           }
           
           // Remove Wowhead classes
-          if (mutation.attributeName === 'class') {
-            target.classList.remove('icontinyl', 'icontinyh');
-          }
-        }
-        
-        // Also check for modified nodes
-        if (mutation.type === 'childList' && mutation.target.classList && mutation.target.classList.contains('talent-icon')) {
-          var target = mutation.target;
+          link.classList.remove('icontinyl', 'icontinyh');
+          
           // Remove any injected elements
-          target.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
+          link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
             el.remove();
           });
-        }
-      });
+        });
+        
+        isProcessing = false;
+      }, 0);
     });
     
     // Start observing the document
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['style', 'class']
+      subtree: true
     });
   }
 
