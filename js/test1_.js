@@ -396,37 +396,30 @@
     if (resultsDiv) {
       resultsDiv.innerHTML = html;
       
-      // Aggressively clean up any Wowhead icon injections
-      setTimeout(function() {
+      // Clean up Wowhead icon injections
+      function cleanupTalentIcons() {
         resultsDiv.querySelectorAll('.talent-icon').forEach(function(link) {
+          // Remove background-image added by Wowhead
+          link.style.backgroundImage = 'none';
+          
           // Remove any injected elements
           link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
             el.remove();
           });
           
-          // Ensure only our img and percent div remain
-          var img = link.querySelector('img');
-          var percent = link.querySelector('.talent-percent');
-          
-          if (img && percent) {
-            // Clear and rebuild with only these elements
-            var href = link.href;
-            var classes = link.className;
-            link.innerHTML = '';
-            link.appendChild(img);
-            link.appendChild(percent);
-            link.href = href;
-            link.className = classes;
-          }
+          // Remove any Wowhead-added classes
+          link.classList.remove('icontinyl', 'icontinyh');
         });
-      }, 150);
+      }
       
-      // Run cleanup again after Wowhead processes
-      setTimeout(function() {
-        resultsDiv.querySelectorAll('.talent-icon ins, .talent-icon del, .talent-icon .wowhead-icon').forEach(function(el) {
-          el.remove();
-        });
-      }, 500);
+      // Initial cleanup
+      setTimeout(cleanupTalentIcons, 150);
+      
+      // Cleanup after Wowhead processes
+      setTimeout(cleanupTalentIcons, 500);
+      
+      // Final cleanup
+      setTimeout(cleanupTalentIcons, 1000);
     }
     
     // Refresh Wowhead tooltips after rendering
@@ -438,8 +431,17 @@
         setTimeout(function() {
           var resultsDiv = document.getElementById('talent-results');
           if (resultsDiv) {
-            resultsDiv.querySelectorAll('.talent-icon ins, .talent-icon del, .talent-icon .wowhead-icon').forEach(function(el) {
-              el.remove();
+            resultsDiv.querySelectorAll('.talent-icon').forEach(function(link) {
+              // Remove background-image
+              link.style.backgroundImage = 'none';
+              
+              // Remove injected elements
+              link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
+                el.remove();
+              });
+              
+              // Remove Wowhead classes
+              link.classList.remove('icontinyl', 'icontinyh');
             });
           }
         }, 100);
@@ -539,6 +541,21 @@
           }
         });
         
+        // Check for style/class changes on talent icons
+        if (mutation.type === 'attributes' && mutation.target.classList && mutation.target.classList.contains('talent-icon')) {
+          var target = mutation.target;
+          
+          // Remove background-image
+          if (mutation.attributeName === 'style' && target.style.backgroundImage && target.style.backgroundImage !== 'none') {
+            target.style.backgroundImage = 'none';
+          }
+          
+          // Remove Wowhead classes
+          if (mutation.attributeName === 'class') {
+            target.classList.remove('icontinyl', 'icontinyh');
+          }
+        }
+        
         // Also check for modified nodes
         if (mutation.type === 'childList' && mutation.target.classList && mutation.target.classList.contains('talent-icon')) {
           var target = mutation.target;
@@ -553,7 +570,9 @@
     // Start observing the document
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class']
     });
   }
 
