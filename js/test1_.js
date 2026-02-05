@@ -409,26 +409,34 @@
     }
   }
 
-  function preventWowheadIcons() {
-    var isProcessing = false;
+function preventWowheadIcons() {
+  var isProcessing = false;
+  
+  var observer = new MutationObserver(function() {
+    if (isProcessing) return;
+    isProcessing = true;
     
-    var observer = new MutationObserver(function() {
-      if (isProcessing) return;
-      isProcessing = true;
-      
-      setTimeout(function() {
-        document.querySelectorAll('.talent-icon').forEach(function(link) {
-          if (link.style.backgroundImage && link.style.backgroundImage !== 'none') {
-            link.style.backgroundImage = 'none';
-          }
-          link.classList.remove('icontinyl', 'icontinyh');
-          link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
-            el.remove();
-          });
+    requestAnimationFrame(function() {
+      document.querySelectorAll('.talent-icon').forEach(function(link) {
+        if (link.style.backgroundImage && link.style.backgroundImage !== 'none') {
+          link.style.backgroundImage = 'none';
+        }
+        link.classList.remove('icontinyl', 'icontinyh');
+        link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
+          el.remove();
         });
-        isProcessing = false;
-      }, 0);
+      });
+      isProcessing = false;
     });
+  });
+  
+  observer.observe(document.body, { 
+    childList: true, 
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['style']
+  });
+}
     
     observer.observe(document.body, { childList: true, subtree: true });
   }
