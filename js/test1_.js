@@ -1,18 +1,11 @@
-// Boss Tips and Talent Display Script
 (function() {
   'use strict';
 
-  // ============================================================================
-  // CONFIGURATION & DATA
-  // ============================================================================
-  
-  // Icon URL helper for ToT encounters
   function iconUrl(encId) {
     var id = (encId >= 51559 && encId <= 51580) ? encId - 50000 : encId;
     return 'https://assets.rpglogs.com/img/warcraft/bosses/' + id + '-icon.jpg?v=2';
   }
 
-  // Talent data
   var talentTiers = {
     15: ["Void Tendrils", "Psyfiend", "Dominate Mind"],
     30: ["Body and Soul", "Angelic Feather", "Phantasm"],
@@ -78,7 +71,6 @@
     return talentNameMap[apiName] || apiName;
   }
 
-  // Parsing rules data
   var PARSING_RULES = {
     51577: ["No rules."],
     51575: ["Horridon is removed from Damage All Star Points."],
@@ -95,7 +87,6 @@
     51580: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."]
   };
 
-  // Boss tips data
   var bosses = [
     {
       id: 'jinrokh', name: "Jin'rokh the Breaker", enc: 51577,
@@ -204,19 +195,11 @@
     }
   ];
 
-  // ============================================================================
-  // TALENT FETCHING & CACHING
-  // ============================================================================
-  
   var fetchController = null;
   var fetchCache = new Map();
 
   function selectBoss(bossId, bossName) {
-    console.log('Fetching talents for:', bossName, 'ID:', bossId);
-    
-    if (fetchController) {
-      fetchController.abort();
-    }
+    if (fetchController) fetchController.abort();
     fetchController = new AbortController();
     
     var resultsDiv = document.getElementById('talent-results');
@@ -225,108 +208,70 @@
     resultsDiv.innerHTML = '<div class="loading-state"><div class="spinner"></div><p>Loading talents...</p></div>';
     
     var CACHE_KEY = 'spriest_rankings_' + bossId;
-    var data;
     
-    // Check in-memory cache
     if (fetchCache.has(CACHE_KEY)) {
       var cached = fetchCache.get(CACHE_KEY);
-      var isRecent = (Date.now() - cached.timestamp) < 3600000;
-      
-      if (isRecent) {
-        console.log('Using in-memory cache for', bossName);
+      if ((Date.now() - cached.timestamp) < 3600000) {
         renderTalents(cached.data, bossName);
         return;
       }
     }
     
-    // Check localStorage cache
     var localCached = localStorage.getItem(CACHE_KEY);
     if (localCached) {
       try {
         var parsedCache = JSON.parse(localCached);
         var cachedAt = parsedCache.cachedAt || (parsedCache.data && parsedCache.data.cachedAt);
-        var isRecent = cachedAt && (Date.now() - Date.parse(cachedAt)) < 3600000;
-        
-        if (isRecent && parsedCache.data) {
-          console.log('Using localStorage cache for', bossName);
-          data = parsedCache.data;
-          
-          fetchCache.set(CACHE_KEY, {
-            data: data,
-            timestamp: Date.now()
-          });
-          
-          renderTalents(data, bossName);
+        if (cachedAt && (Date.now() - Date.parse(cachedAt)) < 3600000 && parsedCache.data) {
+          fetchCache.set(CACHE_KEY, { data: parsedCache.data, timestamp: Date.now() });
+          renderTalents(parsedCache.data, bossName);
           return;
         }
-      } catch (e) {
-        console.error('Cache parse error:', e);
-      }
+      } catch (e) {}
     }
     
-    // Fetch from API
-    console.log('Fetching from API for', bossName);
-    fetch('/.netlify/functions/getLogs?encounterId=' + bossId, {
-      signal: fetchController.signal
-    })
+    fetch('/.netlify/functions/getLogs?encounterId=' + bossId, { signal: fetchController.signal })
     .then(function(response) {
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status + ': Data not available');
-      }
+      if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.json();
     })
     .then(function(data) {
-      console.log('API data received, rankings count:', data.rankings ? data.rankings.length : 0);
-      
       if (!data || !data.rankings || data.rankings.length === 0) {
-        console.warn('No rankings in response');
         resultsDiv.innerHTML = '<div class="empty-state">No ranking data available for this boss yet.</div>';
         return;
       }
       
-      // Store in both caches
-      var cacheData = {
-        data: data,
-        cachedAt: new Date().toISOString()
-      };
-      
-      fetchCache.set(CACHE_KEY, {
-        data: data,
-        timestamp: Date.now()
-      });
+      var cacheData = { data: data, cachedAt: new Date().toISOString() };
+      fetchCache.set(CACHE_KEY, { data: data, timestamp: Date.now() });
       
       try {
         localStorage.setItem(CACHE_KEY, JSON.stringify(cacheData));
-      } catch (storageError) {
-        console.warn('Failed to cache data:', storageError);
-      }
+      } catch (e) {}
       
       renderTalents(data, bossName);
     })
     .catch(function(error) {
-      if (error.name === 'AbortError') {
-        console.log('Request aborted');
-        return;
-      }
+      if (error.name === 'AbortError') return;
       
-      console.error('Error loading talents:', error);
-      
-      if (error.message.includes('404') || error.message.includes('Data not available')) {
-        resultsDiv.innerHTML = '<div class="empty-state">No ranking data available for this boss yet.</div>';
+      var cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        try {
+          var parsedCache = JSON.parse(cached);
+          renderTalents(parsedCache.data, bossName);
+        } catch (e) {
+          resultsDiv.innerHTML = '<div class="empty-state">Failed to load talent data.</div>';
+        }
       } else {
-        resultsDiv.innerHTML = '<div class="empty-state">Failed to load talent data. Please try again later.</div>';
+        resultsDiv.innerHTML = '<div class="empty-state">Failed to load talent data.</div>';
       }
+    })
+    .finally(function() {
+      fetchController = null;
     });
   }
 
-  // ============================================================================
-  // TALENT RENDERING
-  // ============================================================================
-  
   function renderTalents(data, bossName) {
     var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
-    var sampleSize = rankings.length;
-    
     var tierCounts = {};
     var totalPerTier = {};
     
@@ -360,9 +305,7 @@
     
     Object.keys(talentTiers).sort(function(a, b) { return Number(a) - Number(b); }).forEach(function(tier) {
       var total = totalPerTier[tier] || 0;
-      
-      html += '<div class="talent-row-container">';
-      html += '<div class="talent-row">';
+      html += '<div class="talent-row-container"><div class="talent-row">';
       
       talentTiers[tier].forEach(function(talent) {
         var count = tierCounts[tier][talent] || 0;
@@ -375,19 +318,15 @@
           return total > 0 ? ((tierCounts[tier][t] || 0) / total) * 100 : 0;
         }));
         var isTop = parseFloat(percent) >= maxPct - 0.05 && maxPct > 0;
+        var color = parseFloat(percent) >= 75 ? '#10b981' : parseFloat(percent) <= 10 ? '#ef4444' : '#f59e0b';
         
-        var color = parseFloat(percent) >= 75 ? '#10b981' : 
-                   parseFloat(percent) <= 10 ? '#ef4444' : '#f59e0b';
-        
-        // Add data-disable-wowhead-icon-links="true" to prevent icon injection
-        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" data-disable-wowhead-icon-links="true" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
+        html += '<a href="' + wowheadUrl + '" target="_blank" rel="noopener" data-wowhead="spell=' + spellId + '&domain=mop-classic" class="talent-icon ' + (isTop ? 'is-top' : '') + '">';
         html += '<img src="' + iconSrc + '" alt="' + talent + '" loading="lazy">';
         html += '<div class="talent-percent" style="color: ' + color + '">' + percent + '%</div>';
         html += '</a>';
       });
       
-      html += '</div>';
-      html += '</div>';
+      html += '</div></div>';
     });
     
     html += '</div>';
@@ -396,73 +335,21 @@
     if (resultsDiv) {
       resultsDiv.innerHTML = html;
       
-      // Clean up Wowhead icon injections
-      function cleanupTalentIcons() {
+      setTimeout(function() {
         resultsDiv.querySelectorAll('.talent-icon').forEach(function(link) {
-          // Remove background-image added by Wowhead
-          link.style.backgroundImage = 'none';
-          
-          // Lock dimensions to prevent jiggle
           link.style.width = '48px';
           link.style.height = '48px';
           link.style.display = 'block';
-          
-          // Remove any injected elements
-          link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
-            el.remove();
-          });
-          
-          // Remove any Wowhead-added classes
           link.classList.remove('icontinyl', 'icontinyh');
         });
-      }
-      
-      // Initial cleanup
-      setTimeout(cleanupTalentIcons, 150);
-      
-      // Cleanup after Wowhead processes
-      setTimeout(cleanupTalentIcons, 500);
-      
-      // Final cleanup
-      setTimeout(cleanupTalentIcons, 1000);
+      }, 100);
     }
     
-    // Refresh Wowhead tooltips after rendering
     if (window.$WowheadPower) {
-      setTimeout(function() { 
-        window.$WowheadPower.refreshLinks();
-        
-        // Final cleanup after Wowhead refresh
-        setTimeout(function() {
-          var resultsDiv = document.getElementById('talent-results');
-          if (resultsDiv) {
-            resultsDiv.querySelectorAll('.talent-icon').forEach(function(link) {
-              // Remove background-image
-              link.style.backgroundImage = 'none';
-              
-              // Lock dimensions
-              link.style.width = '48px';
-              link.style.height = '48px';
-              link.style.display = 'block';
-              
-              // Remove injected elements
-              link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
-                el.remove();
-              });
-              
-              // Remove Wowhead classes
-              link.classList.remove('icontinyl', 'icontinyh');
-            });
-          }
-        }, 100);
-      }, 100);
+      setTimeout(function() { window.$WowheadPower.refreshLinks(); }, 100);
     }
   }
 
-  // ============================================================================
-  // UI RENDERING
-  // ============================================================================
-  
   function parsingBlock(encId) {
     var rules = PARSING_RULES[encId];
     if (!rules) return '';
@@ -482,7 +369,6 @@
     
     if (!tabsEl || !contentEl) return;
 
-    // Boss tab buttons
     tabsEl.innerHTML = bosses.map(function(b, i) {
       return '<button class="boss-tab' + (i === 0 ? ' active' : '') + '" data-boss="' + b.id + '" data-enc="' + b.enc + '">' +
         '<img src="' + iconUrl(b.enc) + '" alt="' + b.name + '">' +
@@ -490,9 +376,7 @@
       '</button>';
     }).join('');
 
-    // Tips sections
-    contentEl.innerHTML =
-      '<div id="talent-results"></div>' +
+    contentEl.innerHTML = '<div id="talent-results"></div>' +
       bosses.map(function(b, i) {
         return '<div class="boss-section' + (i === 0 ? ' active' : '') + '" data-boss="' + b.id + '">' +
           '<ul class="tips-list">' + b.tips.map(function(t) { return '<li>' + t + '</li>'; }).join('') + '</ul>' +
@@ -500,7 +384,6 @@
         '</div>';
       }).join('');
 
-    // Tab click handler
     tabsEl.addEventListener('click', function(e) {
       var tab = e.target.closest('.boss-tab');
       if (!tab) return;
@@ -516,66 +399,40 @@
         s.classList.toggle('active', s.dataset.boss === id);
       });
 
-      // Fetch talents for selected boss
-      var bossName = tab.querySelector('img').alt;
-      selectBoss(enc, bossName);
+      selectBoss(enc, tab.querySelector('img').alt);
     });
 
-    // Load talents for first boss on init
     selectBoss(bosses[0].enc, bosses[0].name);
 
-    // Refresh Wowhead tooltips
     if (window.$WowheadPower) {
       window.$WowheadPower.refreshLinks();
     }
   }
 
-  // ============================================================================
-  // WOWHEAD ICON PREVENTION
-  // ============================================================================
-  
-  // Simple observer to remove Wowhead icon injections from talent links
   function preventWowheadIcons() {
     var isProcessing = false;
     
-    var observer = new MutationObserver(function(mutations) {
+    var observer = new MutationObserver(function() {
       if (isProcessing) return;
-      
       isProcessing = true;
       
       setTimeout(function() {
-        var talentIcons = document.querySelectorAll('.talent-icon');
-        talentIcons.forEach(function(link) {
-          // Remove background-image if present
+        document.querySelectorAll('.talent-icon').forEach(function(link) {
           if (link.style.backgroundImage && link.style.backgroundImage !== 'none') {
             link.style.backgroundImage = 'none';
           }
-          
-          // Remove Wowhead classes
           link.classList.remove('icontinyl', 'icontinyh');
-          
-          // Remove any injected elements
           link.querySelectorAll('ins, del, .wowhead-icon').forEach(function(el) {
             el.remove();
           });
         });
-        
         isProcessing = false;
       }, 0);
     });
     
-    // Start observing the document
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  // ============================================================================
-  // INITIALIZATION
-  // ============================================================================
-  
-  // Add CSS to prevent Wowhead icons on talent links
   function addTalentIconStyles() {
     var styleId = 'talent-icon-override';
     if (!document.getElementById(styleId)) {
@@ -585,8 +442,7 @@
       document.head.appendChild(style);
     }
   }
-  
-  // Initialize when DOM is ready
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
       addTalentIconStyles();
@@ -599,6 +455,4 @@
     preventWowheadIcons();
   }
 
-  // Expose selectBoss globally for external access
-  window.selectBoss = selectBoss;
-})();
+  window.selectBoss = selectBoss
