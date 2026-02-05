@@ -455,4 +455,5 @@
     preventWowheadIcons();
   }
 
-  window.selectBoss = selectBoss
+  window.selectBoss = selectBoss;
+})();
