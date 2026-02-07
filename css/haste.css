@@ -8,8 +8,8 @@ html { scroll-behavior: smooth; }
 
 /* ── Container ────────────────────────────────────────── */
 .haste-container {
-  padding: 2.5rem 2.5rem 3rem;
-  max-width: 1400px;
+  padding: 2rem 1.5rem 2.5rem;
+  max-width: 100%;
   margin: 0 auto;
   position: relative;
 }
@@ -588,11 +588,11 @@ html { scroll-behavior: smooth; }
 .wa-banner {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: 1.5rem;
   background: linear-gradient(135deg, rgba(26,29,41,.85) 0%, rgba(30,33,48,.9) 100%);
   border: 1px solid var(--border-color);
   border-radius: 16px;
-  padding: .75rem 1.25rem;
+  padding: .625rem .625rem .625rem .625rem;
   text-decoration: none;
   transition: all .3s cubic-bezier(.4,0,.2,1);
   overflow: hidden;
@@ -606,10 +606,11 @@ html { scroll-behavior: smooth; }
 }
 
 .wa-banner-img {
-  width: 80px;
-  height: 48px;
+  width: 280px;
+  height: auto;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--border-color);
   flex-shrink: 0;
   transition: border-color .3s ease;
@@ -761,15 +762,21 @@ html { scroll-behavior: smooth; }
 
   /* WA banner */
   .wa-banner {
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: .75rem;
-    padding: .875rem 1rem;
+    padding: .625rem;
+    align-items: stretch;
   }
-  .wa-banner-img { width: 64px; height: 40px; }
+  .wa-banner-img {
+    width: 100%;
+    height: auto;
+  }
+  .wa-banner-body {
+    padding: 0 .25rem;
+  }
   .wa-banner-cta {
     width: 100%;
     justify-content: center;
-    margin-top: .25rem;
   }
 }
 
