@@ -112,26 +112,21 @@ function calculateRatingFromPercent(targetPercent, isGoblin) {
 // Spell card + timeline rendering
 // ═══════════════════════════════════════════════════════
 function getTimelineMax(points, effectiveHaste) {
-  // Adaptive scale: show ~2 breakpoints ahead of current position
-  // with a minimum window and some breathing room
   var nextIdx = 0;
   for (var i = 0; i < points.length; i++) {
     if (effectiveHaste < points[i]) { nextIdx = i; break; }
     nextIdx = i + 1;
   }
-  // Show up to 2 breakpoints beyond the next one, or all if near the end
   var lookAhead = Math.min(nextIdx + 2, points.length - 1);
   var ceiling = points[lookAhead];
-  // Add 15% padding so markers don't sit at the edge
   ceiling = ceiling * 1.15;
-  // Round up to a clean number
   ceiling = Math.ceil(ceiling / 10) * 10;
-  // Floor at the minimum needed to show current position
   return Math.max(ceiling, effectiveHaste * 1.2, 20);
 }
 
 function updateSpellTable(effectiveHaste, isGoblin) {
   var html = '';
+  var currentRating = Math.min(parseFloat(hasteInput.value) || 0, 20000);
 
   for (var spell in breakpoints) {
     var data = breakpoints[spell];
@@ -151,24 +146,20 @@ function updateSpellTable(effectiveHaste, isGoblin) {
     var isMaxed = nextBP === null;
     var currentTotal = base + extraTicks;
 
-    // Tick class
     var tickClass = 'no-ticks';
     if (extraTicks > 3) tickClass = 'high-ticks';
     else if (extraTicks > 0) tickClass = 'has-ticks';
 
-    // Per-spell adaptive timeline scale
     var timelineMax = getTimelineMax(data.points, effectiveHaste);
-
-    // Cursor position (0–100%)
     var cursorPct = Math.min((effectiveHaste / timelineMax) * 100, 100);
     var fillPct = cursorPct;
 
-    // Build breakpoint markers (only those within the visible range)
+    // Build breakpoint markers (only within visible range)
     var markers = '';
     for (var j = 0; j < data.points.length; j++) {
       var bp = data.points[j];
       var pct = (bp / timelineMax) * 100;
-      if (pct > 100) break; // off-screen, stop rendering
+      if (pct > 100) break;
       var reached = effectiveHaste >= bp;
       markers +=
         '<div class="bp-marker ' + (reached ? 'bp-marker--reached' : 'bp-marker--future') + '" style="left:' + pct.toFixed(2) + '%">' +
@@ -176,7 +167,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
         '</div>';
     }
 
-    // Next breakpoint callout (promoted block)
+    // Next breakpoint callout
     var calloutHTML = '';
     if (isMaxed) {
       calloutHTML =
@@ -188,7 +179,6 @@ function updateSpellTable(effectiveHaste, isGoblin) {
         '</div>';
     } else {
       var nextRating = calculateRatingFromPercent(nextBP, isGoblin);
-      var currentRating = Math.min(parseFloat(hasteInput.value) || 0, 20000);
       var ratingNeeded = Math.max(0, nextRating - currentRating);
       calloutHTML =
         '<div class="bp-next-callout">' +
@@ -197,8 +187,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
             '<div class="bp-next-value">' + nextBP.toFixed(2) + '% effective haste</div>' +
           '</div>' +
           '<div style="text-align:right">' +
-            '<div class="bp-next-rating">' + nextRating.toLocaleString() + ' rating</div>' +
-            '<div class="bp-next-label">' + ratingNeeded.toLocaleString() + ' to go</div>' +
+            '<div class="bp-next-rating">' + ratingNeeded.toLocaleString() + ' rating to go</div>' +
           '</div>' +
         '</div>';
     }
