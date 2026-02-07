@@ -21,6 +21,16 @@
   z-index: 0;
   overflow: hidden;
 }
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('/img/hero-bg.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  filter: blur(4px) brightness(.3) saturate(.7);
+  transform: scale(1.05);
+}
 .hero-bg img,
 .hero-bg video {
   width: 100%;
