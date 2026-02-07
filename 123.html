@@ -33,7 +33,7 @@
 <body>
 
   <!-- ════════════════════════════════════════════════════
-       Navigation  (shared across all pages via nav.js)
+       Navigation
        ════════════════════════════════════════════════════ -->
   <nav class="top-nav">
     <div class="nav-container">
@@ -89,21 +89,10 @@
        Zone 1 — Hero
        ════════════════════════════════════════════════════ -->
   <section class="hero">
-
-    <!-- Background: use img, or swap to <video> for a looping clip
-         <video autoplay muted loop playsinline src="img/hero-loop.mp4"></video>
-    -->
     <div class="hero-bg" aria-hidden="true">
-      <img src="img/hero-bg.jpg"
-           alt=""
-           loading="eager"
-           fetchpriority="high" />
+      <img src="img/hero-bg.jpg" alt="" loading="eager" fetchpriority="high" />
     </div>
-
-    <!-- Darkening overlay + central glow -->
     <div class="hero-overlay" aria-hidden="true"></div>
-
-    <!-- Subtle void orbs (reduced from 3 to 2, lower opacity with bg image) -->
     <div class="hero-glow hero-glow--1" aria-hidden="true"></div>
     <div class="hero-glow hero-glow--2" aria-hidden="true"></div>
 
@@ -149,55 +138,7 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════
-       Zone 2 — Quick-Access Tool Cards
-       ════════════════════════════════════════════════════ -->
-  <section class="home-section">
-    <div class="section-header">
-      <h2 class="section-title">Tools</h2>
-      <p class="section-subtitle">Everything you need to optimise your Shadow Priest</p>
-    </div>
-    <div class="tools-grid">
-
-      <a href="/rankings.html" class="tool-card">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 19 13 23 9"/><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
-        </div>
-        <div class="tool-body">
-          <div class="tool-name">Rankings</div>
-          <div class="tool-desc">Top 100 Shadow Priest DPS parses per boss with talent &amp; gear breakdowns</div>
-          <div class="tool-go">Explore <span>&rarr;</span></div>
-        </div>
-      </a>
-
-      <a href="/haste" class="tool-card">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </div>
-        <div class="tool-body">
-          <div class="tool-name">Haste Calculator</div>
-          <div class="tool-desc">Find your effective haste and see exactly which DoT breakpoints you're hitting</div>
-          <div class="tool-go">Calculate <span>&rarr;</span></div>
-        </div>
-      </a>
-
-      <a href="/addons" class="tool-card">
-        <div class="tool-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
-        </div>
-        <div class="tool-body">
-          <div class="tool-name">Addons &amp; WeakAuras</div>
-          <div class="tool-desc">Download the same UI setup, Plater &amp; SUF profiles, and WeakAuras used by skimmy</div>
-          <div class="tool-go">Browse <span>&rarr;</span></div>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
-  <hr class="section-divider" />
-
-  <!-- ════════════════════════════════════════════════════
-       Zone 3 — Live / Featured Content
+       Zone 2 — Live / Featured Content
        ════════════════════════════════════════════════════ -->
   <section class="home-section">
     <div class="section-header">
@@ -206,7 +147,6 @@
     </div>
     <div class="streams-grid">
 
-      <!-- Twitch -->
       <div class="stream-card">
         <div class="stream-label stream-label--twitch">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
@@ -220,7 +160,6 @@
         </div>
       </div>
 
-      <!-- YouTube -->
       <div class="stream-card">
         <div class="stream-label stream-label--yt">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -240,19 +179,21 @@
   <hr class="section-divider" />
 
   <!-- ════════════════════════════════════════════════════
-       Zone 4 — Throne of Thunder Boss Tips
+       Zone 3 — Throne of Thunder Boss Tips
        ════════════════════════════════════════════════════ -->
   <section class="tips-section">
     <div class="section-header">
       <h2 class="section-title">Throne of Thunder — Boss Tips</h2>
       <p class="section-subtitle">Quick reference for every encounter</p>
     </div>
-    <div id="bossTabs" class="boss-wings"></div>
-    <div id="tipsContent" class="tips-panel"></div>
+    <div class="tips-card">
+      <div id="bossTabs" class="tips-card-tabs"></div>
+      <div id="tipsContent" class="tips-card-body"></div>
+    </div>
   </section>
 
   <!-- ════════════════════════════════════════════════════
-       Zone 5 — Footer
+       Zone 4 — Footer
        ════════════════════════════════════════════════════ -->
   <footer class="site-footer">
     <div class="footer-inner">
@@ -265,7 +206,6 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script src="js/home.js"></script>
   <script src="js/nav.js"></script>
 </body>
