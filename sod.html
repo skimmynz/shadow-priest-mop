@@ -19,7 +19,7 @@
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/base.css" />
-  <link rel="stylesheet" href="css/sod.css" />
+  <link rel="stylesheet" href="css/haste.css" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,6 +103,11 @@
   <div class="unified-container">
     <div class="haste-container">
 
+      <!-- ═══ Page Title ═══ -->
+      <header class="haste-header">
+        <h1>Shadow Priest Haste Calculator</h1>
+      </header>
+
       <!-- ═══ Command Bar ═══ -->
       <div class="command-bar">
         <div class="cmd-rating">
@@ -127,14 +132,18 @@
           <label class="toggle-chip">
             <input type="checkbox" id="goblinRacial" class="toggle-input">
             <span class="toggle-track" aria-hidden="true"></span>
-            <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            <a href="https://www.wowhead.com/mop-classic/race=9/goblin" data-wowhead="race=9&domain=mop-classic" class="toggle-tooltip-wrap">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            </a>
             <span class="toggle-label">Goblin</span>
           </label>
 
           <label class="toggle-chip">
             <input type="checkbox" id="trollRacial" class="toggle-input">
             <span class="toggle-track" aria-hidden="true"></span>
-            <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="toggle-tooltip-wrap">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            </a>
             <span class="toggle-label">Troll</span>
           </label>
 
@@ -144,28 +153,36 @@
           <label class="toggle-chip">
             <input type="checkbox" id="powerInfusion" class="toggle-input">
             <span class="toggle-track" aria-hidden="true"></span>
-            <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            <a href="https://www.wowhead.com/mop-classic/spell=10060/power-infusion" data-wowhead="spell=10060&domain=mop-classic" class="toggle-tooltip-wrap">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            </a>
             <span class="toggle-label">PI</span>
           </label>
 
           <label class="toggle-chip" id="berserkingToggle" style="display: none;">
             <input type="checkbox" id="berserking" class="toggle-input">
             <span class="toggle-track" aria-hidden="true"></span>
-            <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="toggle-tooltip-wrap">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            </a>
             <span class="toggle-label">Berserking</span>
           </label>
 
           <label class="toggle-chip">
             <input type="checkbox" id="bloodlust" class="toggle-input">
             <span class="toggle-track" aria-hidden="true"></span>
-            <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            <a href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust" data-wowhead="spell=2825&domain=mop-classic" class="toggle-tooltip-wrap">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            </a>
             <span class="toggle-label">Lust</span>
           </label>
 
           <label class="toggle-chip">
             <input type="checkbox" id="sinisterPrimal" class="toggle-input">
             <span class="toggle-track" aria-hidden="true"></span>
-            <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            <a href="https://www.wowhead.com/mop-classic/item=76885/sinister-primal-diamond" data-wowhead="item=76885&domain=mop-classic" class="toggle-tooltip-wrap">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg" alt="" class="toggle-icon" aria-hidden="true">
+            </a>
             <span class="toggle-label">Sinister</span>
           </label>
         </div>
@@ -225,7 +242,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/sod.js"></script>
+  <script src="js/haste.js"></script>
   <script src="js/nav.js"></script>
 
   <!-- WeakAura toggle -->
