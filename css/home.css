@@ -314,7 +314,7 @@
 
 /* ── Boss Tips — Unified Card ─────────────────────────── */
 .tips-section {
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 5rem 2rem;
 }
@@ -325,34 +325,36 @@
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, .3);
   overflow: hidden;
+  display: grid;
+  grid-template-columns: auto 1fr;
 }
 
-/* Wing rows inside the card */
+/* Left column — boss icon tabs */
 .tips-card-tabs {
-  padding: 1.25rem 1.5rem 1rem;
+  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: .625rem;
-  border-bottom: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, .12);
 }
 
 .boss-wing {
   display: flex;
-  align-items: center;
-  gap: .625rem;
+  flex-direction: column;
+  gap: .3rem;
 }
 
 .wing-label {
-  font-size: .575rem;
+  font-size: .55rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: .08em;
   color: var(--text-muted);
   white-space: nowrap;
-  min-width: 80px;
-  text-align: right;
-  opacity: .5;
+  opacity: .45;
   line-height: 1.2;
+  padding-left: .1rem;
 }
 
 .wing-icons {
@@ -368,7 +370,7 @@
   cursor: pointer;
   transition: all .2s ease;
   position: relative;
-  width: 52px; height: 52px;
+  width: 48px; height: 48px;
   padding: .2rem;
   font-family: inherit;
   font-size: 0;
@@ -409,10 +411,13 @@
 }
 .boss-tab:hover .boss-tab-tip { opacity: 1; }
 
-/* Content area inside the card */
+/* Right column — tip content */
 .tips-card-body {
-  padding: 1.5rem;
-  min-height: 180px;
+  padding: 1.5rem 1.75rem;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .boss-panel { display: none; }
@@ -544,19 +549,28 @@
   .section-title { font-size: 1.25rem; }
 
   .tips-section { padding: 3.5rem 1.25rem 4rem; }
-  .tips-card-tabs { padding: 1rem 1rem .75rem; gap: .5rem; }
-  .tips-card-body { padding: 1.25rem 1rem; }
-
+  .tips-card { grid-template-columns: 1fr; }
+  .tips-card-tabs {
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: center;
+  }
+  .boss-wing { flex-direction: row; align-items: center; gap: .375rem; }
   .wing-label { display: none; }
-  .boss-wing { justify-content: center; }
-  .boss-tab { width: 46px; height: 46px; }
+  .wing-icons { gap: .3rem; }
+  .boss-tab { width: 44px; height: 44px; }
+  .tips-card-body { padding: 1.25rem 1rem; }
 }
 
 @media (max-width: 480px) {
   .hero-ctas { flex-direction: column; align-items: center; }
   .hero-cta { width: 100%; max-width: 260px; justify-content: center; }
   .hero-author { flex-wrap: wrap; justify-content: center; }
-  .boss-tab { width: 42px; height: 42px; }
-  .tips-card-tabs { padding: .875rem .875rem .625rem; }
+  .boss-tab { width: 40px; height: 40px; }
+  .tips-card-tabs { padding: .875rem; }
   .tips-card-body { padding: 1rem .875rem; }
 }
