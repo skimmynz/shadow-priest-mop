@@ -4,475 +4,208 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="google-adsense-account" content="ca-pub-5698535707794768">
-  <meta name="description" content="Shadow Priest Hub for MoP Classic.">
+  <meta name="description" content="Shadow Priest Hub for MoP Classic — rankings, haste calculator, boss tips, addons & WeakAuras by skimmynz.">
   <meta name="keywords" content="shadow priest, MoP Classic, guide, rankings, haste calculator, World of Warcraft, skimmynz">
-  
+
   <title>Shadow Priest MoP Classic | skimmynz</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5698535707794768" crossorigin="anonymous"></script>
-  
+
   <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  
+  <link rel="canonical" href="https://skimmynz.com/">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/home.css" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <link rel="canonical" href="https://skimmynz.com/">
-  
-  <script>
-    window.whTooltips = { colorLinks: true, iconizeLinks: true, renameLinks: false };
-  </script>
+  <!-- Wowhead Tooltips -->
+  <script>window.whTooltips = { colorLinks: true, iconizeLinks: true, renameLinks: false };</script>
   <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
-  
-  <style>
-    :root {
-      --primary-bg: #0f1117;
-      --glass-bg: rgba(26, 29, 41, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --text-primary: #ffffff;
-      --text-secondary: #e5e7eb;
-      --text-muted: #9ca3af;
-    }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--primary-bg);
-      color: var(--text-primary);
-      font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    /* --- streams --- */
-    .content-grid {
-      max-width: 1800px;
-      margin: 0 auto;
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-    .section-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      border: 1px solid var(--glass-border);
-      padding: 0.5rem;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    }
-    .stream-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 12px;
-    }
-    .stream-container iframe {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      border: 0;
-    }
-
-    /* --- boss tips card --- */
-    .boss-tips-container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-    .boss-tips-card {
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      border: 1px solid var(--glass-border);
-      padding: 2rem;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-    }
-
-    h2 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #a78bfa, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-align: center;
-      margin-bottom: 2rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    /* --- boss tab row --- */
-    .boss-tabs {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-      justify-items: center;
-    }
-    .boss-tab {
-      background: rgba(30,33,48,0.5);
-      border: 2px solid var(--glass-border);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-      width: 80px;
-      height: 80px;
-      padding: 0.4rem;
-    }
-    .boss-tab:hover {
-      border-color: rgba(124,58,237,0.6);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 18px rgba(124,58,237,0.3);
-    }
-    .boss-tab.active {
-      border-color: #7c3aed;
-      box-shadow: 0 0 0 3px rgba(124,58,237,0.3);
-    }
-    .boss-tab img {
-      width: 100%; height: 100%;
-      border-radius: 8px;
-      object-fit: cover;
-      display: block;
-    }
-    .boss-tab-tooltip {
-      position: absolute;
-      top: -32px; left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.9);
-      color: #fff;
-      padding: 0.35rem 0.6rem;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-      border: 1px solid #7c3aed;
-      z-index: 10;
-    }
-    .boss-tab:hover .boss-tab-tooltip { opacity: 1; }
-
-    /* --- tips panel --- */
-    .tips-content {
-      background: rgba(30,33,48,0.3);
-      border-radius: 12px;
-      padding: 1.75rem;
-      min-height: 220px;
-    }
-    .boss-section { display: none; }
-    .boss-section.active {
-      display: block;
-      animation: fadeIn 0.25s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .tips-list { list-style: none; padding: 0; margin: 0; }
-    .tips-list li {
-      padding: 0.5rem 0 0.5rem 1.2rem;
-      position: relative;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-    .tips-list li::before {
-      content: "▸";
-      position: absolute;
-      left: 0;
-      color: #a78bfa;
-      font-size: 1rem;
-    }
-    .tips-list li a.wowhead {
-      color: #a78bfa;
-      text-decoration: none;
-      cursor: pointer;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-    .tips-list li a.wowhead:hover {
-      color: #c4b5fd;
-      text-decoration: none;
-    }
-
-    /* --- parsing rules --- */
-    .parsing-rules {
-      margin-top: 1.5rem;
-      background: rgba(124,58,237,0.08);
-      border: 1px solid rgba(124,58,237,0.25);
-      border-radius: 10px;
-      padding: 0.9rem 1.1rem;
-    }
-    .parsing-rules-header {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      margin-bottom: 0.5rem;
-    }
-    .parsing-rules-header svg { color: #7c3aed; flex-shrink: 0; }
-    .parsing-rules-title {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #a78bfa;
-    }
-    .parsing-rules ul { list-style: none; padding: 0; margin: 0; }
-    .parsing-rules ul li {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      padding: 0.2rem 0 0.2rem 1.1rem;
-      position: relative;
-      line-height: 1.5;
-    }
-    .parsing-rules ul li::before {
-      content: "—";
-      position: absolute;
-      left: 0;
-      color: rgba(124,58,237,0.5);
-    }
-
-    /* --- responsive --- */
-    @media (max-width: 1024px) {
-      .content-grid { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 768px) {
-      .boss-tips-card { padding: 1.25rem; }
-      .boss-tabs { grid-template-columns: repeat(auto-fill, minmax(65px, 1fr)); gap: 0.5rem; }
-      .boss-tab { width: 65px; height: 65px; }
-      .tips-content { padding: 1.25rem; }
-      h2 { font-size: 1.4rem; }
-    }
-  </style>
+  <!-- Ads -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5698535707794768" crossorigin="anonymous"></script>
 </head>
 <body>
+
+  <!-- ════════════════════════════════════════════════════
+       Navigation
+       ════════════════════════════════════════════════════ -->
   <nav class="top-nav">
-    <div class="nav-container">   
+    <div class="nav-container">
       <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="/" class="active"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a></li>
-        <li><a href="/rankings.html"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>Rankings</a></li>
-        <li><a href="https://www.youtube.com/watch?v=LH5aODSFQ1o"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Guide</a></li>
-        <li><a href="/haste"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Haste Calculator</a></li>
-        <li><a href="/addons"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Addons &amp; WAs</a></li>
-        <li><a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>YouTube</a></li>
-        <li><a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener"><svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>Twitch</a></li>
+        <li>
+          <a href="/" class="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/rankings.html">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+            Rankings
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=LH5aODSFQ1o" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Guide
+          </a>
+        </li>
+        <li>
+          <a href="/haste">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Haste Calculator
+          </a>
+        </li>
+        <li>
+          <a href="/addons">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            Addons &amp; WAs
+          </a>
+        </li>
+        <li>
+          <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube
+          </a>
+        </li>
+        <li>
+          <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+            Twitch
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
 
-  <div class="content-grid">
-    <div class="section-card">
-      <div class="stream-container">
-        <iframe src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=www.skimmynz.com" allowfullscreen></iframe>
+  <!-- ════════════════════════════════════════════════════
+       Zone 1 — Hero
+       ════════════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <img src="img/hero-bg.jpg" alt="" loading="eager" fetchpriority="high" />
+    </div>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-glow hero-glow--1" aria-hidden="true"></div>
+    <div class="hero-glow hero-glow--2" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">Shadow Priest</h1>
+      <p class="hero-subtitle">Mists of Pandaria Classic</p>
+      <p class="hero-tagline">Talents, tips & tools for Heroic Raiding</p>
+
+      <div class="hero-author">
+        <span>by <strong>skimmynz</strong></span>
+        <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" class="hero-social" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        </a>
+        <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" class="hero-social" aria-label="Twitch">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+        </a>
+      </div>
+
+      <div class="hero-ctas">
+        <a href="/rankings.html" class="hero-cta hero-cta--pri">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 11 19 13 23 9"/><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+          Rankings
+        </a>
+        <a href="/haste" class="hero-cta hero-cta--sec">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Haste Calculator
+        </a>
+        <a href="/addons" class="hero-cta hero-cta--sec">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Addons &amp; WAs
+        </a>
+        <a href="https://www.youtube.com/watch?v=LH5aODSFQ1o" class="hero-cta hero-cta--sec" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Guide
+        </a>
       </div>
     </div>
-    <div class="section-card">
-      <div class="stream-container">
-        <iframe src="https://www.youtube.com/embed/NaYavDBjAqo?autoplay=1&mute=1" allowfullscreen loading="lazy" title="RANK 1 SHADOW PRIEST → MEGAERA 25M HEROIC"></iframe>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      Scroll
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       Zone 2 — Live / Featured Content
+       ════════════════════════════════════════════════════ -->
+  <section class="home-section">
+    <div class="section-header">
+      <h2 class="section-title">Watch</h2>
+      <p class="section-subtitle">Live streams &amp; featured kills</p>
+    </div>
+    <div class="streams-grid">
+
+      <div class="stream-card">
+        <div class="stream-label stream-label--twitch">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+          Twitch — Live Stream
+        </div>
+        <div class="stream-embed" data-src="https://player.twitch.tv/?channel=skimmynz&parent=skimmynz.com&parent=www.skimmynz.com" data-title="skimmynz Twitch stream">
+          <div class="stream-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Loading stream&hellip;
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <div class="boss-tips-container">
-    <div class="boss-tips-card">
-      <h2>Throne of Thunder Boss Tips</h2>
-      <div class="boss-tabs" id="bossTabs"></div>
-      <div class="tips-content" id="tipsContent"></div>
-    </div>
-  </div>
+      <div class="stream-card">
+        <div class="stream-label stream-label--yt">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          YouTube — Featured
+        </div>
+        <div class="stream-embed" data-src="https://www.youtube.com/embed/NaYavDBjAqo?autoplay=1&mute=1" data-title="RANK 1 SHADOW PRIEST — MEGAERA 25M HEROIC">
+          <div class="stream-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Loading video&hellip;
+          </div>
+        </div>
+      </div>
 
+    </div>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ════════════════════════════════════════════════════
+       Zone 3 — Throne of Thunder Boss Tips
+       ════════════════════════════════════════════════════ -->
+  <section class="tips-section">
+    <div class="section-header">
+      <h2 class="section-title">Throne of Thunder — Boss Tips</h2>
+      <p class="section-subtitle">Quick reference for every encounter</p>
+    </div>
+    <div class="tips-card">
+      <div id="bossTabs" class="tips-card-tabs"></div>
+      <div id="tipsContent" class="tips-card-body"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       Zone 4 — Footer
+       ════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" class="footer-link">YouTube</a>
+        <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" class="footer-link">Twitch</a>
+      </div>
+      <span class="footer-note">Data sourced from Warcraft Logs</span>
+    </div>
+  </footer>
+
+  <script src="js/home.js"></script>
   <script src="js/nav.js"></script>
-  <script>
-  (function() {
-    // Icon URL: ToT encounters use 515xx IDs but assets are at 15xx
-    function iconUrl(encId) {
-      var id = (encId >= 51559 && encId <= 51580) ? encId - 50000 : encId;
-      return 'https://assets.rpglogs.com/img/warcraft/bosses/' + id + '-icon.jpg?v=2';
-    }
-
-    var PARSING_RULES = {
-      51577: ["No rules."],
-      51575: ["Horridon is removed from Damage All Star Points."],
-      51570: ["Damage done to Living Sand is removed."],
-      51565: ["Damage done to Humming Crystal is removed.","Heroic Only: Damage done to Vampiric Cave Bat is removed.","Only damage done to Whirl Turtles that cast Shell Concussion (which they do when kicked) counts."],
-      51578: ["Damage done to heads that don't die is removed.","25m Heroic: Damage done to Nether Wyrm is removed."],
-      51573: ["Ji-Kun is removed from Damage All Star Points."],
-      51572: ["Damage done to Wandering Eye is removed."],
-      51574: ["Primordius is removed from Damage and Healing All Star Points."],
-      51576: ["Heroic: Damage to Large Anima Golem and Massive Anima Golem is removed.","Only count damage done to Anima Golems that die."],
-      51559: ["Damage done to Ice Tomb is removed."],
-      51560: ["Damage done to Lurker in the Night is removed."],
-      51579: ["Damage done to Unharnessed Power, Lesser Diffused Lightning, Greater Diffused Lightning, and Diffused Lightning is removed."],
-      51580: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."]
-    };
-
-var bosses = [
-  {
-    id: 'jinrokh', name: "Jin'rokh the Breaker", enc: 51577,
-    tips: [
-      'Prepot <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a> at 15s and hold your cooldowns.',
-      'With <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust">Bloodlust</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a>, use your CDs and 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a>. RNG <a class="wowhead" href="https://www.wowhead.com/mop-classic/item=96558/unerring-vision-of-lei-shen">Unerring Vision of Lei Shen</a> procs.',
-      'After you clear <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138733/ionization?dd=6">Ionization</a>, get back into <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138002/fluidity?dd=6">Fluidity</a> quickly and reapply your DoTs.',
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=137261/lightning-storm?dd=6">Lightning Storm</a>.'
-    ]
-  },
-  {
-    id: 'horridon', name: "Horridon", enc: 51575,
-    tips: [
-      'Apply <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> to small adds. Keep <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">Vampiric Touch</a> on marked elite adds.',
-      'Double DoT the Direhorn Spirit to benefit from the <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=138156/item-priest-t15-shadow-2p-bonus">Tier 15 Shadow Priest 2P bonus</a>.',
-      'Spend <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a> on Horridon.',
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during high <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=136817/bestial-cry">Bestial Cry</a> stacks.'
-    ]
-  },
-  {
-    id: 'council', name: "Council of Elders", enc: 51570,
-    tips: [
-      'Stack in melee so you can hit multiple targets with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on cooldown.',
-      'Keep DoTs rolling on all bosses and fill with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a>.',
-      'Recast DoTs when <a class="wowhead" href="https://www.wowhead.com/mop-classic/item=96558/unerring-vision-of-lei-shen">Unerring Vision of Lei Shen</a> procs.'
-    ]
-  },
-  {
-    id: 'tortos', name: "Tortos", enc: 51565,
-    tips: [
-      'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> on adds to trigger <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> and generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
-      'Maintain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> on a Humming Crystal for the shield.',
-      'Stay spread to reduce the chance of being knocked up by the Whirl Turtles.'
-    ]
-  },
-  {
-    id: 'megaera', name: "Megaera", enc: 51578,
-    tips: [
-      'Ignore the Venomous Head.',
-      'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> on Nether Wyrms to generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
-      'Swap to <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> if your raid needs extra healing throughput.'
-    ]
-  },
-  {
-    id: 'jikun', name: "Ji-Kun", enc: 51573,
-    tips: [
-      'Use feather charges to intercept Feed Young and gain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=112879/primal-nutriment">Primal Nutriment</a>.',
-      'Cast DoTs on the Nest Guardian. Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> on Hatchlings.',
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during Quills if raid is low.'
-    ]
-  },
-  {
-    id: 'durumu', name: "Durumu the Forgotten", enc: 51572,
-    tips: [
-      'Snipe Crimson Fog adds with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a> uptime and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
-      'Cast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and DoTs on the Ice Walls.',
-    ]
-  },
-  {
-    id: 'primordius', name: "Primordius", enc: 51574,
-    tips: [
-      'Keep DoTs on all Living Fluids (unless your Warlocks know how to play Affliction).',
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on cooldown.',
-      'Adjust your camera angle to help dodge puddles and avoid unwanted debuffs.'
-    ]
-  },
-  {
-    id: 'darkanimus', name: "Dark Animus", enc: 51576,
-    tips: [
-      'DoT as many Anima Golems as possible to maintain <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=109142/twist-of-fate">Twist of Fate</a>.',
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=127632/cascade">Cascade</a> on cooldown for efficient multi-target damage.',
-      'Focus your <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a> into the boss.'
-    ]
-  },
-  {
-    id: 'ironqon', name: "Iron Qon", enc: 51559,
-    tips: [
-      'Recast DoTs on Iron Qon during mount transitions (Ro\'shak → Quet\'zal → Dam\'ren).',
-      'Hold your 2nd cooldowns and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a> for the final phase, when all four targets are active.',
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> during Fist Smash if raid is low.'
-    ]
-  },
-  {
-    id: 'consorts', name: "Twin Empyreans", enc: 51560,
-    tips: [
-      'Precast <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch">Vampiric Touch</a> on Suen then <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain">Shadow Word: Pain</a> before she vanishes.',
-      'Refresh DoTs on Suen during Tears of the Sun.',
-      'During Nuclear Inferno (boss immune), focus on off-healing. Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=15290/vampiric-embrace">Vampiric Embrace</a> when Blazing Radiance stacks get high.'
-    ]
-  },
-  {
-    id: 'leishen', name: "Lei Shen", enc: 51579,
-    tips: [
-      'Use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=120644/halo">Halo</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=48045/mind-sear">Mind Sear</a> to handle Ball Lightnings.',
-      'Snipe low adds with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a> to generate <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=95740/shadow-orbs">Shadow Orbs</a>.',
-      'Save your CDs and 2nd <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=105702/potion-of-the-jade-serpent">Potion of the Jade Serpent</a> for <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust">Bloodlust</a>.'
-    ]
-  },
-  {
-    id: 'raden', name: "Ra-den", enc: 51580,
-    tips: [
-      'DoT the Crackling Stalker, then burst it with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a>.',
-      'Snipe the first Essence of Anima with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=32379/shadow-word-death">Shadow Word: Death</a>. Burn the remaining ones with <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague">Devouring Plague</a> and <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=129197/mind-flay-insanity">Mind Flay: Insanity</a>.',
-      'Sub 40%, use <a class="wowhead" href="https://www.wowhead.com/mop-classic/spell=122128/divine-star">Divine Star</a> on cooldown to help with the HPS check.'
-    ]
-  }
-];
-    
-    function parsingBlock(encId) {
-      var rules = PARSING_RULES[encId];
-      if (!rules) return '';
-      return '<div class="parsing-rules">' +
-        '<div class="parsing-rules-header">' +
-          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>' +
-          '<span class="parsing-rules-title">Parsing Rules</span>' +
-        '</div>' +
-        '<ul>' + rules.map(function(r){ return '<li>' + r + '</li>'; }).join('') + '</ul>' +
-      '</div>';
-    }
-
-    function render() {
-      var tabsEl = document.getElementById('bossTabs');
-      var contentEl = document.getElementById('tipsContent');
-
-      tabsEl.innerHTML = bosses.map(function(b, i) {
-        return '<button class="boss-tab' + (i === 0 ? ' active' : '') + '" data-boss="' + b.id + '">' +
-          '<img src="' + iconUrl(b.enc) + '" alt="' + b.name + '">' +
-          '<span class="boss-tab-tooltip">' + b.name + '</span>' +
-        '</button>';
-      }).join('');
-
-      contentEl.innerHTML = bosses.map(function(b, i) {
-        return '<div class="boss-section' + (i === 0 ? ' active' : '') + '" data-boss="' + b.id + '">' +
-          '<ul class="tips-list">' + b.tips.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul>' +
-          parsingBlock(b.enc) +
-        '</div>';
-      }).join('');
-
-      // Attach tab click handlers
-      tabsEl.addEventListener('click', function(e) {
-        var tab = e.target.closest('.boss-tab');
-        if (!tab) return;
-        var id = tab.dataset.boss;
-        tabsEl.querySelectorAll('.boss-tab').forEach(function(t) {
-          t.classList.toggle('active', t.dataset.boss === id);
-        });
-        contentEl.querySelectorAll('.boss-section').forEach(function(s) {
-          s.classList.toggle('active', s.dataset.boss === id);
-        });
-      });
-
-      // Tell Wowhead to pick up the new links
-      if (window.$WowheadPower) {
-        window.$WowheadPower.refreshLinks();
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', render);
-  })();
-  </script>
 </body>
 </html>
