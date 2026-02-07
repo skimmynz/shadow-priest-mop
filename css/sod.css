@@ -55,24 +55,6 @@ html { scroll-behavior: smooth; }
     0 0 40px rgba(124,58,237,.04);
 }
 
-/* Void accent bar — inset to respect border-radius */
-.command-bar::before {
-  content: '';
-  position: absolute;
-  top: 1px; left: 1px; right: 1px;
-  height: 2px;
-  background: linear-gradient(90deg, #6d28d9, #a78bfa, #7c3aed, #c4b5fd, #6d28d9);
-  background-size: 200% 100%;
-  border-radius: 13px 13px 0 0;
-  animation: voidPulse 6s ease infinite;
-  opacity: .6;
-  z-index: 1;
-}
-@keyframes voidPulse {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
-}
-
 /* ── Rating input group ───────────────────────────────── */
 .cmd-rating {
   display: flex;
@@ -303,7 +285,6 @@ html { scroll-behavior: smooth; }
   gap: .75rem;
 }
 
-/* ── Individual spell card ────────────────────────────── */
 .spell-card {
   padding: 1.125rem 1.25rem;
   background: linear-gradient(160deg, rgba(26,29,41,.9) 0%, rgba(30,33,48,.95) 100%);
@@ -323,19 +304,7 @@ html { scroll-behavior: smooth; }
     0 0 40px rgba(124,58,237,.05);
 }
 
-/* Accent bar — inset to respect border-radius */
-.spell-card::before {
-  content: '';
-  position: absolute;
-  top: 1px; left: 1px; right: 1px;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent-color), #a78bfa);
-  border-radius: 13px 13px 0 0;
-  opacity: .4;
-  z-index: 1;
-}
-
-/* ── Card header (icon + name + current ticks) ────────── */
+/* ── Card header ──────────────────────────────────────── */
 .spell-card-header {
   display: flex;
   align-items: center;
@@ -421,7 +390,6 @@ html { scroll-behavior: smooth; }
   transition: width .6s cubic-bezier(.4,0,.2,1);
 }
 
-/* Tick markers */
 .bp-marker {
   position: absolute;
   top: 0; bottom: 0;
@@ -443,7 +411,6 @@ html { scroll-behavior: smooth; }
 .bp-marker--reached .bp-marker-label { color: rgba(167,139,250,.9); }
 .bp-marker--future .bp-marker-label  { color: rgba(255,255,255,.2); }
 
-/* Current position arrow */
 .bp-cursor {
   position: absolute;
   top: -3px;
@@ -456,7 +423,17 @@ html { scroll-behavior: smooth; }
   filter: drop-shadow(0 0 4px rgba(167,139,250,.4));
 }
 
-/* ── Next breakpoint callout (promoted) ───────────────── */
+/* Timeline scale labels */
+.bp-timeline-scale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .25rem;
+  font-size: .5625rem;
+  color: var(--text-muted);
+  opacity: .5;
+}
+
+/* ── Next breakpoint callout ──────────────────────────── */
 .bp-next-callout {
   display: flex;
   align-items: center;
@@ -482,6 +459,7 @@ html { scroll-behavior: smooth; }
   color: var(--text-primary);
   line-height: 1.2;
 }
+
 .bp-next-rating {
   font-size: .8125rem;
   font-weight: 600;
@@ -496,16 +474,6 @@ html { scroll-behavior: smooth; }
 .bp-next-callout--maxed .bp-next-value {
   color: #34d399;
   text-shadow: 0 0 10px rgba(16,185,129,.25);
-}
-
-/* Timeline scale labels */
-.bp-timeline-scale {
-  display: flex;
-  justify-content: space-between;
-  margin-top: .25rem;
-  font-size: .5625rem;
-  color: var(--text-muted);
-  opacity: .5;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -538,16 +506,6 @@ html { scroll-behavior: smooth; }
 .wa-toggle--open {
   border-radius: 12px 12px 0 0;
   border-bottom-color: transparent;
-}
-
-/* Accent bar — inset */
-.wa-accent-bar {
-  position: absolute;
-  top: 1px; left: 1px; right: 1px;
-  height: 2px;
-  background: linear-gradient(90deg, #6d28d9, #a78bfa, #7c3aed);
-  border-radius: 11px 11px 0 0;
-  opacity: .4;
 }
 
 .wa-toggle-icon {
