@@ -66,6 +66,7 @@ html { scroll-behavior: smooth; }
   display: flex;
   flex-direction: column;
   gap: .75rem;
+  position: relative;
 }
 
 .control-header {
@@ -266,12 +267,11 @@ html { scroll-behavior: smooth; }
 /* GCD warning — absolutely positioned so it never shifts layout */
 #gcdWarningInput {
   position: absolute;
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 100%;
+  left: 0;
+  right: 0;
   z-index: 10;
-  width: max-content;
-  max-width: 90%;
+  padding-top: .5rem;
 }
 
 .gcd-warning {
