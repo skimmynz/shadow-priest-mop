@@ -102,100 +102,119 @@
 
   <div class="unified-container">
     <div class="haste-container">
-
-      <!-- ═══ Page Title ═══ -->
       <header class="haste-header">
         <h1>Shadow Priest Haste Calculator</h1>
       </header>
 
-      <!-- ═══ Command Bar ═══ -->
-      <div class="command-bar">
-        <div class="cmd-rating">
-          <span class="cmd-label">Rating</span>
-          <input
-            type="text"
-            id="hasteInput"
-            class="haste-input"
-            min="0"
-            max="20000"
-            step="1"
-            placeholder="0"
-            aria-label="Haste rating value"
-          />
-          <div id="gcdWarningInput"></div>
+      <!-- ═══ Controls Section ═══ -->
+      <section class="haste-controls-section">
+
+        <!-- Top Row: Rating + Effective side by side -->
+        <div class="controls-top-row">
+          <div class="control-group rating-group">
+            <h3 class="control-header">Haste Rating</h3>
+            <input
+              type="text"
+              id="hasteInput"
+              class="haste-input"
+              placeholder="0"
+              aria-label="Haste rating value"
+            />
+            <div id="gcdWarningInput"></div>
+          </div>
+          <div class="control-group effective-group" aria-live="polite">
+            <h3 class="control-header">Effective Haste</h3>
+            <div class="result-value" id="hasteResult">5.00%</div>
+            <div class="conversion-text" id="conversionText">Base: 5% Shadowform</div>
+          </div>
         </div>
 
-        <div class="cmd-divider" aria-hidden="true"></div>
+        <!-- Bottom Row: Race + Buffs -->
+        <div class="controls-bottom-row">
+          <div class="control-group">
+            <h3 class="control-header">Race Selection</h3>
+            <label class="buff-toggle">
+              <input type="checkbox" id="goblinRacial" class="race-checkbox buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=69042/time-is-money" data-wowhead="spell=69042&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <div class="buff-info">
+                <span class="buff-name">Goblin</span>
+                <span class="buff-description">+1% passive haste</span>
+              </div>
+            </label>
+            <label class="buff-toggle">
+              <input type="checkbox" id="trollRacial" class="race-checkbox buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <div class="buff-info">
+                <span class="buff-name">Troll</span>
+                <span class="buff-description">Berserking racial</span>
+              </div>
+            </label>
+          </div>
 
-        <div class="cmd-toggles">
-          <!-- Race -->
-          <label class="toggle-chip">
-            <input type="checkbox" id="goblinRacial" class="toggle-input">
-            <span class="toggle-track" aria-hidden="true"></span>
-            <a href="https://www.wowhead.com/mop-classic/spell=69042/time-is-money" data-wowhead="spell=69042&domain=mop-classic" class="toggle-tooltip-wrap">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="" class="toggle-icon" aria-hidden="true">
-            </a>
-            <span class="toggle-label">Goblin</span>
-          </label>
-
-          <label class="toggle-chip">
-            <input type="checkbox" id="trollRacial" class="toggle-input">
-            <span class="toggle-track" aria-hidden="true"></span>
-            <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="toggle-tooltip-wrap">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="" class="toggle-icon" aria-hidden="true">
-            </a>
-            <span class="toggle-label">Troll</span>
-          </label>
-
-          <div class="cmd-divider-sm" aria-hidden="true"></div>
-
-          <!-- Buffs -->
-          <label class="toggle-chip">
-            <input type="checkbox" id="powerInfusion" class="toggle-input">
-            <span class="toggle-track" aria-hidden="true"></span>
-            <a href="https://www.wowhead.com/mop-classic/spell=10060/power-infusion" data-wowhead="spell=10060&domain=mop-classic" class="toggle-tooltip-wrap">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="" class="toggle-icon" aria-hidden="true">
-            </a>
-            <span class="toggle-label">PI</span>
-          </label>
-
-          <label class="toggle-chip" id="berserkingToggle" style="display: none;">
-            <input type="checkbox" id="berserking" class="toggle-input">
-            <span class="toggle-track" aria-hidden="true"></span>
-            <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="toggle-tooltip-wrap">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" class="toggle-icon" aria-hidden="true">
-            </a>
-            <span class="toggle-label">Berserking</span>
-          </label>
-
-          <label class="toggle-chip">
-            <input type="checkbox" id="bloodlust" class="toggle-input">
-            <span class="toggle-track" aria-hidden="true"></span>
-            <a href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust" data-wowhead="spell=2825&domain=mop-classic" class="toggle-tooltip-wrap">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="" class="toggle-icon" aria-hidden="true">
-            </a>
-            <span class="toggle-label">Lust</span>
-          </label>
-
-          <label class="toggle-chip">
-            <input type="checkbox" id="sinisterPrimal" class="toggle-input">
-            <span class="toggle-track" aria-hidden="true"></span>
-            <a href="https://www.wowhead.com/mop-classic/item=95347/sinister-primal-diamond" data-wowhead="item=95347&domain=mop-classic" class="toggle-tooltip-wrap">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg" alt="" class="toggle-icon" aria-hidden="true">
-            </a>
-            <span class="toggle-label">Sinister</span>
-          </label>
+          <div class="control-group">
+            <h3 class="control-header">Active Buffs</h3>
+            <label class="buff-toggle">
+              <input type="checkbox" id="powerInfusion" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=10060/power-infusion" data-wowhead="spell=10060&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <div class="buff-info">
+                <span class="buff-name">Power Infusion</span>
+                <span class="buff-description">+20% spell haste</span>
+              </div>
+            </label>
+            <label class="buff-toggle" id="berserkingToggle" style="display: none;">
+              <input type="checkbox" id="berserking" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <div class="buff-info">
+                <span class="buff-name">Berserking</span>
+                <span class="buff-description">+20% spell haste</span>
+              </div>
+            </label>
+            <label class="buff-toggle">
+              <input type="checkbox" id="bloodlust" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust" data-wowhead="spell=2825&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <div class="buff-info">
+                <span class="buff-name">Bloodlust / Heroism</span>
+                <span class="buff-description">+30% spell haste</span>
+              </div>
+            </label>
+            <label class="buff-toggle">
+              <input type="checkbox" id="sinisterPrimal" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/item=95347/sinister-primal-diamond" data-wowhead="item=95347&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <div class="buff-info">
+                <span class="buff-name">Sinister Primal Diamond</span>
+                <span class="buff-description">+30% spell haste proc</span>
+              </div>
+            </label>
+          </div>
         </div>
 
-        <div class="cmd-result" aria-live="polite">
-          <span class="cmd-result-label">Effective</span>
-          <span class="cmd-result-value" id="hasteResult">5.00%</span>
-          <span class="cmd-result-sub" id="conversionText">Base: 5% Shadowform</span>
-        </div>
-      </div>
+      </section>
 
-      <!-- ═══ Spell Cards (rendered by JS) ═══ -->
-      <div id="spellsContainer" class="spell-cards" role="region" aria-label="Spell breakpoints"></div>
+      <!-- ═══ DoT Breakpoint Cards ═══ -->
+      <section class="spells-section">
+        <div class="section-bar">
+          <h2 class="section-title">DoT Breakpoint Analysis</h2>
+        </div>
+        <div id="spellsContainer" class="spell-cards" role="region" aria-label="Spell breakpoints"></div>
+      </section>
 
       <!-- ═══ Collapsible WeakAura ═══ -->
       <div class="wa-section">
@@ -241,7 +260,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/sod.js"></script>
+  <script src="js/haste.js"></script>
   <script src="js/nav.js"></script>
 
   <!-- WeakAura toggle -->
