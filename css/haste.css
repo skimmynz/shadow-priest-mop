@@ -562,6 +562,23 @@ html { scroll-behavior: smooth; }
   border-radius: 3px;
 }
 
+/* ── Breakpoint explainer ─────────────────────────────── */
+.breakpoint-explainer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.04);
+}
+.breakpoint-explainer p {
+  color: var(--text-muted);
+  font-size: .8rem;
+  font-weight: 400;
+  line-height: 1.65;
+  margin: 0;
+}
+.breakpoint-explainer strong {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
 /* ═══════════════════════════════════════════════════════
    Responsive
    ═══════════════════════════════════════════════════════ */

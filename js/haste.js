@@ -157,6 +157,11 @@ function updateSpellTable(effectiveHaste, isGoblin) {
       '</div>';
   }
 
+  spellsHTML +=
+    '<div class="breakpoint-explainer">' +
+      '<p>In Mists of Pandaria Classic, a <strong>Haste Breakpoint</strong> is a specific amount of Haste rating at which a damage-over-time spell gains an additional tick before it expires. DoTs like Shadow Word: Pain, Vampiric Touch, and Devouring Plague tick at fixed intervals, but Haste shortens those intervals. Once you accumulate enough Haste to hit a breakpoint, that extra tick represents a significant DPS increase.</p>' +
+    '</div>';
+
   document.getElementById('spellsContainer').innerHTML = spellsHTML;
 
   if (typeof $WowheadPower !== 'undefined') {
