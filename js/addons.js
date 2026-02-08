@@ -85,8 +85,9 @@ function renderItems(items, containerId) {
   const instructionItems = items.filter(item => item.hasInstructions);
 
   function cardHTML(item) {
+    const previewLink = item.profileUrl || item.url;
     const previewHTML = item.preview
-      ? `<img src="${item.preview}" alt="${item.name} preview" class="item-preview" loading="lazy" onerror="this.style.display='none'">`
+      ? `<a href="${previewLink}" target="_blank" rel="noopener"><img src="${item.preview}" alt="${item.name} preview" class="item-preview" loading="lazy" onerror="this.style.display='none'"></a>`
       : `<div class="item-preview-placeholder">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
