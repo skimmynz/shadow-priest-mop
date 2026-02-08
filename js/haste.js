@@ -87,7 +87,7 @@ function calculateHaste() {
   var warningElement = document.getElementById('gcdWarningInput');
 
   if (rating >= gcdCap) {
-    warningElement.innerHTML = '<div class="gcd-warning">\u26A0\uFE0F GCD Cap Reached (' + gcdCap.toLocaleString() + ' rating)</div>';
+    warningElement.innerHTML = '<div class="gcd-warning">\u26A0\uFE0F GCD Cap Reached (' + gcdCap.toLocaleString() + ' rating)<span class="gcd-tooltip"><div class="gcd-tooltip-body">The GCD cannot go below 1 second. Beyond ' + gcdCap.toLocaleString() + ' rating, Haste won\'t speed up casts but still adds extra DoT ticks. Effects like PI, Bloodlust, and Sinister Primal Diamond remain powerful because they push past the cap to unlock bonus ticks.</div></span></div>';
   } else {
     warningElement.innerHTML = '';
   }
