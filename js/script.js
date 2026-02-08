@@ -495,7 +495,7 @@ function formatDuration(ms) {
 function formatKillDate(startTime) {
   if (!startTime) return 'Unknown Date';
   const d = new Date(startTime);
-  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+  return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
 function formatServerInfo(serverName, regionName) {
   if (!serverName) return 'Unknown Server';
