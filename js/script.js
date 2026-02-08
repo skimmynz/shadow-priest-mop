@@ -187,6 +187,7 @@ class OptimizedRenderer {
     const duration = formatDuration(r.duration);
     const itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
     const server = formatServerInfo(r.serverName, r.regionName);
+    const killDate = formatKillDate(r.startTime);
 
     const html =
       '<div class="rank-entry">' +
@@ -195,7 +196,7 @@ class OptimizedRenderer {
       (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
       '</div>' +
       '<div class="header-right">' +
-      '<span class="fight-summary">' + server + ' - ' + duration + ' - ' + itemLevel + ' iLvl</span>' +
+      '<span class="fight-summary">' + server + ' - ' + duration + ' - ' + itemLevel + ' iLvl - ' + killDate + '</span>' +
       perPlayerTalents +
       '<span class="expand-icon">▼</span>' +
       '</div>' +
@@ -490,6 +491,11 @@ function formatDuration(ms) {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
   return minutes + 'm ' + seconds + 's';
+}
+function formatKillDate(startTime) {
+  if (!startTime) return 'Unknown Date';
+  const d = new Date(startTime);
+  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 function formatServerInfo(serverName, regionName) {
   if (!serverName) return 'Unknown Server';
