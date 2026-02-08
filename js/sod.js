@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   Haste Calculator — js/haste.js  v3 (Concept C)
+   Haste Calculator
    ═══════════════════════════════════════════════════════ */
 
 const breakpoints = {
