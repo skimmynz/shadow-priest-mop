@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   Haste Calculator
+   Haste Calculator — js/haste.js  v3
    ═══════════════════════════════════════════════════════ */
 
 const breakpoints = {
@@ -109,120 +109,66 @@ function calculateRatingFromPercent(targetPercent, isGoblin) {
 }
 
 // ═══════════════════════════════════════════════════════
-// Spell card + timeline rendering
+// Spell table rendering
 // ═══════════════════════════════════════════════════════
-function getTimelineMax(points, effectiveHaste) {
-  var nextIdx = 0;
-  for (var i = 0; i < points.length; i++) {
-    if (effectiveHaste < points[i]) { nextIdx = i; break; }
-    nextIdx = i + 1;
-  }
-  var lookAhead = Math.min(nextIdx + 2, points.length - 1);
-  var ceiling = points[lookAhead];
-  ceiling = ceiling * 1.15;
-  ceiling = Math.ceil(ceiling / 10) * 10;
-  return Math.max(ceiling, effectiveHaste * 1.2, 20);
-}
-
 function updateSpellTable(effectiveHaste, isGoblin) {
-  var html = '';
-  var currentRating = Math.min(parseFloat(hasteInput.value) || 0, 20000);
+  var spellsHTML = '';
 
   for (var spell in breakpoints) {
     var data = breakpoints[spell];
     var base = baseTicks[spell];
     var extraTicks = 0;
-    var nextBP = null;
+    var nextBP = 'Maxed';
+    var nextBPValue = null;
 
     for (var i = 0; i < data.points.length; i++) {
       if (effectiveHaste >= data.points[i]) {
         extraTicks++;
       } else {
-        nextBP = data.points[i];
+        nextBPValue = data.points[i];
+        nextBP = nextBPValue + '% (' + calculateRatingFromPercent(nextBPValue, isGoblin).toLocaleString() + ' rating)';
         break;
       }
     }
 
-    var isMaxed = nextBP === null;
-    var currentTotal = base + extraTicks;
-
-    var tickClass = 'no-ticks';
-    if (extraTicks > 3) tickClass = 'high-ticks';
-    else if (extraTicks > 0) tickClass = 'has-ticks';
-
-    var timelineMax = getTimelineMax(data.points, effectiveHaste);
-    var cursorPct = Math.min((effectiveHaste / timelineMax) * 100, 100);
-    var fillPct = cursorPct;
-
-    // Build breakpoint markers (only within visible range)
-    var markers = '';
-    for (var j = 0; j < data.points.length; j++) {
-      var bp = data.points[j];
-      var pct = (bp / timelineMax) * 100;
-      if (pct > 100) break;
-      var reached = effectiveHaste >= bp;
-      markers +=
-        '<div class="bp-marker ' + (reached ? 'bp-marker--reached' : 'bp-marker--future') + '" style="left:' + pct.toFixed(2) + '%">' +
-          '<span class="bp-marker-label">+' + (j + 1) + '</span>' +
-        '</div>';
+    var progressPercent = 100;
+    if (nextBPValue !== null) {
+      var prevBP = data.points[extraTicks - 1] || 0;
+      progressPercent = Math.min(100, Math.max(0, ((effectiveHaste - prevBP) / (nextBPValue - prevBP)) * 100));
     }
 
-    // Next breakpoint callout
-    var calloutHTML = '';
-    if (isMaxed) {
-      calloutHTML =
-        '<div class="bp-next-callout bp-next-callout--maxed">' +
-          '<div>' +
-            '<div class="bp-next-label">Breakpoints</div>' +
-            '<div class="bp-next-value">\u2714 All breakpoints reached</div>' +
-          '</div>' +
-        '</div>';
-    } else {
-      var nextRating = calculateRatingFromPercent(nextBP, isGoblin);
-      var ratingNeeded = Math.max(0, nextRating - currentRating);
-      calloutHTML =
-        '<div class="bp-next-callout">' +
-          '<div>' +
-            '<div class="bp-next-label">Next breakpoint</div>' +
-            '<div class="bp-next-value">' + nextBP.toFixed(2) + '% effective haste</div>' +
-          '</div>' +
-          '<div style="text-align:right">' +
-            '<div class="bp-next-rating">' + ratingNeeded.toLocaleString() + ' rating to go</div>' +
-          '</div>' +
-        '</div>';
-    }
+    var isMaxed = nextBP === 'Maxed';
 
-    html +=
-      '<div class="spell-card">' +
-        '<div class="spell-card-header">' +
-          '<div class="spell-card-left">' +
-            '<a href="' + data.url + '" target="_blank" data-wowhead="spell=' + data.id + '&domain=mop-classic">' +
-              '<img src="' + data.icon + '" alt="' + spell + '" class="spell-icon">' +
-            '</a>' +
-            '<div>' +
-              '<a href="' + data.url + '" target="_blank" class="spell-card-name" data-wowhead="spell=' + data.id + '&domain=mop-classic">' + spell + '</a>' +
-              '<div class="spell-card-base">' + base + ' base ticks</div>' +
+    var ticksClass = 'no-ticks';
+    if (extraTicks > 3) ticksClass = 'high-ticks';
+    else if (extraTicks > 0) ticksClass = 'has-ticks';
+
+    spellsHTML +=
+      '<div class="spell-row">' +
+        '<div class="spell-info">' +
+          '<a href="' + data.url + '" target="_blank" data-wowhead="spell=' + data.id + '&domain=mop-classic">' +
+            '<img src="' + data.icon + '" alt="' + spell + '" class="spell-icon">' +
+          '</a>' +
+          '<a href="' + data.url + '" target="_blank" class="spell-name" data-wowhead="spell=' + data.id + '&domain=mop-classic">' +
+            spell +
+          '</a>' +
+        '</div>' +
+        '<div class="base-ticks">' + base + ' ticks base</div>' +
+        '<div class="ticks-badge ' + ticksClass + '">+' + extraTicks + ' tick' + (extraTicks !== 1 ? 's' : '') + '</div>' +
+        '<div class="breakpoint-info">' +
+          '<div class="breakpoint-text-container">' +
+            '<div class="breakpoint-text ' + (isMaxed ? 'breakpoint-maxed' : '') + '">' +
+              nextBP +
             '</div>' +
           '</div>' +
-          '<div class="spell-card-right">' +
-            '<div class="spell-card-ticks ' + tickClass + '">' + currentTotal + '</div>' +
-            '<div class="spell-card-ticks-label">current ticks</div>' +
-          '</div>' +
+          (!isMaxed
+            ? '<div class="progress-container"><div class="progress-bar" style="width: ' + progressPercent + '%"></div></div>'
+            : '') +
         '</div>' +
-        '<div class="bp-timeline">' +
-          '<div class="bp-timeline-fill" style="width:' + fillPct.toFixed(2) + '%"></div>' +
-          markers +
-          '<div class="bp-cursor" style="left:' + cursorPct.toFixed(2) + '%"></div>' +
-        '</div>' +
-        '<div class="bp-timeline-scale">' +
-          '<span>0%</span>' +
-          '<span>' + Math.round(timelineMax) + '%</span>' +
-        '</div>' +
-        calloutHTML +
       '</div>';
   }
 
-  document.getElementById('spellsContainer').innerHTML = html;
+  document.getElementById('spellsContainer').innerHTML = spellsHTML;
 
   if (typeof $WowheadPower !== 'undefined') {
     $WowheadPower.refreshLinks();
