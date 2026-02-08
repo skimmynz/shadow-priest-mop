@@ -18,15 +18,15 @@
 .context-bar-inner {
   max-width: 1800px;
   margin: 0 auto;
-  padding: 12px 2rem 10px;
+  padding: 16px 2rem 14px;
 }
 
 .context-selectors {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 /* Tier Toggle */
@@ -40,11 +40,11 @@
 }
 
 .tier-toggle-btn {
-  padding: 6px 20px;
+  padding: 8px 24px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  font-size: 0.8125rem;
+  font-size: 0.9rem;
   font-weight: 700;
   font-family: inherit;
   letter-spacing: 0.05em;
@@ -67,19 +67,19 @@
 /* Raid Pills */
 .raid-pills {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
 .raid-pill {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 8px;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 10px;
   border: 1px solid var(--border-color);
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 600;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -88,9 +88,9 @@
 }
 
 .raid-pill .raid-pill-icon {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
   object-fit: cover;
 }
 
@@ -109,7 +109,7 @@
 /* Boss Strip */
 .boss-strip-wrapper {
   position: relative;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 /* Fade edges when overflowing */
@@ -143,9 +143,9 @@
 
 .boss-strip {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding-bottom: 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
@@ -160,12 +160,12 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 8px;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
-  font-size: 0.6875rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: inherit;
   white-space: nowrap;
@@ -175,9 +175,9 @@
 }
 
 .boss-chip .boss-chip-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: border-color 0.2s ease;
@@ -1032,36 +1032,36 @@ a.wowhead del {
 
 @media (max-width: 768px) {
   .context-bar-inner {
-    padding: 10px 1rem 8px;
+    padding: 12px 1rem 10px;
   }
 
   .context-selectors {
-    gap: 8px;
+    gap: 10px;
   }
 
   .tier-toggle-btn {
-    padding: 5px 14px;
-    font-size: 0.75rem;
+    padding: 7px 18px;
+    font-size: 0.8125rem;
   }
 
   .raid-pill {
-    padding: 5px 10px;
-    font-size: 0.6875rem;
+    padding: 7px 14px;
+    font-size: 0.8125rem;
   }
 
   .raid-pill .raid-pill-icon {
-    width: 18px;
-    height: 18px;
+    width: 24px;
+    height: 24px;
   }
 
   .boss-chip {
-    padding: 4px 10px;
-    font-size: 0.625rem;
+    padding: 6px 12px;
+    font-size: 0.75rem;
   }
 
   .boss-chip .boss-chip-icon {
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
   }
 
   .content-area {
@@ -1131,6 +1131,7 @@ a.wowhead del {
   }
 
   .raid-pill .raid-pill-icon {
-    display: none;
+    width: 20px;
+    height: 20px;
   }
 }
