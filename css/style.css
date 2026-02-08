@@ -667,41 +667,10 @@ a.wowhead del {
   gap: 0.5rem;
 }
 
-.gear-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
-  border: 2px solid var(--border-hover);
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.gear-icon:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
 .gear-info {
   flex: 1;
   min-width: 0;
 }
-
-.gear-name {
-  font-weight: 600;
-  margin-bottom: 0.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.9rem;
-}
-
-.gear-name.poor { color: #9d9d9d; }
-.gear-name.common { color: #ffffff; }
-.gear-name.uncommon { color: #1eff00; }
-.gear-name.rare { color: #0070dd; }
-.gear-name.epic { color: #a335ee; }
-.gear-name.legendary { color: #ff8000; }
 
 .gear-slot {
   font-size: 0.75rem;
@@ -713,30 +682,6 @@ a.wowhead del {
   color: var(--gold-color);
   font-size: 0.8rem;
   flex-shrink: 0;
-}
-
-.gem-enchant {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-}
-
-.gem,
-.enchant {
-  font-size: 0.7rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 6px;
-  background: var(--hover-bg);
-  border: 1px solid var(--border-hover);
-}
-
-.gem {
-  color: var(--success-color);
-}
-
-.enchant {
-  color: var(--text-accent);
 }
 
 .no-gear {

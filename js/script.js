@@ -68,10 +68,6 @@ function createDebounced(fn, delay = 100, immediate = false) {
       }
     }, delay);
   };
-  debounced.cancel = () => {
-    clearTimeout(timeoutId);
-    timeoutId = null;
-  };
   return debounced;
 }
 
@@ -140,8 +136,7 @@ async function analyzeTalentsOptimized(rankings) {
    Optimized Renderer
    -------------------------------------------------------------------------------- */
 class OptimizedRenderer {
-  constructor(container) {
-    this.container = container;
+  constructor() {
     this.renderCache = new Map();
   }
 
@@ -991,24 +986,9 @@ function disableButtons(disabled) {
 }
 
 /* --------------------------------------------------------------------------------
-   Performance logging
-   -------------------------------------------------------------------------------- */
-let performanceMetrics = { renderTimes: [], interactionTimes: [] };
-function trackPerformance(name, startTime) {
-  const duration = performance.now() - startTime;
-  performanceMetrics.renderTimes.push({ name: name, duration: duration, timestamp: Date.now() });
-  if (performanceMetrics.renderTimes.length > 20) {
-    performanceMetrics.renderTimes = performanceMetrics.renderTimes.slice(-20);
-  }
-  console.log('Performance: ' + name + ' completed in ' + duration.toFixed(2) + 'ms');
-}
-
-/* --------------------------------------------------------------------------------
    Boot sequence
    -------------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
-  const initStart = performance.now();
-
   createTierMenu();
   buildBossButtonsForRaid(currentRaidKey);
 
@@ -1030,7 +1010,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const bossName = match ? match[0] : 'Encounter';
 
       fetchAndDisplayRankings(bossName, ph.id);
-      trackPerformance('Initial load from hash', initStart);
       return;
     }
   }
@@ -1051,6 +1030,4 @@ document.addEventListener('DOMContentLoaded', () => {
       el.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">No talent data available</div>';
     }
   }
-
-  trackPerformance('DOMContentLoaded', initStart);
 });
