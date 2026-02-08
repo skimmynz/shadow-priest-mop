@@ -95,7 +95,7 @@ function calculateHaste() {
   var gcdCap = isGoblin ? 17614 : 18215;
   var warningEl = document.getElementById('gcdWarningInput');
   warningEl.innerHTML = rating >= gcdCap
-    ? '<div class="gcd-warning">\u26A0\uFE0F GCD Cap (' + gcdCap.toLocaleString() + ')</div>'
+    ? '<div class="gcd-warning">\u26A0 GCD capped at ' + gcdCap.toLocaleString() + ' rating</div>'
     : '';
 
   updateSpellTable(effectiveHaste, isGoblin);
