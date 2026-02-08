@@ -628,6 +628,7 @@ html { scroll-behavior: smooth; }
   .haste-header h1 { font-size: 1.75rem; }
   .haste-controls-section { padding: 1.25rem; border-radius: 16px; }
   .haste-controls-grid { grid-template-columns: 1fr; gap: .875rem; }
+  .control-header[style*="visibility: hidden"] { display: none; }
 
   .haste-results-layout { grid-template-columns: 1fr; }
   .result-card { padding: 1.75rem 1.25rem; border-radius: 16px; }
