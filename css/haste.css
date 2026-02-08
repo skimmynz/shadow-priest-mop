@@ -359,6 +359,10 @@ html { scroll-behavior: smooth; }
 }
 
 /* GCD warning */
+#gcdWarningInput {
+  min-height: 3.25rem;
+}
+
 .gcd-warning {
   background: linear-gradient(135deg, rgba(245,158,11,.9), rgba(234,88,12,.9));
   color: #fff;
