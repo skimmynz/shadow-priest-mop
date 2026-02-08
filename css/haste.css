@@ -574,9 +574,6 @@ html { scroll-behavior: smooth; }
   line-height: 1.65;
   margin: 0;
 }
-.breakpoint-explainer p + p {
-  margin-top: .6rem;
-}
 .breakpoint-explainer strong {
   color: var(--text-secondary);
   font-weight: 700;
