@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════
-   Haste Calculator — js/haste.js  v3
+   Haste Calculator — js/haste.js
    ═══════════════════════════════════════════════════════ */
 
 const breakpoints = {
@@ -95,7 +95,14 @@ function calculateHaste() {
   var gcdCap = isGoblin ? 17614 : 18215;
   var warningEl = document.getElementById('gcdWarningInput');
   warningEl.innerHTML = rating >= gcdCap
-    ? '<div class="gcd-warning">\u26A0 GCD capped at ' + gcdCap.toLocaleString() + ' rating</div>'
+    ? '<div class="gcd-warning">' +
+        '<span class="gcd-warning-icon">\u26A0</span>' +
+        '<span class="gcd-warning-text">GCD Capped at ' + gcdCap.toLocaleString() + ' rating</span>' +
+        '<div class="gcd-tooltip">' +
+          '<div class="gcd-tooltip-title">Global Cooldown Cap</div>' +
+          '<div class="gcd-tooltip-body">The Global Cooldown (GCD) cannot be reduced below 1 second. Any Haste rating beyond ' + gcdCap.toLocaleString() + ' will still benefit your DoT tick speed and breakpoints, but will no longer reduce the time between ability casts.</div>' +
+        '</div>' +
+      '</div>'
     : '';
 
   updateSpellTable(effectiveHaste, isGoblin);
