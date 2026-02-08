@@ -108,14 +108,19 @@ function renderItems(items, containerId) {
       ${previewHTML}
       <div class="item-name">${item.name}</div>
       <div class="item-links">
-        <a href="${item.url}" target="_blank" rel="noopener" class="item-link">
-          ${isWeakAura ? 'Import' : 'Download'}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-        </a>
+        ${isWeakAura
+          ? `<a href="${item.url}" target="_blank" rel="noopener" class="wago-import-btn">
+              <img src="https://media.wago.io/favicon/favicon-32x32.png" alt="" class="wago-icon">
+              Import from Wago.io
+            </a>`
+          : `<a href="${item.url}" target="_blank" rel="noopener" class="item-link">
+              Download
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </a>`}
         ${profileBtn}
       </div>
     </div>`;

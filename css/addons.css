@@ -242,6 +242,33 @@
   height: 16px;
 }
 
+/* Wago.io import button */
+.wago-import-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .65rem 1.25rem;
+  background: linear-gradient(135deg, rgba(194,65,54,.85), rgba(168,50,42,.9));
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 10px;
+  border: 1px solid rgba(194,65,54,.5);
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+  letter-spacing: .03em;
+}
+.wago-import-btn:hover {
+  background: linear-gradient(135deg, rgba(214,75,64,.95), rgba(194,65,54,1));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(194,65,54,.35);
+}
+.wago-icon {
+  width: 18px;
+  height: 18px;
+}
+
 /* Instructions Card with Tabs */
 .instructions-card {
   display: flex;
