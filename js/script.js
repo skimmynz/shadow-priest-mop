@@ -186,7 +186,8 @@ class OptimizedRenderer {
     const entryId = 'entry-' + index + '-' + r.reportID + '-' + r.fightID;
     const duration = formatDuration(r.duration);
     const itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
-  
+    const server = formatServerInfo(r.serverName, r.regionName);
+
     const html =
       '<div class="rank-entry">' +
       '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
@@ -194,7 +195,7 @@ class OptimizedRenderer {
       (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
       '</div>' +
       '<div class="header-right">' +
-      '<span class="fight-summary">' + duration + ' - ' + itemLevel + ' iLvl</span>' +
+      '<span class="fight-summary">' + server + ' - ' + duration + ' - ' + itemLevel + ' iLvl</span>' +
       perPlayerTalents +
       '<span class="expand-icon">▼</span>' +
       '</div>' +
@@ -489,9 +490,6 @@ function formatDuration(ms) {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
   return minutes + 'm ' + seconds + 's';
-}
-function formatFaction(faction) {
-  return faction === 1 ? 'Alliance' : faction === 0 ? 'Horde' : 'Unknown';
 }
 function formatServerInfo(serverName, regionName) {
   if (!serverName) return 'Unknown Server';
