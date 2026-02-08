@@ -1015,11 +1015,13 @@ a.wowhead del {
 
   .header-right {
     width: 100%;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .fight-summary {
     font-size: 0.75rem;
+    width: 100%;
   }
 }
 
