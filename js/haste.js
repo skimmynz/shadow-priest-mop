@@ -159,7 +159,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
 
   spellsHTML +=
     '<div class="breakpoint-explainer">' +
-      '<p>In Mists of Pandaria Classic, a <strong>Haste Breakpoint</strong> is a specific amount of Haste rating at which a damage-over-time spell gains an additional tick before it expires. DoTs like Shadow Word: Pain, Vampiric Touch, and Devouring Plague tick at fixed intervals, but Haste shortens those intervals. Once you accumulate enough Haste to hit a breakpoint, that extra tick represents a significant DPS increase.</p>' +
+      '<p>In Mists of Pandaria Classic, a <strong>Haste Breakpoint</strong> is a specific amount of Haste rating at which a damage-over-time spell gains an additional tick before it expires. DoTs like <a href="https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain" data-wowhead="spell=589&domain=mop-classic">Shadow Word: Pain</a>, <a href="https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch" data-wowhead="spell=34914&domain=mop-classic">Vampiric Touch</a>, and <a href="https://www.wowhead.com/mop-classic/spell=2944/devouring-plague" data-wowhead="spell=2944&domain=mop-classic">Devouring Plague</a> tick at fixed intervals, but Haste shortens those intervals. Once you accumulate enough Haste to hit a breakpoint, that extra tick represents a significant DPS increase.</p>' +
     '</div>';
 
   document.getElementById('spellsContainer').innerHTML = spellsHTML;
