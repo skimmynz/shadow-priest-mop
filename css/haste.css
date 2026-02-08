@@ -10,6 +10,7 @@ html { scroll-behavior: smooth; }
   padding: 2.5rem 2.5rem 3rem;
   max-width: 1600px;
   margin: 0 auto;
+  position: relative;
 }
 
 /* ── Header ───────────────────────────────────────────── */
@@ -262,23 +263,27 @@ html { scroll-behavior: smooth; }
   min-height: 1.5rem;
 }
 
-/* GCD warning */
+/* GCD warning — absolutely positioned so it never shifts layout */
 #gcdWarningInput {
-  min-height: 3.25rem;
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: max-content;
+  max-width: 90%;
 }
 
 .gcd-warning {
   background: linear-gradient(135deg, rgba(245,158,11,.9), rgba(234,88,12,.9));
   color: #fff;
-  padding: .875rem .75rem;
+  padding: .75rem 1.5rem;
   border-radius: 12px;
-  margin-top: .75rem;
   font-weight: 700;
   font-size: .85rem;
   box-shadow: 0 4px 16px rgba(245,158,11,.25);
   text-align: center;
   line-height: 1.35;
-  width: 100%;
 }
 
 /* ── WeakAura promo ───────────────────────────────────── */
