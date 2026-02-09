@@ -149,7 +149,7 @@ class OptimizedRenderer {
     var searchData = playerName.toLowerCase();
 
     var html =
-      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '" data-server="' + (r.serverName || '').toLowerCase() + '">' +
+      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
       '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
       '<div class="name-wrapper" style="color:' + color + '">' +
       (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
@@ -254,7 +254,6 @@ var currentData = null;
 var currentSearch = '';
 var currentSort = 'dps-desc';
 var currentRegionFilter = '';
-var currentServerFilter = '';
 
 /* --------------------------------------------------------------------------------
    Tier / Raids data
@@ -292,7 +291,6 @@ var searchInput = document.getElementById('search-input');
 var searchClear = document.getElementById('search-clear');
 var sortSelect = document.getElementById('sort-select');
 var regionFilter = document.getElementById('region-filter');
-var serverFilter = document.getElementById('server-filter');
 var resultCountEl = document.getElementById('toolbar-result-count');
 
 // Last updated
@@ -494,7 +492,6 @@ function applyFiltersAndSort() {
 
   // Apply search + region + server filters
   var regionVal = currentRegionFilter.toLowerCase();
-  var serverVal = currentServerFilter.toLowerCase();
   entryArr.forEach(function(el) {
     var hidden = false;
     if (query) {
@@ -503,9 +500,6 @@ function applyFiltersAndSort() {
     }
     if (!hidden && regionVal) {
       if ((el.getAttribute('data-region') || '') !== regionVal) hidden = true;
-    }
-    if (!hidden && serverVal) {
-      if ((el.getAttribute('data-server') || '') !== serverVal) hidden = true;
     }
     el.classList.toggle('filtered-out', hidden);
   });
@@ -553,10 +547,8 @@ var debouncedApplyFilters = createDebounced(applyFiltersAndSort, 150);
 function populateFilterDropdowns(data) {
   var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
   var regions = new Set();
-  var servers = new Set();
   rankings.forEach(function(r) {
     if (r.regionName) regions.add(r.regionName);
-    if (r.serverName) servers.add(r.serverName);
   });
 
   if (regionFilter) {
@@ -566,15 +558,6 @@ function populateFilterDropdowns(data) {
     });
     regionFilter.innerHTML = regionHtml;
     regionFilter.value = '';
-  }
-
-  if (serverFilter) {
-    var serverHtml = '<option value="">Server: All</option>';
-    Array.from(servers).sort().forEach(function(s) {
-      serverHtml += '<option value="' + s + '">' + s + '</option>';
-    });
-    serverFilter.innerHTML = serverHtml;
-    serverFilter.value = '';
   }
 }
 
@@ -755,11 +738,9 @@ async function fetchAndDisplayRankings(name, encounterId) {
     currentSearch = '';
     currentSort = 'dps-desc';
     currentRegionFilter = '';
-    currentServerFilter = '';
     if (searchInput) searchInput.value = '';
     if (sortSelect) sortSelect.value = 'dps-desc';
     if (regionFilter) regionFilter.value = '';
-    if (serverFilter) serverFilter.value = '';
     if (searchClear) searchClear.style.display = 'none';
     if (resultCountEl) resultCountEl.textContent = '';
 
@@ -878,12 +859,6 @@ if (sortSelect) {
 if (regionFilter) {
   regionFilter.addEventListener('change', function() {
     currentRegionFilter = regionFilter.value;
-    applyFiltersAndSort();
-  });
-}
-if (serverFilter) {
-  serverFilter.addEventListener('change', function() {
-    currentServerFilter = serverFilter.value;
     applyFiltersAndSort();
   });
 }
