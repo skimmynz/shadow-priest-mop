@@ -245,7 +245,6 @@ body {
   padding: 12px 0;
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  flex-wrap: wrap;
 }
 
 .toolbar-search {
@@ -395,7 +394,7 @@ body {
 
 /* Talent sidebar */
 .talent-sidebar {
-  padding: 1rem 1.25rem;
+  padding: 2rem 1.25rem;
   overflow-y: auto;
   overflow-x: hidden;
   max-height: calc(100vh - 260px);
@@ -422,30 +421,11 @@ body {
   text-transform: uppercase;
 }
 
-/* Header controls */
-.header-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
 /* Neutralize Wowhead injected styles */
 a.wowhead ins,
 a.wowhead del {
   text-decoration: none !important;
   border: 0 !important;
-}
-
-/* =================================================================
-   Boss Buttons (kept for JS compat, now hidden — chips used instead)
-   ================================================================= */
-#boss-buttons {
-  display: none;
 }
 
 /* =================================================================
@@ -953,20 +933,6 @@ a.wowhead del {
   margin-bottom: 1rem;
 }
 
-.sidebar-rules-heading {
-  margin: 0 0 0.5rem 0;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  text-align: center;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.parsing-rules-header-container {
-  margin: 0;
-}
-
 .parsing-rules-content {
   border: 2px solid var(--warning-color);
   border-radius: 12px;
@@ -1091,12 +1057,8 @@ a.wowhead del {
   }
 
   .raid-pill {
-    padding: 7px 14px;
-    font-size: 0.8125rem;
-  }
-
-  .raid-pill {
     padding: 7px 12px;
+    font-size: 0.8125rem;
   }
 
   .boss-chip {
@@ -1131,6 +1093,8 @@ a.wowhead del {
   .toolbar-sort {
     flex: 1 1 0;
     min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .toolbar .last-updated {
