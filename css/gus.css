@@ -319,8 +319,9 @@ body {
 
 .toolbar .last-updated {
   margin: 0;
-  text-align: right;
+  text-align: center;
   white-space: nowrap;
+  flex: 1 1 auto;
 }
 
 .toolbar-result-count {
@@ -1135,9 +1136,13 @@ a.wowhead del {
     min-width: 0;
   }
 
+  .toolbar .last-updated {
+    text-align: left;
+  }
+
   .toolbar-right {
     margin-left: 0;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
 
   .info-grid {

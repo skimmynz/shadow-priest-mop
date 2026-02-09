@@ -130,6 +130,9 @@
             <input type="text" id="search-input" class="toolbar-search-input" placeholder="Search player..." autocomplete="off" />
             <button class="toolbar-search-clear" id="search-clear" aria-label="Clear search" style="display:none;">✕</button>
           </div>
+          <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+            Loading last updated…
+          </div>
           <div class="toolbar-right">
             <div class="toolbar-result-count" id="toolbar-result-count"></div>
             <select id="region-filter" class="toolbar-sort" aria-label="Filter by region">
@@ -141,9 +144,6 @@
               <option value="ilvl">Sort: Item Level</option>
               <option value="duration">Sort: Duration</option>
             </select>
-            <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-              Loading last updated…
-            </div>
           </div>
         </div>
 
