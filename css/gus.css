@@ -360,20 +360,14 @@ body {
 .unified-container {
   flex: 0 1 auto;
   min-height: 0;
-  max-height: calc(100vh - 160px);
   margin: 0 auto;
   width: 100%;
-  overflow: hidden;
 }
 
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 320px;
-  grid-template-rows: 1fr;
   gap: 0;
-  max-height: inherit;
-  min-height: 0;
-  overflow: hidden;
 }
 
 /* Content area */
@@ -382,7 +376,7 @@ body {
   min-width: 0;
   padding: 2rem 2.5rem;
   overflow-y: auto;
-  min-height: 0;
+  max-height: calc(100vh - 260px);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -394,10 +388,9 @@ body {
 /* Talent sidebar */
 .talent-sidebar {
   padding: 2rem 1.5rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.06);
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: 0;
+  max-height: calc(100vh - 260px);
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
@@ -1065,6 +1058,10 @@ a.wowhead del {
 
   .main-grid {
     grid-template-columns: 1fr;
+  }
+
+  .content-area,
+  .talent-sidebar {
     max-height: none;
   }
 
