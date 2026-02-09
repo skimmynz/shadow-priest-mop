@@ -146,10 +146,10 @@ class OptimizedRenderer {
     var itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
     var server = formatServerInfo(r.serverName, r.regionName);
     var killDate = formatKillDate(r.startTime);
-    var searchData = ((playerName + ' ' + (r.serverName || '') + ' ' + (r.regionName || '')).toLowerCase());
+    var searchData = playerName.toLowerCase();
 
     var html =
-      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '">' +
+      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '" data-server="' + (r.serverName || '').toLowerCase() + '">' +
       '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
       '<div class="name-wrapper" style="color:' + color + '">' +
       (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
@@ -252,7 +252,9 @@ var currentData = null;
    Search & Sort State
    -------------------------------------------------------------------------------- */
 var currentSearch = '';
-var currentSort = 'dps';
+var currentSort = 'dps-desc';
+var currentRegionFilter = '';
+var currentServerFilter = '';
 
 /* --------------------------------------------------------------------------------
    Tier / Raids data
@@ -282,7 +284,6 @@ var currentEncounterId = null;
 var tierToggleEl = document.getElementById('tier-toggle');
 var raidPillsEl = document.getElementById('raid-pills');
 var bossStripEl = document.getElementById('boss-strip');
-var breadcrumbEl = document.getElementById('context-breadcrumb');
 var bossStripWrapper = document.querySelector('.boss-strip-wrapper');
 
 // Existing DOM refs
@@ -290,6 +291,8 @@ var rankingsDiv = document.getElementById('rankings');
 var searchInput = document.getElementById('search-input');
 var searchClear = document.getElementById('search-clear');
 var sortSelect = document.getElementById('sort-select');
+var regionFilter = document.getElementById('region-filter');
+var serverFilter = document.getElementById('server-filter');
 var resultCountEl = document.getElementById('toolbar-result-count');
 
 // Last updated
@@ -473,7 +476,7 @@ function renderParsingRules(encounterId) {
   var rules = PARSING_RULES[encounterId];
   if (!rules) return '';
   var items = rules.rules.map(function(r) { return '<li class="parsing-rule-item">' + r + '</li>'; }).join('');
-  return '<div class="parsing-rules-header-container"><div class="parsing-rules-content active"><ul class="parsing-rules-list">' + items + '</ul></div></div>';
+  return '<h3 class="sidebar-rules-heading">Parsing Rules</h3><div class="parsing-rules-content active"><ul class="parsing-rules-list">' + items + '</ul></div>';
 }
 
 /* --------------------------------------------------------------------------------
@@ -489,45 +492,41 @@ function applyFiltersAndSort() {
   // Build array for sorting
   var entryArr = Array.from(entries);
 
-  // Apply search filter
+  // Apply search + region + server filters
+  var regionVal = currentRegionFilter.toLowerCase();
+  var serverVal = currentServerFilter.toLowerCase();
   entryArr.forEach(function(el) {
-    if (!query) {
-      el.classList.remove('filtered-out');
-    } else {
+    var hidden = false;
+    if (query) {
       var searchData = el.getAttribute('data-search') || '';
-      if (searchData.indexOf(query) !== -1) {
-        el.classList.remove('filtered-out');
-      } else {
-        el.classList.add('filtered-out');
-      }
+      if (searchData.indexOf(query) === -1) hidden = true;
     }
+    if (!hidden && regionVal) {
+      if ((el.getAttribute('data-region') || '') !== regionVal) hidden = true;
+    }
+    if (!hidden && serverVal) {
+      if ((el.getAttribute('data-server') || '') !== serverVal) hidden = true;
+    }
+    el.classList.toggle('filtered-out', hidden);
   });
 
   // Sort visible entries
   var sortField = currentSort;
-  if (sortField !== 'dps') {
-    var parent = rankingsDiv;
-    var sorted = entryArr.slice().sort(function(a, b) {
-      if (sortField === 'ilvl') {
-        return (parseFloat(b.getAttribute('data-ilvl')) || 0) - (parseFloat(a.getAttribute('data-ilvl')) || 0);
-      }
-      if (sortField === 'duration') {
-        return (parseFloat(a.getAttribute('data-duration')) || 0) - (parseFloat(b.getAttribute('data-duration')) || 0);
-      }
-      if (sortField === 'name') {
-        return (a.getAttribute('data-name') || '').localeCompare(b.getAttribute('data-name') || '');
-      }
-      return 0;
-    });
-    sorted.forEach(function(el) { parent.appendChild(el); });
-  } else {
-    // Restore original DPS order (by data-original-rank)
-    var parent = rankingsDiv;
-    var sorted = entryArr.slice().sort(function(a, b) {
-      return (parseInt(a.getAttribute('data-original-rank')) || 0) - (parseInt(b.getAttribute('data-original-rank')) || 0);
-    });
-    sorted.forEach(function(el) { parent.appendChild(el); });
-  }
+  var parent = rankingsDiv;
+  var sorted = entryArr.slice().sort(function(a, b) {
+    if (sortField === 'dps-asc') {
+      return (parseInt(b.getAttribute('data-original-rank')) || 0) - (parseInt(a.getAttribute('data-original-rank')) || 0);
+    }
+    if (sortField === 'ilvl') {
+      return (parseFloat(b.getAttribute('data-ilvl')) || 0) - (parseFloat(a.getAttribute('data-ilvl')) || 0);
+    }
+    if (sortField === 'duration') {
+      return (parseFloat(a.getAttribute('data-duration')) || 0) - (parseFloat(b.getAttribute('data-duration')) || 0);
+    }
+    // Default: dps-desc — restore original rank order (highest first)
+    return (parseInt(a.getAttribute('data-original-rank')) || 0) - (parseInt(b.getAttribute('data-original-rank')) || 0);
+  });
+  sorted.forEach(function(el) { parent.appendChild(el); });
 
   // Count visible
   entryArr.forEach(function(el) {
@@ -551,6 +550,34 @@ function applyFiltersAndSort() {
 
 var debouncedApplyFilters = createDebounced(applyFiltersAndSort, 150);
 
+function populateFilterDropdowns(data) {
+  var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
+  var regions = new Set();
+  var servers = new Set();
+  rankings.forEach(function(r) {
+    if (r.regionName) regions.add(r.regionName);
+    if (r.serverName) servers.add(r.serverName);
+  });
+
+  if (regionFilter) {
+    var regionHtml = '<option value="">Region: All</option>';
+    Array.from(regions).sort().forEach(function(r) {
+      regionHtml += '<option value="' + r + '">' + r + '</option>';
+    });
+    regionFilter.innerHTML = regionHtml;
+    regionFilter.value = '';
+  }
+
+  if (serverFilter) {
+    var serverHtml = '<option value="">Server: All</option>';
+    Array.from(servers).sort().forEach(function(s) {
+      serverHtml += '<option value="' + s + '">' + s + '</option>';
+    });
+    serverFilter.innerHTML = serverHtml;
+    serverFilter.value = '';
+  }
+}
+
 /* --------------------------------------------------------------------------------
    Context Bar: Build UI
    -------------------------------------------------------------------------------- */
@@ -558,7 +585,6 @@ function buildContextBar() {
   buildTierToggle();
   buildRaidPills();
   buildBossStrip();
-  updateBreadcrumb();
 }
 
 function buildTierToggle() {
@@ -596,9 +622,8 @@ function buildRaidPills() {
   var html = '';
   for (var key in raids) {
     var raid = raids[key];
-    html += '<button type="button" class="raid-pill' + (key === currentRaidKey ? ' active' : '') + '" data-raid="' + key + '" role="tab" aria-selected="' + (key === currentRaidKey) + '">' +
-      '<img src="img/' + key + '.webp" alt="" class="raid-pill-icon" loading="lazy" onerror="this.style.display=\'none\'">' +
-      raid.short + '</button>';
+    html += '<button type="button" class="raid-pill' + (key === currentRaidKey ? ' active' : '') + '" data-raid="' + key + '" role="tab" aria-selected="' + (key === currentRaidKey) + '" style="background-image: url(img/' + key + '.webp)">' +
+      raid.name + '</button>';
   }
   raidPillsEl.innerHTML = html;
 
@@ -674,22 +699,6 @@ function updateBossStripOverflow() {
   bossStripWrapper.classList.toggle('has-overflow-right', hasOverflowRight);
 }
 
-function updateBreadcrumb() {
-  if (!breadcrumbEl) return;
-  var raid = TIERS[currentTierKey].raids[currentRaidKey];
-  var raidName = raid ? raid.name : '';
-  var bossName = currentBossName || '';
-  if (!bossName) {
-    breadcrumbEl.innerHTML = raidName;
-    return;
-  }
-  var iconId = currentEncounterId ? bossIconUrl(currentEncounterId) : '';
-  breadcrumbEl.innerHTML = raidName +
-    ' <span class="breadcrumb-sep">›</span> ' +
-    (iconId ? '<img src="' + iconId + '" alt="" class="breadcrumb-boss-icon"> ' : '') +
-    bossName;
-}
-
 // Listen for scroll on boss strip to update fade indicators
 if (bossStripEl) {
   bossStripEl.addEventListener('scroll', createDebounced(updateBossStripOverflow, 50), { passive: true });
@@ -710,6 +719,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
 
   var renderContentAndAttachListeners = async function(data) {
     currentData = data;
+    populateFilterDropdowns(data);
     var talentResult = await renderTalentSummary(data);
     var topByTier = talentResult.topByTier;
     var talentSummaryHTML = talentResult.html;
@@ -725,12 +735,9 @@ async function fetchAndDisplayRankings(name, encounterId) {
       if (el) el.innerHTML = talentSummaryHTML;
     });
     domBatcher.schedule('parsing-rules', function() {
-      var updatedEl = document.getElementById('last-updated');
-      if (updatedEl) {
-        var existing = document.querySelector('.parsing-rules-header-container');
-        if (existing) existing.remove();
-        var html = renderParsingRules(encounterId);
-        if (html) updatedEl.insertAdjacentHTML('afterend', html);
+      var rulesContainer = document.getElementById('sidebar-parsing-rules');
+      if (rulesContainer) {
+        rulesContainer.innerHTML = renderParsingRules(encounterId);
       }
     });
 
@@ -743,14 +750,16 @@ async function fetchAndDisplayRankings(name, encounterId) {
 
   try {
     selectActiveBossChip(encounterId);
-    updateBreadcrumb();
-    updateHash(name, encounterId);
 
     // Reset search/sort on boss change
     currentSearch = '';
-    currentSort = 'dps';
+    currentSort = 'dps-desc';
+    currentRegionFilter = '';
+    currentServerFilter = '';
     if (searchInput) searchInput.value = '';
-    if (sortSelect) sortSelect.value = 'dps';
+    if (sortSelect) sortSelect.value = 'dps-desc';
+    if (regionFilter) regionFilter.value = '';
+    if (serverFilter) serverFilter.value = '';
     if (searchClear) searchClear.style.display = 'none';
     if (resultCountEl) resultCountEl.textContent = '';
 
@@ -803,30 +812,10 @@ async function fetchAndDisplayRankings(name, encounterId) {
 /* --------------------------------------------------------------------------------
    Hash, URL
    -------------------------------------------------------------------------------- */
-function slugify(str) {
-  return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').replace(/--+/g, '-');
-}
-function hashFor(name, id) { return '#' + slugify(name) + '-' + id; }
-function updateHash(name, id) { try { history.replaceState(null, '', hashFor(name, id)); } catch(e) {} }
-function parseHash() {
-  var h = location.hash || '';
-  var m = h.match(/^#([a-z0-9-]+)-(\d+)$/i);
-  if (m) return { slug: m[1].toLowerCase(), id: parseInt(m[2], 10) };
-  var legacy = h.match(/^#e-(\d+)$/i);
-  if (legacy) return { slug: 'e', id: parseInt(legacy[1], 10), legacy: true };
-  return null;
+function clearHash() {
+  try { history.replaceState(null, '', location.pathname); } catch(e) {}
 }
 
-function findRaidKeyByEncounterId(encounterId) {
-  for (var tierKey in TIERS) {
-    for (var raidKey in TIERS[tierKey].raids) {
-      if (Object.values(TIERS[tierKey].raids[raidKey].encounters).includes(encounterId)) {
-        return { tierKey: tierKey, raidKey: raidKey };
-      }
-    }
-  }
-  return null;
-}
 
 /* --------------------------------------------------------------------------------
    Cache helpers
@@ -886,31 +875,30 @@ if (sortSelect) {
     applyFiltersAndSort();
   });
 }
+if (regionFilter) {
+  regionFilter.addEventListener('change', function() {
+    currentRegionFilter = regionFilter.value;
+    applyFiltersAndSort();
+  });
+}
+if (serverFilter) {
+  serverFilter.addEventListener('change', function() {
+    currentServerFilter = serverFilter.value;
+    applyFiltersAndSort();
+  });
+}
 
 /* --------------------------------------------------------------------------------
    Boot sequence
    -------------------------------------------------------------------------------- */
 document.addEventListener('DOMContentLoaded', function() {
+  // Clear any existing hash
+  clearHash();
+
   // Build context bar
   buildContextBar();
 
-  // Check URL hash for deep link
-  var ph = parseHash();
-  if (ph && ph.id) {
-    var result = findRaidKeyByEncounterId(ph.id);
-    if (result) {
-      currentTierKey = result.tierKey;
-      currentRaidKey = result.raidKey;
-      buildContextBar();
-
-      var entries = Object.entries(TIERS[result.tierKey].raids[result.raidKey].encounters);
-      var match = entries.find(function(pair) { return pair[1] === ph.id; });
-      fetchAndDisplayRankings(match ? match[0] : 'Encounter', ph.id);
-      return;
-    }
-  }
-
-  // Default: load first boss of current tier/raid
+  // Load first boss of current tier/raid
   var currentRaid = TIERS[currentTierKey].raids[currentRaidKey];
   var entries = Object.entries(currentRaid.encounters);
   if (entries.length) {
