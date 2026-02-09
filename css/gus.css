@@ -1060,7 +1060,7 @@ a.wowhead del {
 
   .unified-container {
     flex: none;
-    margin: 2rem auto;
+    margin: 0 auto;
     width: auto;
   }
 
