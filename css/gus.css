@@ -358,10 +358,12 @@ body {
    Main Grid Layout (sidebar removed — now 2 columns)
    ================================================================= */
 .unified-container {
-  flex: 1;
+  flex: 0 1 auto;
   min-height: 0;
+  max-height: calc(100vh - 160px);
   margin: 0 auto;
   width: 100%;
+  overflow: hidden;
 }
 
 .main-grid {
