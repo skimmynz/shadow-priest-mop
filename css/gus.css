@@ -1123,9 +1123,14 @@ a.wowhead del {
     max-width: none;
   }
 
+  .toolbar-sort {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .toolbar-right {
     margin-left: 0;
-    justify-content: space-between;
+    flex-wrap: nowrap;
   }
 
   .info-grid {

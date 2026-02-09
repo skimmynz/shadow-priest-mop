@@ -36,5 +36,5 @@ function renderParsingRules(encounterId) {
   var rules = PARSING_RULES[encounterId];
   if (!rules) return '';
   var items = rules.rules.map(function(r) { return '<li class="parsing-rule-item">' + r + '</li>'; }).join('');
-  return '<h3 class="sidebar-rules-heading">Parsing Rules</h3><div class="parsing-rules-content active"><ul class="parsing-rules-list">' + items + '</ul></div>';
+  return '<div class="parsing-rules-content active"><ul class="parsing-rules-list">' + items + '</ul></div>';
 }
