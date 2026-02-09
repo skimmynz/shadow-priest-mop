@@ -1121,6 +1121,7 @@ a.wowhead del {
 
   .toolbar-search {
     max-width: none;
+    flex: none;
   }
 
   .toolbar-sort {
