@@ -371,7 +371,7 @@ body {
   grid-template-columns: 1fr 320px;
   grid-template-rows: 1fr;
   gap: 0;
-  height: 100%;
+  max-height: inherit;
   min-height: 0;
   overflow: hidden;
 }
@@ -1065,7 +1065,7 @@ a.wowhead del {
 
   .main-grid {
     grid-template-columns: 1fr;
-    height: auto;
+    max-height: none;
   }
 
   .talent-sidebar {
