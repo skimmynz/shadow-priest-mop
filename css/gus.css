@@ -2,12 +2,26 @@
    Rankings Page Specific Styles
    ================================================================= */
 
+/* App-shell layout: prevent body scroll, only content areas scroll */
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.top-nav {
+  flex-shrink: 0;
+}
+
 /* =================================================================
    Context Bar (replaces left sidebar)
    ================================================================= */
 .context-bar {
-  position: sticky;
-  top: 64px;
+  flex-shrink: 0;
   z-index: 90;
   background: rgba(15, 17, 23, 0.97);
   backdrop-filter: blur(16px);
@@ -343,11 +357,19 @@
 /* =================================================================
    Main Grid Layout (sidebar removed — now 2 columns)
    ================================================================= */
+.unified-container {
+  flex: 1;
+  min-height: 0;
+  margin: 0 auto;
+  width: 100%;
+}
+
 .main-grid {
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 0;
-  min-height: 80vh;
+  height: 100%;
+  min-height: 0;
 }
 
 /* Content area */
@@ -356,7 +378,7 @@
   min-width: 0;
   padding: 2rem 2.5rem;
   overflow-y: auto;
-  max-height: calc(100vh - 64px - 110px);
+  min-height: 0;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -369,9 +391,9 @@
 .talent-sidebar {
   padding: 2rem 1.5rem;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
-  max-height: calc(100vh - 64px - 110px);
   overflow-y: auto;
   overflow-x: hidden;
+  min-height: 0;
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
@@ -1022,18 +1044,29 @@ a.wowhead del {
    Responsive Design
    ================================================================= */
 @media (max-width: 1024px) {
+  html, body {
+    height: auto;
+    overflow: auto;
+  }
+
+  body {
+    display: block;
+  }
+
+  .unified-container {
+    flex: none;
+    margin: 2rem auto;
+    width: auto;
+  }
+
   .main-grid {
     grid-template-columns: 1fr;
+    height: auto;
   }
 
   .talent-sidebar {
     border-left: none;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
-    max-height: none;
-  }
-
-  .content-area {
-    max-height: none;
   }
 }
 
