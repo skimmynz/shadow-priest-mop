@@ -73,7 +73,6 @@ const BASE_HEIGHT = 1080;
 
 // DOM refs
 const wrapper = document.getElementById('uiMapWrapper');
-const image = document.getElementById('uiImage');
 
 /* --------------------------------------------------------------------------------
    Item rendering
@@ -182,7 +181,7 @@ document.addEventListener('click', (e) => {
    Interactive UI map hotspots
    -------------------------------------------------------------------------------- */
 function getScaleAndPosition(hotspot, coords) {
-  const rect = image.getBoundingClientRect();
+  const rect = wrapper.getBoundingClientRect();
   const scaleX = rect.width / BASE_WIDTH;
   const scaleY = rect.height / BASE_HEIGHT;
 
@@ -279,8 +278,10 @@ function updateAllHotspots() {
 renderItems(addons, 'addons-grid');
 renderItems(weakauras, 'weakauras-grid');
 
-image.addEventListener('load', createHotspots);
-if (image.complete) createHotspots();
+const bgImage = new Image();
+bgImage.src = 'img/ui.jpg';
+bgImage.addEventListener('load', createHotspots);
+if (bgImage.complete) createHotspots();
 
 let resizeTimer;
 window.addEventListener('resize', () => {
