@@ -317,6 +317,12 @@ body {
   margin-left: auto;
 }
 
+.toolbar .last-updated {
+  margin: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
 .toolbar-result-count {
   font-size: 0.75rem;
   color: var(--text-muted);
