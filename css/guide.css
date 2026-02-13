@@ -3,59 +3,11 @@
    Depends on css/base.css (tokens + nav)
    ═══════════════════════════════════════════════════════ */
 
-/* ── Hero (compact) ──────────────────────────────────── */
-.guide-hero {
-  text-align: center;
-  padding: 6rem 2rem 3rem;
-}
-
-.guide-hero-title {
-  font-size: clamp(1.75rem, 3vw, 2.5rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.5rem;
-}
-
-.guide-hero-subtitle {
-  color: var(--text-muted);
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.guide-hero-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  border-radius: 8px;
-  background: rgba(124, 58, 237, 0.15);
-  border: 1px solid rgba(124, 58, 237, 0.3);
-  color: var(--text-accent);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
-}
-.guide-hero-link:hover {
-  background: rgba(124, 58, 237, 0.25);
-  border-color: rgba(124, 58, 237, 0.5);
-  transform: translateY(-1px);
-}
-.guide-hero-link svg {
-  width: 18px;
-  height: 18px;
-}
-
 /* ── Video embed ─────────────────────────────────────── */
 .guide-video {
   max-width: 900px;
   margin: 0 auto 2rem;
-  padding: 0 2rem;
+  padding: 5rem 2rem 0;
 }
 
 .guide-video-wrap {
