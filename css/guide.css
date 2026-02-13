@@ -156,6 +156,16 @@ a.timestamp:hover {
   color: var(--text-accent);
 }
 
+.guide-card a {
+  color: var(--text-accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.guide-card a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
 .guide-card p,
 .guide-card ul,
 .guide-card ol {
