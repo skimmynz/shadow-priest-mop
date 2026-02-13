@@ -25,7 +25,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/img/hero-bg.jpg');
+  background-image: url('/img/hero-bg.webp');
   background-size: cover;
   background-position: center 30%;
   filter: blur(4px) brightness(.3) saturate(.7);
