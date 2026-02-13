@@ -278,15 +278,48 @@
     <div class="guide-card" id="macros">
       <h3>Macros <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=995" target="_blank" rel="noopener">16:35</a></h3>
       <p>Macros combine multiple button presses into one and smooth out the gameplay. Key macros to set up:</p>
-      <ul>
-        <li><strong>Cooldowns button:</strong> <a href="https://www.wowhead.com/mop-classic/spell=26297">Berserking</a> + <a href="https://www.wowhead.com/mop-classic/spell=10060">Power Infusion</a> (if talented) + Engineering gloves (<code>/use 10</code>) + trinkets (<code>/use 13</code>, <code>/use 14</code>) all in one press. Works great with double passive trinkets since there's no cooldown conflict.</li>
-        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=34433">Shadowfiend</a>:</strong> Casts Shadowfiend and commands the pet to attack. Also includes auto-target logic (see below).</li>
-        <li><strong>Auto-target enemy:</strong> Add to all damage spells (<a href="https://www.wowhead.com/mop-classic/spell=8092">Mind Blast</a>, DOTs, <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a>). If your target is dead or doesn't exist, the macro finds a new one. Invaluable for sniping adds.</li>
-        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a>:</strong> Updates its tooltip based on your Level 90 talent, so you never have to drag spells from the talent pane onto your bars.</li>
-        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=47585">Dispersion</a> toggle:</strong> First press activates, second press cancels &mdash; like a paladin bubble.</li>
-        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=121536">Angelic Feather</a> at feet:</strong> Use <code>@player</code> to remove the targeting reticle entirely. Instant 80% speed boost whenever you need it.</li>
-        <li><strong>Talent switching:</strong> A <code>/run</code> command can swap talents without a tome. Put different talent configs on a second action bar row and toggle between bosses or trash with zero downtime.</li>
-      </ul>
+      <h4>Cooldowns</h4>
+      <p><a href="https://www.wowhead.com/mop-classic/spell=26297">Berserking</a> + <a href="https://www.wowhead.com/mop-classic/spell=10060">Power Infusion</a> (if talented) + Engineering gloves + trinkets all in one press. Works great with double passive trinkets since there's no cooldown conflict.</p>
+      <pre><code>#showtooltip
+/cast Berserking
+/cast Power Infusion
+/use 10
+/use 13
+/use 14</code></pre>
+
+      <h4><a href="https://www.wowhead.com/mop-classic/spell=34433">Shadowfiend</a></h4>
+      <p>Casts Shadowfiend, auto-targets a living enemy if needed, and commands the pet to attack.</p>
+      <pre><code>#showtooltip
+/cast Shadowfiend
+/cleartarget [dead][noharm]
+/targetenemy [noexists]
+/petattack</code></pre>
+
+      <h4><a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a></h4>
+      <p>Auto-targets a living enemy. Updates its tooltip based on your Level 90 talent, so you never have to drag spells from the talent pane onto your bars.</p>
+      <pre><code>#showtooltip Shadow Word: Death
+/cleartarget [dead][noharm]
+/targetenemy [noexists]
+/cast [stance] Shadow Word: Death; [nostance] Shadowform
+/cast Shadow Word: Death</code></pre>
+
+      <h4>Level 90 Talent</h4>
+      <p>One button for <a href="https://www.wowhead.com/mop-classic/spell=127632">Cascade</a>, <a href="https://www.wowhead.com/mop-classic/spell=122128">Divine Star</a>, or <a href="https://www.wowhead.com/mop-classic/spell=120644">Halo</a> &mdash; automatically casts whichever you have talented.</p>
+      <pre><code>#showtooltip
+/cast [talent:6/1]Cascade
+/cast [talent:6/2]Divine Star
+/cast [talent:6/3]Halo</code></pre>
+
+      <h4><a href="https://www.wowhead.com/mop-classic/spell=47585">Dispersion</a></h4>
+      <p>First press activates, second press cancels &mdash; like a paladin bubble.</p>
+      <pre><code>#showtooltip Dispersion
+/cast Dispersion
+/cancelaura Dispersion</code></pre>
+
+      <h4><a href="https://www.wowhead.com/mop-classic/spell=121536">Angelic Feather</a></h4>
+      <p>Cast at your feet with <code>@player</code> to remove the targeting reticle entirely. Instant 80% speed boost whenever you need it.</p>
+      <pre><code>#showtooltip
+/cast [@player] Angelic Feather</code></pre>
     </div>
   </section>
 
