@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google-adsense-account" content="ca-pub-5698535707794768">
+  <meta name="description" content="Shadow Priest MoP Classic PVE Guide — TL;DW text recap covering talents, stats, haste breakpoints, rotation, macros & more by skimmynz.">
+  <meta name="keywords" content="shadow priest, MoP Classic, PVE guide, talents, haste breakpoints, rotation, opener, macros, skimmynz">
+
+  <title>Shadow Priest PVE Guide | MoP Classic | skimmynz</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="canonical" href="https://skimmynz.com/guide">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/guide.css" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Wowhead Tooltips -->
+  <script>window.whTooltips = { colorLinks: true, iconizeLinks: true, renameLinks: false };</script>
+  <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
+
+  <!-- Ads -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5698535707794768" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════
+       Navigation
+       ════════════════════════════════════════════════════ -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li>
+          <a href="/">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/rankings.html">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+            Rankings
+          </a>
+        </li>
+        <li>
+          <a href="https://www.youtube.com/watch?v=LH5aODSFQ1o" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Guide
+          </a>
+        </li>
+        <li>
+          <a href="/haste">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Haste Calculator
+          </a>
+        </li>
+        <li>
+          <a href="/addons">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            Addons &amp; WAs
+          </a>
+        </li>
+        <li>
+          <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube
+          </a>
+        </li>
+        <li>
+          <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+            Twitch
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════════
+       Hero
+       ════════════════════════════════════════════════════ -->
+  <header class="guide-hero">
+    <h1 class="guide-hero-title">Shadow Priest PVE Guide</h1>
+    <p class="guide-hero-subtitle">Mists of Pandaria Classic &mdash; TL;DW text recap</p>
+    <a href="https://www.youtube.com/watch?v=LH5aODSFQ1o" target="_blank" rel="noopener" class="guide-hero-link">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+      Watch the full video on YouTube
+    </a>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════
+       Video Embed
+       ════════════════════════════════════════════════════ -->
+  <div class="guide-video">
+    <div class="guide-video-wrap">
+      <iframe src="https://www.youtube.com/embed/LH5aODSFQ1o" title="Shadow Priest MoP Classic PVE Guide" allowfullscreen loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════
+       Table of Contents
+       ════════════════════════════════════════════════════ -->
+  <div class="guide-toc">
+    <div class="guide-toc-inner">
+      <h2>Contents</h2>
+      <ol>
+        <li><a href="#talents">Talents</a></li>
+        <li><a href="#angelic-feather">Why Angelic Feather?</a></li>
+        <li><a href="#level-90-talents">Level 90 Talents</a></li>
+        <li><a href="#stats">Stats</a></li>
+        <li><a href="#dots">How our DOTs work</a></li>
+        <li><a href="#haste-breakpoints">Haste Breakpoints</a></li>
+        <li><a href="#t14-breakpoints">T14 4pc Haste Breakpoints</a></li>
+        <li><a href="#gems">Gems</a></li>
+        <li><a href="#stat-scaling">Stat Scaling</a></li>
+        <li><a href="#opener">Opener</a></li>
+        <li><a href="#spell-priority">Spell Priority</a></li>
+        <li><a href="#mfi">Mind Flay: Insanity</a></li>
+        <li><a href="#addons">WeakAuras &amp; Addons</a></li>
+        <li><a href="#macros">Macros</a></li>
+      </ol>
+    </div>
+  </div>
+
+  <hr class="guide-divider" />
+
+  <!-- ════════════════════════════════════════════════════
+       Talents
+       ════════════════════════════════════════════════════ -->
+  <section class="guide-section" id="talents">
+    <h2 class="guide-section-title">Talents</h2>
+
+    <div class="guide-card">
+      <h3>Talents <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=50" target="_blank" rel="noopener">0:50</a></h3>
+      <p class="placeholder"><!-- TODO: fill in talent overview --></p>
+    </div>
+
+    <div class="guide-card" id="angelic-feather">
+      <h3>Why Angelic Feather? <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=292" target="_blank" rel="noopener">4:52</a></h3>
+      <p class="placeholder"><!-- TODO: fill in Angelic Feather explanation --></p>
+    </div>
+
+    <div class="guide-card" id="level-90-talents">
+      <h3>Level 90 Talents <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=355" target="_blank" rel="noopener">5:55</a></h3>
+      <p class="placeholder"><!-- TODO: fill in level 90 talent choices --></p>
+    </div>
+  </section>
+
+  <hr class="guide-divider" />
+
+  <!-- ════════════════════════════════════════════════════
+       Stats
+       ════════════════════════════════════════════════════ -->
+  <section class="guide-section" id="stats">
+    <h2 class="guide-section-title">Stats</h2>
+
+    <div class="guide-card">
+      <h3>Stats <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=395" target="_blank" rel="noopener">6:35</a></h3>
+      <p class="placeholder"><!-- TODO: fill in stat priority --></p>
+    </div>
+
+    <div class="guide-card" id="dots">
+      <h3>How our DOTs work <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=474" target="_blank" rel="noopener">7:54</a></h3>
+      <p class="placeholder"><!-- TODO: fill in DOT mechanics (snapshotting, pandemic, etc.) --></p>
+    </div>
+
+    <div class="guide-card" id="haste-breakpoints">
+      <h3>Haste Breakpoints <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=508" target="_blank" rel="noopener">8:28</a></h3>
+      <p class="placeholder"><!-- TODO: fill in haste breakpoints table/info, link to /haste calculator --></p>
+    </div>
+
+    <div class="guide-card" id="t14-breakpoints">
+      <h3>T14 4pc Haste Breakpoints <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=575" target="_blank" rel="noopener">9:35</a></h3>
+      <p class="placeholder"><!-- TODO: fill in T14 4pc breakpoint info --></p>
+    </div>
+
+    <div class="guide-card" id="gems">
+      <h3>Gems <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=605" target="_blank" rel="noopener">10:05</a></h3>
+      <p class="placeholder"><!-- TODO: fill in gem recommendations --></p>
+    </div>
+
+    <div class="guide-card" id="stat-scaling">
+      <h3>Stat Scaling <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=643" target="_blank" rel="noopener">10:43</a></h3>
+      <p class="placeholder"><!-- TODO: fill in stat scaling explanation --></p>
+    </div>
+  </section>
+
+  <hr class="guide-divider" />
+
+  <!-- ════════════════════════════════════════════════════
+       Rotation
+       ════════════════════════════════════════════════════ -->
+  <section class="guide-section" id="opener">
+    <h2 class="guide-section-title">Rotation</h2>
+
+    <div class="guide-card">
+      <h3>Opener <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=694" target="_blank" rel="noopener">11:34</a></h3>
+      <p class="placeholder"><!-- TODO: fill in opener sequence --></p>
+    </div>
+
+    <div class="guide-card" id="spell-priority">
+      <h3>Spell Priority <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=803" target="_blank" rel="noopener">13:23</a></h3>
+      <p class="placeholder"><!-- TODO: fill in spell priority list --></p>
+    </div>
+
+    <div class="guide-card" id="mfi">
+      <h3>Mind Flay: Insanity <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=911" target="_blank" rel="noopener">15:11</a></h3>
+      <p class="placeholder"><!-- TODO: fill in MFI usage and tips --></p>
+    </div>
+  </section>
+
+  <hr class="guide-divider" />
+
+  <!-- ════════════════════════════════════════════════════
+       Setup
+       ════════════════════════════════════════════════════ -->
+  <section class="guide-section" id="addons">
+    <h2 class="guide-section-title">Setup</h2>
+
+    <div class="guide-card">
+      <h3>WeakAuras &amp; Addons <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=961" target="_blank" rel="noopener">16:01</a></h3>
+      <p>See the full setup on the <a href="/addons">Addons &amp; WeakAuras</a> page.</p>
+    </div>
+
+    <div class="guide-card" id="macros">
+      <h3>Macros <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=995" target="_blank" rel="noopener">16:35</a></h3>
+      <p class="placeholder"><!-- TODO: fill in macro examples --></p>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════
+       Footer
+       ════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="http://youtube.com/@skimmynz" target="_blank" rel="noopener" class="footer-link">YouTube</a>
+        <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" class="footer-link">Twitch</a>
+      </div>
+      <span class="footer-note">Data sourced from Warcraft Logs</span>
+    </div>
+  </footer>
+
+  <script defer src="js/nav.js"></script>
+</body>
+</html>
