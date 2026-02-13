@@ -157,7 +157,7 @@ a.timestamp:hover {
 }
 
 .guide-card a {
-  color: var(--text-primary);
+  color: #ffd100;
   text-decoration: none;
   transition: color 0.2s ease;
 }
