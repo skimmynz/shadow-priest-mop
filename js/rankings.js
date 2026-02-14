@@ -241,13 +241,20 @@ function buildGearItemUrl(item, allItemIds) {
 var GEAR_SKIP_SLOTS = new Set([3]); // Shirt
 var GEAR_TRINKET_SLOTS = new Set([12, 13]); // Trinket 1, Trinket 2
 
+function isTabardItem(item) {
+  if (!item) return false;
+  var name = (item.name || '').toLowerCase();
+  var icon = (item.icon || '').toLowerCase();
+  return name.indexOf('tabard') !== -1 || icon.indexOf('tabard') !== -1;
+}
+
 function buildGearStrip(gear) {
   if (!Array.isArray(gear) || gear.length === 0) return '<div class="no-gear">No gear data available</div>';
   var allItemIds = gear.map(function(item) { return item ? item.id : 0; }).filter(Boolean).join(':');
   var mainIcons = [];
   var trinketIcons = [];
   gear.forEach(function(item, index) {
-    if (!item || item.id === 0 || GEAR_SKIP_SLOTS.has(index)) return;
+    if (!item || item.id === 0 || GEAR_SKIP_SLOTS.has(index) || isTabardItem(item)) return;
     var iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + (item.icon || 'inv_misc_questionmark.jpg');
     var qualityClass = item.quality || 'common';
     var slotName = GEAR_SLOTS[index] || ('Slot ' + index);
