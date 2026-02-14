@@ -238,27 +238,35 @@ function buildGearItemUrl(item, allItemIds) {
   return 'https://www.wowhead.com/mop-classic/item=' + item.id + (qs ? ('?' + qs) : '');
 }
 
+var GEAR_SKIP_SLOTS = new Set([3]); // Shirt
+var GEAR_TRINKET_SLOTS = new Set([12, 13]); // Trinket 1, Trinket 2
+
 function buildGearStrip(gear) {
   if (!Array.isArray(gear) || gear.length === 0) return '<div class="no-gear">No gear data available</div>';
   var allItemIds = gear.map(function(item) { return item ? item.id : 0; }).filter(Boolean).join(':');
-  var icons = gear.map(function(item, index) {
-    if (!item || item.id === 0) return '';
+  var mainIcons = [];
+  var trinketIcons = [];
+  gear.forEach(function(item, index) {
+    if (!item || item.id === 0 || GEAR_SKIP_SLOTS.has(index)) return;
     var iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + (item.icon || 'inv_misc_questionmark.jpg');
     var qualityClass = item.quality || 'common';
     var slotName = GEAR_SLOTS[index] || ('Slot ' + index);
     var itemUrl = buildGearItemUrl(item, allItemIds);
-    return (
-      '<a href="' + itemUrl + '" class="gear-strip-icon ' + qualityClass + ' wowhead" data-gear-index="' + index + '"' +
+    var isTrinket = GEAR_TRINKET_SLOTS.has(index);
+    var html =
+      '<a href="' + itemUrl + '" class="gear-strip-icon ' + qualityClass + ' wowhead' + (isTrinket ? ' is-trinket' : '') + '" data-gear-index="' + index + '"' +
       ' data-item-name="' + (item.name || 'Unknown Item').replace(/"/g, '&quot;') + '"' +
       ' data-item-ilvl="' + (item.itemLevel || '0') + '"' +
       ' data-item-slot="' + slotName + '"' +
       ' data-item-quality="' + qualityClass + '"' +
       '>' +
       '<img src="' + iconSrc + '" alt="' + slotName + '" loading="lazy">' +
-      '</a>'
-    );
-  }).filter(Boolean).join('');
-  return '<div class="gear-strip">' + icons + '</div>';
+      '</a>';
+    if (isTrinket) trinketIcons.push(html);
+    else mainIcons.push(html);
+  });
+  return '<div class="gear-strip">' + mainIcons.join('') + '</div>' +
+    (trinketIcons.length ? '<div class="gear-strip gear-trinkets">' + trinketIcons.join('') + '</div>' : '');
 }
 
 /* --------------------------------------------------------------------------------

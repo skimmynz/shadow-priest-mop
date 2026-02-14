@@ -823,7 +823,20 @@ a.wowhead del {
 .gear-strip-icon.legendary { border-color: #ff8000; }
 .gear-strip-icon.common { border-color: #9d9d9d; }
 
-/* (Gear detail panel removed — wowhead tooltips used instead) */
+/* Trinket emphasis */
+.gear-trinkets {
+  gap: 4px;
+  margin-left: 4px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.gear-strip-icon.is-trinket {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
 
 .no-gear {
   text-align: center;
@@ -838,17 +851,20 @@ a.wowhead del {
 /* Talent icon hover & highlighting */
 .ranking-header .talent-row {
   display: flex;
-  gap: 3px;
+  gap: 4px;
   flex-shrink: 0;
+  margin-left: 4px;
+  padding-left: 6px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ranking-header .talent-icon-img {
-  width: 28px;
-  height: 28px;
-  border-radius: 5px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
   border: 2px solid var(--border-color);
   transition: all 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 .talent-link {
@@ -1143,9 +1159,14 @@ a.wowhead del {
     height: 24px;
   }
 
+  .gear-strip-icon.is-trinket {
+    width: 30px;
+    height: 30px;
+  }
+
   .ranking-header .talent-icon-img {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
   }
 
   .entry-row-1 {
@@ -1176,13 +1197,18 @@ a.wowhead del {
   }
 
   .ranking-header .talent-icon-img {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
   }
 
   .gear-strip-icon {
     width: 22px;
     height: 22px;
+  }
+
+  .gear-strip-icon.is-trinket {
+    width: 26px;
+    height: 26px;
   }
 
   .raid-pill {
