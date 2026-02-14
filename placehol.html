@@ -94,32 +94,29 @@
     </div>
   </div>
 
+  <h1>Shadow Priest PVE Guide</h1>
+
   <!-- ════════════════════════════════════════════════════
-       Table of Contents
+       Tier Tabs
        ════════════════════════════════════════════════════ -->
-  <div class="guide-toc">
-    <div class="guide-toc-inner">
-      <h2>Contents</h2>
-      <ol>
-        <li><a href="#talents">Talents</a></li>
-        <li><a href="#angelic-feather">Why Angelic Feather?</a></li>
-        <li><a href="#level-90-talents">Level 90 Talents</a></li>
-        <li><a href="#stats">Stats</a></li>
-        <li><a href="#dots">How our DOTs work</a></li>
-        <li><a href="#haste-breakpoints">Haste Breakpoints</a></li>
-        <li><a href="#t14-breakpoints">T14 4pc Haste Breakpoints</a></li>
-        <li><a href="#gems">Gems</a></li>
-        <li><a href="#stat-scaling">Stat Scaling</a></li>
-        <li><a href="#opener">Opener</a></li>
-        <li><a href="#spell-priority">Spell Priority</a></li>
-        <li><a href="#mfi">Mind Flay: Insanity</a></li>
-        <li><a href="#addons">WeakAuras &amp; Addons</a></li>
-        <li><a href="#macros">Macros</a></li>
-      </ol>
-    </div>
+  <div class="tier-tabs">
+    <button class="tier-tab" data-tier="t14">T14</button>
+    <button class="tier-tab active" data-tier="t15">T15</button>
+    <button class="tier-tab" data-tier="t16">T16</button>
   </div>
 
-  <hr class="guide-divider" />
+  <!-- ── T14 ─────────────────────────────────────────── -->
+  <div class="tier-content" id="tier-t14" style="display:none;">
+    <section class="guide-section">
+      <h2 class="guide-section-title">T14 — Coming Soon</h2>
+      <div class="guide-card">
+        <p class="placeholder">Tier 14 content will be added here.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ── T15 ─────────────────────────────────────────── -->
+  <div class="tier-content" id="tier-t15">
 
   <!-- ════════════════════════════════════════════════════
        Talents
@@ -128,20 +125,20 @@
     <h2 class="guide-section-title">Talents</h2>
 
     <div class="guide-card">
-      <h3>Talents <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=50" target="_blank" rel="noopener">0:50</a></h3>
+      <h3>Talents</h3>
       <p>MoP replaced the old 40-point talent trees with six rows you can swap per boss. Here's the breakdown:</p>
       <ul>
-        <li><strong>Row 1 (15):</strong> Pure utility &mdash; doesn't affect DPS. On fights like Zorlok, untalent it entirely so you can't grief the raid if mind controlled.</li>
+        <li><strong>Row 1 (15):</strong> Pure utility &mdash; doesn't affect DPS. Swap per boss, no wrong choice.</li>
         <li><strong>Row 2 (30):</strong> <a href="https://www.wowhead.com/mop-classic/spell=121536">Angelic Feather</a> &mdash; always. Non-negotiable. See below.</li>
-        <li><strong>Row 3 (45):</strong> <a href="https://www.wowhead.com/mop-classic/spell=139139">Solace &amp; Insanity</a> is the default (best single-target). <a href="https://www.wowhead.com/mop-classic/spell=123040">Mindbender</a> for cleave fights where you stand still (e.g. Stone Guard). <a href="https://www.wowhead.com/mop-classic/spell=109186">From Darkness, Comes Light</a> for movement-heavy encounters &mdash; gives you something to cast on the move.</li>
-        <li><strong>Row 4 (60):</strong> <a href="https://www.wowhead.com/mop-classic/spell=114214">Angelic Bulwark</a> is the default &mdash; a substantial HP buffer when you get low. Switch to <a href="https://www.wowhead.com/mop-classic/spell=19236">Desperate Prayer</a> on Amber-Shaper (Bulwark's shield scales with the construct and you'll get a 2M shield &mdash; don't be that guy).</li>
-        <li><strong>Row 5 (75):</strong> <a href="https://www.wowhead.com/mop-classic/spell=109142">Twist of Fate</a> if you can get at least 50% uptime (fights with snipeable adds = more <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a> + flat bonus damage). Otherwise <a href="https://www.wowhead.com/mop-classic/spell=10060">Power Infusion</a> for flat single-target fights (Feng, Blade Lord) &mdash; line one up with your opener, one with execute phase. <a href="https://www.wowhead.com/mop-classic/spell=124430">Divine Insight</a> is behind this phase.</li>
+        <li><strong>Row 3 (45):</strong> <a href="https://www.wowhead.com/mop-classic/spell=139139">Solace &amp; Insanity</a> is the default (best single-target). <a href="https://www.wowhead.com/mop-classic/spell=123040">Mindbender</a> for sustained cleave (e.g. Council of Elders). <a href="https://www.wowhead.com/mop-classic/spell=109186">From Darkness, Comes Light</a> for movement-heavy encounters &mdash; gives you something to cast on the move.</li>
+        <li><strong>Row 4 (60):</strong> <a href="https://www.wowhead.com/mop-classic/spell=114214">Angelic Bulwark</a> is the default &mdash; a substantial HP buffer when you get low. <a href="https://www.wowhead.com/mop-classic/spell=19236">Desperate Prayer</a> if you need an on-demand heal for a specific mechanic.</li>
+        <li><strong>Row 5 (75):</strong> <a href="https://www.wowhead.com/mop-classic/spell=109142">Twist of Fate</a> if you can get at least 50% uptime (fights with snipeable adds like Tortos, Durumu, Dark Animus = more <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a> + flat bonus damage). Otherwise <a href="https://www.wowhead.com/mop-classic/spell=10060">Power Infusion</a> for flat single-target fights (Jin'rokh, Iron Qon) &mdash; line one up with your opener, one with execute phase. <a href="https://www.wowhead.com/mop-classic/spell=124430">Divine Insight</a> is niche &mdash; only consider it on pure single-target with zero add uptime.</li>
         <li><strong>Row 6 (90):</strong> See Level 90 Talents below.</li>
       </ul>
     </div>
 
     <div class="guide-card" id="angelic-feather">
-      <h3>Why Angelic Feather? <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=292" target="_blank" rel="noopener">4:52</a></h3>
+      <h3>Why Angelic Feather?</h3>
       <p>The MoP version of <a href="https://www.wowhead.com/mop-classic/spell=121536">Angelic Feather</a> is dramatically better than retail:</p>
       <ul>
         <li><strong>80% movement speed</strong> (double retail)</li>
@@ -153,11 +150,11 @@
     </div>
 
     <div class="guide-card" id="level-90-talents">
-      <h3>Level 90 Talents <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=355" target="_blank" rel="noopener">5:55</a></h3>
+      <h3>Level 90 Talents</h3>
       <ul>
         <li><strong><a href="https://www.wowhead.com/mop-classic/spell=120644">Halo</a></strong> &mdash; default choice. Must be at least 20 yards from the target for full damage. Use <a href="https://wago.io/ri2lfOS8b" target="_blank" rel="noopener">this WeakAura</a> to track your distance.</li>
         <li><strong><a href="https://www.wowhead.com/mop-classic/spell=122128">Divine Star</a></strong> &mdash; take this if your strategy forces you to stack in melee, or when farming celestial dungeons.</li>
-        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=127632">Cascade</a></strong> &mdash; only for Elegon and Galon at this point.</li>
+        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=127632">Cascade</a></strong> &mdash; strong on Primordius, Dark Animus, and any fight with spread multi-target.</li>
       </ul>
     </div>
   </section>
@@ -171,45 +168,48 @@
     <h2 class="guide-section-title">Stats</h2>
 
     <div class="guide-card">
-      <h3>Stats <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=395" target="_blank" rel="noopener">6:35</a></h3>
+      <h3>Stats</h3>
       <p>Item level wins 9 times out of 10 &mdash; the raw stamina, intellect, and secondary stats across 18 slots add up to more than chasing a perfect stat spread. But never at the expense of hitting these key thresholds:</p>
       <ol>
         <li><strong>Hit cap &mdash; 15%.</strong> Hit rating, Spirit (converts passively), and Expertise all count toward this. Once you're capped, reforge/regem away from it.</li>
         <li><strong>Haste &mdash; to 8085 rating.</strong> The most important breakpoint for our DOTs. See below.</li>
-        <li><strong>Crit &ge; Mastery.</strong> Crit is slightly ahead in T14. This relationship ping-pongs as new tier sets and items become available.</li>
+        <li><strong>Crit &ge; Mastery.</strong> Crit and Mastery are close in T15 &mdash; sim your character. The gap narrows as item level rises.</li>
       </ol>
     </div>
 
     <div class="guide-card" id="dots">
-      <h3>How our DOTs work <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=474" target="_blank" rel="noopener">7:54</a></h3>
+      <h3>How our DOTs work</h3>
       <p>Our three main DOTs &mdash; <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a>, <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a>, and <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> &mdash; all have fixed durations. Within that window, they tick a set number of times.</p>
       <p>More haste does three things: reduces cast times, reduces your GCD, and <strong>adds extra ticks</strong> within the same duration. For example, <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> might do 8 ticks instead of 6 in the same 6-second window. That's free damage.</p>
     </div>
 
     <div class="guide-card" id="haste-breakpoints">
-      <h3>Haste Breakpoints <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=508" target="_blank" rel="noopener">8:28</a></h3>
+      <h3>Haste Breakpoints</h3>
       <p>You get 5% haste baseline from <a href="https://www.wowhead.com/mop-classic/spell=15473">Shadowform</a>. The first breakpoint is trivial to hit.</p>
       <p>The one that matters is <strong>8085 haste rating</strong> &mdash; this gives 2 extra ticks of <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and 2 extra ticks of <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a>. Building and spending orbs as often as possible is the name of the game, so those extra DP ticks are a huge deal.</p>
-      <p>Later breakpoints: 30% is achievable with raid gear. 14,000 and 18,000 rating become reachable in Throne of Thunder and Siege of Orgrimmar. Use the <a href="/haste">Haste Calculator</a> to plan your gearing.</p>
+      <p>Later breakpoints: with full T15 Heroic gear, the 14,873 breakpoint (extra <a href="https://www.wowhead.com/mop-classic/spell=34914">VT</a> tick) is reachable. 18,215 is a stretch goal for late-phase BiS. Use the <a href="/haste">Haste Calculator</a> to plan your gearing.</p>
     </div>
 
-    <div class="guide-card" id="t14-breakpoints">
-      <h3>T14 4pc Haste Breakpoints <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=575" target="_blank" rel="noopener">9:35</a></h3>
-      <p>The <a href="https://www.wowhead.com/mop-classic/spell=138156">Tier 14 4-piece bonus</a> extends both <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> by 3 seconds, giving you a free extra tick by default. This changes the breakpoint values &mdash; VT adopts the same breakpoint formula as SWP.</p>
-      <p>8085 remains the key target. Sim your character to check whether chasing the next breakpoint beyond that is worth the intellect you'd sacrifice.</p>
+    <div class="guide-card" id="t15-set-bonuses">
+      <h3>T15 Set Bonuses</h3>
+      <ul>
+        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=138156">2-piece:</a></strong> When your <a href="https://www.wowhead.com/mop-classic/spell=77487">Shadowy Apparitions</a> damage their target, they have a 65% chance to extend <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> by one additional tick each. Fewer manual refreshes means more GCDs for <a href="https://www.wowhead.com/mop-classic/spell=8092">Mind Blast</a> and <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a>.</li>
+        <li><strong><a href="https://www.wowhead.com/mop-classic/spell=138158">4-piece:</a></strong> <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> periodic damage has a 10% chance to spawn a <a href="https://www.wowhead.com/mop-classic/spell=77487">Shadowy Apparition</a>. More apparitions means more 2pc procs &mdash; a feedback loop that keeps your DOTs rolling longer.</li>
+      </ul>
+      <p>Both bonuses are worth wearing even at a small item-level loss. Your haste breakpoints still matter for the base tick count &mdash; the bonus tick from 2pc is added on top.</p>
     </div>
 
     <div class="guide-card" id="gems">
-      <h3>Gems <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=605" target="_blank" rel="noopener">10:05</a></h3>
+      <h3>Gems</h3>
       <ul>
-        <li><strong>Early gearing:</strong> <a href="https://www.wowhead.com/mop-classic/item=76699">Quick Sun's Radiance</a> (yellow) and <a href="https://www.wowhead.com/mop-classic/item=76651">Energized Wild Jade</a> (blue) to reach 8085 as fast as possible. Reforging and enchants help too.</li>
+        <li><strong>While building toward 8085:</strong> <a href="https://www.wowhead.com/mop-classic/item=76699">Quick Sun's Radiance</a> (yellow) and <a href="https://www.wowhead.com/mop-classic/item=76651">Energized Wild Jade</a> (blue) to reach the breakpoint as fast as possible. Reforging and enchants help too.</li>
         <li><strong>Once 8085 is hit naturally:</strong> Swap to <a href="https://www.wowhead.com/mop-classic/item=76668">Reckless Vermilion Onyx</a> and <a href="https://www.wowhead.com/mop-classic/item=76686">Purified Imperial Amethyst</a> for a better intellect/secondary balance.</li>
       </ul>
-      <p>If simming shows that chasing the next breakpoint costs too much intellect, stop stacking haste and go for the balanced gems.</p>
+      <p>In T15, most Heroic-geared priests exceed 8085 passively &mdash; prioritise intellect gems unless pushing the 14,873 breakpoint. If simming shows that chasing the next breakpoint costs too much intellect, stop stacking haste and go for the balanced gems.</p>
     </div>
 
     <div class="guide-card" id="stat-scaling">
-      <h3>Stat Scaling <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=643" target="_blank" rel="noopener">10:43</a></h3>
+      <h3>Stat Scaling</h3>
       <p>Comparing Phase 1 to Phase 5 gear: weapons get double the spell power, double the stamina, massive intellect gains, and socket bonuses. Rings see similar jumps. Multiply that across 18 slots and scaling classes like Shadow Priest and Fire Mage become monsters by the end of the expansion.</p>
       <p>The tradeoff: you may feel behind early on, but as you hit higher breakpoints and GCD cap later, it pays off.</p>
     </div>
@@ -224,7 +224,7 @@
     <h2 class="guide-section-title">Rotation</h2>
 
     <div class="guide-card">
-      <h3>Opener <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=694" target="_blank" rel="noopener">11:34</a></h3>
+      <h3>Opener</h3>
       <ol>
         <li>Stand at least <strong>28 yards</strong> from the boss.</li>
         <li>At <strong>2.5s</strong> on the pull timer, cast <a href="https://www.wowhead.com/mop-classic/spell=120644">Halo</a> &mdash; the travel time makes it land on zero.</li>
@@ -239,7 +239,7 @@
     </div>
 
     <div class="guide-card" id="spell-priority">
-      <h3>Spell Priority <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=803" target="_blank" rel="noopener">13:23</a></h3>
+      <h3>Spell Priority</h3>
       <p>Everything revolves around building and spending <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a>:</p>
       <ol>
         <li><strong><a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a></strong> &mdash; only at 3 orbs.</li>
@@ -255,7 +255,7 @@
     </div>
 
     <div class="guide-card" id="mfi">
-      <h3>Mind Flay: Insanity <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=911" target="_blank" rel="noopener">15:11</a></h3>
+      <h3>Mind Flay: Insanity</h3>
       <p><a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> buffs <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a> by 33% per orb spent. At 3 orbs (which is always), that's <strong>100% bonus damage</strong> on every MFI channel.</p>
       <p><strong>Snapshot trick:</strong> recast MFI just before Devouring Plague expires. The channel will snapshot and retain the full 100% buff for its entire duration, even after DP falls off. This is a meaningful DPS gain.</p>
       <p>To compare yourself to other Shadow Priests: look at their total MFI damage relative to how many Devouring Plagues they cast. That ratio tells you how well they're converting orbs into insanity damage.</p>
@@ -271,12 +271,12 @@
     <h2 class="guide-section-title">Setup</h2>
 
     <div class="guide-card">
-      <h3>WeakAuras &amp; Addons <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=961" target="_blank" rel="noopener">16:01</a></h3>
+      <h3>WeakAuras &amp; Addons</h3>
       <p>See the full setup, profiles, and previews on the <a href="/addons">Addons &amp; WeakAuras</a> page.</p>
     </div>
 
     <div class="guide-card" id="macros">
-      <h3>Macros <a class="timestamp" href="https://www.youtube.com/watch?v=LH5aODSFQ1o&t=995" target="_blank" rel="noopener">16:35</a></h3>
+      <h3>Macros</h3>
       <p>Macros combine multiple button presses into one and smooth out the gameplay. Key macros to set up:</p>
       <h4>Cooldowns</h4>
       <p><a href="https://www.wowhead.com/mop-classic/spell=26297">Berserking</a> + <a href="https://www.wowhead.com/mop-classic/spell=10060">Power Infusion</a> (if talented) + Engineering gloves + trinkets all in one press. Works great with double passive trinkets since there's no cooldown conflict.</p>
@@ -323,6 +323,18 @@
     </div>
   </section>
 
+  </div><!-- /tier-t15 -->
+
+  <!-- ── T16 ─────────────────────────────────────────── -->
+  <div class="tier-content" id="tier-t16" style="display:none;">
+    <section class="guide-section">
+      <h2 class="guide-section-title">T16 — Coming Soon</h2>
+      <div class="guide-card">
+        <p class="placeholder">Tier 16 content will be added here.</p>
+      </div>
+    </section>
+  </div>
+
   <!-- ════════════════════════════════════════════════════
        Footer
        ════════════════════════════════════════════════════ -->
@@ -337,5 +349,15 @@
   </footer>
 
   <script defer src="js/nav.js"></script>
+  <script>
+    document.querySelectorAll('.tier-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.tier-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tier-content').forEach(function(c) { c.style.display = 'none'; });
+        tab.classList.add('active');
+        document.getElementById('tier-' + tab.dataset.tier).style.display = '';
+      });
+    });
+  </script>
 </body>
 </html>

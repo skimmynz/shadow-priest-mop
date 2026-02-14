@@ -84,6 +84,42 @@
   color: var(--text-accent);
 }
 
+/* ── Tier Tabs ───────────────────────────────────────── */
+.tier-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem 0;
+}
+
+.tier-tab {
+  padding: 0.625rem 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--secondary-bg);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tier-tab:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+  background: var(--hover-bg);
+}
+
+.tier-tab.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+
 /* ── Section ─────────────────────────────────────────── */
 .guide-section {
   max-width: 900px;
@@ -267,12 +303,8 @@ a.timestamp:hover {
     padding: 0 1rem;
   }
 
-  .guide-toc {
-    padding: 0 1rem 2rem;
-  }
-
-  .guide-toc ol {
-    grid-template-columns: 1fr;
+  .tier-tabs {
+    padding: 1rem 1rem 0;
   }
 
   .guide-section {
