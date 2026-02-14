@@ -473,6 +473,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
+  --cols: 42px 1fr 80px 380px 76px 210px 130px 58px 46px 66px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -524,320 +525,162 @@ a.wowhead del {
   color: var(--text-secondary);
 }
 
-/* Player Rank Entry */
+/* =================================================================
+   Grid Table Layout
+   ================================================================= */
+/* Header row */
+.rank-table-header {
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: center;
+  gap: 0;
+  padding: 6px 0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 2px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--primary-bg, #0f1117);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.rank-table-header > span {
+  padding: 0 8px;
+}
+
+.rank-table-header .col-dps {
+  text-align: right;
+}
+
+/* Player row */
 .rank-entry {
-  margin: 0 0 0.5rem 0;
-  background: var(--secondary-bg);
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: center;
+  gap: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.15s ease;
   contain: layout style paint;
-  transform: translateZ(0);
 }
 
-.rank-entry.filtered-out {
-  opacity: 0;
-  max-height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-width: 0 !important;
-  overflow: hidden;
-  pointer-events: none;
-  transition: opacity 0.2s ease, max-height 0.2s ease, margin 0.2s ease;
-}
-
-.rank-entry::before {
-  display: none;
+.rank-entry:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.015);
 }
 
 .rank-entry:hover {
-  background: var(--hover-bg);
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  background: rgba(124, 58, 237, 0.06);
 }
 
-/* Ranking Header — Two-Row Card */
-.ranking-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  transition: all 0.2s ease;
+.rank-entry.filtered-out {
+  display: none !important;
 }
 
-/* Row 1: Name + DPS left, fight summary right */
-.entry-row-1 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+/* Column cells */
+.rank-entry > span,
+.rank-entry > div {
+  padding: 0 8px;
   min-width: 0;
 }
 
-.ranking-header .name-wrapper {
-  color: var(--text-primary);
-  font-weight: 600;
+/* Rank number */
+.col-rank {
+  font-weight: 700;
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.rank-entry[data-rank-tier="gold"] .col-rank {
+  color: #e5cc80;
+  border-left: 3px solid #e5cc80;
+}
+
+.rank-entry[data-rank-tier="pink"] .col-rank {
+  color: #e268a8;
+  border-left: 3px solid #e268a8;
+}
+
+.rank-entry[data-rank-tier="orange"] .col-rank {
+  color: #ff8000;
+  border-left: 3px solid #ff8000;
+}
+
+/* Player name */
+.col-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.9375rem;
-  min-width: 0;
-  flex: 1;
+  font-weight: 600;
+  font-size: 0.875rem;
 }
 
-.ranking-header .player-link {
+.col-name .player-link {
   text-decoration: none;
-  color: inherit;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
-.ranking-header .player-link:hover {
+.rank-entry[data-rank-tier="gold"] .col-name .player-link { color: #e5cc80; }
+.rank-entry[data-rank-tier="pink"] .col-name .player-link { color: #e268a8; }
+.rank-entry[data-rank-tier="orange"] .col-name .player-link { color: #ff8000; }
+
+.col-name .player-link:hover {
   text-decoration: underline;
   filter: brightness(1.3);
 }
 
-/* Fight info pills */
-.fight-summary {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  white-space: nowrap;
-  flex-shrink: 0;
-  color: var(--text-secondary);
-  letter-spacing: 0.01em;
-}
-
-.fight-summary .info-pill {
-  padding: 2px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.fight-summary .info-sep {
-  color: rgba(255, 255, 255, 0.15);
-  font-weight: 400;
-}
-
-/* Row 2: Gear left | Highlights right */
-.entry-row-2 {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  min-width: 0;
-}
-
-/* Left: main gear icons, natural width */
-.entry-gear-left {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-/* Right: trinkets + talents + date, pinned right */
-.entry-highlights {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
-.kill-date {
-  font-size: 0.75rem;
-  font-weight: 600;
-  white-space: nowrap;
-  flex-shrink: 0;
-  padding: 3px 10px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--text-secondary);
-  letter-spacing: 0.02em;
-}
-
-/* (Dropdown removed — all data shown inline) */
-
-/* Info & Gear grids */
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
-  width: 100%;
-  min-width: 0;
-}
-
-.info-section {
-  background: var(--secondary-bg);
-  padding: 1.25rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  min-width: 0;
-  overflow: hidden;
-}
-
-.info-section:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.info-section h4 {
-  margin: 0 0 1rem 0;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 1.05rem;
+/* DPS */
+.col-dps {
   font-weight: 700;
-  border-bottom: 2px solid var(--border-hover);
-  padding-bottom: 0.5rem;
-}
-
-.report-link-inline {
   font-size: 0.875rem;
-  font-weight: 500;
-  background: transparent;
-  -webkit-background-clip: unset;
-  -webkit-text-fill-color: unset;
-  background-clip: unset;
-  margin-left: 1rem;
-}
-
-.report-link-inline a {
-  color: var(--accent-color);
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.report-link-inline a:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.6rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.info-row:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-}
-
-.info-label {
-  font-weight: 600;
-  color: var(--text-secondary);
-  min-width: 80px;
-  flex-shrink: 0;
-  font-size: 0.9rem;
-}
-
-.info-value {
-  color: var(--text-primary);
   text-align: right;
-  font-weight: 500;
-  word-break: break-word;
-  min-width: 0;
-  font-size: 0.9rem;
-}
-
-.info-value a {
-  color: var(--text-accent);
-  text-decoration: none;
-  transition: color 0.3s ease;
-  word-break: break-all;
-}
-
-.info-value a:hover {
-  color: var(--accent-hover);
-  text-shadow: 0 0 10px var(--shadow-glow);
-}
-
-/* Compact inline info section */
-.info-section-compact {
-  grid-column: 1 / -1;
-  margin-bottom: 0;
-}
-
-.info-row-inline {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  border: none;
-  padding: 0;
-  margin: 0;
-}
-
-.info-row-inline .info-label {
-  color: var(--text-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
-  min-width: auto;
-  flex-shrink: 0;
-}
-
-.info-row-inline .info-value {
+  font-variant-numeric: tabular-nums;
   color: var(--text-primary);
-  font-size: 0.875rem;
+}
+
+/* Server, Time, iLvl, Date */
+.col-server,
+.col-time,
+.col-ilvl,
+.col-date {
+  font-size: 0.75rem;
   font-weight: 500;
-  margin-right: 0.5rem;
-  text-align: left;
-}
-
-.info-row-inline .info-value:not(:last-child)::after {
-  content: "•";
   color: var(--text-muted);
-  margin-left: 0.75rem;
-  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.info-row-inline .info-value a {
-  color: var(--accent-color);
-  text-decoration: none;
-  transition: color 0.2s ease;
+.col-ilvl {
+  font-variant-numeric: tabular-nums;
+  text-align: center;
 }
 
-.info-row-inline .info-value a:hover {
-  color: var(--accent-hover);
+.col-time {
+  font-variant-numeric: tabular-nums;
 }
 
 /* Gear Strip Display */
 .gear-strip {
   display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
+  flex-wrap: nowrap;
+  gap: 2px;
   padding: 0;
 }
 
 .gear-strip-icon {
   display: inline-block;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   padding: 0;
-  border-radius: 5px;
-  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  border: 1.5px solid var(--border-color);
   background: var(--card-bg);
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: all 0.15s ease;
   overflow: hidden;
   text-decoration: none;
   line-height: 0;
@@ -851,8 +694,9 @@ a.wowhead del {
 }
 
 .gear-strip-icon:hover {
-  transform: translateY(-2px) scale(1.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: scale(1.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  z-index: 2;
 }
 
 .gear-strip-icon.epic { border-color: #a335ee; }
@@ -861,21 +705,15 @@ a.wowhead del {
 .gear-strip-icon.legendary { border-color: #ff8000; }
 .gear-strip-icon.common { border-color: #9d9d9d; }
 
-/* Trinket emphasis */
+/* Trinkets column */
 .gear-trinkets {
-  gap: 5px;
-  padding: 4px 6px;
-  border-radius: 8px;
-  background: rgba(163, 53, 238, 0.08);
-  border: 1px solid rgba(163, 53, 238, 0.15);
-  flex-shrink: 0;
+  gap: 4px;
 }
 
 .gear-strip-icon.is-trinket {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(163, 53, 238, 0.2);
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
 }
 
 .no-gear {
@@ -888,24 +726,23 @@ a.wowhead del {
   border: 1px solid var(--border-color);
 }
 
-/* Talent icon hover & highlighting */
-.ranking-header .talent-row {
+/* Talent icons in table rows */
+.rank-entry .talent-row {
   display: flex;
-  gap: 5px;
-  flex-shrink: 0;
-  padding: 4px 6px;
-  border-radius: 8px;
-  background: rgba(251, 191, 36, 0.06);
-  border: 1px solid rgba(251, 191, 36, 0.12);
+  gap: 3px;
 }
 
-.ranking-header .talent-icon-img {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
-  border: 2px solid var(--border-color);
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+.rank-entry .talent-icon-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  border: 1.5px solid var(--border-color);
+  transition: all 0.15s ease;
+}
+
+.rank-entry .talent-link.is-meta .talent-icon-img {
+  border-color: #fbbf24;
+  box-shadow: 0 0 0 1px #fbbf24, 0 2px 8px rgba(251, 191, 36, 0.25);
 }
 
 .talent-link {
@@ -919,7 +756,7 @@ a.wowhead del {
 }
 
 .talent-link:hover .talent-icon-img {
-  transform: translateY(-2px) scale(1.08);
+  transform: scale(1.1);
   filter: brightness(1.15);
   box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
 }
@@ -955,45 +792,6 @@ a.wowhead del {
   text-shadow: 0 2px 8px rgba(16, 185, 129, 0.5);
   font-weight: 800;
 }
-
-/* Rankings gear link styling */
-.rankings-gear-name {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  text-decoration: none;
-  color: var(--text-primary);
-  font-weight: 600;
-  transition: all 0.2s ease;
-  font-size: 0.8rem;
-}
-
-.rankings-gear-name:hover {
-  color: var(--text-accent);
-  text-shadow: 0 0 10px var(--shadow-glow);
-}
-
-.rankings-gear-image {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  border: 1px solid var(--border-hover);
-  flex-shrink: 0;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.rankings-gear-name:hover .rankings-gear-image {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-.rankings-gear-name.poor { color: #9d9d9d; }
-.rankings-gear-name.common { color: #ffffff; }
-.rankings-gear-name.uncommon { color: #1eff00; }
-.rankings-gear-name.rare { color: #0070dd; }
-.rankings-gear-name.epic { color: #a335ee; }
-.rankings-gear-name.legendary { color: #ff8000; }
 
 /* =================================================================
    Parsing Rules
@@ -1191,45 +989,30 @@ a.wowhead del {
     font-size: 0.6875rem;
   }
 
-  .info-grid {
-    grid-template-columns: 1fr;
+  /* Table horizontal scroll on narrow screens */
+  #rankings {
+    overflow-x: auto;
+    --cols: 36px 120px 70px 340px 68px 190px 110px 50px 40px 60px;
+  }
+
+  .rank-table-header,
+  .rank-entry {
+    min-width: 900px;
   }
 
   .gear-strip-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 
   .gear-strip-icon.is-trinket {
-    width: 28px;
-    height: 28px;
+    width: 26px;
+    height: 26px;
   }
 
-  .ranking-header .talent-icon-img {
-    width: 28px;
-    height: 28px;
-  }
-
-  .entry-row-1 {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .entry-row-2 {
-    flex-wrap: wrap;
-  }
-
-  .entry-highlights {
-    gap: 0.35rem;
-  }
-
-  .fight-summary {
-    font-size: 0.6875rem;
-    gap: 0.35rem;
-  }
-
-  .fight-summary .info-pill {
-    padding: 1px 5px;
+  .rank-entry .talent-icon-img {
+    width: 26px;
+    height: 26px;
   }
 }
 
@@ -1245,19 +1028,19 @@ a.wowhead del {
     height: 40px;
   }
 
-  .ranking-header .talent-icon-img {
-    width: 24px;
-    height: 24px;
+  .rank-entry .talent-icon-img {
+    width: 22px;
+    height: 22px;
   }
 
   .gear-strip-icon {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .gear-strip-icon.is-trinket {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
 
   .raid-pill {

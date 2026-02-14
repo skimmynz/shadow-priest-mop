@@ -116,27 +116,33 @@ class OptimizedRenderer {
   async renderRankings(data, topByTier) {
     var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     var visible = rankings.slice(0, 100);
-    var rankColors = new Map();
-    for (var i = 0; i < visible.length; i++) {
-      var rank = i + 1;
-      if (rank === 1) rankColors.set(i, '#e5cc80');
-      else if (rank <= 25) rankColors.set(i, '#e268a8');
-      else rankColors.set(i, '#ff8000');
-    }
     var rendered = await TimeSlicing.processInChunks(visible, async (chunk) => {
       return chunk.map(r => {
         var idx = visible.indexOf(r);
-        return this.renderSingleEntry(r, idx, rankColors.get(idx), topByTier);
+        return this.renderSingleEntry(r, idx, topByTier);
       });
     }, 10, 1);
-    return rendered.join('');
+    var header = '<div class="rank-table-header">' +
+      '<span class="col-rank">#</span>' +
+      '<span class="col-name">Player</span>' +
+      '<span class="col-dps">DPS</span>' +
+      '<span class="col-gear">Gear</span>' +
+      '<span class="col-trinkets">Trinkets</span>' +
+      '<span class="col-talents">Talents</span>' +
+      '<span class="col-server">Server</span>' +
+      '<span class="col-time">Time</span>' +
+      '<span class="col-ilvl">iLvl</span>' +
+      '<span class="col-date">Date</span>' +
+      '</div>';
+    return header + rendered.join('');
   }
 
-  renderSingleEntry(r, index, color, topByTier) {
-    // Cache by reportID + fightID + original rank (not display index)
+  renderSingleEntry(r, index, topByTier) {
     var cacheKey = r.reportID + '-' + r.fightID + '-' + index;
     if (this.renderCache.has(cacheKey)) return this.renderCache.get(cacheKey);
 
+    var rank = index + 1;
+    var rankTier = rank === 1 ? 'gold' : (rank <= 25 ? 'pink' : 'orange');
     var reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
     var dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
     var playerName = (r && r.name) ? r.name : 'Unknown';
@@ -149,29 +155,17 @@ class OptimizedRenderer {
     var gear = buildGearStrip(r.gear);
 
     var html =
-      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
-      '<div class="ranking-header">' +
-      '<div class="entry-row-1">' +
-      '<div class="name-wrapper" style="color:' + color + '">' +
-      (index + 1) + '. <a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener" style="color:' + color + '">' + playerName + '</a> — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
-      '</div>' +
-      '<span class="fight-summary">' +
-      '<span class="info-pill">' + server + '</span>' +
-      '<span class="info-sep">&middot;</span>' +
-      '<span class="info-pill">' + duration + '</span>' +
-      '<span class="info-sep">&middot;</span>' +
-      '<span class="info-pill">' + itemLevel + ' iLvl</span>' +
-      '</span>' +
-      '</div>' +
-      '<div class="entry-row-2">' +
-      '<div class="entry-gear-left">' + gear.main + '</div>' +
-      '<div class="entry-highlights">' +
-      gear.trinkets +
-      perPlayerTalents +
-      '<span class="kill-date">' + killDate + '</span>' +
-      '</div>' +
-      '</div>' +
-      '</div>' +
+      '<div class="rank-entry" data-rank-tier="' + rankTier + '" data-original-rank="' + rank + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
+      '<span class="col-rank">' + rank + '</span>' +
+      '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + playerName + '</a></span>' +
+      '<span class="col-dps">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span>' +
+      '<span class="col-gear">' + gear.main + '</span>' +
+      '<span class="col-trinkets">' + gear.trinkets + '</span>' +
+      '<span class="col-talents">' + perPlayerTalents + '</span>' +
+      '<span class="col-server">' + server + '</span>' +
+      '<span class="col-time">' + duration + '</span>' +
+      '<span class="col-ilvl">' + itemLevel + '</span>' +
+      '<span class="col-date">' + killDate + '</span>' +
       '</div>';
 
     this.renderCache.set(cacheKey, html);
