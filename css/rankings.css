@@ -473,7 +473,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 42px 1fr 80px 380px 76px 210px 130px 58px 46px 66px;
+  --cols: 36px 1fr 80px 370px 76px 210px 120px 66px 42px 62px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -534,17 +534,19 @@ a.wowhead del {
   grid-template-columns: var(--cols);
   align-items: center;
   gap: 0;
-  padding: 6px 0;
+  padding: 8px 0;
   border-bottom: 2px solid rgba(255, 255, 255, 0.08);
-  margin-bottom: 2px;
+  margin: 0 -2.5rem 2px;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
   position: sticky;
-  top: 0;
+  top: -2rem;
   z-index: 5;
-  background: var(--primary-bg, #0f1117);
-  font-size: 0.6875rem;
+  background: #0f1117;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--text-muted);
 }
 
@@ -592,6 +594,7 @@ a.wowhead del {
   font-weight: 700;
   font-size: 0.8125rem;
   text-align: center;
+  padding-left: 0 !important;
 }
 
 .rank-entry[data-rank-tier="gold"] .col-rank {
@@ -646,9 +649,9 @@ a.wowhead del {
 .col-time,
 .col-ilvl,
 .col-date {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -989,30 +992,45 @@ a.wowhead del {
     font-size: 0.6875rem;
   }
 
-  /* Table horizontal scroll on narrow screens */
+  /* Mobile: hide gear column, show compact layout */
   #rankings {
-    overflow-x: auto;
-    --cols: 36px 120px 70px 340px 68px 190px 110px 50px 40px 60px;
+    --cols: 28px 1fr 70px 0px 60px 160px 0px 0px 36px 54px;
   }
 
-  .rank-table-header,
-  .rank-entry {
-    min-width: 900px;
+  .col-gear,
+  .col-server,
+  .col-time {
+    display: none;
   }
 
-  .gear-strip-icon {
-    width: 20px;
-    height: 20px;
+  .rank-table-header {
+    margin: 0 -1rem 2px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    top: -1.5rem;
   }
 
   .gear-strip-icon.is-trinket {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 
   .rank-entry .talent-icon-img {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
+  }
+
+  .col-name {
+    font-size: 0.8125rem;
+  }
+
+  .col-dps {
+    font-size: 0.8125rem;
+  }
+
+  .col-ilvl,
+  .col-date {
+    font-size: 0.75rem;
   }
 }
 
@@ -1028,19 +1046,39 @@ a.wowhead del {
     height: 40px;
   }
 
+  /* Tighter grid for small screens */
+  #rankings {
+    --cols: 24px 1fr 60px 0px 0px 130px 0px 0px 32px 0px;
+  }
+
+  .col-trinkets,
+  .col-date {
+    display: none;
+  }
+
   .rank-entry .talent-icon-img {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
   }
 
-  .gear-strip-icon {
-    width: 18px;
-    height: 18px;
+  .rank-table-header {
+    margin: 0 -1rem 2px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    top: -1.5rem;
+    font-size: 0.6875rem;
   }
 
-  .gear-strip-icon.is-trinket {
-    width: 22px;
-    height: 22px;
+  .col-rank {
+    font-size: 0.75rem;
+  }
+
+  .col-name {
+    font-size: 0.75rem;
+  }
+
+  .col-dps {
+    font-size: 0.75rem;
   }
 
   .raid-pill {
