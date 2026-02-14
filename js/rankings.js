@@ -146,7 +146,7 @@ class OptimizedRenderer {
     var server = formatServerInfo(r.serverName, r.regionName);
     var killDate = formatKillDate(r.startTime);
     var searchData = playerName.toLowerCase();
-    var gearStrip = buildGearStrip(r.gear);
+    var gear = buildGearStrip(r.gear);
 
     var html =
       '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
@@ -164,9 +164,12 @@ class OptimizedRenderer {
       '</span>' +
       '</div>' +
       '<div class="entry-row-2">' +
-      gearStrip +
+      '<div class="entry-gear-left">' + gear.main + '</div>' +
+      '<div class="entry-highlights">' +
+      gear.trinkets +
       perPlayerTalents +
       '<span class="kill-date">' + killDate + '</span>' +
+      '</div>' +
       '</div>' +
       '</div>' +
       '</div>';
@@ -255,7 +258,8 @@ function isTabardItem(item) {
 }
 
 function buildGearStrip(gear) {
-  if (!Array.isArray(gear) || gear.length === 0) return '<div class="no-gear">No gear data available</div>';
+  var empty = { main: '<div class="no-gear">No gear data</div>', trinkets: '' };
+  if (!Array.isArray(gear) || gear.length === 0) return empty;
   var allItemIds = gear.map(function(item) { return item ? item.id : 0; }).filter(Boolean).join(':');
   var mainIcons = [];
   var trinketIcons = [];
@@ -278,8 +282,10 @@ function buildGearStrip(gear) {
     if (isTrinket) trinketIcons.push(html);
     else mainIcons.push(html);
   });
-  return '<div class="gear-strip">' + mainIcons.join('') + '</div>' +
-    (trinketIcons.length ? '<div class="gear-strip gear-trinkets">' + trinketIcons.join('') + '</div>' : '');
+  return {
+    main: '<div class="gear-strip">' + mainIcons.join('') + '</div>',
+    trinkets: trinketIcons.length ? '<div class="gear-strip gear-trinkets">' + trinketIcons.join('') + '</div>' : ''
+  };
 }
 
 /* --------------------------------------------------------------------------------
