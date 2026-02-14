@@ -360,6 +360,47 @@ body {
   color: var(--text-secondary);
 }
 
+/* Sort Toggle Buttons */
+.sort-toggles {
+  display: flex;
+  gap: 4px;
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.sort-btn:hover {
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+  background: var(--hover-bg);
+}
+
+.sort-btn.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+
+.sort-arrow {
+  font-size: 0.625rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
 /* =================================================================
    Main Grid Layout (sidebar removed — now 2 columns)
    ================================================================= */
@@ -1095,6 +1136,15 @@ a.wowhead del {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  .sort-toggles {
+    flex-wrap: wrap;
+  }
+
+  .sort-btn {
+    padding: 6px 10px;
+    font-size: 0.6875rem;
   }
 
   .toolbar .last-updated {

@@ -149,7 +149,7 @@ class OptimizedRenderer {
     var searchData = playerName.toLowerCase();
 
     var html =
-      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
+      '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
       '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
       '<div class="name-wrapper" style="color:' + color + '">' +
       (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
@@ -252,7 +252,8 @@ var currentData = null;
    Search & Sort State
    -------------------------------------------------------------------------------- */
 var currentSearch = '';
-var currentSort = 'dps-desc';
+var currentSortField = 'dps';
+var currentSortDir = 'desc';
 var currentRegionFilter = '';
 
 /* --------------------------------------------------------------------------------
@@ -358,20 +359,27 @@ function applyFiltersAndSort() {
   });
 
   // Sort visible entries
-  var sortField = currentSort;
+  var field = currentSortField;
+  var dir = currentSortDir;
   var parent = rankingsDiv;
   var sorted = entryArr.slice().sort(function(a, b) {
-    if (sortField === 'dps-asc') {
-      return (parseInt(b.getAttribute('data-original-rank')) || 0) - (parseInt(a.getAttribute('data-original-rank')) || 0);
+    var aVal, bVal;
+    if (field === 'dps') {
+      aVal = parseInt(a.getAttribute('data-original-rank')) || 0;
+      bVal = parseInt(b.getAttribute('data-original-rank')) || 0;
+      return dir === 'desc' ? aVal - bVal : bVal - aVal;
     }
-    if (sortField === 'ilvl') {
-      return (parseFloat(b.getAttribute('data-ilvl')) || 0) - (parseFloat(a.getAttribute('data-ilvl')) || 0);
+    if (field === 'ilvl') {
+      aVal = parseFloat(a.getAttribute('data-ilvl')) || 0;
+      bVal = parseFloat(b.getAttribute('data-ilvl')) || 0;
+    } else if (field === 'duration') {
+      aVal = parseFloat(a.getAttribute('data-duration')) || 0;
+      bVal = parseFloat(b.getAttribute('data-duration')) || 0;
+    } else if (field === 'date') {
+      aVal = parseFloat(a.getAttribute('data-date')) || 0;
+      bVal = parseFloat(b.getAttribute('data-date')) || 0;
     }
-    if (sortField === 'duration') {
-      return (parseFloat(a.getAttribute('data-duration')) || 0) - (parseFloat(b.getAttribute('data-duration')) || 0);
-    }
-    // Default: dps-desc — restore original rank order (highest first)
-    return (parseInt(a.getAttribute('data-original-rank')) || 0) - (parseInt(b.getAttribute('data-original-rank')) || 0);
+    return dir === 'desc' ? bVal - aVal : aVal - bVal;
   });
   sorted.forEach(function(el) { parent.appendChild(el); });
 
@@ -589,10 +597,11 @@ async function fetchAndDisplayRankings(name, encounterId) {
 
     // Reset search/sort on boss change
     currentSearch = '';
-    currentSort = 'dps-desc';
+    currentSortField = 'dps';
+    currentSortDir = 'desc';
     currentRegionFilter = '';
     if (searchInput) searchInput.value = '';
-    if (sortSelect) sortSelect.value = 'dps-desc';
+    resetSortToggles();
     if (regionFilter) regionFilter.value = '';
     if (searchClear) searchClear.style.display = 'none';
     if (resultCountEl) resultCountEl.textContent = '';
@@ -703,9 +712,35 @@ if (searchClear) {
     searchInput.focus();
   });
 }
-if (sortSelect) {
-  sortSelect.addEventListener('change', function() {
-    currentSort = sortSelect.value;
+// Sort toggle buttons
+var sortTogglesEl = document.getElementById('sort-toggles');
+var defaultDirs = { dps: 'desc', ilvl: 'desc', duration: 'asc', date: 'desc' };
+
+function resetSortToggles() {
+  if (!sortTogglesEl) return;
+  var btns = sortTogglesEl.querySelectorAll('.sort-btn');
+  for (var i = 0; i < btns.length; i++) {
+    var f = btns[i].getAttribute('data-sort');
+    btns[i].classList.toggle('active', f === 'dps');
+    btns[i].querySelector('.sort-arrow').textContent = defaultDirs[f] === 'desc' ? '\u25BC' : '\u25B2';
+  }
+}
+
+if (sortTogglesEl) {
+  sortTogglesEl.addEventListener('click', function(e) {
+    var btn = e.target.closest('.sort-btn');
+    if (!btn) return;
+    var field = btn.getAttribute('data-sort');
+    if (field === currentSortField) {
+      currentSortDir = currentSortDir === 'desc' ? 'asc' : 'desc';
+    } else {
+      currentSortField = field;
+      currentSortDir = defaultDirs[field];
+      var btns = sortTogglesEl.querySelectorAll('.sort-btn');
+      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+      btn.classList.add('active');
+    }
+    btn.querySelector('.sort-arrow').textContent = currentSortDir === 'desc' ? '\u25BC' : '\u25B2';
     applyFiltersAndSort();
   });
 }

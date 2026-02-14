@@ -32,7 +32,6 @@ var bossStripWrapper = document.querySelector('.boss-strip-wrapper');
 var rankingsDiv = document.getElementById('rankings');
 var searchInput = document.getElementById('search-input');
 var searchClear = document.getElementById('search-clear');
-var sortSelect = document.getElementById('sort-select');
 var regionFilter = document.getElementById('region-filter');
 var resultCountEl = document.getElementById('toolbar-result-count');
 
