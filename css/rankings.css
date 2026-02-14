@@ -802,51 +802,104 @@ a.wowhead del {
   color: var(--accent-hover);
 }
 
-/* Gear Display */
-.gear-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.5rem;
-  width: 100%;
-  min-width: 0;
+/* Gear Strip Display */
+.gear-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0;
 }
 
-.gear-item {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+.gear-strip-icon {
+  width: 36px;
+  height: 36px;
+  padding: 0;
   border-radius: 6px;
-  padding: 0.5rem 0.6rem;
+  border: 2px solid var(--border-color);
+  background: var(--card-bg);
+  cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  min-width: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   overflow: hidden;
 }
 
-.gear-item:hover {
-  border-color: var(--border-hover);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+.gear-strip-icon img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
-.gear-header {
+.gear-strip-icon:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.gear-strip-icon.epic { border-color: #a335ee; }
+.gear-strip-icon.rare { border-color: #0070dd; }
+.gear-strip-icon.uncommon { border-color: #1eff00; }
+.gear-strip-icon.legendary { border-color: #ff8000; }
+.gear-strip-icon.common { border-color: #9d9d9d; }
+
+.gear-strip-icon.active {
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 0 0 2px var(--accent-color), 0 4px 16px rgba(124, 58, 237, 0.4);
+}
+
+.gear-detail {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.2s ease, padding 0.2s ease;
+}
+
+.gear-detail.active {
+  max-height: 60px;
+  padding-top: 10px;
+}
+
+.gear-detail-inner {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
 }
 
-.gear-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.gear-slot {
+.gear-detail-slot {
   font-size: 0.75rem;
   color: var(--text-muted);
+  font-weight: 600;
+  min-width: 70px;
 }
 
-.gear-ilvl {
+.gear-detail-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gear-detail-name.epic { color: #a335ee; }
+.gear-detail-name.rare { color: #0070dd; }
+.gear-detail-name.uncommon { color: #1eff00; }
+.gear-detail-name.legendary { color: #ff8000; }
+.gear-detail-name.common { color: #ffffff; }
+
+.gear-detail-name:hover {
+  filter: brightness(1.3);
+}
+
+.gear-detail-ilvl {
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--gold-color);
-  font-size: 0.8rem;
   flex-shrink: 0;
 }
 
@@ -1167,8 +1220,9 @@ a.wowhead del {
     grid-template-columns: 1fr;
   }
 
-  .gear-grid {
-    grid-template-columns: 1fr;
+  .gear-strip-icon {
+    width: 32px;
+    height: 32px;
   }
 
   .ranking-header {

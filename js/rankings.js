@@ -239,11 +239,51 @@ async function loadDropdownContent(dropdown, reportId, fightId) {
   dropdown.innerHTML =
     '<div class="info-section">' +
     '<h4>Gear & Equipment <span class="report-link-inline">Report: <a href="' + reportUrl + '" target="_blank" rel="noopener">' + reportId + '</a></span></h4>' +
-    '<div class="gear-grid">' + buildGearDisplay(entry.gear) + '</div>' +
+    buildGearStrip(entry.gear) +
     '</div>';
 }
 
 function toggleDropdown(entryId) { debouncedToggleDropdown(entryId); }
+
+// Gear strip icon click handler
+document.addEventListener('click', function(e) {
+  var btn = e.target.closest('.gear-strip-icon');
+  if (!btn) return;
+  var strip = btn.closest('.gear-strip');
+  var detail = strip ? strip.nextElementSibling : null;
+  if (!detail || !detail.classList.contains('gear-detail')) return;
+
+  var wasActive = btn.classList.contains('active');
+
+  // Clear all active icons in this strip
+  strip.querySelectorAll('.gear-strip-icon.active').forEach(function(b) { b.classList.remove('active'); });
+
+  if (wasActive) {
+    detail.innerHTML = '';
+    detail.classList.remove('active');
+    return;
+  }
+
+  btn.classList.add('active');
+  var url = btn.getAttribute('data-item-url');
+  var name = btn.getAttribute('data-item-name');
+  var ilvl = btn.getAttribute('data-item-ilvl');
+  var slot = btn.getAttribute('data-item-slot');
+  var quality = btn.getAttribute('data-item-quality');
+
+  detail.innerHTML =
+    '<div class="gear-detail-inner">' +
+    '<span class="gear-detail-slot">' + slot + '</span>' +
+    '<a href="' + url + '" class="gear-detail-name ' + quality + ' wowhead" target="_blank" rel="noopener">' + name + '</a>' +
+    '<span class="gear-detail-ilvl">iLvl ' + ilvl + '</span>' +
+    '</div>';
+  detail.classList.add('active');
+
+  // Re-trigger Wowhead tooltips for the new link
+  if (window.$WowheadPower && window.$WowheadPower.refreshLinks) {
+    window.$WowheadPower.refreshLinks();
+  }
+});
 
 var optimizedRenderer = new OptimizedRenderer();
 var currentData = null;
@@ -271,32 +311,41 @@ function formatServerInfo(serverName, regionName) {
   if (!serverName) return 'Unknown Server';
   return regionName ? (serverName + ' (' + regionName + ')') : serverName;
 }
-function buildGearDisplay(gear) {
+var GEAR_SLOTS = { 0:'Head',1:'Neck',2:'Shoulder',3:'Shirt',4:'Chest',5:'Belt',6:'Legs',7:'Feet',8:'Wrist',9:'Hands',10:'Ring 1',11:'Ring 2',12:'Trinket 1',13:'Trinket 2',14:'Back',15:'Main Hand',16:'Off Hand',17:'Ranged' };
+
+function buildGearItemUrl(item, allItemIds) {
+  var params = new URLSearchParams();
+  if (item.itemLevel) params.append('ilvl', item.itemLevel);
+  if (allItemIds) params.append('pcs', allItemIds);
+  var gemIds = (Array.isArray(item.gems) ? item.gems : []).map(function(g) { return g.id; }).filter(Boolean);
+  if (gemIds.length > 0) params.append('gems', gemIds.join(':'));
+  if (item.permanentEnchant) params.append('ench', item.permanentEnchant);
+  var qs = params.toString();
+  return 'https://www.wowhead.com/mop-classic/item=' + item.id + (qs ? ('?' + qs) : '');
+}
+
+function buildGearStrip(gear) {
   if (!Array.isArray(gear) || gear.length === 0) return '<div class="no-gear">No gear data available</div>';
-  var gearSlots = { 0:'Head',1:'Neck',2:'Shoulder',3:'Shirt',4:'Chest',5:'Belt',6:'Legs',7:'Feet',8:'Wrist',9:'Hands',10:'Ring 1',11:'Ring 2',12:'Trinket 1',13:'Trinket 2',14:'Back',15:'Main Hand',16:'Off Hand',17:'Ranged' };
   var allItemIds = gear.map(function(item) { return item ? item.id : 0; }).filter(Boolean).join(':');
-  return gear.map(function(item, index) {
+  var icons = gear.map(function(item, index) {
     if (!item || item.id === 0) return '';
-    var slotName = gearSlots[index] || ('Slot ' + index);
-    var qualityClass = item.quality || 'common';
     var iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + (item.icon || 'inv_misc_questionmark.jpg');
-    var params = new URLSearchParams();
-    if (item.itemLevel) params.append('ilvl', item.itemLevel);
-    if (allItemIds) params.append('pcs', allItemIds);
-    var gemIds = (Array.isArray(item.gems) ? item.gems : []).map(function(g) { return g.id; }).filter(Boolean);
-    if (gemIds.length > 0) params.append('gems', gemIds.join(':'));
-    if (item.permanentEnchant) params.append('ench', item.permanentEnchant);
-    var qs = params.toString();
-    var itemUrl = 'https://www.wowhead.com/mop-classic/item=' + item.id + (qs ? ('?' + qs) : '');
+    var qualityClass = item.quality || 'common';
+    var slotName = GEAR_SLOTS[index] || ('Slot ' + index);
+    var itemUrl = buildGearItemUrl(item, allItemIds);
     return (
-      '<div class="gear-item"><div class="gear-header"><div class="gear-info">' +
-      '<a href="' + itemUrl + '" class="rankings-gear-name ' + qualityClass + ' wowhead" target="_blank" rel="noopener">' +
-      '<img src="' + iconSrc + '" alt="' + (item.name || 'Unknown Item') + '" class="rankings-gear-image" loading="lazy">' +
-      (item.name || 'Unknown Item') + '</a>' +
-      '<div class="gear-slot">' + slotName + '</div></div>' +
-      '<div class="gear-ilvl">iLvl ' + (item.itemLevel || '0') + '</div></div></div>'
+      '<button type="button" class="gear-strip-icon ' + qualityClass + '" data-gear-index="' + index + '"' +
+      ' data-item-url="' + itemUrl + '"' +
+      ' data-item-name="' + (item.name || 'Unknown Item').replace(/"/g, '&quot;') + '"' +
+      ' data-item-ilvl="' + (item.itemLevel || '0') + '"' +
+      ' data-item-slot="' + slotName + '"' +
+      ' data-item-quality="' + qualityClass + '"' +
+      '>' +
+      '<img src="' + iconSrc + '" alt="' + slotName + '" loading="lazy">' +
+      '</button>'
     );
   }).filter(Boolean).join('');
+  return '<div class="gear-strip">' + icons + '</div><div class="gear-detail"></div>';
 }
 
 /* --------------------------------------------------------------------------------
