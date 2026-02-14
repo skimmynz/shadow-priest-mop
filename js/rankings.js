@@ -155,7 +155,13 @@ class OptimizedRenderer {
       '<div class="name-wrapper" style="color:' + color + '">' +
       (index + 1) + '. <a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener" style="color:' + color + '">' + playerName + '</a> — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
       '</div>' +
-      '<span class="fight-summary">' + server + ' - ' + duration + ' - ' + itemLevel + ' iLvl</span>' +
+      '<span class="fight-summary">' +
+      '<span class="info-pill">' + server + '</span>' +
+      '<span class="info-sep">&middot;</span>' +
+      '<span class="info-pill">' + duration + '</span>' +
+      '<span class="info-sep">&middot;</span>' +
+      '<span class="info-pill">' + itemLevel + ' iLvl</span>' +
+      '</span>' +
       '</div>' +
       '<div class="entry-row-2">' +
       gearStrip +
