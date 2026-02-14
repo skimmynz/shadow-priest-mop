@@ -1138,22 +1138,29 @@ a.wowhead del {
     text-overflow: ellipsis;
   }
 
-  .sort-toggles {
-    flex-wrap: wrap;
-  }
-
-  .sort-btn {
-    padding: 6px 10px;
-    font-size: 0.6875rem;
-  }
-
   .toolbar .last-updated {
     text-align: left;
   }
 
   .toolbar-right {
     margin-left: 0;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .toolbar-right .toolbar-sort {
+    width: 100%;
+  }
+
+  .sort-toggles {
+    width: 100%;
+  }
+
+  .sort-btn {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 6px;
+    font-size: 0.6875rem;
   }
 
   .info-grid {
