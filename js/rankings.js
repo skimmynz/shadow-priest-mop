@@ -249,6 +249,7 @@ function toggleDropdown(entryId) { debouncedToggleDropdown(entryId); }
 document.addEventListener('click', function(e) {
   var btn = e.target.closest('.gear-strip-icon');
   if (!btn) return;
+  e.preventDefault();
   var strip = btn.closest('.gear-strip');
   var detail = strip ? strip.nextElementSibling : null;
   if (!detail || !detail.classList.contains('gear-detail')) return;
@@ -265,7 +266,7 @@ document.addEventListener('click', function(e) {
   }
 
   btn.classList.add('active');
-  var url = btn.getAttribute('data-item-url');
+  var url = btn.getAttribute('href');
   var name = btn.getAttribute('data-item-name');
   var ilvl = btn.getAttribute('data-item-ilvl');
   var slot = btn.getAttribute('data-item-slot');
@@ -334,15 +335,14 @@ function buildGearStrip(gear) {
     var slotName = GEAR_SLOTS[index] || ('Slot ' + index);
     var itemUrl = buildGearItemUrl(item, allItemIds);
     return (
-      '<button type="button" class="gear-strip-icon ' + qualityClass + '" data-gear-index="' + index + '"' +
-      ' data-item-url="' + itemUrl + '"' +
+      '<a href="' + itemUrl + '" class="gear-strip-icon ' + qualityClass + ' wowhead" data-gear-index="' + index + '"' +
       ' data-item-name="' + (item.name || 'Unknown Item').replace(/"/g, '&quot;') + '"' +
       ' data-item-ilvl="' + (item.itemLevel || '0') + '"' +
       ' data-item-slot="' + slotName + '"' +
       ' data-item-quality="' + qualityClass + '"' +
       '>' +
       '<img src="' + iconSrc + '" alt="' + slotName + '" loading="lazy">' +
-      '</button>'
+      '</a>'
     );
   }).filter(Boolean).join('');
   return '<div class="gear-strip">' + icons + '</div><div class="gear-detail"></div>';
