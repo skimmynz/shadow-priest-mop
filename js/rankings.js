@@ -141,40 +141,32 @@ class OptimizedRenderer {
     var dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
     var playerName = (r && r.name) ? r.name : 'Unknown';
     var perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
-    var entryId = 'entry-' + index + '-' + r.reportID + '-' + r.fightID;
     var duration = formatDuration(r.duration);
     var itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
     var server = formatServerInfo(r.serverName, r.regionName);
     var killDate = formatKillDate(r.startTime);
     var searchData = playerName.toLowerCase();
+    var gearStrip = buildGearStrip(r.gear);
 
     var html =
       '<div class="rank-entry" data-original-rank="' + (index + 1) + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
-      '<div class="ranking-header" onclick="toggleDropdown(\'' + entryId + '\')">' +
+      '<div class="ranking-header">' +
+      '<div class="entry-row-1">' +
       '<div class="name-wrapper" style="color:' + color + '">' +
-      (index + 1) + '. ' + playerName + ' — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
+      (index + 1) + '. <a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener" style="color:' + color + '">' + playerName + '</a> — ' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + ' DPS' +
       '</div>' +
-      '<div class="header-right">' +
-      '<span class="fight-summary">' + server + ' - ' + duration + ' - ' + itemLevel + ' iLvl - ' + killDate + '</span>' +
+      '<span class="fight-summary">' + server + ' - ' + duration + ' - ' + itemLevel + ' iLvl</span>' +
+      '</div>' +
+      '<div class="entry-row-2">' +
+      gearStrip +
       perPlayerTalents +
-      '<span class="expand-icon">▼</span>' +
+      '<span class="kill-date">' + killDate + '</span>' +
       '</div>' +
-      '</div>' +
-      '<div class="dropdown-content" id="' + entryId + '">' +
-      this.renderDropdownContent(r, reportUrl) +
       '</div>' +
       '</div>';
 
     this.renderCache.set(cacheKey, html);
     return html;
-  }
-
-  renderDropdownContent(r, reportUrl) {
-    return (
-      '<div class="dropdown-placeholder" data-report-id="' + r.reportID + '" data-fight-id="' + r.fightID + '">' +
-      '<div style="text-align: center; padding: 1rem; color: #94a3b8;">Click to load details...</div>' +
-      '</div>'
-    );
   }
 
   buildPlayerTalentIcons(playerTalentsRaw, topByTier) {
@@ -204,87 +196,8 @@ class OptimizedRenderer {
 }
 
 /* --------------------------------------------------------------------------------
-   Dropdown toggle
+   (Dropdown removed — all data shown inline)
    -------------------------------------------------------------------------------- */
-var debouncedToggleDropdown = createDebounced(async function (entryId) {
-  var dropdown = document.getElementById(entryId);
-  var header = dropdown ? dropdown.previousElementSibling : null;
-  var expandIcon = header ? header.querySelector('.expand-icon') : null;
-  if (!dropdown || !expandIcon) return;
-
-  var isActive = dropdown.classList.contains('active');
-  document.querySelectorAll('.dropdown-content.active').forEach(el => {
-    if (el.id !== entryId) {
-      el.classList.remove('active');
-      var otherIcon = el.previousElementSibling ? el.previousElementSibling.querySelector('.expand-icon') : null;
-      if (otherIcon) otherIcon.classList.remove('rotated');
-    }
-  });
-
-  if (!isActive) {
-    var placeholder = dropdown.querySelector('.dropdown-placeholder');
-    if (placeholder) {
-      await loadDropdownContent(dropdown, placeholder.dataset.reportId, placeholder.dataset.fightId);
-    }
-  }
-  dropdown.classList.toggle('active', !isActive);
-  expandIcon.classList.toggle('rotated', !isActive);
-}, 50, true);
-
-async function loadDropdownContent(dropdown, reportId, fightId) {
-  if (!currentData || !currentData.rankings) return;
-  var entry = currentData.rankings.find(r => r.reportID === reportId && r.fightID === parseInt(fightId, 10));
-  if (!entry) return;
-  var reportUrl = 'https://classic.warcraftlogs.com/reports/' + reportId + '?fight=' + fightId + '&type=damage-done';
-  dropdown.innerHTML =
-    '<div class="info-section">' +
-    '<h4>Gear & Equipment <span class="report-link-inline">Report: <a href="' + reportUrl + '" target="_blank" rel="noopener">' + reportId + '</a></span></h4>' +
-    buildGearStrip(entry.gear) +
-    '</div>';
-}
-
-function toggleDropdown(entryId) { debouncedToggleDropdown(entryId); }
-
-// Gear strip icon click handler
-document.addEventListener('click', function(e) {
-  var btn = e.target.closest('.gear-strip-icon');
-  if (!btn) return;
-  e.preventDefault();
-  var strip = btn.closest('.gear-strip');
-  var detail = strip ? strip.nextElementSibling : null;
-  if (!detail || !detail.classList.contains('gear-detail')) return;
-
-  var wasActive = btn.classList.contains('active');
-
-  // Clear all active icons in this strip
-  strip.querySelectorAll('.gear-strip-icon.active').forEach(function(b) { b.classList.remove('active'); });
-
-  if (wasActive) {
-    detail.innerHTML = '';
-    detail.classList.remove('active');
-    return;
-  }
-
-  btn.classList.add('active');
-  var url = btn.getAttribute('href');
-  var name = btn.getAttribute('data-item-name');
-  var ilvl = btn.getAttribute('data-item-ilvl');
-  var slot = btn.getAttribute('data-item-slot');
-  var quality = btn.getAttribute('data-item-quality');
-
-  detail.innerHTML =
-    '<div class="gear-detail-inner">' +
-    '<span class="gear-detail-slot">' + slot + '</span>' +
-    '<a href="' + url + '" class="gear-detail-name ' + quality + ' wowhead" target="_blank" rel="noopener">' + name + '</a>' +
-    '<span class="gear-detail-ilvl">iLvl ' + ilvl + '</span>' +
-    '</div>';
-  detail.classList.add('active');
-
-  // Re-trigger Wowhead tooltips for the new link
-  if (window.$WowheadPower && window.$WowheadPower.refreshLinks) {
-    window.$WowheadPower.refreshLinks();
-  }
-});
 
 var optimizedRenderer = new OptimizedRenderer();
 var currentData = null;
@@ -345,7 +258,7 @@ function buildGearStrip(gear) {
       '</a>'
     );
   }).filter(Boolean).join('');
-  return '<div class="gear-strip">' + icons + '</div><div class="gear-detail"></div>';
+  return '<div class="gear-strip">' + icons + '</div>';
 }
 
 /* --------------------------------------------------------------------------------

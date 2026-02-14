@@ -526,7 +526,7 @@ a.wowhead del {
 
 /* Player Rank Entry */
 .rank-entry {
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.5rem 0;
   background: var(--secondary-bg);
   border-radius: 12px;
   border: 1px solid var(--border-color);
@@ -560,93 +560,72 @@ a.wowhead del {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Ranking Header */
+/* Ranking Header — Two-Row Card */
 .ranking-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  transition: all 0.2s ease;
+}
+
+/* Row 1: Name + DPS left, fight summary right */
+.entry-row-1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1rem 1.25rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.ranking-header:hover {
-  background: rgba(124, 58, 237, 0.08);
+  min-width: 0;
 }
 
 .ranking-header .name-wrapper {
   color: var(--text-primary);
   font-weight: 600;
-  flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.9375rem;
   min-width: 0;
+  flex: 1;
 }
 
 .ranking-header .player-link {
   text-decoration: none;
   color: inherit;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .ranking-header .player-link:hover {
-  color: var(--accent-hover);
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
+  text-decoration: underline;
+  filter: brightness(1.3);
 }
 
 .fight-summary {
   color: var(--text-muted);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* Expand Icon */
-.expand-icon {
+/* Row 2: Gear strip + Talents + Kill date */
+.entry-row-2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.kill-date {
   color: var(--text-muted);
-  font-size: 0.875rem;
-  transition: transform 0.3s ease, color 0.2s ease;
-  user-select: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
-.expand-icon.rotated {
-  transform: rotate(180deg);
-  color: var(--accent-color);
-}
-
-/* Dropdown content */
-.dropdown-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(15, 17, 23, 0.5);
-  border-top: 1px solid var(--border-color);
-  opacity: 0;
-  overflow-x: auto;
-  contain: layout paint;
-}
-
-.dropdown-content::-webkit-scrollbar {
-  display: none;
-}
-
-.dropdown-content.active {
-  max-height: 2000px;
-  opacity: 1;
-  padding: 1.25rem;
-  overflow: auto;
-}
+/* (Dropdown removed — all data shown inline) */
 
 /* Info & Gear grids */
 .info-grid {
@@ -806,21 +785,21 @@ a.wowhead del {
 .gear-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  padding: 4px 0;
+  gap: 3px;
+  padding: 0;
 }
 
 .gear-strip-icon {
   display: inline-block;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   padding: 0;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid var(--border-color);
   background: var(--card-bg);
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   text-decoration: none;
   line-height: 0;
@@ -844,67 +823,7 @@ a.wowhead del {
 .gear-strip-icon.legendary { border-color: #ff8000; }
 .gear-strip-icon.common { border-color: #9d9d9d; }
 
-.gear-strip-icon.active {
-  transform: translateY(-2px) scale(1.1);
-  box-shadow: 0 0 0 2px var(--accent-color), 0 4px 16px rgba(124, 58, 237, 0.4);
-}
-
-.gear-detail {
-  overflow: hidden;
-  max-height: 0;
-  transition: max-height 0.2s ease, padding 0.2s ease;
-}
-
-.gear-detail.active {
-  max-height: 60px;
-  padding-top: 10px;
-}
-
-.gear-detail-inner {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-}
-
-.gear-detail-slot {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-weight: 600;
-  min-width: 70px;
-}
-
-.gear-detail-name {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: color 0.2s ease;
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.gear-detail-name.epic { color: #a335ee; }
-.gear-detail-name.rare { color: #0070dd; }
-.gear-detail-name.uncommon { color: #1eff00; }
-.gear-detail-name.legendary { color: #ff8000; }
-.gear-detail-name.common { color: #ffffff; }
-
-.gear-detail-name:hover {
-  filter: brightness(1.3);
-}
-
-.gear-detail-ilvl {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--gold-color);
-  flex-shrink: 0;
-}
+/* (Gear detail panel removed — wowhead tooltips used instead) */
 
 .no-gear {
   text-align: center;
@@ -919,21 +838,17 @@ a.wowhead del {
 /* Talent icon hover & highlighting */
 .ranking-header .talent-row {
   display: flex;
-  gap: 0.375rem;
+  gap: 3px;
+  flex-shrink: 0;
 }
 
 .ranking-header .talent-icon-img {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
   border: 2px solid var(--border-color);
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.ranking-header:hover .talent-icon-img {
-  border-color: var(--accent-color);
-  transform: scale(1.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .talent-link {
@@ -1224,25 +1139,27 @@ a.wowhead del {
   }
 
   .gear-strip-icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
   }
 
-  .ranking-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
+  .ranking-header .talent-icon-img {
+    width: 24px;
+    height: 24px;
   }
 
-  .header-right {
-    width: 100%;
+  .entry-row-1 {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .entry-row-2 {
     flex-wrap: wrap;
     gap: 0.5rem;
   }
 
   .fight-summary {
     font-size: 0.75rem;
-    width: 100%;
   }
 }
 
@@ -1259,8 +1176,13 @@ a.wowhead del {
   }
 
   .ranking-header .talent-icon-img {
-    width: 32px;
-    height: 32px;
+    width: 22px;
+    height: 22px;
+  }
+
+  .gear-strip-icon {
+    width: 22px;
+    height: 22px;
   }
 
   .raid-pill {
