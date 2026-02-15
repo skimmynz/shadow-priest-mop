@@ -34,9 +34,9 @@
 }
 
 .page-header .last-updated {
-  color: var(--text-muted);
+  color: var(--text-primary);
   font-size: 0.8125rem;
-  font-weight: 400;
+  font-weight: 700;
   text-align: center;
   margin-bottom: 0;
 }
