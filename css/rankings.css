@@ -473,7 +473,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 36px 150px 100px 64px 170px 1fr 66px 46px 62px;
+  --cols: 36px 2fr 90px 68px 170px 2fr 66px 46px 62px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -594,7 +594,7 @@ a.wowhead del {
   font-weight: 700;
   font-size: 0.8125rem;
   text-align: center;
-  padding-left: 0 !important;
+  padding-left: 4px !important;
 }
 
 .rank-entry[data-rank-tier="gold"] .col-rank {
@@ -618,7 +618,7 @@ a.wowhead del {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .col-name .player-link {
@@ -638,7 +638,7 @@ a.wowhead del {
 /* DPS */
 .col-dps {
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
@@ -1023,19 +1023,6 @@ a.wowhead del {
     padding-left: 1rem;
     padding-right: 1rem;
     top: -1.5rem;
-  }
-
-  .col-name {
-    font-size: 0.8125rem;
-  }
-
-  .col-dps {
-    font-size: 0.8125rem;
-  }
-
-  .col-ilvl,
-  .col-date {
-    font-size: 0.75rem;
   }
 }
 
