@@ -962,13 +962,15 @@ a.wowhead del {
     font-size: 0.6875rem;
   }
 
-  /* Mobile: hide date/time, compact layout */
+  /* Mobile: only show #, Player, DPS, Talents */
   #rankings {
-    --cols: 28px 1fr 36px 70px 0px 0px 140px 54px;
+    --cols: 28px 1fr 0px 70px 0px 0px 140px 0px;
   }
 
+  .col-ilvl,
   .col-date,
-  .col-time {
+  .col-time,
+  .col-trinkets {
     display: none;
   }
 
@@ -998,11 +1000,7 @@ a.wowhead del {
 
   /* Tighter grid for small screens */
   #rankings {
-    --cols: 24px 1fr 32px 60px 0px 0px 110px 0px;
-  }
-
-  .col-trinkets {
-    display: none;
+    --cols: 24px 1fr 0px 60px 0px 0px 110px 0px;
   }
 
   .rank-entry .talent-icon-img {
