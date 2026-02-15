@@ -701,8 +701,8 @@ function formatAgo(d) {
 }
 function updateLastUpdated(iso) {
   if (!lastUpdatedEl) return;
-  if (!iso) { lastUpdatedEl.textContent = ''; return; }
-  lastUpdatedEl.textContent = 'Last updated: ' + new Date(iso).toLocaleString() + ' (' + formatAgo(iso) + ')';
+  if (!iso) { lastUpdatedEl.innerHTML = ''; return; }
+  lastUpdatedEl.innerHTML = '<img src="https://assets.rpglogs.com/img/warcraft/favicon.png?v=4" alt="" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;border-radius:2px;">Updated from WarcraftLogs: ' + formatAgo(iso);
 }
 
 /* --------------------------------------------------------------------------------
