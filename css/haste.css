@@ -600,13 +600,19 @@ html { scroll-behavior: smooth; }
 /* ═══════════════════════════════════════════════════════
    Responsive
    ═══════════════════════════════════════════════════════ */
+
+/* Large desktop — controls go 2-col */
 @media (max-width: 1400px) {
   .haste-controls-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+/* Tablet landscape — stack results, tighten spell rows */
 @media (max-width: 1024px) {
+  .haste-container {
+    padding: 2rem 1.5rem 2.5rem;
+  }
   .haste-controls-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -622,10 +628,11 @@ html { scroll-behavior: smooth; }
   }
 }
 
+/* Tablet portrait — single column everything */
 @media (max-width: 768px) {
   .haste-container { padding: 1.5rem 1rem 2rem; }
-  .haste-header { margin-bottom: 2rem; }
-  .haste-header h1 { font-size: 1.75rem; }
+  .haste-header { margin-bottom: 1.5rem; }
+  .haste-header h1 { font-size: 1.75rem; letter-spacing: .05em; }
   .haste-controls-section { padding: 1.25rem; border-radius: 16px; }
   .haste-controls-grid { grid-template-columns: 1fr; gap: .875rem; }
   .control-header[style*="visibility: hidden"] { display: none; }
@@ -654,13 +661,71 @@ html { scroll-behavior: smooth; }
   .table-title { font-size: 1.1rem; }
   .spell-icon { width: 44px; height: 44px; }
   .spell-name { font-size: .9rem; }
+
+  .breakpoint-explainer { padding: 1rem 1.25rem; }
+  .breakpoint-explainer p { font-size: .75rem; }
 }
 
+/* Phone */
 @media (max-width: 480px) {
-  .buff-toggle { padding: .45rem .5rem; }
+  .haste-container { padding: 1rem .75rem 1.5rem; }
+  .haste-header { margin-bottom: 1.25rem; }
+  .haste-header h1 { font-size: 1.5rem; }
+  .haste-controls-section { padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
+  .haste-controls-grid { gap: .75rem; }
+  .control-header { font-size: .6rem; letter-spacing: 1px; }
+
+  .buff-toggle { padding: .45rem .5rem; min-height: 46px; }
   .buff-name { font-size: .775rem; }
   .buff-description { font-size: .65rem; }
-  .buff-icon { width: 26px; height: 26px; }
-  .result-value { font-size: 2.5rem; }
-  .haste-input { font-size: 1.1rem; padding: .875rem .625rem; }
+  .buff-icon { width: 26px; height: 26px; border-radius: 6px; }
+  .buff-switch { width: 34px; height: 18px; }
+  .buff-switch::after { width: 14px; height: 14px; }
+  .race-checkbox:checked + .buff-switch::after,
+  .buff-checkbox:checked + .buff-switch::after { transform: translateX(16px); }
+
+  .result-card { padding: 1.25rem 1rem; border-radius: 14px; }
+  .result-value { font-size: 2.25rem; }
+  .result-label { font-size: .6rem; letter-spacing: 2px; }
+  .conversion-text { font-size: .8rem; }
+
+  .haste-input { font-size: 1.1rem; padding: .875rem .625rem; border-radius: 12px; }
+
+  .spells-table { border-radius: 14px; }
+  .spell-row { padding: 1rem .875rem; gap: .75rem; }
+  .spell-icon { width: 40px; height: 40px; border-radius: 10px; }
+  .spell-name { font-size: .85rem; }
+  .base-ticks { font-size: .75rem; padding: .35rem .5rem; }
+  .ticks-badge { font-size: .75rem; padding: .4rem .75rem; min-width: 75px; }
+  .breakpoint-text { font-size: .75rem; }
+  .progress-container { max-width: 160px; height: 6px; }
+  .table-header { padding: .875rem 1rem; }
+  .table-title { font-size: 1rem; }
+
+  .weakaura-title { font-size: .6rem; }
+  .wago-import-btn { font-size: .75rem; padding: .55rem 1rem; }
+
+  .breakpoint-explainer { padding: .875rem 1rem; }
+  .breakpoint-explainer p { font-size: .7rem; }
+
+  .gcd-warning { font-size: .75rem; padding: .6rem 1rem; border-radius: 10px; }
+  .gcd-warning .gcd-tooltip { width: 240px; font-size: .7rem; }
+}
+
+/* Very small phone */
+@media (max-width: 360px) {
+  .haste-container { padding: .75rem .5rem 1.25rem; }
+  .haste-header h1 { font-size: 1.25rem; }
+  .haste-controls-section { padding: .875rem; }
+
+  .result-value { font-size: 2rem; }
+  .result-card { padding: 1rem .875rem; }
+
+  .spell-row { padding: .875rem .75rem; }
+  .spell-icon { width: 36px; height: 36px; }
+  .spell-name { font-size: .8rem; }
+
+  .buff-toggle { padding: .4rem .45rem; min-height: 42px; border-radius: 10px; }
+  .buff-icon { width: 24px; height: 24px; }
+  .buff-name { font-size: .725rem; }
 }
