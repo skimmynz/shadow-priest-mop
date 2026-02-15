@@ -542,12 +542,16 @@ if (raidNavEl) {
     var raidHeader = e.target.closest('.raid-header');
     if (raidHeader) {
       var raidKey = raidHeader.dataset.raid;
-      if (raidKey === currentRaidKey) return;
-      currentRaidKey = raidKey;
-      buildRaidNav();
-      var entries = Object.entries(TIERS[currentTierKey].raids[raidKey].encounters);
-      if (entries.length > 0) {
-        fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+      if (raidKey === currentRaidKey) {
+        currentRaidKey = null;
+        buildRaidNav();
+      } else {
+        currentRaidKey = raidKey;
+        buildRaidNav();
+        var entries = Object.entries(TIERS[currentTierKey].raids[raidKey].encounters);
+        if (entries.length > 0) {
+          fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+        }
       }
       return;
     }
