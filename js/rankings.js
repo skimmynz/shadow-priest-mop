@@ -548,9 +548,17 @@ if (raidNavEl) {
       } else {
         currentRaidKey = raidKey;
         buildRaidNav();
-        var entries = Object.entries(TIERS[currentTierKey].raids[raidKey].encounters);
-        if (entries.length > 0) {
-          fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+        var remembered = lastBossPerRaid[raidKey];
+        if (remembered && remembered.id === currentEncounterId) {
+          // Already viewing this boss, just expand nav
+        } else if (remembered) {
+          fetchAndDisplayRankings(remembered.name, remembered.id);
+        } else {
+          var entries = Object.entries(TIERS[currentTierKey].raids[raidKey].encounters);
+          if (entries.length > 0) {
+            lastBossPerRaid[raidKey] = { name: entries[0][0], id: entries[0][1] };
+            fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+          }
         }
       }
       return;
@@ -561,6 +569,9 @@ if (raidNavEl) {
     if (bossItem) {
       var id = parseInt(bossItem.dataset.encounterId, 10);
       var name = bossItem.dataset.bossName;
+      if (currentRaidKey) {
+        lastBossPerRaid[currentRaidKey] = { name: name, id: id };
+      }
       fetchAndDisplayRankings(name, id);
     }
   });

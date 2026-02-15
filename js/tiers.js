@@ -21,6 +21,7 @@ var currentTierKey = 't15';
 var currentRaidKey = 'tot';
 var currentBossName = '';
 var currentEncounterId = null;
+var lastBossPerRaid = {};
 
 // DOM refs — raid navigation sidebar
 var raidNavEl = document.getElementById('raid-nav');
