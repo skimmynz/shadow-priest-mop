@@ -429,8 +429,9 @@ function buildRaidNav() {
     var raid = raids[raidKey];
     var isExpanded = raidKey === currentRaidKey;
     html += '<div class="raid-section">';
-    html += '<button type="button" class="raid-header' + (isExpanded ? ' active' : '') + '" data-raid="' + raidKey + '">' +
-      '<span class="raid-header-arrow">' + (isExpanded ? '&#9662;' : '&#9656;') + '</span>' + raid.name + '</button>';
+    html += '<button type="button" class="raid-header' + (isExpanded ? ' active' : '') + '" data-raid="' + raidKey + '" style="background-image:url(img/' + raidKey + '.webp)">' +
+      '<span class="raid-header-overlay"></span>' +
+      '<span class="raid-header-content"><span class="raid-header-arrow">' + (isExpanded ? '&#9662;' : '&#9656;') + '</span>' + raid.name + '</span></button>';
     if (isExpanded) {
       html += '<div class="boss-list">';
       for (var bossName in raid.encounters) {
