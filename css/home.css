@@ -471,12 +471,12 @@
   font-size: .9rem;
 }
 .tips-list li a.wowhead {
-  color: #a78bfa;
+  color: #ffd100;
   text-decoration: none;
   font-weight: 500;
   transition: color .2s;
 }
-.tips-list li a.wowhead:hover { color: #c4b5fd; }
+.tips-list li a.wowhead:hover { color: #ffe14d; }
 
 /* Parsing rules */
 .parsing-box {
