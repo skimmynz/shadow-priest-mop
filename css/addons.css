@@ -34,11 +34,26 @@
 }
 
 .page-header .last-updated {
-  color: var(--text-primary);
   font-size: 0.8125rem;
-  font-weight: 700;
   text-align: center;
   margin-bottom: 0;
+  line-height: 1.8;
+}
+
+.meta-label {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.meta-value {
+  color: var(--text-accent);
+  font-weight: 700;
+}
+
+.meta-sep {
+  color: var(--text-muted);
+  margin: 0 0.25rem;
+  opacity: 0.5;
 }
 
 /* ── Section Headers (centered, matching home) ───────── */
