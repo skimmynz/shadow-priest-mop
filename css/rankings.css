@@ -473,7 +473,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 36px 2fr 90px 68px 170px 2fr 66px 46px 62px;
+  --cols: 36px 1fr 46px 100px 62px 60px 170px 68px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -614,16 +614,29 @@ a.wowhead del {
 
 /* Player name */
 .col-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   overflow: hidden;
-  text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 600;
   font-size: 0.8125rem;
+  min-width: 0;
 }
 
 .col-name .player-link {
   text-decoration: none;
   transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.col-name .player-server {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: auto;
 }
 
 .rank-entry[data-rank-tier="gold"] .col-name .player-link { color: #e5cc80; }
@@ -641,7 +654,7 @@ a.wowhead del {
   font-size: 0.8125rem;
   text-align: right;
   font-variant-numeric: tabular-nums;
-  color: var(--text-primary);
+  color: #4ade80;
   position: relative;
   overflow: hidden;
 }
@@ -661,8 +674,7 @@ a.wowhead del {
   z-index: 1;
 }
 
-/* Server, Time, iLvl, Date */
-.col-server,
+/* Time, iLvl, Date */
 .col-time,
 .col-ilvl,
 .col-date {
@@ -1008,13 +1020,17 @@ a.wowhead del {
     font-size: 0.6875rem;
   }
 
-  /* Mobile: hide server/time, compact layout */
+  /* Mobile: hide date/time, compact layout */
   #rankings {
-    --cols: 28px 1fr 70px 50px 130px 0px 0px 36px 54px;
+    --cols: 28px 1fr 36px 70px 0px 0px 140px 54px;
   }
 
-  .col-server,
+  .col-date,
   .col-time {
+    display: none;
+  }
+
+  .col-name .player-server {
     display: none;
   }
 
@@ -1040,11 +1056,10 @@ a.wowhead del {
 
   /* Tighter grid for small screens */
   #rankings {
-    --cols: 24px 1fr 60px 0px 110px 0px 0px 32px 0px;
+    --cols: 24px 1fr 32px 60px 0px 0px 110px 0px;
   }
 
-  .col-trinkets,
-  .col-date {
+  .col-trinkets {
     display: none;
   }
 
