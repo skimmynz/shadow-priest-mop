@@ -411,129 +411,92 @@ function populateFilterDropdowns(data) {
 }
 
 /* --------------------------------------------------------------------------------
-   Context Bar: Build UI
+   Raid Nav Sidebar
    -------------------------------------------------------------------------------- */
-function buildContextBar() {
-  buildTierToggle();
-  buildRaidPills();
-  buildBossStrip();
-}
+function buildRaidNav() {
+  if (!raidNavEl) return;
 
-function buildTierToggle() {
-  if (!tierToggleEl) return;
-  var html = '';
-  for (var key in TIERS) {
-    html += '<button type="button" class="tier-toggle-btn' + (key === currentTierKey ? ' active' : '') + '" data-tier="' + key + '" role="radio" aria-checked="' + (key === currentTierKey) + '">' + TIERS[key].name + '</button>';
+  // Tier tabs
+  var html = '<div class="tier-tabs">';
+  for (var tierKey in TIERS) {
+    html += '<button type="button" class="tier-tab' + (tierKey === currentTierKey ? ' active' : '') + '" data-tier="' + tierKey + '">' + TIERS[tierKey].name + '</button>';
   }
-  tierToggleEl.innerHTML = html;
+  html += '</div>';
 
-  tierToggleEl.addEventListener('click', function(e) {
-    var btn = e.target.closest('.tier-toggle-btn');
-    if (!btn) return;
-    var newTier = btn.dataset.tier;
-    if (newTier === currentTierKey) return;
-
-    currentTierKey = newTier;
-    var raids = TIERS[newTier].raids;
-    currentRaidKey = Object.keys(raids)[0];
-
-    buildTierToggle();
-    buildRaidPills();
-    buildBossStrip();
-
-    var entries = Object.entries(raids[currentRaidKey].encounters);
-    if (entries.length > 0) {
-      fetchAndDisplayRankings(entries[0][0], entries[0][1]);
-    }
-  });
-}
-
-function buildRaidPills() {
-  if (!raidPillsEl) return;
+  // Accordion: raids + boss lists
   var raids = TIERS[currentTierKey].raids;
-  var html = '';
-  for (var key in raids) {
-    var raid = raids[key];
-    html += '<button type="button" class="raid-pill' + (key === currentRaidKey ? ' active' : '') + '" data-raid="' + key + '" role="tab" aria-selected="' + (key === currentRaidKey) + '" style="background-image: url(img/' + key + '.webp)">' +
-      raid.name + '</button>';
-  }
-  raidPillsEl.innerHTML = html;
-
-  raidPillsEl.addEventListener('click', function(e) {
-    var btn = e.target.closest('.raid-pill');
-    if (!btn) return;
-    var key = btn.dataset.raid;
-    if (key === currentRaidKey) return;
-
-    currentRaidKey = key;
-    buildRaidPills();
-    buildBossStrip();
-
-    var entries = Object.entries(TIERS[currentTierKey].raids[key].encounters);
-    if (entries.length > 0) {
-      fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+  for (var raidKey in raids) {
+    var raid = raids[raidKey];
+    var isExpanded = raidKey === currentRaidKey;
+    html += '<div class="raid-section">';
+    html += '<button type="button" class="raid-header' + (isExpanded ? ' active' : '') + '" data-raid="' + raidKey + '">' +
+      '<span class="raid-header-arrow">' + (isExpanded ? '&#9662;' : '&#9656;') + '</span>' + raid.name + '</button>';
+    if (isExpanded) {
+      html += '<div class="boss-list">';
+      for (var bossName in raid.encounters) {
+        var bossId = raid.encounters[bossName];
+        var isActive = bossId === currentEncounterId;
+        html += '<button type="button" class="boss-nav-item' + (isActive ? ' active' : '') + '" data-encounter-id="' + bossId + '" data-boss-name="' + bossName + '">' +
+          '<img class="boss-nav-icon" src="' + bossIconUrl(bossId) + '" alt="" loading="lazy" onerror="this.src=\'https://assets.rpglogs.com/img/warcraft/abilities/inv_misc_questionmark.jpg\'">' +
+          '<span class="boss-nav-name">' + bossName + '</span></button>';
+      }
+      html += '</div>';
     }
-  });
-}
-
-function buildBossStrip() {
-  if (!bossStripEl) return;
-  var raid = TIERS[currentTierKey].raids[currentRaidKey];
-  if (!raid) return;
-
-  var html = '';
-  for (var name in raid.encounters) {
-    var id = raid.encounters[name];
-    var isActive = id === currentEncounterId;
-    html += '<button type="button" class="boss-chip' + (isActive ? ' active' : '') + '" data-encounter-id="' + id + '" data-boss-name="' + name + '" role="tab" aria-selected="' + isActive + '">' +
-      '<img src="' + bossIconUrl(id) + '" alt="" class="boss-chip-icon" loading="lazy" onerror="this.src=\'https://assets.rpglogs.com/img/warcraft/abilities/inv_misc_questionmark.jpg\'">' +
-      name + '</button>';
+    html += '</div>';
   }
-  bossStripEl.innerHTML = html;
 
-  bossStripEl.addEventListener('click', function(e) {
-    var btn = e.target.closest('.boss-chip');
-    if (!btn) return;
-    var id = parseInt(btn.dataset.encounterId, 10);
-    var name = btn.dataset.bossName;
-    fetchAndDisplayRankings(name, id);
-  });
-
-  updateBossStripOverflow();
-  scrollToActiveBossChip();
+  raidNavEl.innerHTML = html;
 }
 
-function selectActiveBossChip(encounterId) {
-  if (!bossStripEl) return;
-  bossStripEl.querySelectorAll('.boss-chip').forEach(function(b) {
+function selectActiveBossNav(encounterId) {
+  if (!raidNavEl) return;
+  raidNavEl.querySelectorAll('.boss-nav-item').forEach(function(b) {
     var isActive = parseInt(b.dataset.encounterId, 10) === encounterId;
     b.classList.toggle('active', isActive);
-    b.setAttribute('aria-selected', isActive);
   });
-  scrollToActiveBossChip();
 }
 
-function scrollToActiveBossChip() {
-  if (!bossStripEl) return;
-  var active = bossStripEl.querySelector('.boss-chip.active');
-  if (active) {
-    active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-  }
-  // Delay overflow check to let scroll settle
-  setTimeout(updateBossStripOverflow, 100);
-}
+// Event delegation for raid nav
+if (raidNavEl) {
+  raidNavEl.addEventListener('click', function(e) {
+    // Tier tab click
+    var tierTab = e.target.closest('.tier-tab');
+    if (tierTab) {
+      var newTier = tierTab.dataset.tier;
+      if (newTier === currentTierKey) return;
+      currentTierKey = newTier;
+      var raids = TIERS[newTier].raids;
+      currentRaidKey = Object.keys(raids)[0];
+      buildRaidNav();
+      var entries = Object.entries(raids[currentRaidKey].encounters);
+      if (entries.length > 0) {
+        fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+      }
+      return;
+    }
 
-function updateBossStripOverflow() {
-  if (!bossStripEl || !bossStripWrapper) return;
-  var hasOverflowLeft = bossStripEl.scrollLeft > 4;
-  var hasOverflowRight = (bossStripEl.scrollWidth - bossStripEl.scrollLeft - bossStripEl.clientWidth) > 4;
-  bossStripWrapper.classList.toggle('has-overflow-left', hasOverflowLeft);
-  bossStripWrapper.classList.toggle('has-overflow-right', hasOverflowRight);
-}
+    // Raid header click (accordion)
+    var raidHeader = e.target.closest('.raid-header');
+    if (raidHeader) {
+      var raidKey = raidHeader.dataset.raid;
+      if (raidKey === currentRaidKey) return;
+      currentRaidKey = raidKey;
+      buildRaidNav();
+      var entries = Object.entries(TIERS[currentTierKey].raids[raidKey].encounters);
+      if (entries.length > 0) {
+        fetchAndDisplayRankings(entries[0][0], entries[0][1]);
+      }
+      return;
+    }
 
-// Listen for scroll on boss strip to update fade indicators
-if (bossStripEl) {
-  bossStripEl.addEventListener('scroll', createDebounced(updateBossStripOverflow, 50), { passive: true });
+    // Boss item click
+    var bossItem = e.target.closest('.boss-nav-item');
+    if (bossItem) {
+      var id = parseInt(bossItem.dataset.encounterId, 10);
+      var name = bossItem.dataset.bossName;
+      fetchAndDisplayRankings(name, id);
+    }
+  });
 }
 
 /* --------------------------------------------------------------------------------
@@ -581,7 +544,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
   };
 
   try {
-    selectActiveBossChip(encounterId);
+    selectActiveBossNav(encounterId);
 
     // Reset search/sort on boss change
     currentSearch = '';
@@ -747,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
   clearHash();
 
   // Build context bar
-  buildContextBar();
+  buildRaidNav();
 
   // Load first boss of current tier/raid
   var currentRaid = TIERS[currentTierKey].raids[currentRaidKey];

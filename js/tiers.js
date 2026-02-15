@@ -22,11 +22,8 @@ var currentRaidKey = 'tot';
 var currentBossName = '';
 var currentEncounterId = null;
 
-// DOM refs — new context bar elements
-var tierToggleEl = document.getElementById('tier-toggle');
-var raidPillsEl = document.getElementById('raid-pills');
-var bossStripEl = document.getElementById('boss-strip');
-var bossStripWrapper = document.querySelector('.boss-strip-wrapper');
+// DOM refs — raid navigation sidebar
+var raidNavEl = document.getElementById('raid-nav');
 
 // Existing DOM refs
 var rankingsDiv = document.getElementById('rankings');

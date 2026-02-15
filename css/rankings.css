@@ -18,221 +18,145 @@ body {
 }
 
 /* =================================================================
-   Context Bar (replaces left sidebar)
+   Raid Nav Sidebar
    ================================================================= */
-.context-bar {
-  flex-shrink: 0;
-  z-index: 90;
-  background: rgba(15, 17, 23, 0.97);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.context-bar-inner {
-  max-width: 1800px;
-  margin: 0 auto;
-  padding: 16px 2rem 14px;
-}
-
-.context-selectors {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-/* Tier Toggle */
-.tier-toggle {
-  display: flex;
-  background: var(--secondary-bg);
-  border-radius: 10px;
-  padding: 3px;
-  border: 1px solid var(--border-color);
-  flex-shrink: 0;
-}
-
-.tier-toggle-btn {
-  padding: 12px 36px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.35rem;
-  font-weight: 700;
-  font-family: inherit;
-  letter-spacing: 0.05em;
-  transition: all 0.2s ease;
-  background: transparent;
-  color: var(--text-muted);
-}
-
-.tier-toggle-btn.active {
-  background: var(--accent-color);
-  color: #ffffff;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4);
-}
-
-.tier-toggle-btn:not(.active):hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.05);
-}
-
-/* Raid Pills */
-.raid-pills {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.raid-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 15px 30px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  font-size: 1.3rem;
-  font-weight: 700;
-  font-family: inherit;
-  transition: all 0.2s ease;
-  color: var(--text-primary);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  position: relative;
-  overflow: hidden;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.6);
-  z-index: 0;
-}
-
-.raid-pill::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 17, 23, 0.55);
-  z-index: -1;
-  transition: background 0.2s ease;
-}
-
-.raid-pill:hover {
-  border-color: var(--accent-color);
-  color: #ffffff;
-}
-
-.raid-pill:hover::before {
-  background: rgba(124, 58, 237, 0.35);
-}
-
-.raid-pill.active {
-  border-color: var(--accent-color);
-  color: #ffffff;
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.4);
-}
-
-.raid-pill.active::before {
-  background: rgba(124, 58, 237, 0.45);
-}
-
-/* Boss Strip */
-.boss-strip-wrapper {
-  position: relative;
-  margin-bottom: 6px;
-}
-
-/* Fade edges when overflowing */
-.boss-strip-wrapper::before,
-.boss-strip-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 32px;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.boss-strip-wrapper::before {
-  left: 0;
-  background: linear-gradient(90deg, rgba(15, 17, 23, 0.97), transparent);
-}
-
-.boss-strip-wrapper::after {
-  right: 0;
-  background: linear-gradient(270deg, rgba(15, 17, 23, 0.97), transparent);
-}
-
-.boss-strip-wrapper.has-overflow-left::before,
-.boss-strip-wrapper.has-overflow-right::after {
-  opacity: 1;
-}
-
-.boss-strip {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 6px;
+.raid-nav {
+  padding: 0.75rem 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(15, 17, 23, 0.5);
   scrollbar-width: none;
   -ms-overflow-style: none;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
 }
 
-.boss-strip::-webkit-scrollbar {
+.raid-nav::-webkit-scrollbar {
   display: none;
 }
 
-.boss-chip {
-  flex-shrink: 0;
+/* Tier tabs */
+.tier-tabs {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  cursor: pointer;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  padding: 0 0.75rem 0.75rem;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 0.5rem;
+}
+
+.tier-tab {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 700;
   font-family: inherit;
-  white-space: nowrap;
+  cursor: pointer;
   transition: all 0.2s ease;
-  background: rgba(30, 33, 48, 0.6);
-  color: var(--text-secondary);
+  text-align: center;
 }
 
-.boss-chip .boss-chip-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 6px;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: border-color 0.2s ease;
-}
-
-.boss-chip:hover {
-  border-color: rgba(124, 58, 237, 0.5);
-  background: rgba(124, 58, 237, 0.08);
+.tier-tab:hover {
   color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.boss-chip:hover .boss-chip-icon {
-  border-color: rgba(124, 58, 237, 0.5);
-}
-
-.boss-chip.active {
+.tier-tab.active {
   background: var(--accent-color);
   border-color: var(--accent-color);
   color: #ffffff;
-  transform: scale(1.02);
-  box-shadow: 0 2px 10px rgba(124, 58, 237, 0.4);
 }
 
-.boss-chip.active .boss-chip-icon {
-  border-color: rgba(255, 255, 255, 0.3);
+/* Raid section headers (accordion) */
+.raid-section {
+  margin-bottom: 2px;
+}
+
+.raid-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.raid-header:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.raid-header.active {
+  color: var(--text-primary);
+}
+
+.raid-header-arrow {
+  font-size: 0.625rem;
+  line-height: 1;
+  opacity: 0.5;
+}
+
+/* Boss list */
+.boss-list {
+  padding-bottom: 4px;
+}
+
+.boss-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 5px 14px 5px 22px;
+  border: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.boss-nav-item:hover {
+  background: rgba(124, 58, 237, 0.06);
+  color: var(--text-primary);
+}
+
+.boss-nav-item.active {
+  background: rgba(124, 58, 237, 0.12);
+  border-left-color: var(--accent-color);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.boss-nav-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.boss-nav-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* =================================================================
@@ -414,7 +338,7 @@ body {
 
 .main-grid {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 200px 1fr 320px;
   gap: 0;
 }
 
@@ -424,7 +348,7 @@ body {
   min-width: 0;
   padding: 2rem 2.5rem;
   overflow-y: auto;
-  max-height: calc(100vh - 260px);
+  max-height: calc(100vh - 60px);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
@@ -438,7 +362,7 @@ body {
   padding: 2rem 1.25rem;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100vh - 260px);
+  max-height: calc(100vh - 60px);
   background: transparent;
   border: none;
   border-left: 1px solid rgba(255, 255, 255, 0.06);
@@ -929,6 +853,31 @@ a.wowhead del {
     grid-template-columns: 1fr;
   }
 
+  .raid-nav {
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    overflow-y: visible;
+  }
+
+  .boss-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .boss-nav-item {
+    white-space: nowrap;
+    padding: 5px 10px;
+    border-left: none;
+    border-radius: 6px;
+  }
+
+  .boss-nav-item.active {
+    border-left-color: transparent;
+    border-radius: 6px;
+  }
+
   .content-area,
   .talent-sidebar {
     max-height: none;
@@ -941,34 +890,6 @@ a.wowhead del {
 }
 
 @media (max-width: 768px) {
-  .context-bar-inner {
-    padding: 12px 1rem 10px;
-  }
-
-  .context-selectors {
-    gap: 10px;
-  }
-
-  .tier-toggle-btn {
-    padding: 7px 18px;
-    font-size: 0.8125rem;
-  }
-
-  .raid-pill {
-    padding: 7px 12px;
-    font-size: 0.8125rem;
-  }
-
-  .boss-chip {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-  }
-
-  .boss-chip .boss-chip-icon {
-    width: 26px;
-    height: 26px;
-  }
-
   .content-area {
     padding: 1.5rem 1rem;
   }
@@ -1088,8 +1009,4 @@ a.wowhead del {
     font-size: 0.75rem;
   }
 
-  .raid-pill {
-    font-size: 0.75rem;
-    padding: 6px 10px;
-  }
 }
