@@ -152,7 +152,7 @@ class OptimizedRenderer {
     var perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
     var duration = formatDuration(r.duration);
     var itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
-    var server = formatServerInfo(r.serverName, r.regionName);
+    var server = formatServerInfo(r.guildName, r.serverName, r.regionName);
     var killDate = formatKillDate(r.startTime);
     var searchData = playerName.toLowerCase();
     var gear = buildGearStrip(r.gear);
@@ -225,9 +225,13 @@ function formatKillDate(startTime) {
   if (!startTime) return 'Unknown Date';
   return new Date(startTime).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
-function formatServerInfo(serverName, regionName) {
-  if (!serverName) return 'Unknown Server';
-  return regionName ? (serverName + ' (' + regionName + ')') : serverName;
+function formatServerInfo(guildName, serverName, regionName) {
+  var parts = [];
+  if (guildName) parts.push(guildName);
+  if (serverName) {
+    parts.push(regionName ? serverName + ' (' + regionName + ')' : serverName);
+  }
+  return parts.join(' - ') || 'Unknown Server';
 }
 var GEAR_SLOTS = { 0:'Head',1:'Neck',2:'Shoulder',3:'Shirt',4:'Chest',5:'Belt',6:'Legs',7:'Feet',8:'Wrist',9:'Hands',10:'Ring 1',11:'Ring 2',12:'Trinket 1',13:'Trinket 2',14:'Back',15:'Main Hand',16:'Off Hand',17:'Ranged' };
 
