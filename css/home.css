@@ -513,36 +513,6 @@
   color: rgba(124, 58, 237, .5);
 }
 
-/* ── Footer ───────────────────────────────────────────── */
-.site-footer {
-  border-top: 1px solid var(--border-color);
-  padding: 2.5rem 2rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: .8125rem;
-}
-.footer-inner {
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .75rem;
-}
-.footer-inner strong { color: var(--text-accent); }
-
-.footer-links { display: flex; gap: 1.25rem; }
-.footer-link {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: .8125rem;
-  transition: color .2s;
-}
-.footer-link:hover { color: var(--text-accent); }
-
-.footer-note { font-size: .75rem; opacity: .5; }
-
 /* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 1024px) {
   .streams-grid { grid-template-columns: 1fr; }

@@ -366,8 +366,9 @@
 .ui-map-wrapper {
   position: relative;
   width: 100%;
-  max-width: 1920px;
-  margin: 2rem auto 0;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 2rem;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -447,33 +448,6 @@
   font-size: 0.875rem;
   font-weight: 500;
 }
-
-/* ── Footer ──────────────────────────────────────────── */
-.site-footer {
-  border-top: 1px solid var(--border-color);
-  padding: 2.5rem 2rem;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: .8125rem;
-}
-.footer-inner {
-  max-width: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .75rem;
-}
-.footer-links { display: flex; gap: 1.25rem; }
-.footer-link {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: .8125rem;
-  transition: color .2s;
-}
-.footer-link:hover { color: var(--text-accent); }
-.footer-note { font-size: .75rem; opacity: .5; }
 
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
