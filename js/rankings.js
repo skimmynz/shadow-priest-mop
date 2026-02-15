@@ -135,7 +135,7 @@ class OptimizedRenderer {
       '<span class="col-date">Date</span>' +
       '<span class="col-time">Time</span>' +
       '<span class="col-talents">Talents</span>' +
-      '<span class="col-trinkets">Trnk</span>' +
+      '<span class="col-trinkets">Trinkets</span>' +
       '</div>';
     return header + rendered.join('');
   }
