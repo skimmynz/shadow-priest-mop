@@ -116,17 +116,21 @@ class OptimizedRenderer {
   async renderRankings(data, topByTier) {
     var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     var visible = rankings.slice(0, 100);
+    var maxDps = 0;
+    for (var i = 0; i < visible.length; i++) {
+      var d = (visible[i] && typeof visible[i].total === 'number') ? Math.round(visible[i].total) : 0;
+      if (d > maxDps) maxDps = d;
+    }
     var rendered = await TimeSlicing.processInChunks(visible, async (chunk) => {
       return chunk.map(r => {
         var idx = visible.indexOf(r);
-        return this.renderSingleEntry(r, idx, topByTier);
+        return this.renderSingleEntry(r, idx, topByTier, maxDps);
       });
     }, 10, 1);
     var header = '<div class="rank-table-header">' +
       '<span class="col-rank">#</span>' +
       '<span class="col-name">Player</span>' +
       '<span class="col-dps">DPS</span>' +
-      '<span class="col-gear">Gear</span>' +
       '<span class="col-trinkets">Trinkets</span>' +
       '<span class="col-talents">Talents</span>' +
       '<span class="col-server">Server</span>' +
@@ -137,7 +141,7 @@ class OptimizedRenderer {
     return header + rendered.join('');
   }
 
-  renderSingleEntry(r, index, topByTier) {
+  renderSingleEntry(r, index, topByTier, maxDps) {
     var cacheKey = r.reportID + '-' + r.fightID + '-' + index;
     if (this.renderCache.has(cacheKey)) return this.renderCache.get(cacheKey);
 
@@ -158,8 +162,7 @@ class OptimizedRenderer {
       '<div class="rank-entry" data-rank-tier="' + rankTier + '" data-original-rank="' + rank + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
       '<span class="col-rank">' + rank + '</span>' +
       '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + playerName + '</a></span>' +
-      '<span class="col-dps">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span>' +
-      '<span class="col-gear">' + gear.main + '</span>' +
+      '<span class="col-dps"><span class="dps-bar" style="width:' + (typeof dps === 'number' && maxDps > 0 ? Math.round((dps / maxDps) * 100) : 0) + '%"></span><span class="dps-value">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span></span>' +
       '<span class="col-trinkets">' + gear.trinkets + '</span>' +
       '<span class="col-talents">' + perPlayerTalents + '</span>' +
       '<span class="col-server">' + server + '</span>' +

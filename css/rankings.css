@@ -473,7 +473,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 36px 1fr 80px 370px 76px 210px 120px 66px 42px 62px;
+  --cols: 36px 1fr 90px 64px 170px 140px 66px 42px 62px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -564,7 +564,7 @@ a.wowhead del {
   grid-template-columns: var(--cols);
   align-items: center;
   gap: 0;
-  padding: 7px 0;
+  padding: 5px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   transition: background 0.15s ease;
   contain: layout style paint;
@@ -642,6 +642,23 @@ a.wowhead del {
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: var(--text-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.dps-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(124, 58, 237, 0.08);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.dps-value {
+  position: relative;
+  z-index: 1;
 }
 
 /* Server, Time, iLvl, Date */
@@ -710,13 +727,13 @@ a.wowhead del {
 
 /* Trinkets column */
 .gear-trinkets {
-  gap: 4px;
+  gap: 2px;
 }
 
 .gear-strip-icon.is-trinket {
-  width: 30px;
-  height: 30px;
-  border-radius: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
 }
 
 .no-gear {
@@ -732,20 +749,19 @@ a.wowhead del {
 /* Talent icons in table rows */
 .rank-entry .talent-row {
   display: flex;
-  gap: 3px;
+  gap: 2px;
 }
 
 .rank-entry .talent-icon-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 5px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
   border: 1.5px solid var(--border-color);
   transition: all 0.15s ease;
 }
 
-.rank-entry .talent-link.is-meta .talent-icon-img {
-  border-color: #fbbf24;
-  box-shadow: 0 0 0 1px #fbbf24, 0 2px 8px rgba(251, 191, 36, 0.25);
+.rank-entry .talent-link:not(.is-meta) .talent-icon-img {
+  opacity: 0.45;
 }
 
 .talent-link {
@@ -992,12 +1008,11 @@ a.wowhead del {
     font-size: 0.6875rem;
   }
 
-  /* Mobile: hide gear column, show compact layout */
+  /* Mobile: hide server/time, compact layout */
   #rankings {
-    --cols: 28px 1fr 70px 0px 60px 160px 0px 0px 36px 54px;
+    --cols: 28px 1fr 70px 50px 140px 0px 0px 36px 54px;
   }
 
-  .col-gear,
   .col-server,
   .col-time {
     display: none;
@@ -1008,16 +1023,6 @@ a.wowhead del {
     padding-left: 1rem;
     padding-right: 1rem;
     top: -1.5rem;
-  }
-
-  .gear-strip-icon.is-trinket {
-    width: 24px;
-    height: 24px;
-  }
-
-  .rank-entry .talent-icon-img {
-    width: 24px;
-    height: 24px;
   }
 
   .col-name {
@@ -1048,7 +1053,7 @@ a.wowhead del {
 
   /* Tighter grid for small screens */
   #rankings {
-    --cols: 24px 1fr 60px 0px 0px 130px 0px 0px 32px 0px;
+    --cols: 24px 1fr 60px 0px 110px 0px 0px 32px 0px;
   }
 
   .col-trinkets,
