@@ -333,20 +333,27 @@ function renderTrinketSummary(data) {
     var seen = {};
     r.gear.forEach(function(item, index) {
       if (!GEAR_TRINKET_SLOTS.has(index) || !item || item.id === 0) return;
-      var key = item.id;
-      if (seen[key]) return;
-      seen[key] = true;
-      if (!trinketCounts[key]) {
-        trinketCounts[key] = {
+      var trinketName = item.name || 'Unknown Trinket';
+      if (seen[trinketName]) return;
+      seen[trinketName] = true;
+      if (!trinketCounts[trinketName]) {
+        trinketCounts[trinketName] = {
           id: item.id,
-          name: item.name || 'Unknown Trinket',
+          name: trinketName,
           icon: item.icon || 'inv_misc_questionmark.jpg',
           quality: item.quality || 'common',
           itemLevel: item.itemLevel || 0,
           count: 0
         };
       }
-      trinketCounts[key].count++;
+      // Keep the highest ilvl version for the tooltip
+      if ((item.itemLevel || 0) > trinketCounts[trinketName].itemLevel) {
+        trinketCounts[trinketName].id = item.id;
+        trinketCounts[trinketName].itemLevel = item.itemLevel || 0;
+        trinketCounts[trinketName].quality = item.quality || 'common';
+        trinketCounts[trinketName].icon = item.icon || 'inv_misc_questionmark.jpg';
+      }
+      trinketCounts[trinketName].count++;
     });
   });
 
