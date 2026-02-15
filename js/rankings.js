@@ -320,6 +320,61 @@ async function renderTalentSummary(data) {
 }
 
 /* --------------------------------------------------------------------------------
+   Trinket summary rendering
+   -------------------------------------------------------------------------------- */
+function renderTrinketSummary(data) {
+  var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
+  var trinketCounts = {};
+  var totalPlayers = 0;
+
+  rankings.forEach(function(r) {
+    if (!Array.isArray(r.gear) || r.gear.length === 0) return;
+    totalPlayers++;
+    var seen = {};
+    r.gear.forEach(function(item, index) {
+      if (!GEAR_TRINKET_SLOTS.has(index) || !item || item.id === 0) return;
+      var key = item.id;
+      if (seen[key]) return;
+      seen[key] = true;
+      if (!trinketCounts[key]) {
+        trinketCounts[key] = {
+          id: item.id,
+          name: item.name || 'Unknown Trinket',
+          icon: item.icon || 'inv_misc_questionmark.jpg',
+          quality: item.quality || 'common',
+          itemLevel: item.itemLevel || 0,
+          count: 0
+        };
+      }
+      trinketCounts[key].count++;
+    });
+  });
+
+  var sorted = Object.values(trinketCounts).sort(function(a, b) { return b.count - a.count; });
+  var top = sorted.slice(0, 8);
+  if (!top.length || totalPlayers === 0) return '';
+
+  var maxCount = top[0].count;
+  var html = '<div class="trinket-summary-list">';
+  top.forEach(function(t) {
+    var pct = ((t.count / totalPlayers) * 100).toFixed(1);
+    var barWidth = ((t.count / maxCount) * 100).toFixed(1);
+    var iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + t.icon;
+    var itemUrl = 'https://www.wowhead.com/mop-classic/item=' + t.id;
+    html += '<a class="trinket-summary-item wowhead" href="' + itemUrl + '" target="_blank" rel="noopener">' +
+      '<span class="gear-strip-icon ' + t.quality + '"><img src="' + iconSrc + '" alt="' + t.name.replace(/"/g, '&quot;') + '" loading="lazy"></span>' +
+      '<span class="trinket-summary-info">' +
+        '<span class="trinket-summary-name ' + t.quality + '">' + t.name + '</span>' +
+        '<span class="trinket-summary-bar"><span class="trinket-summary-bar-fill" style="width:' + barWidth + '%"></span></span>' +
+      '</span>' +
+      '<span class="trinket-summary-pct">' + pct + '%</span>' +
+    '</a>';
+  });
+  html += '</div>';
+  return html;
+}
+
+/* --------------------------------------------------------------------------------
    Search & Sort
    -------------------------------------------------------------------------------- */
 function applyFiltersAndSort() {
@@ -519,6 +574,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
     var talentResult = await renderTalentSummary(data);
     var topByTier = talentResult.topByTier;
     var talentSummaryHTML = talentResult.html;
+    var trinketSummaryHTML = renderTrinketSummary(data);
     var finalRankingsHTML = await optimizedRenderer.renderRankings(data, topByTier);
 
     domBatcher.schedule('rankings', function() {
@@ -529,6 +585,8 @@ async function fetchAndDisplayRankings(name, encounterId) {
     domBatcher.schedule('talents', function() {
       var el = document.querySelector('.talent-sidebar .talent-summary');
       if (el) el.innerHTML = talentSummaryHTML;
+      var trinketEl = document.getElementById('trinket-summary');
+      if (trinketEl) trinketEl.innerHTML = trinketSummaryHTML || '';
     });
     domBatcher.schedule('parsing-rules', function() {
       var rulesContainer = document.getElementById('sidebar-parsing-rules');
