@@ -964,7 +964,7 @@ a.wowhead del {
 
   /* Mobile: only show #, Player, DPS, Talents */
   #rankings {
-    --cols: 28px 1fr 0px 70px 0px 0px 140px 0px;
+    --cols: 24px 1fr 0px 64px 0px 0px auto 0px;
   }
 
   .col-ilvl,
@@ -972,6 +972,15 @@ a.wowhead del {
   .col-time,
   .col-trinkets {
     display: none;
+  }
+
+  .col-dps {
+    font-size: 0.75rem;
+  }
+
+  .rank-entry .talent-icon-img {
+    width: 20px;
+    height: 20px;
   }
 
   .col-name .player-server {
@@ -1000,12 +1009,12 @@ a.wowhead del {
 
   /* Tighter grid for small screens */
   #rankings {
-    --cols: 24px 1fr 0px 60px 0px 0px 110px 0px;
+    --cols: 22px 1fr 0px 56px 0px 0px auto 0px;
   }
 
   .rank-entry .talent-icon-img {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
   .rank-table-header {
@@ -1017,15 +1026,15 @@ a.wowhead del {
   }
 
   .col-rank {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
   }
 
   .col-name {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
   }
 
   .col-dps {
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
   }
 
 }
