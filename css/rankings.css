@@ -1068,7 +1068,7 @@ a.wowhead del {
 
   /* Grid: only show #, Player, DPS, Talents */
   #rankings {
-    --cols: 24px 1fr 0px 68px 0px 0px 132px 0px;
+    --cols: 22px 1fr 0px 60px 0px 0px 130px 0px;
   }
 
   .col-ilvl,
@@ -1085,11 +1085,16 @@ a.wowhead del {
   .rank-entry > span,
   .rank-entry > div,
   .rank-table-header > span {
-    padding: 0 4px;
+    padding: 0 2px;
   }
 
   .col-dps {
     font-size: 0.75rem;
+    text-align: left;
+  }
+
+  .rank-table-header .col-dps {
+    text-align: left;
   }
 
   .rank-entry .talent-icon-img {
@@ -1181,13 +1186,13 @@ a.wowhead del {
 
   /* Tighter grid */
   #rankings {
-    --cols: 22px 1fr 0px 58px 0px 0px 112px 0px;
+    --cols: 20px 1fr 0px 52px 0px 0px 108px 0px;
   }
 
   .rank-entry > span,
   .rank-entry > div,
   .rank-table-header > span {
-    padding: 0 3px;
+    padding: 0 2px;
   }
 
   .rank-entry .talent-icon-img {
