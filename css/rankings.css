@@ -377,7 +377,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 36px 1fr 52px 100px 68px 72px 170px 68px;
+  --cols: 36px 1fr 52px 76px 68px 72px 170px 68px;
   margin-top: 0;
   min-height: 400px;
 }
