@@ -37,6 +37,6 @@ function renderParsingRules(encounterId) {
   if (!rules) return '<span class="parsing-pill no-rules">No rules</span>';
   var meaningful = rules.rules.filter(function(r) { return !/^no rules\.?$/i.test(r.trim()); });
   if (meaningful.length === 0) return '<span class="parsing-pill no-rules">No rules</span>';
-  var tooltip = meaningful.join(' \u2022 ');
-  return '<span class="parsing-pill has-rules" title="' + tooltip.replace(/"/g, '&quot;') + '">' + meaningful.length + ' rule' + (meaningful.length > 1 ? 's' : '') + '</span>';
+  var items = meaningful.join(' <span class="parsing-sep">\u2022</span> ');
+  return '<span class="parsing-pill has-rules">' + items + '</span>';
 }
