@@ -718,7 +718,12 @@ function formatAgo(d) {
 function updateLastUpdated(iso) {
   if (!lastUpdatedEl) return;
   if (!iso) { lastUpdatedEl.innerHTML = ''; return; }
-  lastUpdatedEl.innerHTML = '<img src="https://assets.rpglogs.com/img/warcraft/favicon.png?v=4" alt="" style="width:14px;height:14px;vertical-align:-2px;margin-right:4px;border-radius:2px;">Updated from WarcraftLogs: ' + formatAgo(iso);
+  lastUpdatedEl.innerHTML = '<span class="last-updated-badge">' +
+    '<img class="last-updated-icon" src="https://assets.rpglogs.com/img/warcraft/favicon.png?v=4" alt="">' +
+    '<span class="last-updated-label">Updated from WarcraftLogs</span>' +
+    '<span class="last-updated-separator"></span>' +
+    '<span class="last-updated-time">' + formatAgo(iso) + '</span>' +
+    '</span>';
 }
 
 /* --------------------------------------------------------------------------------

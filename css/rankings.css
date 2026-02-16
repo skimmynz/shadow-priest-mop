@@ -268,6 +268,43 @@ body {
   flex: 1 1 auto;
 }
 
+.last-updated-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.last-updated-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.last-updated-label {
+  font-weight: 500;
+}
+
+.last-updated-separator {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.last-updated-time {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
 .toolbar-result-count {
   font-size: 0.75rem;
   color: var(--text-muted);
