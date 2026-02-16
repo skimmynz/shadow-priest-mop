@@ -377,7 +377,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 36px 1fr 46px 100px 62px 72px 170px 68px;
+  --cols: 36px 1fr 52px 100px 68px 72px 170px 68px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -462,6 +462,9 @@ a.wowhead del {
   cursor: pointer;
   user-select: none;
   transition: color 0.15s ease;
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
 }
 
 .rank-table-header [data-sort]:hover {
@@ -480,10 +483,6 @@ a.wowhead del {
 
 .rank-table-header [data-sort].active-sort .sort-arrow {
   opacity: 1;
-}
-
-.rank-table-header .col-dps {
-  text-align: right;
 }
 
 /* Player row */
@@ -580,7 +579,6 @@ a.wowhead del {
 .col-dps {
   font-weight: 700;
   font-size: 0.8125rem;
-  text-align: right;
   font-variant-numeric: tabular-nums;
   color: #e6ff00;
 }
@@ -1063,11 +1061,6 @@ a.wowhead del {
 
   .col-dps {
     font-size: 0.75rem;
-    text-align: left;
-  }
-
-  .rank-table-header .col-dps {
-    text-align: left;
   }
 
   .rank-entry .talent-icon-img {
