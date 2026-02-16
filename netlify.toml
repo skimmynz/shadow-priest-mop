@@ -1,2 +1,17 @@
 [functions]
   directory = "netlify/functions"
+
+[[redirects]]
+  from = "/rankings"
+  to = "/rankings.html"
+  status = 200
+
+[[redirects]]
+  from = "/haste"
+  to = "/haste.html"
+  status = 200
+
+[[redirects]]
+  from = "/addons"
+  to = "/addons.html"
+  status = 200
