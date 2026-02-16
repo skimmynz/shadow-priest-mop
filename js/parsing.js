@@ -34,7 +34,9 @@ var PARSING_RULES = {
 };
 function renderParsingRules(encounterId) {
   var rules = PARSING_RULES[encounterId];
-  if (!rules) return '';
-  var items = rules.rules.map(function(r) { return '<li class="parsing-rule-item">' + r + '</li>'; }).join('');
-  return '<div class="parsing-rules-content active"><ul class="parsing-rules-list">' + items + '</ul></div>';
+  if (!rules) return '<span class="parsing-pill no-rules">No rules</span>';
+  var meaningful = rules.rules.filter(function(r) { return !/^no rules\.?$/i.test(r.trim()); });
+  if (meaningful.length === 0) return '<span class="parsing-pill no-rules">No rules</span>';
+  var tooltip = meaningful.join(' \u2022 ');
+  return '<span class="parsing-pill has-rules" title="' + tooltip.replace(/"/g, '&quot;') + '">' + meaningful.length + ' rule' + (meaningful.length > 1 ? 's' : '') + '</span>';
 }

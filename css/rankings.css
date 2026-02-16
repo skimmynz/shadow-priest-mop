@@ -851,44 +851,40 @@ a.wowhead del {
 }
 
 /* =================================================================
-   Parsing Rules
+   Parsing Rules (toolbar pill)
    ================================================================= */
-.sidebar-parsing-rules {
-  margin-bottom: 1rem;
+.toolbar-parsing-rules {
+  flex-shrink: 0;
 }
 
-.parsing-rules-content {
-  border: 2px solid var(--warning-color);
-  border-radius: 12px;
-  padding: 0.625rem 0.75rem;
+.parsing-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
 }
 
-.parsing-rule-item::before {
-  content: "⚠ ";
+.parsing-pill.no-rules {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+
+.parsing-pill.has-rules {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
   color: var(--warning-color);
-  font-weight: bold;
-  margin-right: 0.5rem;
+  cursor: help;
 }
 
-.parsing-rules-content.active {
-  display: block;
-}
-
-.parsing-rules-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.parsing-rule-item {
-  padding: 0.3rem 0;
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.parsing-rule-item:last-child {
-  border-bottom: none;
+.parsing-pill.has-rules::before {
+  content: "\26A0";
+  margin-right: 4px;
+  font-size: 0.75rem;
 }
 
 /* =================================================================
