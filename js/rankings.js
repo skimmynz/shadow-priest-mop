@@ -1,50 +1,9 @@
-// Time-slicing for large operations
-class TimeSlicing {
-  static async processInChunks(items, processor, chunkSize = 50, yieldEvery = 5) {
-    const results = [];
-    let processedChunks = 0;
-    for (let i = 0; i < items.length; i += chunkSize) {
-      const chunk = items.slice(i, i + chunkSize);
-      const chunkResults = await processor(chunk);
-      results.push(...chunkResults);
-      processedChunks++;
-      if (processedChunks % yieldEvery === 0) {
-        await new Promise(resolve => setTimeout(resolve, 0));
-      }
-    }
-    return results;
-  }
-}
-
-// Optimized DOM batch updates
-class DOMBatcher {
-  constructor() {
-    this.pendingUpdates = new Map();
-    this.isScheduled = false;
-  }
-  schedule(key, updateFn) {
-    this.pendingUpdates.set(key, updateFn);
-    if (!this.isScheduled) {
-      this.isScheduled = true;
-      scheduler.postTask(() => this.flush(), { priority: 'user-blocking' });
-    }
-  }
-  flush() {
-    this.pendingUpdates.forEach(updateFn => {
-      try { updateFn(); } catch (e) { console.error('DOMBatcher update failed:', e); }
-    });
-    this.pendingUpdates.clear();
-    this.isScheduled = false;
-  }
-}
-
-// Task scheduler polyfill
-const domBatcher = new DOMBatcher();
-const scheduler = window.scheduler || {
-  postTask: (fn, options) => {
+// Minimal scheduler for deferred work
+var scheduler = window.scheduler || {
+  postTask: function(fn, options) {
     var priority = options && options.priority ? options.priority : 'background';
     if (priority === 'user-blocking') return Promise.resolve().then(fn);
-    return new Promise(resolve => setTimeout(() => resolve(fn()), 0));
+    return new Promise(function(resolve) { setTimeout(function() { resolve(fn()); }, 0); });
   }
 };
 
@@ -77,7 +36,7 @@ function bossIconUrl(encounterId) {
 /* --------------------------------------------------------------------------------
    Talent analysis
    -------------------------------------------------------------------------------- */
-async function analyzeTalentsOptimized(rankings) {
+function analyzeTalents(rankings) {
   if (!Array.isArray(rankings) || rankings.length === 0) {
     return { tierCounts: {}, totalPerTier: {} };
   }
@@ -87,24 +46,22 @@ async function analyzeTalentsOptimized(rankings) {
     totalPerTier[tier] = 0;
     for (var talent of talentTiers[tier]) tierCounts[tier][talent] = 0;
   }
-  await TimeSlicing.processInChunks(rankings, async (chunk) => {
-    return chunk.map(entry => {
-      var seenTiers = new Set();
-      var talents = Array.isArray(entry && entry.talents) ? entry.talents : [];
-      for (var t of talents) {
-        var displayName = getTalentDisplayName(t.name);
-        if (!VALID_TALENT_SET.has(displayName)) continue;
-        var tier = TIER_BY_TALENT.get(displayName);
-        if (tier && !seenTiers.has(tier)) {
-          tierCounts[tier][displayName]++;
-          totalPerTier[tier]++;
-          seenTiers.add(tier);
-        }
+  for (var i = 0; i < rankings.length; i++) {
+    var entry = rankings[i];
+    var seenTiers = new Set();
+    var talents = Array.isArray(entry && entry.talents) ? entry.talents : [];
+    for (var t of talents) {
+      var displayName = getTalentDisplayName(t.name);
+      if (!VALID_TALENT_SET.has(displayName)) continue;
+      var tier = TIER_BY_TALENT.get(displayName);
+      if (tier && !seenTiers.has(tier)) {
+        tierCounts[tier][displayName]++;
+        totalPerTier[tier]++;
+        seenTiers.add(tier);
       }
-      return entry;
-    });
-  }, 25, 2);
-  return { tierCounts, totalPerTier };
+    }
+  }
+  return { tierCounts: tierCounts, totalPerTier: totalPerTier };
 }
 
 /* --------------------------------------------------------------------------------
@@ -113,7 +70,7 @@ async function analyzeTalentsOptimized(rankings) {
 class OptimizedRenderer {
   constructor() { this.renderCache = new Map(); }
 
-  async renderRankings(data, topByTier) {
+  renderRankings(data, topByTier) {
     var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     var visible = rankings.slice(0, 100);
     var maxDps = 0;
@@ -121,12 +78,10 @@ class OptimizedRenderer {
       var d = (visible[i] && typeof visible[i].total === 'number') ? Math.round(visible[i].total) : 0;
       if (d > maxDps) maxDps = d;
     }
-    var rendered = await TimeSlicing.processInChunks(visible, async (chunk) => {
-      return chunk.map(r => {
-        var idx = visible.indexOf(r);
-        return this.renderSingleEntry(r, idx, topByTier, maxDps);
-      });
-    }, 10, 1);
+    var parts = [];
+    for (var i = 0; i < visible.length; i++) {
+      parts.push(this.renderSingleEntry(visible[i], i, topByTier, maxDps));
+    }
     var header = '<div class="rank-table-header">' +
       '<span class="col-rank">#</span>' +
       '<span class="col-name">Player</span>' +
@@ -137,7 +92,7 @@ class OptimizedRenderer {
       '<span class="col-talents">Talents</span>' +
       '<span class="col-trinkets">Trinkets</span>' +
       '</div>';
-    return header + rendered.join('');
+    return header + parts.join('');
   }
 
   renderSingleEntry(r, index, topByTier, maxDps) {
@@ -290,9 +245,9 @@ function buildGearStrip(gear) {
 /* --------------------------------------------------------------------------------
    Talent summary rendering
    -------------------------------------------------------------------------------- */
-async function renderTalentSummary(data) {
+function renderTalentSummary(data) {
   var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
-  var result = await analyzeTalentsOptimized(rankings);
+  var result = analyzeTalents(rankings);
   var tierCounts = result.tierCounts, totalPerTier = result.totalPerTier;
   var TOP_BY_TIER = new Map();
   var html = '<div class="talent-summary-content">';
@@ -531,6 +486,7 @@ if (raidNavEl) {
       var raids = TIERS[newTier].raids;
       currentRaidKey = Object.keys(raids)[0];
       buildRaidNav();
+      prefetchRaidBosses(currentRaidKey);
       var entries = Object.entries(raids[currentRaidKey].encounters);
       if (entries.length > 0) {
         fetchAndDisplayRankings(entries[0][0], entries[0][1]);
@@ -548,6 +504,7 @@ if (raidNavEl) {
       } else {
         currentRaidKey = raidKey;
         buildRaidNav();
+        prefetchRaidBosses(raidKey);
         var remembered = lastBossPerRaid[raidKey];
         if (remembered && remembered.id === currentEncounterId) {
           // Already viewing this boss, just expand nav
@@ -580,78 +537,112 @@ if (raidNavEl) {
 /* --------------------------------------------------------------------------------
    Main fetch & display
    -------------------------------------------------------------------------------- */
-async function fetchAndDisplayRankings(name, encounterId) {
+function renderContent(data, encounterId) {
   var startTime = performance.now();
+  currentData = data;
+  populateFilterDropdowns(data);
+  var talentResult = renderTalentSummary(data);
+  var topByTier = talentResult.topByTier;
+  var finalRankingsHTML = optimizedRenderer.renderRankings(data, topByTier);
 
+  if (rankingsDiv) rankingsDiv.innerHTML = finalRankingsHTML;
+  updateHeaderSortIndicators();
+  applyFiltersAndSort();
+
+  var el = document.querySelector('.talent-sidebar .talent-summary');
+  if (el) el.innerHTML = talentResult.html;
+  var trinketEl = document.getElementById('trinket-summary');
+  if (trinketEl) trinketEl.innerHTML = renderTrinketSummary(data) || '';
+
+  var rulesContainer = document.getElementById('sidebar-parsing-rules');
+  if (rulesContainer) rulesContainer.innerHTML = renderParsingRules(encounterId);
+
+  scheduler.postTask(function() {
+    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+  }, { priority: 'background' });
+
+  console.log('Rendered in ' + (performance.now() - startTime).toFixed(1) + 'ms');
+}
+
+/* Background revalidate — fetch fresh data and update if boss is still active */
+function revalidateInBackground(encounterId) {
+  fetch(API_URL(encounterId), { headers: { 'accept': 'application/json' } })
+    .then(function(res) { return res.ok ? res.json() : null; })
+    .then(function(data) {
+      if (!data) return;
+      var serverTs = data.cachedAt || (new Date()).toISOString();
+      writeCache(encounterId, data, serverTs);
+      // Only re-render if user is still viewing this boss
+      if (currentEncounterId === encounterId) {
+        updateLastUpdated(serverTs);
+        renderContent(data, encounterId);
+      }
+    })
+    .catch(function() { /* silent — stale data is already displayed */ });
+}
+
+/* Prefetch all bosses in the current raid (background, low priority) */
+function prefetchRaidBosses(raidKey) {
+  var raids = TIERS[currentTierKey] && TIERS[currentTierKey].raids;
+  if (!raids || !raids[raidKey]) return;
+  var encounters = raids[raidKey].encounters;
+  Object.keys(encounters).forEach(function(bossName) {
+    var id = encounters[bossName];
+    if (id === currentEncounterId) return; // skip current boss
+    var cached = readCache(id);
+    if (cached && isFresh(cached.cachedAt || (cached.data && cached.data.cachedAt))) return; // already fresh
+    // Stagger prefetches to avoid flooding
+    setTimeout(function() {
+      fetch(API_URL(id), { headers: { 'accept': 'application/json' } })
+        .then(function(res) { return res.ok ? res.json() : null; })
+        .then(function(data) {
+          if (data) writeCache(id, data, data.cachedAt || (new Date()).toISOString());
+        })
+        .catch(function() {});
+    }, Math.random() * 2000);
+  });
+}
+
+async function fetchAndDisplayRankings(name, encounterId) {
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
   // Update state
   currentBossName = name;
   currentEncounterId = encounterId;
+  selectActiveBossNav(encounterId);
 
-  var renderContentAndAttachListeners = async function(data) {
-    currentData = data;
-    populateFilterDropdowns(data);
-    var talentResult = await renderTalentSummary(data);
-    var topByTier = talentResult.topByTier;
-    var talentSummaryHTML = talentResult.html;
-    var trinketSummaryHTML = renderTrinketSummary(data);
-    var finalRankingsHTML = await optimizedRenderer.renderRankings(data, topByTier);
+  // Reset search/sort on boss change
+  currentSearch = '';
+  currentSortField = 'dps';
+  currentSortDir = 'desc';
+  currentRegionFilter = '';
+  if (searchInput) searchInput.value = '';
+  resetSortToggles();
+  if (regionFilter) regionFilter.value = '';
+  if (searchClear) searchClear.style.display = 'none';
+  if (resultCountEl) resultCountEl.textContent = '';
 
-    domBatcher.schedule('rankings', function() {
-      if (rankingsDiv) rankingsDiv.innerHTML = finalRankingsHTML;
-      updateHeaderSortIndicators();
-      // Re-apply filters after rendering
-      applyFiltersAndSort();
-    });
-    domBatcher.schedule('talents', function() {
-      var el = document.querySelector('.talent-sidebar .talent-summary');
-      if (el) el.innerHTML = talentSummaryHTML;
-      var trinketEl = document.getElementById('trinket-summary');
-      if (trinketEl) trinketEl.innerHTML = trinketSummaryHTML || '';
-    });
-    domBatcher.schedule('parsing-rules', function() {
-      var rulesContainer = document.getElementById('sidebar-parsing-rules');
-      if (rulesContainer) {
-        rulesContainer.innerHTML = renderParsingRules(encounterId);
-      }
-    });
+  // Stale-while-revalidate: show cached data immediately, fetch fresh in background
+  var cached = readCache(encounterId);
+  var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
 
-    scheduler.postTask(function() {
-      if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
-    }, { priority: 'background' });
+  if (cached) {
+    updateLastUpdated(cachedAt);
+    renderContent(cached.data, encounterId);
+    // If stale, revalidate in background (user already sees data)
+    if (!isFresh(cachedAt)) {
+      revalidateInBackground(encounterId);
+    }
+    return;
+  }
 
-    console.log('Rendering completed in ' + (performance.now() - startTime) + 'ms');
-  };
+  // No cache at all — show loader and fetch
+  if (rankingsDiv) {
+    rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ' + name + '…</p></div>';
+  }
 
   try {
-    selectActiveBossNav(encounterId);
-
-    // Reset search/sort on boss change
-    currentSearch = '';
-    currentSortField = 'dps';
-    currentSortDir = 'desc';
-    currentRegionFilter = '';
-    if (searchInput) searchInput.value = '';
-    resetSortToggles();
-    if (regionFilter) regionFilter.value = '';
-    if (searchClear) searchClear.style.display = 'none';
-    if (resultCountEl) resultCountEl.textContent = '';
-
-    if (rankingsDiv) {
-      rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ' + name + '…</p></div>';
-    }
-
-    var cached = readCache(encounterId);
-    var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
-
-    if (cached && isFresh(cachedAt)) {
-      updateLastUpdated(cachedAt);
-      await renderContentAndAttachListeners(cached.data);
-      return;
-    }
-
     var res = await fetch(API_URL(encounterId), {
       signal: currentController.signal,
       headers: { 'accept': 'application/json' }
@@ -662,24 +653,17 @@ async function fetchAndDisplayRankings(name, encounterId) {
     var serverTs = data.cachedAt || (new Date()).toISOString();
     writeCache(encounterId, data, serverTs);
     updateLastUpdated(serverTs);
-    await renderContentAndAttachListeners(data);
+    renderContent(data, encounterId);
 
   } catch (err) {
     if (err && err.name === 'AbortError') return;
     console.error('Failed to fetch rankings:', err);
-
-    var cached = readCache(encounterId);
-    if (cached) {
-      updateLastUpdated(cached.cachedAt || (cached.data && cached.data.cachedAt));
-      await renderContentAndAttachListeners(cached.data);
-    } else {
-      if (rankingsDiv) {
-        rankingsDiv.innerHTML = '<div style="text-align:center;color:red;margin-top:16px;">Couldn\'t load data for ' + name + '. Please try again later.</div>';
-      }
-      updateLastUpdated(null);
-      var el = document.querySelector('.talent-sidebar .talent-summary');
-      if (el) el.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
+    if (rankingsDiv) {
+      rankingsDiv.innerHTML = '<div style="text-align:center;color:red;margin-top:16px;">Couldn\'t load data for ' + name + '. Please try again later.</div>';
     }
+    updateLastUpdated(null);
+    var el = document.querySelector('.talent-sidebar .talent-summary');
+    if (el) el.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 2rem; font-style: italic;">Failed to load talent data</div>';
   } finally {
     currentController = null;
   }

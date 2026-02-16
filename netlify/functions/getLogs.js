@@ -115,7 +115,8 @@ exports.handler = async function(event, context) {
       statusCode: 200,
       headers: {
         ...headers,
-        'Cache-Control': 'public, max-age=300' // 5 minutes instead of 6 hours for better refresh
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
+        'CDN-Cache-Control': 'public, max-age=300, stale-while-revalidate=3600'
       },
       body: JSON.stringify(processedData)
     };
