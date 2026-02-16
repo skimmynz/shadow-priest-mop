@@ -93,20 +93,10 @@
 .hero-title {
   font-size: clamp(3rem, 6vw, 5.5rem);
   font-weight: 900;
-  background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 25%, #7c3aed 50%, #6d28d9 75%, #a78bfa 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #a78bfa;
   letter-spacing: .08em;
   line-height: 1;
   margin-bottom: .5rem;
-  animation: gradShift 8s ease infinite;
-}
-
-@keyframes gradShift {
-  0%, 100% { background-position: 0% 50%; }
-  50%      { background-position: 100% 50%; }
 }
 
 .hero-subtitle {
