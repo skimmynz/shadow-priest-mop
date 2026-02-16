@@ -305,47 +305,6 @@ body {
   color: var(--text-secondary);
 }
 
-/* Sort Toggle Buttons */
-.sort-toggles {
-  display: flex;
-  gap: 4px;
-}
-
-.sort-btn {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border-color);
-  background: var(--secondary-bg);
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.sort-btn:hover {
-  border-color: var(--border-hover);
-  color: var(--text-secondary);
-  background: var(--hover-bg);
-}
-
-.sort-btn.active {
-  background: var(--accent-color);
-  border-color: var(--accent-color);
-  color: #fff;
-}
-
-.sort-arrow {
-  font-size: 0.625rem;
-  line-height: 1;
-  transition: transform 0.2s ease;
-}
-
 /* =================================================================
    Main Grid Layout (sidebar removed — now 2 columns)
    ================================================================= */
@@ -499,6 +458,30 @@ a.wowhead del {
   padding: 0 8px;
 }
 
+.rank-table-header [data-sort] {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s ease;
+}
+
+.rank-table-header [data-sort]:hover {
+  color: var(--text-primary);
+}
+
+.rank-table-header [data-sort].active-sort {
+  color: var(--accent-hover);
+}
+
+.rank-table-header .sort-arrow {
+  font-size: 0.625rem;
+  margin-left: 2px;
+  opacity: 0.6;
+}
+
+.rank-table-header [data-sort].active-sort .sort-arrow {
+  opacity: 1;
+}
+
 .rank-table-header .col-dps {
   text-align: right;
 }
@@ -600,10 +583,6 @@ a.wowhead del {
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: #e6ff00;
-}
-
-.dps-bar {
-  display: none;
 }
 
 /* Time, iLvl, Date */
@@ -1053,17 +1032,6 @@ a.wowhead del {
 
   .toolbar-right .toolbar-sort {
     width: 100%;
-  }
-
-  .sort-toggles {
-    width: 100%;
-  }
-
-  .sort-btn {
-    flex: 1;
-    justify-content: center;
-    padding: 8px 6px;
-    font-size: 0.6875rem;
   }
 
   /* Grid: only show #, Player, DPS, Talents */

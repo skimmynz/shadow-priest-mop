@@ -130,10 +130,10 @@ class OptimizedRenderer {
     var header = '<div class="rank-table-header">' +
       '<span class="col-rank">#</span>' +
       '<span class="col-name">Player</span>' +
-      '<span class="col-ilvl">iLvl</span>' +
-      '<span class="col-dps">DPS</span>' +
-      '<span class="col-date">Date</span>' +
-      '<span class="col-time">Time</span>' +
+      '<span class="col-ilvl" data-sort="ilvl">iLvl <span class="sort-arrow"></span></span>' +
+      '<span class="col-dps" data-sort="dps">DPS <span class="sort-arrow"></span></span>' +
+      '<span class="col-date" data-sort="date">Date <span class="sort-arrow"></span></span>' +
+      '<span class="col-time" data-sort="duration">Time <span class="sort-arrow"></span></span>' +
       '<span class="col-talents">Talents</span>' +
       '<span class="col-trinkets">Trinkets</span>' +
       '</div>';
@@ -162,7 +162,7 @@ class OptimizedRenderer {
       '<span class="col-rank">' + rank + '</span>' +
       '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + playerName + '</a><span class="player-server">' + server + '</span></span>' +
       '<span class="col-ilvl">' + itemLevel + '</span>' +
-      '<span class="col-dps"><span class="dps-bar" style="width:' + (typeof dps === 'number' && maxDps > 0 ? Math.round((dps / maxDps) * 100) : 0) + '%"></span><span class="dps-value">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span></span>' +
+      '<span class="col-dps">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span>' +
       '<span class="col-date">' + killDate + '</span>' +
       '<span class="col-time">' + duration + '</span>' +
       '<span class="col-talents">' + perPlayerTalents + '</span>' +
@@ -601,6 +601,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
 
     domBatcher.schedule('rankings', function() {
       if (rankingsDiv) rankingsDiv.innerHTML = finalRankingsHTML;
+      updateHeaderSortIndicators();
       // Re-apply filters after rendering
       applyFiltersAndSort();
     });
@@ -744,35 +745,41 @@ if (searchClear) {
     searchInput.focus();
   });
 }
-// Sort toggle buttons
-var sortTogglesEl = document.getElementById('sort-toggles');
+// Sort via column headers
 var defaultDirs = { dps: 'desc', ilvl: 'desc', duration: 'asc', date: 'desc' };
 
-function resetSortToggles() {
-  if (!sortTogglesEl) return;
-  var btns = sortTogglesEl.querySelectorAll('.sort-btn');
-  for (var i = 0; i < btns.length; i++) {
-    var f = btns[i].getAttribute('data-sort');
-    btns[i].classList.toggle('active', f === 'dps');
-    btns[i].querySelector('.sort-arrow').textContent = defaultDirs[f] === 'desc' ? '\u25BC' : '\u25B2';
+function updateHeaderSortIndicators() {
+  if (!rankingsDiv) return;
+  var headers = rankingsDiv.querySelectorAll('.rank-table-header [data-sort]');
+  for (var i = 0; i < headers.length; i++) {
+    var field = headers[i].getAttribute('data-sort');
+    var arrow = headers[i].querySelector('.sort-arrow');
+    if (field === currentSortField) {
+      headers[i].classList.add('active-sort');
+      if (arrow) arrow.textContent = currentSortDir === 'desc' ? '\u25BC' : '\u25B2';
+    } else {
+      headers[i].classList.remove('active-sort');
+      if (arrow) arrow.textContent = '';
+    }
   }
 }
 
-if (sortTogglesEl) {
-  sortTogglesEl.addEventListener('click', function(e) {
-    var btn = e.target.closest('.sort-btn');
-    if (!btn) return;
-    var field = btn.getAttribute('data-sort');
+function resetSortToggles() {
+  updateHeaderSortIndicators();
+}
+
+if (rankingsDiv) {
+  rankingsDiv.addEventListener('click', function(e) {
+    var header = e.target.closest('.rank-table-header [data-sort]');
+    if (!header) return;
+    var field = header.getAttribute('data-sort');
     if (field === currentSortField) {
       currentSortDir = currentSortDir === 'desc' ? 'asc' : 'desc';
     } else {
       currentSortField = field;
       currentSortDir = defaultDirs[field];
-      var btns = sortTogglesEl.querySelectorAll('.sort-btn');
-      for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
-      btn.classList.add('active');
     }
-    btn.querySelector('.sort-arrow').textContent = currentSortDir === 'desc' ? '\u25BC' : '\u25B2';
+    updateHeaderSortIndicators();
     applyFiltersAndSort();
   });
 }
