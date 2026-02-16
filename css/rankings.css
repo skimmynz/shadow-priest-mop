@@ -851,36 +851,44 @@ a.wowhead del {
 }
 
 /* =================================================================
-   Parsing Rules (toolbar pill)
+   Parsing Rules Box
    ================================================================= */
-.toolbar-parsing-rules {
-  flex-shrink: 1;
-  min-width: 0;
+.parsing-rules-box {
+  margin-bottom: 10px;
+}
+
+.parsing-rules-box:empty {
+  display: none;
 }
 
 .parsing-pill {
-  display: inline;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.parsing-pill.no-rules {
-  color: var(--text-muted);
-  font-style: italic;
+  display: none;
 }
 
 .parsing-pill.has-rules {
-  color: var(--warning-color);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-left: 3px solid var(--warning-color);
+  background: rgba(245, 158, 11, 0.06);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .parsing-pill.has-rules::before {
-  content: "\26A0\FE0F ";
+  content: "\26A0\FE0F";
+  flex-shrink: 0;
 }
 
 .parsing-sep {
   color: var(--text-muted);
-  margin: 0 2px;
+  margin: 0 3px;
+  font-size: 0.625rem;
+  vertical-align: middle;
 }
 
 /* =================================================================

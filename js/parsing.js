@@ -34,9 +34,9 @@ var PARSING_RULES = {
 };
 function renderParsingRules(encounterId) {
   var rules = PARSING_RULES[encounterId];
-  if (!rules) return '<span class="parsing-pill no-rules">No rules</span>';
+  if (!rules) return '';
   var meaningful = rules.rules.filter(function(r) { return !/^no rules\.?$/i.test(r.trim()); });
-  if (meaningful.length === 0) return '<span class="parsing-pill no-rules">No rules</span>';
+  if (meaningful.length === 0) return '';
   var items = meaningful.join(' <span class="parsing-sep">\u2022</span> ');
   return '<span class="parsing-pill has-rules">' + items + '</span>';
 }
