@@ -416,6 +416,7 @@ a.wowhead del {
 #rankings {
   --cols: 36px 1fr 52px 76px 68px 72px 170px 68px;
   margin-top: 0;
+  margin-bottom: 2rem;
   min-height: 400px;
 }
 
