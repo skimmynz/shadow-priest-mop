@@ -332,17 +332,13 @@
 }
 
 /* =================================================================
-   Main Grid Layout (sidebar removed — now 2 columns)
+   Page Grid Layout
    ================================================================= */
-.unified-container {
-  width: 100%;
-  margin: 0 auto;
-}
-
-.main-grid {
+.page-grid {
   display: grid;
   grid-template-columns: 320px 1fr 320px;
   gap: 0;
+  width: 100%;
 }
 
 /* Content area */
@@ -917,7 +913,7 @@ a.wowhead del {
    ================================================================= */
 /* ----- Tablet (≤1024px): single column stacked layout ----- */
 @media (max-width: 1024px) {
-  .main-grid {
+  .page-grid {
     grid-template-columns: 1fr;
   }
 

@@ -102,51 +102,49 @@
     </div>
   </nav>
 
-  <div class="unified-container">
-    <div class="main-grid">
-      <nav class="raid-nav" id="raid-nav" aria-label="Raid and boss selection"></nav>
-      <main class="content-area">
-        <h1 class="sr-only">Shadow Priest Top 100 Rankings – MoP Classic</h1>
-        <!-- ═══ Toolbar (search + sort) ═══ -->
-        <div class="toolbar" id="toolbar">
-          <div class="toolbar-search">
-            <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" id="search-input" class="toolbar-search-input" placeholder="Search player..." autocomplete="off" />
-            <button class="toolbar-search-clear" id="search-clear" aria-label="Clear search" style="display:none;">✕</button>
-          </div>
-          <div class="last-updated" id="last-updated" role="status" aria-live="polite">
-            Loading last updated…
-          </div>
-          <div class="toolbar-right">
-            <div class="toolbar-result-count" id="toolbar-result-count"></div>
-            <select id="region-filter" class="toolbar-sort" aria-label="Filter by region">
-              <option value="">Region: All</option>
-            </select>
-          </div>
+  <div class="page-grid">
+    <nav class="raid-nav" id="raid-nav" aria-label="Raid and boss selection"></nav>
+    <main class="content-area">
+      <h1 class="sr-only">Shadow Priest Top 100 Rankings – MoP Classic</h1>
+      <!-- ═══ Toolbar (search + sort) ═══ -->
+      <div class="toolbar" id="toolbar">
+        <div class="toolbar-search">
+          <svg class="toolbar-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="text" id="search-input" class="toolbar-search-input" placeholder="Search player..." autocomplete="off" />
+          <button class="toolbar-search-clear" id="search-clear" aria-label="Clear search" style="display:none;">✕</button>
         </div>
+        <div class="last-updated" id="last-updated" role="status" aria-live="polite">
+          Loading last updated…
+        </div>
+        <div class="toolbar-right">
+          <div class="toolbar-result-count" id="toolbar-result-count"></div>
+          <select id="region-filter" class="toolbar-sort" aria-label="Filter by region">
+            <option value="">Region: All</option>
+          </select>
+        </div>
+      </div>
 
-        <div class="parsing-rules-box" id="sidebar-parsing-rules"></div>
+      <div class="parsing-rules-box" id="sidebar-parsing-rules"></div>
 
-        <section id="rankings">
-        </section>
-      </main>
-      
-      <aside class="talent-sidebar" id="talents">
-        <h3>Popular Talents</h3>
-        <div class="talent-summary">
-          <div style="text-align: center; color: #6b7280; padding: 2rem; font-style: italic;">
-            Select a boss to view talent data
-          </div>
+      <section id="rankings">
+      </section>
+    </main>
+
+    <aside class="talent-sidebar" id="talents">
+      <h3>Popular Talents</h3>
+      <div class="talent-summary">
+        <div style="text-align: center; color: #6b7280; padding: 2rem; font-style: italic;">
+          Select a boss to view talent data
         </div>
-        <div class="trinket-summary-section">
-          <h3>Popular Trinkets</h3>
-          <div class="trinket-summary" id="trinket-summary"></div>
-        </div>
-      </aside>
-    </div>
+      </div>
+      <div class="trinket-summary-section">
+        <h3>Popular Trinkets</h3>
+        <div class="trinket-summary" id="trinket-summary"></div>
+      </div>
+    </aside>
   </div>
   <script src="js/nav.js"></script>
   <script src="js/tiers.js" defer></script>
