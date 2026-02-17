@@ -15,3 +15,8 @@
   from = "/addons"
   to = "/addons.html"
   status = 200
+
+[[redirects]]
+  from = "/guide"
+  to = "/guide.html"
+  status = 200
