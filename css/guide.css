@@ -216,6 +216,11 @@
   object-fit: cover;
 }
 
+/* Prevent Wowhead iconizeLinks from injecting icons into talent grid cells */
+.talent-cell ins {
+  display: contents !important;
+}
+
 .talent-cell.active {
   opacity: 1;
   filter: none;
