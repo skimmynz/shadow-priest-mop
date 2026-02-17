@@ -265,6 +265,10 @@
   line-height: 1.5;
 }
 
+.talent-tier-text p a {
+  color: #ffd100;
+}
+
 .talent-boss-note {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
