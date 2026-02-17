@@ -1,0 +1,227 @@
+/* ═══════════════════════════════════════════════════════
+   Guide Page — css/guide.css
+   Depends on css/base.css (tokens + nav)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Hero / Video Section ────────────────────────────── */
+.guide-hero {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 3rem 2rem 1rem;
+  text-align: center;
+}
+
+.guide-subtitle {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.guide-video-card {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.guide-video-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.guide-video {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  background: var(--card-bg);
+}
+
+.guide-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ── Tab Section ─────────────────────────────────────── */
+.guide-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+
+.guide-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1.5rem 0;
+}
+
+.guide-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.guide-tab:hover {
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--text-accent);
+  border-color: rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.guide-tab.active {
+  background: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+}
+
+.guide-tab svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Content Panels ──────────────────────────────────── */
+.guide-panel {
+  display: none;
+}
+
+.guide-panel.active {
+  display: block;
+  animation: guideTabFadeUp 0.2s ease;
+}
+
+@keyframes guideTabFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.guide-panel-body {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.guide-panel-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.guide-panel-title svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-accent);
+}
+
+.guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.guide-list li {
+  padding: 0.4rem 0 0.4rem 1.25rem;
+  position: relative;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  font-size: 0.9rem;
+}
+
+.guide-list li::before {
+  content: "\25B8";
+  position: absolute;
+  left: 0;
+  color: var(--text-accent);
+  font-size: 0.9rem;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .guide-hero {
+    padding: 2rem 1.25rem 0.75rem;
+  }
+
+  .guide-content {
+    padding: 0 1.25rem 3rem;
+  }
+
+  .guide-tabs {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    padding: 1.25rem 0;
+    gap: 0.4rem;
+    scrollbar-width: none;
+  }
+
+  .guide-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .guide-tab {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .guide-panel-body {
+    padding: 1.25rem 1rem;
+    border-radius: 12px;
+  }
+
+  .guide-panel-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .guide-hero {
+    padding: 1.5rem 1rem 0.5rem;
+  }
+
+  .guide-content {
+    padding: 0 1rem 2.5rem;
+  }
+
+  .guide-subtitle {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .guide-panel-body {
+    padding: 1rem 0.875rem;
+  }
+
+  .guide-list li {
+    font-size: 0.85rem;
+  }
+}
