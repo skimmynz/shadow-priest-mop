@@ -246,11 +246,11 @@
 .talent-explain-name {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-accent);
+  color: #ffd100;
 }
 
 .talent-explain-name a {
-  color: inherit;
+  color: #ffd100;
   text-decoration: none;
 }
 
