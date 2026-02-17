@@ -59,13 +59,20 @@
 
 .guide-tabs {
   display: flex;
-  flex-wrap: wrap;
   gap: 0.5rem;
   justify-content: center;
   padding: 1.5rem 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.guide-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .guide-tab {
+  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -172,23 +179,12 @@
   }
 
   .guide-tabs {
-    flex-wrap: nowrap;
     justify-content: flex-start;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
     padding: 1.25rem 0;
     gap: 0.4rem;
-    scrollbar-width: none;
-  }
-
-  .guide-tabs::-webkit-scrollbar {
-    display: none;
   }
 
   .guide-tab {
-    flex-shrink: 0;
-    scroll-snap-align: start;
     padding: 0.5rem 1rem;
     font-size: 0.8125rem;
   }
