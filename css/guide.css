@@ -420,6 +420,12 @@
   font-size: 0.85rem;
 }
 
+.boss-tips a {
+  color: #ffd100;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .boss-rules {
   margin: 0.5rem 0 0;
   padding: 0.5rem 0.75rem;
