@@ -283,6 +283,108 @@
   color: var(--text-accent);
 }
 
+/* ── Boss Accordion (T15 Tips) ──────────────────────── */
+.boss-wing-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin: 1.5rem 0 0.5rem;
+}
+
+.boss-wing-label:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.boss-accordion {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.boss-accordion:last-of-type {
+  border-bottom: none;
+}
+
+.boss-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease;
+  border-radius: 6px;
+}
+
+.boss-accordion-header:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.boss-accordion-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.boss-accordion-chevron {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.boss-accordion-header.active .boss-accordion-chevron {
+  transform: rotate(0deg);
+}
+
+.boss-accordion-header:not(.active) .boss-accordion-chevron {
+  transform: rotate(-90deg);
+}
+
+.boss-accordion-body {
+  display: none;
+  padding: 0 0.5rem 0.75rem;
+}
+
+.boss-accordion-body.active {
+  display: block;
+}
+
+.boss-tips {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.boss-tips li {
+  padding: 0.3rem 0 0.3rem 1.25rem;
+  position: relative;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.85rem;
+}
+
+.boss-tips li::before {
+  content: "\25B8";
+  position: absolute;
+  left: 0;
+  color: var(--text-accent);
+  font-size: 0.85rem;
+}
+
+.boss-rules {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+  border-left: 2px solid var(--border-color);
+  line-height: 1.5;
+}
+
 /* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .guide-hero {

@@ -521,6 +521,15 @@
         if (panel) panel.classList.add('active');
       });
     });
+
+    document.querySelectorAll('.boss-accordion-header').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var body = btn.nextElementSibling;
+        var isOpen = btn.classList.contains('active');
+        btn.classList.toggle('active', !isOpen);
+        body.classList.toggle('active', !isOpen);
+      });
+    });
   </script>
 </body>
 </html>
