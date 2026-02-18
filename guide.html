@@ -113,9 +113,9 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         Rotation
       </button>
-      <button class="guide-tab" data-tab="gear" role="tab" aria-selected="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-        Gear
+      <button class="guide-tab" data-tab="macros" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Macros
       </button>
       <button class="guide-tab" data-tab="glyphs" role="tab" aria-selected="false">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -241,18 +241,57 @@
       </div>
     </div>
 
-    <div class="guide-panel" data-panel="gear" role="tabpanel">
+    <div class="guide-panel" data-panel="macros" role="tabpanel">
       <div class="guide-panel-body">
         <h2 class="guide-panel-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          Gear &amp; Best in Slot
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Macros
         </h2>
-        <ul class="guide-list">
-          <li>Placeholder — Head: Hood of the Crimson Wake (Heroic) — Throne of Thunder.</li>
-          <li>Placeholder — Trinket 1: Wushoolay's Final Choice (Heroic) — priority loot.</li>
-          <li>Placeholder — Trinket 2: Cha-Ye's Essence of Brilliance (Heroic) — strong on-use synergy.</li>
-          <li>Placeholder — 4-piece T15 set bonus is mandatory; do not break it for item level upgrades.</li>
-        </ul>
+        <div class="macro-grid">
+          <div class="macro-card">
+            <h3 class="macro-name">CDs</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast Berserking
+/cast Power Infusion
+/use 10
+/use 13
+/use 14</code></pre>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Shadowfiend</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast Shadowfiend
+/cleartarget [dead][noharm]
+/targetenemy [noexists]
+/petattack</code></pre>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">SWD</h3>
+            <pre class="macro-code"><code>#showtooltip Shadow Word: Death
+/cleartarget [dead][noharm]
+/targetenemy [noexists]
+/cast [stance] Shadow Word: Death; [nostance] Shadowform
+/cast Shadow Word: Death</code></pre>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Tier 6 Talent</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast [talent:6/1]Cascade
+/cast [talent:6/2]Divine Star
+/cast [talent:6/3]Halo</code></pre>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Dispersion</h3>
+            <pre class="macro-code"><code>#showtooltip Dispersion
+/cast Dispersion
+/cancelaura Dispersion</code></pre>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Feather</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast [@player] Angelic Feather</code></pre>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -311,6 +350,7 @@
         <h3 class="boss-wing-label">Last Stand of the Zandalari</h3>
         <div class="boss-accordion">
           <button class="boss-accordion-header active" data-boss="jinrokh">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1577-icon.jpg" alt="">
             <span class="boss-accordion-name">Jin'rokh the Breaker</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -326,6 +366,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="horridon">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1575-icon.jpg" alt="">
             <span class="boss-accordion-name">Horridon</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -341,6 +382,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="council">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1570-icon.jpg" alt="">
             <span class="boss-accordion-name">Council of Elders</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -358,6 +400,7 @@
         <h3 class="boss-wing-label">Forgotten Depths</h3>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="tortos">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1565-icon.jpg" alt="">
             <span class="boss-accordion-name">Tortos</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -372,6 +415,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="megaera">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1578-icon.jpg" alt="">
             <span class="boss-accordion-name">Megaera</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -386,6 +430,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="jikun">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1573-icon.jpg" alt="">
             <span class="boss-accordion-name">Ji-Kun</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -403,6 +448,7 @@
         <h3 class="boss-wing-label">Halls of Flesh-Shaping</h3>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="durumu">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1572-icon.jpg" alt="">
             <span class="boss-accordion-name">Durumu the Forgotten</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -416,6 +462,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="primordius">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1574-icon.jpg" alt="">
             <span class="boss-accordion-name">Primordius</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -430,6 +477,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="darkanimus">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1576-icon.jpg" alt="">
             <span class="boss-accordion-name">Dark Animus</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -447,6 +495,7 @@
         <h3 class="boss-wing-label">Pinnacle of Storms</h3>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="ironqon">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1559-icon.jpg" alt="">
             <span class="boss-accordion-name">Iron Qon</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -461,6 +510,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="consorts">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1560-icon.jpg" alt="">
             <span class="boss-accordion-name">Twin Empyreans</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -475,6 +525,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="leishen">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1579-icon.jpg" alt="">
             <span class="boss-accordion-name">Lei Shen</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>
@@ -489,6 +540,7 @@
         </div>
         <div class="boss-accordion">
           <button class="boss-accordion-header" data-boss="raden">
+            <img class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1580-icon.jpg" alt="">
             <span class="boss-accordion-name">Ra-den</span>
             <span class="boss-accordion-chevron">▾</span>
           </button>

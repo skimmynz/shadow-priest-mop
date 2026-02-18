@@ -283,6 +283,44 @@
   color: var(--text-accent);
 }
 
+/* ── Macros ──────────────────────────────────────────── */
+.macro-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.macro-card {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.macro-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffd100;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--border-color);
+  margin: 0;
+}
+
+.macro-code {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.macro-code code {
+  font-family: inherit;
+}
+
 /* ── Boss Accordion (T15 Tips) ──────────────────────── */
 .boss-wing-label {
   font-size: 0.7rem;
@@ -308,7 +346,7 @@
 .boss-accordion-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 0.625rem;
   width: 100%;
   padding: 0.75rem 0.5rem;
   background: none;
@@ -323,10 +361,18 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
+.boss-accordion-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .boss-accordion-name {
   font-size: 0.95rem;
   font-weight: 700;
   color: var(--text-primary);
+  flex: 1;
 }
 
 .boss-accordion-chevron {
@@ -424,6 +470,10 @@
   .talent-cell {
     width: 42px;
     height: 42px;
+  }
+
+  .macro-grid {
+    grid-template-columns: 1fr;
   }
 }
 
