@@ -232,7 +232,7 @@
 .rot-loop a[href*="/item="],
 .rot-note a[href*="/item="],
 .rot-goal a[href*="/item="] {
-  color: unset;
+  color: unset !important;
   font-weight: 700;
   text-decoration: none;
 }
@@ -644,6 +644,35 @@
   .macro-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Rotation — tighten numbered badge rows */
+  .rot-steps li,
+  .rot-priority li {
+    font-size: 0.85rem;
+    gap: 0.5rem;
+  }
+
+  .rot-section-heading {
+    font-size: 0.9rem;
+    margin-top: 1.25rem;
+  }
+
+  .rot-rule,
+  .rot-loop,
+  .rot-note {
+    font-size: 0.82rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  /* Boss accordion — allow name to wrap */
+  .boss-accordion-name {
+    font-size: 0.85rem;
+  }
+
+  .boss-accordion-icon {
+    width: 28px;
+    height: 28px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -687,5 +716,45 @@
     width: 38px;
     height: 38px;
     border-radius: 6px;
+  }
+
+  /* Rotation — numbered counter shrinks */
+  .rot-steps li::before,
+  .rot-priority li::before {
+    min-width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.7rem;
+  }
+
+  .rot-steps li,
+  .rot-priority li {
+    font-size: 0.82rem;
+    gap: 0.45rem;
+  }
+
+  .rot-rule,
+  .rot-loop,
+  .rot-note {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.625rem;
+  }
+
+  /* Boss accordion — stack icon tighter on small phones */
+  .boss-accordion-header {
+    gap: 0.5rem;
+    padding: 0.5rem 0.625rem;
+  }
+
+  .boss-accordion-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .boss-accordion-name {
+    font-size: 0.82rem;
+  }
+
+  .boss-tips li {
+    font-size: 0.8rem;
   }
 }
