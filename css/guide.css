@@ -426,7 +426,8 @@
   text-decoration: none;
 }
 
-.boss-tips a[href*="/item="] {
+.boss-tips a[href*="/item="],
+.boss-tips a[href*="/npc="] {
   font-weight: 700;
   text-decoration: none;
 }
