@@ -226,6 +226,17 @@
   text-decoration: none;
 }
 
+.rot-steps a[href*="/item="],
+.rot-priority a[href*="/item="],
+.rot-rule a[href*="/item="],
+.rot-loop a[href*="/item="],
+.rot-note a[href*="/item="],
+.rot-goal a[href*="/item="] {
+  color: unset;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .rot-note {
   font-size: 0.85rem;
   color: var(--text-muted);
