@@ -215,12 +215,18 @@
   flex-shrink: 0;
 }
 
-.rot-steps a,
-.rot-priority a,
-.rot-rule a,
-.rot-loop a,
-.rot-note a,
-.rot-goal a {
+.rot-steps a[href*="/spell="],
+.rot-priority a[href*="/spell="],
+.rot-rule a[href*="/spell="],
+.rot-loop a[href*="/spell="],
+.rot-note a[href*="/spell="],
+.rot-goal a[href*="/spell="],
+.rot-steps a[href*="/npc="],
+.rot-priority a[href*="/npc="],
+.rot-rule a[href*="/npc="],
+.rot-loop a[href*="/npc="],
+.rot-note a[href*="/npc="],
+.rot-goal a[href*="/npc="] {
   color: #ffd100 !important;
   font-weight: 700;
   text-decoration: none;
@@ -232,7 +238,6 @@
 .rot-loop a[href*="/item="],
 .rot-note a[href*="/item="],
 .rot-goal a[href*="/item="] {
-  color: unset !important;
   font-weight: 700;
   text-decoration: none;
 }
