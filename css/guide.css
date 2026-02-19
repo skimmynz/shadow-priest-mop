@@ -267,6 +267,25 @@
   margin: 0 0 0.4rem;
 }
 
+.rot-priority-desc {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.rot-priority-desc a[href*="/spell="],
+.rot-priority-desc a[href*="/npc="] {
+  color: #ffd100 !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.rot-priority-desc a[href*="/item="] {
+  font-weight: 700;
+  text-decoration: none;
+}
+
 .rot-rule {
   font-size: 0.88rem;
   color: var(--text-secondary);
