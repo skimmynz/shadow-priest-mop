@@ -169,20 +169,59 @@
 }
 
 /* ── Rotation ────────────────────────────────────────── */
-.rot-prepull-tag {
-  display: inline-block;
-  font-size: 0.65rem;
+.rot-prepull-block {
+  background: rgba(124, 58, 237, 0.06);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  border-left: 3px solid var(--text-accent);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.rot-prepull-heading {
+  display: block;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.1rem 0.4rem;
-  border-radius: 3px;
-  background: rgba(124, 58, 237, 0.15);
-  border: 1px solid rgba(124, 58, 237, 0.35);
+  letter-spacing: 0.08em;
   color: var(--text-accent);
-  margin-right: 0.4rem;
-  vertical-align: middle;
+  margin-bottom: 0.5rem;
+}
+
+.rot-prepull-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rot-prepull-list li {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   line-height: 1.6;
+  padding-left: 1rem;
+  position: relative;
+}
+
+.rot-prepull-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--text-accent);
+}
+
+.rot-prepull-list a[href*="/spell="],
+.rot-prepull-list a[href*="/npc="] {
+  color: #ffd100 !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.rot-prepull-list a[href*="/item="] {
+  font-weight: 700;
+  text-decoration: none;
 }
 
 .rot-section-heading {
