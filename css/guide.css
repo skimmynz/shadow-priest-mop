@@ -347,6 +347,16 @@
   padding-left: 0 !important;
 }
 
+/* Suppress Wowhead icons in rotation lists — keeps layout clean, tooltips still work */
+.rot-steps a.icontinyl,
+.rot-priority a.icontinyl,
+.rot-rule a.icontinyl,
+.rot-note a.icontinyl,
+.rot-goal a.icontinyl {
+  background-image: none !important;
+  padding-left: 0 !important;
+}
+
 .talent-cell.active {
   opacity: 1;
   filter: none;
