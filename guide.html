@@ -669,7 +669,7 @@
     document.querySelectorAll('.macro-code code').forEach(function(code) {
       var html = code.innerHTML;
       html = html.replace(/(#showtooltip[^\n]*)/g, '<span class="mc-comment">$1</span>');
-      html = html.replace(/(\/\w+)/g, '<span class="mc-cmd">$1</span>');
+      html = html.replace(/^(\/\w+)/gm, '<span class="mc-cmd">$1</span>');
       html = html.replace(/(\[[^\]]+\])/g, '<span class="mc-cond">$1</span>');
       code.innerHTML = html;
     });
