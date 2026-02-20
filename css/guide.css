@@ -517,6 +517,49 @@
   font-family: inherit;
 }
 
+.macro-desc {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  border-top: 1px solid var(--border-color);
+}
+
+.macro-desc a[href*="/npc="],
+.macro-desc a[href*="/spell="] {
+  color: #ffd100 !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.macro-desc a[href*="/item="] {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.macro-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.35rem;
+}
+
+.macro-slots span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.macro-slots code {
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  padding: 0.05rem 0.35rem;
+  color: var(--text-secondary);
+}
+
 /* ── Boss Accordion (T15 Tips) ──────────────────────── */
 .boss-wing-label {
   font-size: 0.7rem;
