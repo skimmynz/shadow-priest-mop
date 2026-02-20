@@ -582,9 +582,12 @@
 }
 
 .macro-slots span {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  display: block;
+  line-height: 1.7;
+}
+
+.macro-slots span code {
+  margin-right: 0.3rem;
 }
 
 .macro-slots code {
@@ -595,11 +598,6 @@
   border-radius: 3px;
   padding: 0.05rem 0.35rem;
   color: var(--text-secondary);
-}
-
-.macro-slots a.icontinyl {
-  background-image: none !important;
-  padding-left: 0 !important;
 }
 
 /* ── Boss Accordion (T15 Tips) ──────────────────────── */
