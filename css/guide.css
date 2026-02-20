@@ -749,6 +749,22 @@
   text-decoration: none;
 }
 
+.stats-haste-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem 0.625rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.stats-haste-link:hover {
+  color: var(--text-accent);
+}
+
 .stats-sim-cta {
   display: flex;
   align-items: center;

@@ -204,5 +204,12 @@ document.getElementById('berserking').addEventListener('change', calculateHaste)
 document.getElementById('bloodlust').addEventListener('change', calculateHaste);
 document.getElementById('sinisterPrimal').addEventListener('change', calculateHaste);
 
+// Prefill from URL param (?rating=15294)
+var params = new URLSearchParams(window.location.search);
+var prefill = params.get('rating');
+if (prefill && /^\d{1,5}$/.test(prefill)) {
+  hasteInput.value = prefill;
+}
+
 // Init
 calculateHaste();
