@@ -574,11 +574,6 @@
   text-decoration: none;
 }
 
-.macro-desc a.icontinyl {
-  background-image: none !important;
-  padding-left: 0 !important;
-}
-
 .macro-slots {
   display: flex;
   flex-direction: column;
