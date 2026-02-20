@@ -317,7 +317,7 @@
 /cleartarget [dead][noharm]
 /targetenemy [noexists]
 /petattack</code></pre>
-            <p class="macro-desc">Casts <a href="https://www.wowhead.com/mop-classic/spell=34433">Shadowfiend</a> and forces it to attack your target. Automatically switches to a new enemy if your current target is already dead.</p>
+            <p class="macro-desc">Casts <a href="https://www.wowhead.com/mop-classic/spell=34433">Shadowfiend</a> and forces it to attack your target. If your current target is already dead, pressing it again automatically switches to a new enemy.</p>
           </div>
           <div class="macro-card">
             <h3 class="macro-name">SWD</h3>
@@ -625,6 +625,25 @@
         btn.classList.toggle('active', !isOpen);
         body.classList.toggle('active', !isOpen);
       });
+    });
+
+    document.querySelectorAll('.macro-code').forEach(function(pre) {
+      var wrap = document.createElement('div');
+      wrap.className = 'macro-code-wrap';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+      var btn = document.createElement('button');
+      btn.className = 'macro-copy-btn';
+      btn.textContent = 'Copy';
+      btn.addEventListener('click', function() {
+        var text = (pre.querySelector('code') || pre).innerText;
+        navigator.clipboard.writeText(text).then(function() {
+          btn.textContent = 'Copied!';
+          btn.classList.add('copied');
+          setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+        });
+      });
+      wrap.insertBefore(btn, pre);
     });
 
     var expandBtn = document.getElementById('bossExpandAll');

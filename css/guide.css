@@ -484,6 +484,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+  align-items: start;
 }
 
 .macro-card {
@@ -491,6 +492,8 @@
   border: 1px solid var(--border-color);
   border-radius: 10px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .macro-name {
@@ -498,13 +501,47 @@
   font-weight: 700;
   color: #ffd100;
   padding: 0.625rem 0.875rem;
+  background: rgba(255, 255, 255, 0.03);
   border-bottom: 1px solid var(--border-color);
   margin: 0;
 }
 
+.macro-code-wrap {
+  position: relative;
+}
+
+.macro-copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  z-index: 1;
+}
+
+.macro-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+}
+
+.macro-copy-btn.copied {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #10b981;
+}
+
 .macro-code {
   margin: 0;
-  padding: 0.75rem 0.875rem;
+  padding: 1.25rem 0.875rem 0.75rem;
   font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
   font-size: 0.8rem;
   line-height: 1.6;
@@ -535,6 +572,11 @@
 .macro-desc a[href*="/item="] {
   font-weight: 700;
   text-decoration: none;
+}
+
+.macro-desc a.icontinyl {
+  background-image: none !important;
+  padding-left: 0 !important;
 }
 
 .macro-slots {
