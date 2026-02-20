@@ -481,10 +481,8 @@
 
 /* ── Macros ──────────────────────────────────────────── */
 .macro-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  align-items: start;
+  columns: 2;
+  column-gap: 1rem;
 }
 
 .macro-card {
@@ -494,14 +492,17 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  break-inside: avoid;
+  margin-bottom: 1rem;
 }
 
 .macro-name {
   font-size: 0.85rem;
   font-weight: 700;
   color: #ffd100;
-  padding: 0.625rem 0.875rem;
+  padding: 0.625rem 0.875rem 0.625rem calc(0.875rem - 3px);
   background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid #ffd100;
   border-bottom: 1px solid var(--border-color);
   margin: 0;
 }
@@ -525,6 +526,9 @@
   cursor: pointer;
   transition: all 0.15s ease;
   z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .macro-copy-btn:hover {
@@ -560,6 +564,7 @@
   color: var(--text-muted);
   line-height: 1.6;
   border-top: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.015);
 }
 
 .macro-desc a[href*="/npc="],
@@ -599,6 +604,9 @@
   padding: 0.05rem 0.35rem;
   color: var(--text-secondary);
 }
+
+.mc-cmd  { color: #c084fc; }
+.mc-cond { color: #67e8f9; }
 
 /* ── Stats ───────────────────────────────────────────── */
 .stats-grid {
@@ -919,7 +927,7 @@
   }
 
   .macro-grid {
-    grid-template-columns: 1fr;
+    columns: 1;
   }
 
   /* Rotation — tighten numbered badge rows */
