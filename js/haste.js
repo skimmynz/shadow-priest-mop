@@ -110,12 +110,14 @@ function updateSpellTable(effectiveHaste, isGoblin) {
     var nextBP = 'Maxed';
     var nextBPValue = null;
 
+    var nextBPRating = null;
     for (var i = 0; i < data.points.length; i++) {
       if (effectiveHaste >= data.points[i]) {
         extraTicks++;
       } else {
         nextBPValue = data.points[i];
-        nextBP = nextBPValue + '% (' + calculateRatingFromPercent(nextBPValue, isGoblin).toLocaleString() + ' rating)';
+        nextBPRating = calculateRatingFromPercent(nextBPValue, isGoblin);
+        nextBP = nextBPValue + '% (' + nextBPRating.toLocaleString() + ' rating)';
         break;
       }
     }
@@ -132,6 +134,13 @@ function updateSpellTable(effectiveHaste, isGoblin) {
     if (extraTicks > 3) ticksClass = 'high-ticks';
     else if (extraTicks > 0) ticksClass = 'has-ticks';
 
+    var breakpointContent = isMaxed
+      ? '<div class="breakpoint-text breakpoint-maxed">Maxed</div>'
+      : '<div class="breakpoint-text">' +
+          '<span class="bp-pct">' + nextBPValue + '%</span>' +
+          '<span class="bp-rating">' + nextBPRating.toLocaleString() + ' rating</span>' +
+        '</div>';
+
     spellsHTML +=
       '<div class="spell-row">' +
         '<div class="spell-info">' +
@@ -145,11 +154,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
         '<div class="base-ticks">' + baseTicks[spell] + ' ticks base</div>' +
         '<div class="ticks-badge ' + ticksClass + '">+' + extraTicks + ' tick' + (extraTicks !== 1 ? 's' : '') + '</div>' +
         '<div class="breakpoint-info">' +
-          '<div class="breakpoint-text-container">' +
-            '<div class="breakpoint-text ' + (isMaxed ? 'breakpoint-maxed' : '') + '">' +
-              nextBP +
-            '</div>' +
-          '</div>' +
+          breakpointContent +
           (!isMaxed
             ? '<div class="progress-container"><div class="progress-bar" style="width: ' + progressPercent + '%"></div></div>'
             : '') +
