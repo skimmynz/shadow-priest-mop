@@ -644,6 +644,14 @@
   text-decoration: underline;
 }
 
+.stats-source-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 4px;
+  border-radius: 3px;
+}
+
 .stats-table {
   width: 100%;
   border-collapse: collapse;
