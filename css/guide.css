@@ -597,6 +597,11 @@
   color: var(--text-secondary);
 }
 
+.macro-slots a.icontinyl {
+  background-image: none !important;
+  padding-left: 0 !important;
+}
+
 /* ── Boss Accordion (T15 Tips) ──────────────────────── */
 .boss-wing-label {
   font-size: 0.7rem;
