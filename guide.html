@@ -325,7 +325,7 @@
             <p class="macro-desc">Ensures you're in <a href="https://www.wowhead.com/mop-classic/spell=15473">Shadowform</a> before casting. Automatically retargets a new enemy if your current target is dead — useful for sniping low-health adds like <a href="https://www.wowhead.com/mop-classic/npc=69232/ball-lightning">Ball Lightning</a>.</p>
           </div>
           <div class="macro-card">
-            <h3 class="macro-name">Tier 6 Talent</h3>
+            <h3 class="macro-name">MOP</h3>
             <pre class="macro-code"><code>#showtooltip
 /cast [talent:6/1]Cascade
 /cast [talent:6/2]Divine Star
@@ -334,7 +334,7 @@
           </div>
           <div class="macro-card">
             <h3 class="macro-name">Dispersion</h3>
-            <pre class="macro-code"><code>#showtooltip Dispersion
+            <pre class="macro-code"><code>#showtooltip
 /cast Dispersion
 /cancelaura Dispersion</code></pre>
             <p class="macro-desc">Press once to activate <a href="https://www.wowhead.com/mop-classic/spell=47585">Dispersion</a>, press again to cancel.</p>
@@ -668,6 +668,7 @@
     });
     document.querySelectorAll('.macro-code code').forEach(function(code) {
       var html = code.innerHTML;
+      html = html.replace(/(#showtooltip[^\n]*)/g, '<span class="mc-comment">$1</span>');
       html = html.replace(/(\/\w+)/g, '<span class="mc-cmd">$1</span>');
       html = html.replace(/(\[[^\]]+\])/g, '<span class="mc-cond">$1</span>');
       code.innerHTML = html;

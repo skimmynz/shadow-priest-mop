@@ -605,6 +605,7 @@
   color: var(--text-secondary);
 }
 
+.mc-comment { color: #4b5563; }
 .mc-cmd  { color: #c084fc; }
 .mc-cond { color: #67e8f9; }
 
