@@ -600,6 +600,112 @@
   color: var(--text-secondary);
 }
 
+/* ── Stats ───────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.stats-block {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stats-block-heading {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-accent);
+  padding: 0.625rem 0.875rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--border-color);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stats-source {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0.4rem 0.875rem 0;
+  margin: 0;
+}
+
+.stats-source a {
+  color: var(--text-accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.stats-source a:hover {
+  text-decoration: underline;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.stats-table th {
+  text-align: left;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.stats-table td {
+  padding: 0.5rem 0.875rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.stats-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.stats-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.stats-pct {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.stats-row-highlight td {
+  color: #ffd100;
+  font-weight: 700;
+}
+
+.stats-note {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  padding: 0.5rem 0.875rem 0.75rem;
+  margin: 0;
+  border-top: 1px solid var(--border-color);
+  line-height: 1.55;
+}
+
+.stats-note a {
+  color: unset;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+@media (max-width: 600px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Boss Accordion (T15 Tips) ──────────────────────── */
 .boss-wing-label {
   font-size: 0.7rem;
