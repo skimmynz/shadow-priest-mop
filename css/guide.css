@@ -856,6 +856,7 @@
   text-decoration: underline;
 }
 
+
 @media (max-width: 600px) {
   .stats-grid {
     grid-template-columns: 1fr;
