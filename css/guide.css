@@ -838,23 +838,22 @@
   border-color: rgba(255, 209, 0, 0.6);
 }
 
-/* Note strip */
-.stats-mid-strip {
-  padding: 0.6rem 1rem;
-  border-top: 1px solid var(--border-color);
-}
-
-.stats-note {
-  font-size: 0.75rem;
+/* Inline caption under a stat row */
+.stat-bar-caption {
+  margin: 0.35rem 0 0;
+  font-size: 0.68rem;
   color: var(--text-muted);
-  margin: 0;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
-.stats-note a {
+.stat-bar-caption a {
   color: unset;
-  font-weight: 700;
+  font-weight: 600;
   text-decoration: none;
+}
+
+.stat-bar-caption a:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 600px) {
