@@ -729,6 +729,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 1.5rem;
   margin-bottom: 0.3rem;
 }
 
@@ -809,17 +810,32 @@
   color: #ffd100;
 }
 
-/* Hero highlight (Haste) */
+/* Hero highlight (Haste) — gold, mirrors Intellect */
 .stat-bar-row--hero .stat-bar-name {
-  color: var(--text-accent);
+  color: #ffd100;
+}
+
+.stat-bar-row--hero .stat-bar-fill {
+  background: #ffd100;
 }
 
 .stat-bar-row--hero .stat-bar-pct {
-  color: var(--text-accent);
+  color: #ffd100;
 }
 
 .stat-bar-row--hero .stat-bar-val {
-  color: var(--text-accent);
+  color: #ffd100;
+}
+
+.stat-bar-row--hero .stat-bar-link {
+  color: #ffd100;
+  border-color: rgba(255, 209, 0, 0.35);
+  background: rgba(255, 209, 0, 0.08);
+}
+
+.stat-bar-row--hero .stat-bar-link:hover {
+  background: rgba(255, 209, 0, 0.16);
+  border-color: rgba(255, 209, 0, 0.6);
 }
 
 /* Note strip */
