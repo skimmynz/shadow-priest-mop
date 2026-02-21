@@ -332,11 +332,11 @@ html { scroll-behavior: smooth; }
   border-top: 1px solid rgba(255,255,255,.06);
 }
 .weakaura-title {
-  font-size: .65rem;
+  font-size: .8rem;
   font-weight: 700;
   margin-bottom: .75rem;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
+  letter-spacing: .08em;
   color: var(--text-accent);
 }
 .weakaura-link {
@@ -710,7 +710,7 @@ html { scroll-behavior: smooth; }
   .table-header { padding: .875rem 1rem; }
   .table-title { font-size: 1rem; }
 
-  .weakaura-title { font-size: .6rem; }
+  .weakaura-title { font-size: .72rem; }
   .wago-import-btn { font-size: .75rem; padding: .55rem 1rem; }
 
   .breakpoint-explainer { padding: .875rem 1rem; }
