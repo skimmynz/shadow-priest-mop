@@ -859,8 +859,7 @@
 .stat-bar-caption a ins,
 .stat-bar-caption a del {
   text-decoration: none;
-  border: 0;
-  margin-right: 0.25em;
+  margin-right: 4px;
 }
 
 
