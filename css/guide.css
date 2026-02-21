@@ -743,14 +743,21 @@
 .stat-bar-link {
   display: inline-flex;
   align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.65rem;
+  font-weight: 600;
   color: var(--text-accent);
-  opacity: 0.6;
   text-decoration: none;
-  transition: opacity 0.15s;
+  border: 1px solid rgba(124, 58, 237, 0.35);
+  border-radius: 4px;
+  background: rgba(124, 58, 237, 0.08);
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .stat-bar-link:hover {
-  opacity: 1;
+  background: rgba(124, 58, 237, 0.16);
+  border-color: rgba(124, 58, 237, 0.6);
 }
 
 .stat-bar-track {
@@ -774,8 +781,9 @@
 }
 
 .stat-bar-pct {
-  font-size: 0.7rem;
-  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .stat-bar-val {
@@ -799,6 +807,19 @@
 
 .stat-bar-row--highlight .stat-bar-val {
   color: #ffd100;
+}
+
+/* Hero highlight (Haste) */
+.stat-bar-row--hero .stat-bar-name {
+  color: var(--text-accent);
+}
+
+.stat-bar-row--hero .stat-bar-pct {
+  color: var(--text-accent);
+}
+
+.stat-bar-row--hero .stat-bar-val {
+  color: var(--text-accent);
 }
 
 /* Note strip */
