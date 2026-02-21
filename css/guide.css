@@ -856,10 +856,10 @@
   text-decoration: underline;
 }
 
-.stat-bar-caption a ins,
-.stat-bar-caption a del {
-  text-decoration: none;
-  margin-right: 4px;
+.stat-bar-caption a.icontinyl {
+  background-size: 13px 13px !important;
+  padding-left: 15px;
+  background-position: left center;
 }
 
 
