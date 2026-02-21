@@ -617,20 +617,20 @@
   overflow: hidden;
 }
 
+/* Priority bar */
 .stats-priority {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 0.875rem;
+  padding: 0.7rem 1rem;
   border-bottom: 1px solid var(--border-color);
-  font-size: 0.85rem;
 }
 
 .stats-priority-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -638,17 +638,20 @@
 .stats-priority-chain {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
-  color: var(--text-secondary);
-  font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .stats-priority-arrow {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 400;
 }
 
+/* Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -667,15 +670,16 @@
   border-right: 1px solid var(--border-color);
 }
 
+/* Section headings */
 .stats-block-heading {
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: var(--text-primary);
-  padding: 0.625rem 0.875rem;
+  color: var(--text-muted);
+  padding: 0.6rem 1rem;
   border-bottom: 1px solid var(--border-color);
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }
 
 .stats-source-icon {
@@ -686,26 +690,18 @@
   border-radius: 3px;
 }
 
+/* Tables */
 .stats-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
 }
 
 .stats-table th {
-  text-align: left;
-  padding: 0.5rem 0.875rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border-color);
+  display: none;
 }
 
 .stats-table td {
-  padding: 0.5rem 0.875rem;
-  color: var(--text-secondary);
+  padding: 0.65rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -714,28 +710,44 @@
 }
 
 .stats-table tbody tr:hover td {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+/* Stat name — the label */
+.stats-stat-name {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* Value — the hero number */
+.stats-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
 }
 
 .stats-pct {
   color: var(--text-muted);
-  font-size: 0.8rem;
-}
-
-.stats-table td:nth-child(n+2),
-.stats-table th:nth-child(n+2) {
-  text-align: right;
-}
-
-.stats-row-highlight td {
-  color: #ffd100;
-  font-weight: 700;
-}
-
-.stats-note {
   font-size: 0.78rem;
+  text-align: right;
+  padding-left: 0.25rem;
+}
+
+/* Gold highlight row (Intellect) overrides val color only */
+.stats-row-highlight .stats-stat-name {
+  color: #ffd100;
+}
+.stats-row-highlight .stats-val {
+  color: #ffd100;
+}
+
+/* Crit note */
+.stats-note {
+  font-size: 0.75rem;
   color: var(--text-muted);
-  padding: 0.5rem 0.875rem 0.75rem;
+  padding: 0.6rem 1rem 0.5rem;
   margin: 0;
   border-top: 1px solid var(--border-color);
   line-height: 1.55;
