@@ -856,6 +856,10 @@
   text-decoration: underline;
 }
 
+.stat-bar-caption a ins {
+  margin-right: 0.25em;
+}
+
 
 @media (max-width: 600px) {
   .stats-grid {
