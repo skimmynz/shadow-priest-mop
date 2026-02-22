@@ -318,6 +318,83 @@
     container.removeAttribute('data-src');
   }
 
+  /* ── 3D character model viewer ─────────────────────── */
+
+  /*
+   * Uses Wowhead's ZamModelViewer (the same engine classicwowarmory.com uses).
+   * Assets are loaded via bypass-cors-policies.onrender.com to satisfy CORS.
+   *
+   * Character appearance values for Skimmyxo (Troll Priest):
+   *   race 8 = Troll, gender 1 = female
+   *   Adjust skin/face/hair/facialStyle to match the actual character.
+   *   items[] accepts { slot, displayId } pairs — leave empty for a base model.
+   */
+  var CHAR_MODEL = {
+    race: 8, gender: 1,
+    skin: 2, face: 1, hairStyle: 5, hairColor: 3, facialStyle: 0,
+    items: []
+  };
+
+  function initCharacterModel() {
+    var container = document.getElementById('charModelContainer');
+    if (!container) return;
+
+    var contentPath =
+      'https://bypass-cors-policies.onrender.com/' +
+      'https://wow.zamimg.com/modelviewer/live/';
+
+    function showFallback() {
+      container.innerHTML =
+        '<div class="model-fallback">' +
+          '<a href="https://classicwowarmory.com/character/US/arugal-au/skimmyxo' +
+             '?game_version=classic" target="_blank" rel="noopener">' +
+            'View on Classic WoW Armory →' +
+          '</a>' +
+        '</div>';
+    }
+
+    function loadScript(src, onload) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = onload;
+      s.onerror = showFallback;
+      document.head.appendChild(s);
+    }
+
+    function startViewer() {
+      loadScript(
+        'https://wow.zamimg.com/modelviewer/live/viewer/viewer.min.js',
+        function() {
+          if (typeof ZamModelViewer === 'undefined') { showFallback(); return; }
+
+          var loading = container.querySelector('.model-loading');
+          if (loading) loading.remove();
+
+          try {
+            new ZamModelViewer({
+              parent: container,
+              contentPath: contentPath,
+              type: 1,              // 1 = player character
+              id: CHAR_MODEL,
+              width: container.offsetWidth  || 340,
+              height: container.offsetHeight || 560
+            });
+          } catch (e) { showFallback(); }
+        }
+      );
+    }
+
+    // ZamModelViewer requires jQuery
+    if (window.jQuery) {
+      startViewer();
+    } else {
+      loadScript(
+        'https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js',
+        startViewer
+      );
+    }
+  }
+
   /* ── Character parse loader ────────────────────────── */
 
   var CHAR_CACHE_KEY = 'character-rankings-v1';
@@ -436,6 +513,7 @@
   function init() {
     render();
     initLazyStreams();
+    initCharacterModel();
     loadCharacterParses();
   }
 

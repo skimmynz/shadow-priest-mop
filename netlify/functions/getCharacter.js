@@ -28,9 +28,10 @@ exports.handler = async function(event) {
 
   try {
     // WarcraftLogs v1 character rankings — returns best parse per encounter.
+    // difficulty=4 (Heroic), size=25 — matches WarcraftLogs character page defaults.
     const url =
       `https://classic.warcraftlogs.com/v1/rankings/character/${CHAR}/${SERVER}/${REGION}` +
-      `?metric=dps&api_key=${apiKey}`;
+      `?metric=dps&difficulty=4&size=25&api_key=${apiKey}`;
 
     const res = await fetch(url, {
       timeout: 10000,
