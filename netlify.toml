@@ -20,3 +20,8 @@
   from = "/guide"
   to = "/guide.html"
   status = 200
+
+[[redirects]]
+  from = "/landing"
+  to = "/landing.html"
+  status = 200

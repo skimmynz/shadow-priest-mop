@@ -318,11 +318,125 @@
     container.removeAttribute('data-src');
   }
 
+  /* ── Character parse loader ────────────────────────── */
+
+  var CHAR_CACHE_KEY = 'character-rankings-v1';
+  var CHAR_CACHE_TTL = 30 * 60 * 1000; // 30 minutes
+
+  /* Boss order matches wing order above; short names for compact table */
+  var BOSS_ORDER = [
+    { enc: 51577, name: "Jin'rokh" },
+    { enc: 51575, name: 'Horridon' },
+    { enc: 51570, name: 'Council' },
+    { enc: 51565, name: 'Tortos' },
+    { enc: 51578, name: 'Megaera' },
+    { enc: 51573, name: 'Ji-Kun' },
+    { enc: 51572, name: 'Durumu' },
+    { enc: 51574, name: 'Primordius' },
+    { enc: 51576, name: 'Dark Animus' },
+    { enc: 51559, name: 'Iron Qon' },
+    { enc: 51560, name: 'Twins' },
+    { enc: 51579, name: 'Lei Shen' },
+    { enc: 51580, name: 'Ra-den' }
+  ];
+
+  function parsePctClass(pct) {
+    if (pct >= 100) return 'parse-legendary';
+    if (pct >= 95)  return 'parse-epic';
+    if (pct >= 75)  return 'parse-rare';
+    if (pct >= 50)  return 'parse-uncommon';
+    return 'parse-poor';
+  }
+
+  function renderParseTable(rankings) {
+    var map = {};
+    rankings.forEach(function(r) {
+      // API may return encounterID or encounter_id
+      var id = r.encounterID || r.encounter_id;
+      if (id) map[id] = r;
+    });
+
+    var headerHtml =
+      '<div class="parse-table-header">' +
+        '<span>Boss</span><span>Parse</span><span>Rank</span>' +
+      '</div>';
+
+    var rowsHtml = BOSS_ORDER.map(function(b) {
+      var r = map[b.enc];
+      if (!r) {
+        return (
+          '<div class="parse-row">' +
+            '<span class="parse-boss">' + b.name + '</span>' +
+            '<span class="parse-pct parse-poor">—</span>' +
+            '<span class="parse-rank">—</span>' +
+          '</div>'
+        );
+      }
+      var pct = Math.round(r.percentile || r.rankPercent || 0);
+      var cls = parsePctClass(pct);
+      var wclUrl =
+        'https://classic.warcraftlogs.com/character/us/arugal-au/skimmyxo' +
+        '#zone=29&boss=' + b.enc;
+      return (
+        '<div class="parse-row">' +
+          '<a class="parse-boss" href="' + wclUrl + '" target="_blank" rel="noopener">' +
+            b.name +
+          '</a>' +
+          '<span class="parse-pct ' + cls + '">' + pct + '</span>' +
+          '<span class="parse-rank">#' + r.rank + '</span>' +
+        '</div>'
+      );
+    }).join('');
+
+    return headerHtml + rowsHtml;
+  }
+
+  function showParseError(el) {
+    el.innerHTML =
+      '<div class="parse-error">' +
+        'Could not load parse data. ' +
+        '<a href="https://classic.warcraftlogs.com/character/us/arugal-au/skimmyxo"' +
+           ' target="_blank" rel="noopener">View on WarcraftLogs →</a>' +
+      '</div>';
+  }
+
+  function loadCharacterParses() {
+    var el = document.getElementById('aboutParses');
+    if (!el) return;
+
+    // Try localStorage cache first
+    try {
+      var cached = JSON.parse(localStorage.getItem(CHAR_CACHE_KEY) || 'null');
+      if (cached && Date.now() - cached.cachedAt < CHAR_CACHE_TTL) {
+        el.innerHTML = renderParseTable(cached.rankings || []);
+        return;
+      }
+    } catch (e) { /* ignore */ }
+
+    // Fetch from Netlify function
+    fetch('/.netlify/functions/getCharacter')
+      .then(function(res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        if (!data.rankings) throw new Error('No rankings in response');
+        try {
+          localStorage.setItem(CHAR_CACHE_KEY, JSON.stringify(data));
+        } catch (e) { /* quota exceeded — skip caching */ }
+        el.innerHTML = renderParseTable(data.rankings);
+      })
+      .catch(function() {
+        showParseError(el);
+      });
+  }
+
   /* ── Init ──────────────────────────────────────────── */
 
   function init() {
     render();
     initLazyStreams();
+    loadCharacterParses();
   }
 
   if (document.readyState === 'loading') {

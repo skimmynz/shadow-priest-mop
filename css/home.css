@@ -503,9 +503,275 @@
   color: rgba(124, 58, 237, .5);
 }
 
+/* ── Feature Cards ────────────────────────────────────── */
+.features-section {
+  padding-top: 0;
+  padding-bottom: 2rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  padding: 1.5rem;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  text-decoration: none;
+  transition: all .25s cubic-bezier(.4, 0, .2, 1);
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
+  opacity: 0;
+  transition: opacity .25s;
+}
+.feature-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, .15);
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  background: rgba(124, 58, 237, .12);
+  border-radius: 10px;
+  color: var(--accent-hover);
+  flex-shrink: 0;
+}
+.feature-icon svg { width: 22px; height: 22px; }
+
+.feature-title {
+  font-size: .9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.feature-desc {
+  font-size: .8125rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── About ────────────────────────────────────────────── */
+.about-section { padding-top: 0; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Left — armory iframe */
+.about-armory {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.about-armory-label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .875rem 1.25rem;
+  font-size: .8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+.about-armory-label svg { width: 16px; height: 16px; color: var(--accent-hover); }
+
+.about-armory-embed {
+  height: 580px;
+  overflow: hidden;
+  background: var(--card-bg);
+}
+.about-armory-embed iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* Right — bio + parses */
+.about-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.about-bio-block {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+.about-label {
+  font-size: .65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-muted);
+  margin-bottom: .35rem;
+}
+.about-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-accent);
+  margin: 0 0 .75rem;
+}
+.about-bio {
+  font-size: .875rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+.about-wcl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .6rem 1.1rem;
+  background: rgba(124, 58, 237, .1);
+  border: 1px solid rgba(124, 58, 237, .35);
+  border-radius: 8px;
+  color: var(--text-accent);
+  font-size: .8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all .2s;
+}
+.about-wcl-btn:hover {
+  background: rgba(124, 58, 237, .2);
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+}
+.about-wcl-btn svg { width: 14px; height: 14px; }
+
+/* Parse table card */
+.about-parses {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.parse-table-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  padding: .6rem 1rem;
+  font-size: .625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, .12);
+}
+
+.parse-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  padding: .4rem 1rem;
+  border-bottom: 1px solid rgba(45, 49, 66, .5);
+  transition: background .15s;
+}
+.parse-row:last-child { border-bottom: none; }
+.parse-row:hover { background: rgba(255, 255, 255, .03); }
+
+.parse-boss {
+  font-size: .8125rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.parse-boss:hover { color: var(--text-accent); }
+
+.parse-pct {
+  font-size: .875rem;
+  font-weight: 800;
+  min-width: 36px;
+  text-align: right;
+  padding-right: .25rem;
+}
+/* WarcraftLogs-style parse colour coding */
+.parse-legendary { color: #e67800; }
+.parse-epic      { color: #e268a8; }
+.parse-rare      { color: #4e9eff; }
+.parse-uncommon  { color: #1eff00; }
+.parse-poor      { color: var(--text-muted); }
+
+.parse-rank {
+  font-size: .75rem;
+  color: var(--text-muted);
+  min-width: 44px;
+  text-align: right;
+}
+
+/* Shimmer skeleton */
+.parse-skeleton {
+  padding: .5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+.parse-skeleton-row {
+  height: 22px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--card-bg) 25%, var(--hover-bg) 50%, var(--card-bg) 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease infinite;
+}
+.parse-skeleton-row:nth-child(odd)  { opacity: .8; }
+.parse-skeleton-row:nth-child(even) { opacity: .5; }
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Parse error state */
+.parse-error {
+  padding: 1.25rem 1rem;
+  text-align: center;
+  font-size: .8125rem;
+  color: var(--text-muted);
+}
+.parse-error a {
+  color: var(--text-accent);
+  text-decoration: none;
+}
+.parse-error a:hover { text-decoration: underline; }
+
 /* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 1024px) {
   .streams-grid { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-armory { display: none; } /* hide iframe embed on tablet/mobile */
+}
+
+@media (max-width: 900px) {
+  .features-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -543,4 +809,5 @@
   .boss-tab { width: 40px; height: 40px; }
   .tips-card-tabs { padding: .875rem; }
   .tips-card-body { padding: 1rem .875rem; }
+  .features-grid { grid-template-columns: 1fr; }
 }
