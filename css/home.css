@@ -791,6 +791,66 @@
   100% { background-position: -200% 0; }
 }
 
+/* ── Character Stats Card ─────────────────────────────── */
+.char-stats-card {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.char-stats-hdr {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .875rem 1rem;
+  font-size: .8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0, 0, 0, .12);
+}
+.char-stats-hdr svg {
+  width: 14px; height: 14px;
+  color: var(--accent-hover);
+  flex-shrink: 0;
+}
+
+.char-stats-body { padding: .2rem 0; }
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .35rem 1rem;
+  border-bottom: 1px solid rgba(45, 49, 66, .4);
+  transition: background .15s;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-row:hover { background: rgba(255, 255, 255, .03); }
+
+/* Top border separating primary stats from secondary stats */
+.stat-row--sep { border-top: 1px solid var(--border-color); }
+
+.stat-name {
+  font-size: .8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.stat-val {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+/* Secondary stats with percentage — shown in accent colour */
+.stat-val--pct { color: var(--text-accent); }
+/* Unimportant / zero stats — shown dimmer */
+.stat-val--dim { color: var(--text-muted); font-weight: 600; }
+
 /* Parse error state */
 .parse-error {
   padding: 1.25rem 1rem;

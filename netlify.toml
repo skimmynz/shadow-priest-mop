@@ -25,3 +25,12 @@
   from = "/landing"
   to = "/landing.html"
   status = 200
+
+# Proxy WarcraftLogs model-viewer assets to bypass browser CORS restrictions.
+# ZamModelViewer requests /model-viewer/* assets — Netlify proxies them
+# transparently from wow.zamimg.com so the browser sees a same-origin response.
+[[redirects]]
+  from = "/model-viewer/*"
+  to = "https://wow.zamimg.com/modelviewer/live/:splat"
+  status = 200
+  force = true

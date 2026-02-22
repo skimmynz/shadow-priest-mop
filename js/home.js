@@ -339,9 +339,9 @@
     var container = document.getElementById('charModelContainer');
     if (!container) return;
 
-    var contentPath =
-      'https://bypass-cors-policies.onrender.com/' +
-      'https://wow.zamimg.com/modelviewer/live/';
+    // Netlify proxies /model-viewer/* → wow.zamimg.com/modelviewer/live/*
+    // so all asset requests are same-origin and bypass CORS restrictions.
+    var contentPath = '/model-viewer/';
 
     function showFallback() {
       container.innerHTML =
