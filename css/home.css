@@ -281,7 +281,7 @@
 
 .feature-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
   padding: 1.5rem 1.75rem;
   text-decoration: none;
@@ -300,6 +300,7 @@
   justify-content: center;
   width: 40px; height: 40px;
   flex-shrink: 0;
+  margin-top: .1rem;
   background: rgba(124, 58, 237, .12);
   border-radius: 10px;
   color: var(--accent-hover);
@@ -329,6 +330,7 @@
 .feature-item-arrow {
   width: 16px; height: 16px;
   flex-shrink: 0;
+  margin-top: .25rem;
   color: var(--border-hover);
   transition: color .2s, transform .2s ease;
 }
