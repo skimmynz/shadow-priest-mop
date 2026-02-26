@@ -314,15 +314,15 @@
 }
 
 .feature-item-title {
-  font-size: .9375rem;
+  font-size: 1.0625rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: .2rem;
+  margin-bottom: .3rem;
   white-space: nowrap;
 }
 
 .feature-item-desc {
-  font-size: .75rem;
+  font-size: .875rem;
   color: var(--text-muted);
   line-height: 1.5;
 }
