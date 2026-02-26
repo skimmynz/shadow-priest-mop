@@ -363,6 +363,7 @@
   border-radius: 10px;
   color: var(--accent-hover);
   flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(124, 58, 237, .15), 0 0 40px rgba(124, 58, 237, .05);
 }
 .feature-icon svg { width: 22px; height: 22px; }
 
