@@ -71,24 +71,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Unified Container */
-.unified-container {
-  max-width: 1800px;
-  margin: 2rem auto;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.unified-container:hover {
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
-}
-
 /* Top Navigation Bar */
 .top-nav {
   position: sticky;
@@ -103,16 +85,6 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
-.nav-brand {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--text-accent);
-  text-decoration: none;
-  letter-spacing: .04em;
-  white-space: nowrap;
-  transition: color .2s;
-}
-.nav-brand:hover { color: #fff; }
 
 .nav-container {
   max-width: 1800px;
