@@ -101,15 +101,83 @@ exports.handler = async function(event, context) {
     }
     
     const data = await response.json();
-    
+    const rankings = Array.isArray(data.rankings) ? data.rankings : [];
+
+    // --- Haste enrichment ---
+    // Fetch haste for each unique report, server-side so the result is CDN-cached.
+    // Uses a rolling concurrency queue (max 8 at a time) to keep wall-clock time
+    // predictable and avoid flooding WCL with simultaneous requests.
+    const uniqueReportIDs = [...new Set(rankings.map(r => r.reportID).filter(Boolean))];
+
+    async function fetchHasteForReport(reportID) {
+      try {
+        const opts = { timeout: 8000, headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' } };
+        const [fightsRes, eventsRes] = await Promise.all([
+          fetch(`https://www.warcraftlogs.com/v1/report/fights/${reportID}?api_key=${apiKey}`, opts),
+          fetch(`https://www.warcraftlogs.com/v1/report/events/${reportID}?start=0&end=9999999999&type=combatantinfo&api_key=${apiKey}`, opts)
+        ]);
+        if (!fightsRes.ok || !eventsRes.ok) return {};
+        const [fightsData, eventsData] = await Promise.all([fightsRes.json(), eventsRes.json()]);
+        const actorNames = {};
+        for (const f of (fightsData.friendlies || [])) actorNames[f.id] = f.name;
+        const hasteMap = {};
+        for (const ev of (eventsData.events || [])) {
+          const name = actorNames[ev.sourceID];
+          if (name && typeof ev.hasteSpell === 'number' && !hasteMap[name]) hasteMap[name] = ev.hasteSpell;
+        }
+        return hasteMap;
+      } catch (e) {
+        return {};
+      }
+    }
+
+    // Rolling concurrency queue with a hard 20s wall-clock budget.
+    // If WCL is slow and the budget expires, rankings return without haste
+    // rather than the whole function timing out.
+    const CONCURRENCY = 8;
+    const HASTE_BUDGET_MS = 20000;
+    const hasteByReport = {};
+    let timedOut = false;
+
+    await new Promise(resolve => {
+      const budgetTimer = setTimeout(() => { timedOut = true; resolve(); }, HASTE_BUDGET_MS);
+      let index = 0;
+      let active = 0;
+      let done = 0;
+
+      function runNext() {
+        if (timedOut) return;
+        if (done >= uniqueReportIDs.length) { clearTimeout(budgetTimer); resolve(); return; }
+        while (active < CONCURRENCY && index < uniqueReportIDs.length) {
+          const reportID = uniqueReportIDs[index++];
+          active++;
+          fetchHasteForReport(reportID).then(hasteMap => {
+            hasteByReport[reportID] = hasteMap;
+            active--;
+            done++;
+            runNext();
+          });
+        }
+      }
+      runNext();
+    });
+
+    // Embed hasteRating into each ranking entry
+    for (const r of rankings) {
+      const map = hasteByReport[r.reportID];
+      if (map && typeof map[r.name] === 'number') r.hasteRating = map[r.name];
+    }
+    // --- End haste enrichment ---
+
     // Add server timestamp for caching
     const processedData = {
       ...data,
+      rankings,
       cachedAt: new Date().toISOString(),
       encounterId: encounterId
     };
-    
-    console.log(`Successfully fetched ${data.rankings?.length || 0} rankings for encounter ${encounterId}`);
+
+    console.log(`Successfully fetched ${rankings.length} rankings for encounter ${encounterId} (haste: ${timedOut ? 'timed out' : 'ok'})`);
     
     return {
       statusCode: 200,
