@@ -1,9 +1,6 @@
 [functions]
   directory = "netlify/functions"
 
-[functions."getLogs"]
-  timeout = 26
-
 [[redirects]]
   from = "/rankings"
   to = "/rankings.html"

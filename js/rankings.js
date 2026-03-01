@@ -86,7 +86,6 @@ class OptimizedRenderer {
       '<span class="col-rank">#</span>' +
       '<span class="col-name">Player</span>' +
       '<span class="col-ilvl" data-sort="ilvl">iLvl <span class="sort-arrow"></span></span>' +
-      '<span class="col-haste" data-sort="haste">Haste <span class="sort-arrow"></span></span>' +
       '<span class="col-dps" data-sort="dps">DPS <span class="sort-arrow"></span></span>' +
       '<span class="col-date" data-sort="date">Date <span class="sort-arrow"></span></span>' +
       '<span class="col-time" data-sort="duration">Time <span class="sort-arrow"></span></span>' +
@@ -97,7 +96,7 @@ class OptimizedRenderer {
   }
 
   renderSingleEntry(r, index, topByTier, maxDps) {
-    var cacheKey = r.reportID + '-' + r.fightID + '-' + index + '-' + (r.hasteRating != null ? r.hasteRating : '');
+    var cacheKey = r.reportID + '-' + r.fightID + '-' + index;
     if (this.renderCache.has(cacheKey)) return this.renderCache.get(cacheKey);
 
     var rank = index + 1;
@@ -113,20 +112,11 @@ class OptimizedRenderer {
     var searchData = playerName.toLowerCase();
     var gear = buildGearStrip(r.gear);
 
-    var hasteHtml = '';
-    if (typeof r.hasteRating === 'number') {
-      var hastePct = (((1 + r.hasteRating / 42500) * 1.05) - 1) * 100;
-      hasteHtml = '<a class="player-haste" href="/haste?rating=' + r.hasteRating + '" title="Open in Haste Calculator">' +
-        '<span class="player-haste-rating">' + r.hasteRating.toLocaleString() + '</span>' +
-        ' <span class="player-haste-pct">' + hastePct.toFixed(1) + '%</span></a>';
-    }
-
     var html =
-      '<div class="rank-entry" data-rank-tier="' + rankTier + '" data-original-rank="' + rank + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-haste="' + (typeof r.hasteRating === 'number' ? r.hasteRating : 0) + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
+      '<div class="rank-entry" data-rank-tier="' + rankTier + '" data-original-rank="' + rank + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
       '<span class="col-rank">' + rank + '</span>' +
       '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + playerName + '</a><span class="player-server">' + server + '</span></span>' +
       '<span class="col-ilvl">' + itemLevel + '</span>' +
-      '<span class="col-haste">' + hasteHtml + '</span>' +
       '<span class="col-dps">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span>' +
       '<span class="col-date">' + killDate + '</span>' +
       '<span class="col-time">' + duration + '</span>' +
@@ -393,9 +383,6 @@ function applyFiltersAndSort() {
     } else if (field === 'date') {
       aVal = parseFloat(a.getAttribute('data-date')) || 0;
       bVal = parseFloat(b.getAttribute('data-date')) || 0;
-    } else if (field === 'haste') {
-      aVal = parseFloat(a.getAttribute('data-haste')) || 0;
-      bVal = parseFloat(b.getAttribute('data-haste')) || 0;
     }
     return dir === 'desc' ? bVal - aVal : aVal - bVal;
   });
@@ -583,9 +570,6 @@ function renderContent(data, encounterId) {
 
   scheduler.postTask(function() {
     if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
-    if (typeof loadHasteForRankings === 'function') {
-      loadHasteForRankings(Array.isArray(data.rankings) ? data.rankings.slice(0, 100) : []);
-    }
   }, { priority: 'background' });
 
   console.log('Rendered in ' + (performance.now() - startTime).toFixed(1) + 'ms');
@@ -762,7 +746,7 @@ if (searchClear) {
   });
 }
 // Sort via column headers
-var defaultDirs = { dps: 'desc', ilvl: 'desc', duration: 'asc', date: 'desc', haste: 'desc' };
+var defaultDirs = { dps: 'desc', ilvl: 'desc', duration: 'asc', date: 'desc' };
 
 function updateHeaderSortIndicators() {
   if (!rankingsDiv) return;
