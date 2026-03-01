@@ -51,7 +51,7 @@ exports.handler = async function(event, context) {
 
   const reportID = event.queryStringParameters && event.queryStringParameters.reportID;
   const fightID = parseInt(event.queryStringParameters && event.queryStringParameters.fightID);
-  if (!reportID || !/^[a-zA-Z0-9]{16}$/.test(reportID) || !fightID || fightID < 1) {
+  if (!reportID || !/^[a-zA-Z0-9]{8,24}$/.test(reportID) || !fightID || fightID < 1) {
     return {
       statusCode: 400,
       headers,

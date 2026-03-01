@@ -34,7 +34,7 @@ function writeHasteCache(reportID, fightID, players) {
 function fetchHasteForFight(reportID, fightID) {
   var cached = readHasteCache(reportID, fightID);
   if (cached) return Promise.resolve(cached);
-  return fetch('/netlify/functions/getPlayerHaste?reportID=' + reportID + '&fightID=' + fightID, {
+  return fetch('/.netlify/functions/getPlayerHaste?reportID=' + reportID + '&fightID=' + fightID, {
     headers: { 'accept': 'application/json' }
   })
     .then(function(res) { return res.ok ? res.json() : null; })
