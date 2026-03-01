@@ -69,20 +69,19 @@ exports.handler = async function(event, context) {
   }
 
   try {
-    // Step 1: Get fight timestamps and actor name map
-    const fightsUrl = `https://www.warcraftlogs.com/v1/report/fights/${reportID}?api_key=${apiKey}`;
-    const fightsRes = await fetch(fightsUrl, { timeout: 10000, headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' } });
-    if (!fightsRes.ok) throw new Error(`Fights API returned ${fightsRes.status}`);
-    const fightsData = await fightsRes.json();
+    const reqOpts = { timeout: 10000, headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' } };
 
-    const fight = (fightsData.fights || []).find(f => f.id === fightID);
-    if (!fight) {
-      return {
-        statusCode: 404,
-        headers,
-        body: JSON.stringify({ error: 'Fight not found in report' })
-      };
-    }
+    // Fire both calls in parallel — combatantinfo events fire at fight start so the
+    // full-report window (0..INT_MAX) always captures them without needing fight timestamps first.
+    const [fightsRes, eventsRes] = await Promise.all([
+      fetch(`https://www.warcraftlogs.com/v1/report/fights/${reportID}?api_key=${apiKey}`, reqOpts),
+      fetch(`https://www.warcraftlogs.com/v1/report/events/${reportID}?start=0&end=9999999999&type=combatantinfo&api_key=${apiKey}`, reqOpts)
+    ]);
+
+    if (!fightsRes.ok) throw new Error(`Fights API returned ${fightsRes.status}`);
+    if (!eventsRes.ok) throw new Error(`Events API returned ${eventsRes.status}`);
+
+    const [fightsData, eventsData] = await Promise.all([fightsRes.json(), eventsRes.json()]);
 
     // Build actorID -> name map from friendlies
     const actorNames = {};
@@ -90,17 +89,11 @@ exports.handler = async function(event, context) {
       actorNames[f.id] = f.name;
     }
 
-    // Step 2: Fetch combatantinfo events for the fight window
-    const eventsUrl = `https://www.warcraftlogs.com/v1/report/events/${reportID}?start=${fight.start_time}&end=${fight.end_time}&type=combatantinfo&api_key=${apiKey}`;
-    const eventsRes = await fetch(eventsUrl, { timeout: 10000, headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' } });
-    if (!eventsRes.ok) throw new Error(`Events API returned ${eventsRes.status}`);
-    const eventsData = await eventsRes.json();
-
-    // Step 3: Build playerName -> hasteRating map
+    // Build playerName -> hasteRating map (first combatantinfo event per player wins)
     const players = {};
     for (const ev of (eventsData.events || [])) {
       const name = actorNames[ev.sourceID];
-      if (name && typeof ev.hasteSpell === 'number') {
+      if (name && typeof ev.hasteSpell === 'number' && !players[name]) {
         players[name] = { hasteRating: ev.hasteSpell };
       }
     }

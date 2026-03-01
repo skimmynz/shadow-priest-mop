@@ -65,7 +65,7 @@ function injectHaste(playerName, hasteRating) {
     link.className = 'player-haste';
     link.href = '/haste?rating=' + hasteRating;
     link.title = 'Open in Haste Calculator';
-    link.innerHTML = hasteRating.toLocaleString() + ' <span class="player-haste-pct">' + pct + '%</span>';
+    link.innerHTML = '<span class="player-haste-rating">' + hasteRating.toLocaleString() + '</span> <span class="player-haste-pct">' + pct + '%</span>';
     var playerServer = colName.querySelector('.player-server');
     if (playerServer) {
       colName.insertBefore(link, playerServer);
@@ -101,21 +101,34 @@ function setHastePlaceholders(rankings) {
 function loadHasteForRankings(rankings) {
   if (!Array.isArray(rankings) || rankings.length === 0) return;
 
-  setHastePlaceholders(rankings);
-
-  // Group players by reportID+fightID
-  var groups = new Map();
+  // Fast path: haste already embedded in rankings by getLogs server-side enrichment
+  var missing = [];
   for (var i = 0; i < rankings.length; i++) {
     var r = rankings[i];
-    if (!r || !r.reportID || !r.fightID || !r.name) continue;
-    var key = r.reportID + '-' + r.fightID;
-    if (!groups.has(key)) groups.set(key, { reportID: r.reportID, fightID: r.fightID, players: [] });
-    groups.get(key).players.push(r.name);
+    if (!r || !r.name) continue;
+    if (typeof r.hasteRating === 'number') {
+      injectHaste(r.name, r.hasteRating);
+    } else {
+      missing.push(r);
+    }
+  }
+
+  if (missing.length === 0) return;
+
+  // Fallback: fetch haste for any entries not already enriched (e.g. old cached responses)
+  setHastePlaceholders(missing);
+
+  var groups = new Map();
+  for (var i = 0; i < missing.length; i++) {
+    var r = missing[i];
+    if (!r.reportID || !r.fightID) continue;
+    var key = r.reportID;
+    if (!groups.has(key)) groups.set(key, { reportID: r.reportID, fightID: r.fightID });
   }
 
   var tasks = Array.from(groups.values());
   var index = 0;
-  var CONCURRENCY = 5;
+  var CONCURRENCY = 10;
 
   function runNext() {
     if (index >= tasks.length) return;
@@ -130,7 +143,6 @@ function loadHasteForRankings(rankings) {
     });
   }
 
-  // Start up to CONCURRENCY tasks
   var initialBatch = Math.min(CONCURRENCY, tasks.length);
   for (var i = 0; i < initialBatch; i++) {
     runNext();

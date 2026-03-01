@@ -86,30 +86,66 @@ exports.handler = async function(event, context) {
 
   try {
     const url = `https://www.warcraftlogs.com/v1/rankings/encounter/${encounterId}?metric=dps&size=25&difficulty=4&class=7&spec=3&includeCombatantInfo=true&api_key=${apiKey}`;
-    
+
     console.log(`Fetching data for encounter ${encounterId} from WCL API`);
-    
+
     const response = await fetch(url, {
-      timeout: 10000, // 10 second timeout
-      headers: {
-        'User-Agent': 'ShadowPriest-Rankings/1.0'
-      }
+      timeout: 10000,
+      headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' }
     });
-    
+
     if (!response.ok) {
       throw new Error(`WCL API returned ${response.status}: ${response.statusText}`);
     }
-    
+
     const data = await response.json();
-    
+    const rankings = Array.isArray(data.rankings) ? data.rankings : [];
+
+    // Collect unique reportIDs and fetch haste for all reports simultaneously
+    const uniqueReports = [...new Set(rankings.map(r => r.reportID).filter(Boolean))];
+
+    async function fetchHasteForReport(reportID) {
+      try {
+        const reqOpts = { timeout: 8000, headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' } };
+        const [fightsRes, eventsRes] = await Promise.all([
+          fetch(`https://www.warcraftlogs.com/v1/report/fights/${reportID}?api_key=${apiKey}`, reqOpts),
+          fetch(`https://www.warcraftlogs.com/v1/report/events/${reportID}?start=0&end=9999999999&type=combatantinfo&api_key=${apiKey}`, reqOpts)
+        ]);
+        if (!fightsRes.ok || !eventsRes.ok) return {};
+        const [fightsData, eventsData] = await Promise.all([fightsRes.json(), eventsRes.json()]);
+        const actorNames = {};
+        for (const f of (fightsData.friendlies || [])) actorNames[f.id] = f.name;
+        const hasteMap = {};
+        for (const ev of (eventsData.events || [])) {
+          const name = actorNames[ev.sourceID];
+          if (name && typeof ev.hasteSpell === 'number' && !hasteMap[name]) hasteMap[name] = ev.hasteSpell;
+        }
+        return hasteMap;
+      } catch (e) {
+        return {};
+      }
+    }
+
+    // Run all report fetches simultaneously — unique reports per boss is typically 20-60
+    const hasteResults = await Promise.all(uniqueReports.map(rid => fetchHasteForReport(rid)));
+    const hasteByReport = {};
+    uniqueReports.forEach((rid, i) => { hasteByReport[rid] = hasteResults[i]; });
+
+    // Embed hasteRating directly into each ranking entry
+    for (const r of rankings) {
+      const hasteMap = hasteByReport[r.reportID];
+      if (hasteMap && typeof hasteMap[r.name] === 'number') r.hasteRating = hasteMap[r.name];
+    }
+
     // Add server timestamp for caching
     const processedData = {
       ...data,
+      rankings,
       cachedAt: new Date().toISOString(),
       encounterId: encounterId
     };
-    
-    console.log(`Successfully fetched ${data.rankings?.length || 0} rankings for encounter ${encounterId}`);
+
+    console.log(`Successfully fetched ${rankings.length} rankings for encounter ${encounterId}`);
     
     return {
       statusCode: 200,

@@ -1095,6 +1095,10 @@ a.wowhead del {
     display: none;
   }
 
+  .player-haste-rating {
+    display: none;
+  }
+
   .col-rank { grid-column: 1; }
   .col-name { grid-column: 2; }
   .col-dps { grid-column: 3; }
