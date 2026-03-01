@@ -90,48 +90,11 @@ function setHastePlaceholders(rankings) {
 
 function loadHasteForRankings(rankings) {
   if (!Array.isArray(rankings) || rankings.length === 0) return;
-
-  // Fast path: haste already rendered inline by renderSingleEntry for enriched entries.
-  // Only handle entries missing hasteRating (e.g. old cached responses).
-  var missing = [];
+  // Only inject haste that was pre-embedded server-side — no extra WCL API calls.
   for (var i = 0; i < rankings.length; i++) {
     var r = rankings[i];
-    if (!r || !r.name) continue;
-    if (typeof r.hasteRating !== 'number') missing.push(r);
-  }
-
-  if (missing.length === 0) return;
-
-  // Fallback: fetch haste for any entries not already enriched (e.g. old cached responses)
-  setHastePlaceholders(missing);
-
-  var groups = new Map();
-  for (var i = 0; i < missing.length; i++) {
-    var r = missing[i];
-    if (!r.reportID || !r.fightID) continue;
-    var key = r.reportID;
-    if (!groups.has(key)) groups.set(key, { reportID: r.reportID, fightID: r.fightID });
-  }
-
-  var tasks = Array.from(groups.values());
-  var index = 0;
-  var CONCURRENCY = 10;
-
-  function runNext() {
-    if (index >= tasks.length) return;
-    var task = tasks[index++];
-    fetchHasteForFight(task.reportID, task.fightID).then(function(playerMap) {
-      for (var name in playerMap) {
-        if (playerMap[name] && typeof playerMap[name].hasteRating === 'number') {
-          injectHaste(name, playerMap[name].hasteRating);
-        }
-      }
-      runNext();
-    });
-  }
-
-  var initialBatch = Math.min(CONCURRENCY, tasks.length);
-  for (var i = 0; i < initialBatch; i++) {
-    runNext();
+    if (r && r.name && typeof r.hasteRating === 'number') {
+      injectHaste(r.name, r.hasteRating);
+    }
   }
 }
