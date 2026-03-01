@@ -86,28 +86,30 @@ exports.handler = async function(event, context) {
 
   try {
     const url = `https://www.warcraftlogs.com/v1/rankings/encounter/${encounterId}?metric=dps&size=25&difficulty=4&class=7&spec=3&includeCombatantInfo=true&api_key=${apiKey}`;
-
+    
     console.log(`Fetching data for encounter ${encounterId} from WCL API`);
-
+    
     const response = await fetch(url, {
-      timeout: 10000,
-      headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' }
+      timeout: 10000, // 10 second timeout
+      headers: {
+        'User-Agent': 'ShadowPriest-Rankings/1.0'
+      }
     });
-
+    
     if (!response.ok) {
       throw new Error(`WCL API returned ${response.status}: ${response.statusText}`);
     }
-
+    
     const data = await response.json();
-
+    
     // Add server timestamp for caching
     const processedData = {
       ...data,
       cachedAt: new Date().toISOString(),
       encounterId: encounterId
     };
-
-    console.log(`Successfully fetched rankings for encounter ${encounterId}`);
+    
+    console.log(`Successfully fetched ${data.rankings?.length || 0} rankings for encounter ${encounterId}`);
     
     return {
       statusCode: 200,
