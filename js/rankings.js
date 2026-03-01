@@ -570,6 +570,9 @@ function renderContent(data, encounterId) {
 
   scheduler.postTask(function() {
     if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+    if (typeof loadHasteForRankings === 'function') {
+      loadHasteForRankings(Array.isArray(data.rankings) ? data.rankings.slice(0, 100) : []);
+    }
   }, { priority: 'background' });
 
   console.log('Rendered in ' + (performance.now() - startTime).toFixed(1) + 'ms');

@@ -597,6 +597,36 @@ a.wowhead del {
   margin-left: auto;
 }
 
+.col-name .player-haste {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #7dd3fc;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.col-name .player-haste:hover {
+  color: #38bdf8;
+  text-decoration: underline;
+}
+
+.col-name .player-haste.player-haste-loading {
+  color: var(--text-muted);
+  font-weight: 400;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+.col-name .player-haste-pct {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
 .rank-entry[data-rank-tier="gold"] .col-name .player-link { color: #e5cc80; }
 .rank-entry[data-rank-tier="pink"] .col-name .player-link { color: #e268a8; }
 .rank-entry[data-rank-tier="orange"] .col-name .player-link { color: #ff8000; }
