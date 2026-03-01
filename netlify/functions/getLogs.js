@@ -126,16 +126,26 @@ exports.handler = async function(event, context) {
       }
     }
 
-    // Run all report fetches simultaneously — unique reports per boss is typically 20-60
-    const hasteResults = await Promise.all(uniqueReports.map(rid => fetchHasteForReport(rid)));
-    const hasteByReport = {};
-    uniqueReports.forEach((rid, i) => { hasteByReport[rid] = hasteResults[i]; });
+    // Run all report fetches simultaneously, but cap total time to stay within the
+    // Netlify function 10s limit (initial rankings fetch already consumed some of it).
+    const HASTE_BUDGET_MS = 6000;
+    const hasteTimeout = new Promise(resolve => setTimeout(() => resolve(null), HASTE_BUDGET_MS));
+    const hasteResults = await Promise.race([
+      Promise.all(uniqueReports.map(rid => fetchHasteForReport(rid))),
+      hasteTimeout
+    ]);
 
-    // Embed hasteRating directly into each ranking entry
-    for (const r of rankings) {
-      const hasteMap = hasteByReport[r.reportID];
-      if (hasteMap && typeof hasteMap[r.name] === 'number') r.hasteRating = hasteMap[r.name];
+    if (hasteResults !== null) {
+      // Completed within budget — embed hasteRating into each ranking entry
+      const hasteByReport = {};
+      uniqueReports.forEach((rid, i) => { hasteByReport[rid] = hasteResults[i]; });
+      for (const r of rankings) {
+        const hasteMap = hasteByReport[r.reportID];
+        if (hasteMap && typeof hasteMap[r.name] === 'number') r.hasteRating = hasteMap[r.name];
+      }
     }
+    // If hasteResults is null the budget expired — rankings return without hasteRating;
+    // the client fallback (getPlayerHaste) will fill in haste values asynchronously.
 
     // Add server timestamp for caching
     const processedData = {

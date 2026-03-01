@@ -408,7 +408,7 @@ a.wowhead del {
    Rankings & Talent Display
    ================================================================= */
 #rankings {
-  --cols: 36px 1fr 52px 76px 68px 72px 170px 68px;
+  --cols: 36px 1fr 52px 100px 76px 68px 72px 170px 68px;
   margin-top: 0;
   min-height: 400px;
 }
@@ -597,12 +597,16 @@ a.wowhead del {
   margin-left: auto;
 }
 
-.col-name .player-haste {
+.col-haste {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+}
+
+.col-haste .player-haste {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  flex-shrink: 0;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   color: #7dd3fc;
   text-decoration: none;
@@ -610,19 +614,18 @@ a.wowhead del {
   transition: color 0.15s ease;
 }
 
-.col-name .player-haste:hover {
+.col-haste .player-haste:hover {
   color: #38bdf8;
   text-decoration: underline;
 }
 
-.col-name .player-haste.player-haste-loading {
+.col-haste .player-haste.player-haste-loading {
   color: var(--text-muted);
   font-weight: 400;
   pointer-events: none;
-  text-decoration: none;
 }
 
-.col-name .player-haste-pct {
+.col-haste .player-haste-pct {
   color: #94a3b8;
   font-weight: 400;
 }
@@ -1085,6 +1088,7 @@ a.wowhead del {
   }
 
   .col-ilvl,
+  .col-haste,
   .col-date,
   .col-time,
   .col-trinkets {
@@ -1092,10 +1096,6 @@ a.wowhead del {
   }
 
   .col-name .player-server {
-    display: none;
-  }
-
-  .player-haste-rating {
     display: none;
   }
 

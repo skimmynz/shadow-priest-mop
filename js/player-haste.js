@@ -51,10 +51,10 @@ function injectHaste(playerName, hasteRating) {
   for (var i = 0; i < entries.length; i++) {
     var el = entries[i];
     if (el.getAttribute('data-name') !== playerName) continue;
-    var colName = el.querySelector('.col-name');
-    if (!colName) continue;
+    var colHaste = el.querySelector('.col-haste');
+    if (!colHaste) continue;
     // Replace loading placeholder if present
-    var existing = colName.querySelector('.player-haste');
+    var existing = colHaste.querySelector('.player-haste');
     if (existing && existing.classList.contains('player-haste-loading')) {
       existing.remove();
     } else if (existing) {
@@ -66,12 +66,7 @@ function injectHaste(playerName, hasteRating) {
     link.href = '/haste?rating=' + hasteRating;
     link.title = 'Open in Haste Calculator';
     link.innerHTML = '<span class="player-haste-rating">' + hasteRating.toLocaleString() + '</span> <span class="player-haste-pct">' + pct + '%</span>';
-    var playerServer = colName.querySelector('.player-server');
-    if (playerServer) {
-      colName.insertBefore(link, playerServer);
-    } else {
-      colName.appendChild(link);
-    }
+    colHaste.appendChild(link);
   }
 }
 
@@ -83,17 +78,12 @@ function setHastePlaceholders(rankings) {
     for (var j = 0; j < entries.length; j++) {
       var el = entries[j];
       if (el.getAttribute('data-name') !== r.name) continue;
-      var colName = el.querySelector('.col-name');
-      if (!colName || colName.querySelector('.player-haste')) continue;
+      var colHaste = el.querySelector('.col-haste');
+      if (!colHaste || colHaste.querySelector('.player-haste')) continue;
       var placeholder = document.createElement('span');
       placeholder.className = 'player-haste player-haste-loading';
       placeholder.textContent = '···';
-      var playerServer = colName.querySelector('.player-server');
-      if (playerServer) {
-        colName.insertBefore(placeholder, playerServer);
-      } else {
-        colName.appendChild(placeholder);
-      }
+      colHaste.appendChild(placeholder);
     }
   }
 }
@@ -101,16 +91,13 @@ function setHastePlaceholders(rankings) {
 function loadHasteForRankings(rankings) {
   if (!Array.isArray(rankings) || rankings.length === 0) return;
 
-  // Fast path: haste already embedded in rankings by getLogs server-side enrichment
+  // Fast path: haste already rendered inline by renderSingleEntry for enriched entries.
+  // Only handle entries missing hasteRating (e.g. old cached responses).
   var missing = [];
   for (var i = 0; i < rankings.length; i++) {
     var r = rankings[i];
     if (!r || !r.name) continue;
-    if (typeof r.hasteRating === 'number') {
-      injectHaste(r.name, r.hasteRating);
-    } else {
-      missing.push(r);
-    }
+    if (typeof r.hasteRating !== 'number') missing.push(r);
   }
 
   if (missing.length === 0) return;
