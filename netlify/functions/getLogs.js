@@ -99,63 +99,15 @@ exports.handler = async function(event, context) {
     }
 
     const data = await response.json();
-    const rankings = Array.isArray(data.rankings) ? data.rankings : [];
-
-    // Collect unique reportIDs and fetch haste for all reports simultaneously
-    const uniqueReports = [...new Set(rankings.map(r => r.reportID).filter(Boolean))];
-
-    async function fetchHasteForReport(reportID) {
-      try {
-        const reqOpts = { timeout: 8000, headers: { 'User-Agent': 'ShadowPriest-Rankings/1.0' } };
-        const [fightsRes, eventsRes] = await Promise.all([
-          fetch(`https://www.warcraftlogs.com/v1/report/fights/${reportID}?api_key=${apiKey}`, reqOpts),
-          fetch(`https://www.warcraftlogs.com/v1/report/events/${reportID}?start=0&end=9999999999&type=combatantinfo&api_key=${apiKey}`, reqOpts)
-        ]);
-        if (!fightsRes.ok || !eventsRes.ok) return {};
-        const [fightsData, eventsData] = await Promise.all([fightsRes.json(), eventsRes.json()]);
-        const actorNames = {};
-        for (const f of (fightsData.friendlies || [])) actorNames[f.id] = f.name;
-        const hasteMap = {};
-        for (const ev of (eventsData.events || [])) {
-          const name = actorNames[ev.sourceID];
-          if (name && typeof ev.hasteSpell === 'number' && !hasteMap[name]) hasteMap[name] = ev.hasteSpell;
-        }
-        return hasteMap;
-      } catch (e) {
-        return {};
-      }
-    }
-
-    // Run all report fetches simultaneously, but cap total time to stay within the
-    // Netlify function 10s limit (initial rankings fetch already consumed some of it).
-    const HASTE_BUDGET_MS = 6000;
-    const hasteTimeout = new Promise(resolve => setTimeout(() => resolve(null), HASTE_BUDGET_MS));
-    const hasteResults = await Promise.race([
-      Promise.all(uniqueReports.map(rid => fetchHasteForReport(rid))),
-      hasteTimeout
-    ]);
-
-    if (hasteResults !== null) {
-      // Completed within budget — embed hasteRating into each ranking entry
-      const hasteByReport = {};
-      uniqueReports.forEach((rid, i) => { hasteByReport[rid] = hasteResults[i]; });
-      for (const r of rankings) {
-        const hasteMap = hasteByReport[r.reportID];
-        if (hasteMap && typeof hasteMap[r.name] === 'number') r.hasteRating = hasteMap[r.name];
-      }
-    }
-    // If hasteResults is null the budget expired — rankings return without hasteRating;
-    // the client fallback (getPlayerHaste) will fill in haste values asynchronously.
 
     // Add server timestamp for caching
     const processedData = {
       ...data,
-      rankings,
       cachedAt: new Date().toISOString(),
       encounterId: encounterId
     };
 
-    console.log(`Successfully fetched ${rankings.length} rankings for encounter ${encounterId}`);
+    console.log(`Successfully fetched rankings for encounter ${encounterId}`);
     
     return {
       statusCode: 200,
