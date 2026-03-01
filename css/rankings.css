@@ -169,6 +169,24 @@
   text-overflow: ellipsis;
 }
 
+.no-asp-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  padding-left: 6px;
+  color: #475569;
+}
+
+.boss-nav-item:hover .no-asp-badge {
+  color: #64748b;
+}
+
+.boss-nav-item.active .no-asp-badge {
+  color: #94a3b8;
+}
+
 /* =================================================================
    Toolbar (search + sort)
    ================================================================= */

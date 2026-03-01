@@ -454,9 +454,20 @@ function buildRaidNav() {
       for (var bossName in raid.encounters) {
         var bossId = raid.encounters[bossName];
         var isActive = bossId === currentEncounterId;
+        var noAsp = typeof getNoAsp === 'function' ? getNoAsp(bossId) : null;
+        var aspBadge = noAsp
+          ? '<span class="no-asp-badge" title="Not counted for All Star Points">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">' +
+              '<polygon points="8,1.5 9.9,6 14.8,6 11,9.2 12.5,14 8,11.2 3.5,14 5,9.2 1.2,6 6.1,6" fill="currentColor"/>' +
+              '<line x1="2" y1="14.5" x2="14.5" y2="2" stroke-width="2" stroke-linecap="round" stroke="currentColor"/>' +
+              '</svg>' +
+            '</span>'
+          : '';
         html += '<button type="button" class="boss-nav-item' + (isActive ? ' active' : '') + '" data-encounter-id="' + bossId + '" data-boss-name="' + bossName + '">' +
           '<img class="boss-nav-icon" src="' + bossIconUrl(bossId) + '" alt="" loading="lazy" onerror="this.src=\'https://assets.rpglogs.com/img/warcraft/abilities/inv_misc_questionmark.jpg\'">' +
-          '<span class="boss-nav-name">' + bossName + '</span></button>';
+          '<span class="boss-nav-name">' + bossName + '</span>' +
+          aspBadge +
+          '</button>';
       }
       html += '</div>';
     }
