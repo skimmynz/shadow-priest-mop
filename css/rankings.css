@@ -1016,43 +1016,41 @@ a.wowhead del {
     padding: 1.25rem 0.75rem;
   }
 
-  /* Toolbar wraps on mobile */
+  /* Toolbar wraps on mobile — 2 rows */
   .toolbar {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px 8px;
   }
 
   .toolbar-search {
     max-width: none;
     flex: 1 1 150px;
+    order: 1;
   }
 
   .search-all-toggle {
+    order: 2;
     align-self: center;
   }
 
-  .toolbar-sort {
-    flex: 1 1 0;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
   .toolbar .last-updated {
-    flex-basis: 100%;
+    flex: 1 1 auto;
     text-align: left;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     order: 3;
+    margin: 0;
+    min-width: 0;
   }
 
   .toolbar-right {
-    flex-basis: 100%;
-    margin-left: 0;
+    margin-left: auto;
     order: 4;
+    flex-shrink: 0;
   }
 
   .toolbar-right .toolbar-sort {
-    width: 100%;
+    font-size: 0.75rem;
+    padding: 6px 8px;
   }
 
   /* Grid: only show #, Player, DPS, Talents */
