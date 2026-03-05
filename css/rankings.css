@@ -202,7 +202,7 @@
 .toolbar-search {
   position: relative;
   flex: 0 1 220px;
-  max-width: 220px;
+  max-width: 320px;
 }
 
 .toolbar-search-icon {
@@ -1253,5 +1253,153 @@ a.wowhead del {
 
   .trinket-summary-section h3 {
     font-size: 0.875rem;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   Search All Bosses
+   ════════════════════════════════════════════════════════ */
+
+/* Toggle button */
+.search-all-toggle {
+  position: absolute;
+  right: -90px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(124, 58, 237, 0.1);
+  border: 1px solid rgba(124, 58, 237, 0.25);
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  font-family: inherit;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.search-all-toggle:hover {
+  background: rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.4);
+  color: var(--text-primary);
+}
+
+.search-all-toggle.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+}
+
+/* Search-all prompt / progress */
+.search-all-prompt,
+.search-all-progress {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 3rem 1rem;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.search-all-progress .loader {
+  margin: 0 auto 12px;
+}
+
+/* Search-all results grid — adds boss column */
+.search-all-header,
+.search-all-entry {
+  grid-template-columns: 36px minmax(120px, 1.2fr) 1fr 52px 76px 68px 72px 170px 68px !important;
+}
+
+/* Boss column */
+.col-boss {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.col-boss .boss-nav-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.col-boss .boss-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-boss .raid-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Clickable row */
+.search-all-entry {
+  cursor: pointer;
+}
+
+.search-all-entry:hover {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+/* Hide sidebar when search-all is active */
+.talent-sidebar.search-all-active {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .search-all-toggle {
+    position: static;
+    transform: none;
+    margin-top: 6px;
+  }
+
+  .search-all-header,
+  .search-all-entry {
+    grid-template-columns: 22px minmax(80px, 1fr) 1fr 60px 130px !important;
+  }
+
+  .search-all-entry .col-date,
+  .search-all-entry .col-time,
+  .search-all-entry .col-talents,
+  .search-all-entry .col-trinkets,
+  .search-all-header .col-date,
+  .search-all-header .col-time,
+  .search-all-header .col-talents,
+  .search-all-header .col-trinkets {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .search-all-header,
+  .search-all-entry {
+    grid-template-columns: 20px minmax(70px, 1fr) 1fr 52px 108px !important;
+  }
+
+  .col-boss .boss-label {
+    font-size: 0.75rem;
+  }
+
+  .col-boss .raid-label {
+    display: none;
+  }
+
+  .search-all-entry .col-ilvl,
+  .search-all-header .col-ilvl {
+    display: none;
   }
 }

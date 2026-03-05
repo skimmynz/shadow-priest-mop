@@ -169,6 +169,9 @@ var currentSearch = '';
 var currentSortField = 'dps';
 var currentSortDir = 'desc';
 var currentRegionFilter = '';
+var searchAllMode = false;
+var searchAllController = null;
+var searchAllToggle = document.getElementById('search-all-toggle');
 
 /* --------------------------------------------------------------------------------
    Utility
@@ -728,12 +731,234 @@ function updateLastUpdated(iso) {
 var currentController = null;
 
 /* --------------------------------------------------------------------------------
+   Player Lookup — search across all bosses in current tier
+   -------------------------------------------------------------------------------- */
+function getTierEncounters(tierKey) {
+  var tier = TIERS[tierKey];
+  if (!tier) return [];
+  var list = [];
+  for (var raidKey in tier.raids) {
+    var raid = tier.raids[raidKey];
+    for (var bossName in raid.encounters) {
+      list.push({ raidName: raid.name, raidShort: raid.short, bossName: bossName, encounterId: raid.encounters[bossName] });
+    }
+  }
+  return list;
+}
+
+function fetchBossData(encounterId) {
+  var cached = readCache(encounterId);
+  if (cached && cached.data) return Promise.resolve(cached.data);
+  return fetch(API_URL(encounterId), { headers: { 'accept': 'application/json' } })
+    .then(function(res) { return res.ok ? res.json() : null; })
+    .then(function(data) {
+      if (data) writeCache(encounterId, data, data.cachedAt || (new Date()).toISOString());
+      return data;
+    })
+    .catch(function() { return null; });
+}
+
+var debouncedSearchAll = createDebounced(function() {
+  var query = currentSearch.toLowerCase().trim();
+  if (!query || query.length < 2) {
+    if (rankingsDiv) rankingsDiv.innerHTML = '<div class="search-all-prompt">Type a player name to search across all ' + TIERS[currentTierKey].name + ' bosses</div>';
+    if (resultCountEl) resultCountEl.textContent = '';
+    return;
+  }
+  searchAllBosses(query);
+}, 300);
+
+async function searchAllBosses(query) {
+  // Abort previous search-all
+  if (searchAllController) searchAllController.abort();
+  searchAllController = new AbortController();
+  var signal = searchAllController.signal;
+
+  var encounters = getTierEncounters(currentTierKey);
+  var total = encounters.length;
+  var loaded = 0;
+  var matches = [];
+
+  // Show progress
+  if (rankingsDiv) {
+    rankingsDiv.innerHTML = '<div class="search-all-progress"><div class="loader"></div><p>Searching <span id="search-all-count">0</span>/' + total + ' bosses\u2026</p></div>';
+  }
+
+  // Fetch in batches of 6
+  var BATCH_SIZE = 6;
+  for (var i = 0; i < encounters.length; i += BATCH_SIZE) {
+    if (signal.aborted) return;
+    var batch = encounters.slice(i, i + BATCH_SIZE);
+    var results = await Promise.allSettled(batch.map(function(enc) { return fetchBossData(enc.encounterId); }));
+
+    for (var j = 0; j < results.length; j++) {
+      if (signal.aborted) return;
+      loaded++;
+      var data = results[j].status === 'fulfilled' ? results[j].value : null;
+      if (!data || !Array.isArray(data.rankings)) continue;
+
+      var enc = batch[j];
+      for (var k = 0; k < data.rankings.length; k++) {
+        var r = data.rankings[k];
+        if (r && r.name && r.name.toLowerCase().indexOf(query) !== -1) {
+          matches.push({
+            rank: k + 1,
+            entry: r,
+            bossName: enc.bossName,
+            raidShort: enc.raidShort,
+            encounterId: enc.encounterId
+          });
+        }
+      }
+    }
+
+    // Update progress
+    var countEl = document.getElementById('search-all-count');
+    if (countEl) countEl.textContent = loaded;
+  }
+
+  if (signal.aborted) return;
+  renderSearchAllResults(matches, query);
+}
+
+function renderSearchAllResults(matches, query) {
+  if (!rankingsDiv) return;
+
+  if (matches.length === 0) {
+    rankingsDiv.innerHTML = '<div class="search-all-prompt">No results for "' + query + '" in ' + TIERS[currentTierKey].name + '</div>';
+    if (resultCountEl) resultCountEl.textContent = '';
+    return;
+  }
+
+  // Sort by DPS descending
+  matches.sort(function(a, b) {
+    var aDps = (a.entry && typeof a.entry.total === 'number') ? a.entry.total : 0;
+    var bDps = (b.entry && typeof b.entry.total === 'number') ? b.entry.total : 0;
+    return bDps - aDps;
+  });
+
+  var header = '<div class="rank-table-header search-all-header">' +
+    '<span class="col-rank">#</span>' +
+    '<span class="col-boss">Boss</span>' +
+    '<span class="col-name">Player</span>' +
+    '<span class="col-ilvl">iLvl</span>' +
+    '<span class="col-dps">DPS</span>' +
+    '<span class="col-date">Date</span>' +
+    '<span class="col-time">Time</span>' +
+    '<span class="col-talents">Talents</span>' +
+    '<span class="col-trinkets">Trinkets</span>' +
+    '</div>';
+
+  var rows = '';
+  for (var i = 0; i < matches.length; i++) {
+    var m = matches[i];
+    var r = m.entry;
+    var dps = (typeof r.total === 'number') ? Math.round(r.total) : 0;
+    var rankTier = m.rank === 1 ? 'gold' : (m.rank <= 25 ? 'pink' : 'orange');
+    var reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
+    var gear = buildGearStrip(r.gear);
+    var talentIcons = optimizedRenderer.buildPlayerTalentIcons(r.talents, null);
+
+    rows += '<div class="rank-entry search-all-entry" data-rank-tier="' + rankTier + '" data-encounter-id="' + m.encounterId + '" data-boss-name="' + m.bossName + '">' +
+      '<span class="col-rank">' + m.rank + '</span>' +
+      '<span class="col-boss"><img class="boss-nav-icon" src="' + bossIconUrl(m.encounterId) + '" alt="" loading="lazy"><span class="boss-label">' + m.bossName + '</span><span class="raid-label">' + m.raidShort + '</span></span>' +
+      '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + r.name + '</a><span class="player-server">' + formatServerInfo(r.guildName, r.serverName, r.regionName) + '</span></span>' +
+      '<span class="col-ilvl">' + (r.itemLevel != null ? r.itemLevel : 'N/A') + '</span>' +
+      '<span class="col-dps">' + dps.toLocaleString() + '</span>' +
+      '<span class="col-date">' + formatKillDate(r.startTime) + '</span>' +
+      '<span class="col-time">' + formatDuration(r.duration) + '</span>' +
+      '<span class="col-talents">' + talentIcons + '</span>' +
+      '<span class="col-trinkets">' + gear.trinkets + '</span>' +
+      '</div>';
+  }
+
+  rankingsDiv.innerHTML = header + rows;
+
+  if (resultCountEl) resultCountEl.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
+
+  // Click to navigate to boss
+  rankingsDiv.querySelectorAll('.search-all-entry').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      if (e.target.closest('a')) return; // don't intercept link clicks
+      var id = parseInt(el.dataset.encounterId, 10);
+      var name = el.dataset.bossName;
+      exitSearchAllMode();
+      // Find and expand the right raid
+      for (var raidKey in TIERS[currentTierKey].raids) {
+        var encounters = TIERS[currentTierKey].raids[raidKey].encounters;
+        if (encounters[name] === id) {
+          currentRaidKey = raidKey;
+          lastBossPerRaid[raidKey] = { name: name, id: id };
+          break;
+        }
+      }
+      buildRaidNav();
+      fetchAndDisplayRankings(name, id);
+    });
+  });
+
+  scheduler.postTask(function() {
+    if (window.$WowheadPower) window.$WowheadPower.refreshLinks();
+  }, { priority: 'background' });
+}
+
+function enterSearchAllMode() {
+  searchAllMode = true;
+  if (searchAllToggle) {
+    searchAllToggle.classList.add('active');
+    searchAllToggle.setAttribute('aria-pressed', 'true');
+  }
+  // Hide sidebar content
+  var sidebar = document.getElementById('talents');
+  if (sidebar) sidebar.classList.add('search-all-active');
+  // Hide parsing rules
+  var rules = document.getElementById('sidebar-parsing-rules');
+  if (rules) rules.style.display = 'none';
+  // Update last-updated area
+  updateLastUpdated(null);
+  // Update placeholder
+  if (searchInput) searchInput.placeholder = 'Search player across ' + TIERS[currentTierKey].name + '...';
+  // Trigger search if there's already text
+  if (currentSearch.trim().length >= 2) {
+    debouncedSearchAll();
+  } else {
+    if (rankingsDiv) rankingsDiv.innerHTML = '<div class="search-all-prompt">Type a player name to search across all ' + TIERS[currentTierKey].name + ' bosses</div>';
+  }
+}
+
+function exitSearchAllMode() {
+  searchAllMode = false;
+  if (searchAllController) { searchAllController.abort(); searchAllController = null; }
+  if (searchAllToggle) {
+    searchAllToggle.classList.remove('active');
+    searchAllToggle.setAttribute('aria-pressed', 'false');
+  }
+  // Show sidebar content
+  var sidebar = document.getElementById('talents');
+  if (sidebar) sidebar.classList.remove('search-all-active');
+  // Show parsing rules
+  var rules = document.getElementById('sidebar-parsing-rules');
+  if (rules) rules.style.display = '';
+  // Reset placeholder
+  if (searchInput) searchInput.placeholder = 'Search player...';
+  // Restore current boss view
+  if (currentData && currentEncounterId) {
+    renderContent(currentData, currentEncounterId);
+  }
+}
+
+/* --------------------------------------------------------------------------------
    Search & Sort event listeners
    -------------------------------------------------------------------------------- */
 if (searchInput) {
   searchInput.addEventListener('input', function() {
     currentSearch = searchInput.value;
-    debouncedApplyFilters();
+    if (searchAllMode) {
+      if (searchClear) searchClear.style.display = currentSearch ? 'block' : 'none';
+      debouncedSearchAll();
+    } else {
+      debouncedApplyFilters();
+    }
   });
   searchInput.addEventListener('focus', function() { this.select(); });
 }
@@ -742,8 +967,22 @@ if (searchClear) {
     currentSearch = '';
     searchInput.value = '';
     searchClear.style.display = 'none';
-    applyFiltersAndSort();
+    if (searchAllMode) {
+      if (rankingsDiv) rankingsDiv.innerHTML = '<div class="search-all-prompt">Type a player name to search across all ' + TIERS[currentTierKey].name + ' bosses</div>';
+      if (resultCountEl) resultCountEl.textContent = '';
+    } else {
+      applyFiltersAndSort();
+    }
     searchInput.focus();
+  });
+}
+if (searchAllToggle) {
+  searchAllToggle.addEventListener('click', function() {
+    if (searchAllMode) {
+      exitSearchAllMode();
+    } else {
+      enterSearchAllMode();
+    }
   });
 }
 // Sort via column headers
