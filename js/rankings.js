@@ -172,6 +172,9 @@ var currentRegionFilter = '';
 var searchAllMode = false;
 var searchAllController = null;
 var searchAllToggle = document.getElementById('search-all-toggle');
+var searchAllMatches = [];
+var searchAllSortField = 'dps';
+var searchAllSortDir = 'desc';
 
 /* --------------------------------------------------------------------------------
    Utility
@@ -497,6 +500,7 @@ if (raidNavEl) {
     if (tierTab) {
       var newTier = tierTab.dataset.tier;
       if (newTier === currentTierKey) return;
+      if (searchAllMode) exitSearchAllMode();
       currentTierKey = newTier;
       var raids = TIERS[newTier].raids;
       currentRaidKey = Object.keys(raids)[0];
@@ -524,10 +528,12 @@ if (raidNavEl) {
         if (remembered && remembered.id === currentEncounterId) {
           // Already viewing this boss, just expand nav
         } else if (remembered) {
+          if (searchAllMode) exitSearchAllMode();
           fetchAndDisplayRankings(remembered.name, remembered.id);
         } else {
           var entries = Object.entries(TIERS[currentTierKey].raids[raidKey].encounters);
           if (entries.length > 0) {
+            if (searchAllMode) exitSearchAllMode();
             lastBossPerRaid[raidKey] = { name: entries[0][0], id: entries[0][1] };
             fetchAndDisplayRankings(entries[0][0], entries[0][1]);
           }
@@ -544,6 +550,7 @@ if (raidNavEl) {
       if (currentRaidKey) {
         lastBossPerRaid[currentRaidKey] = { name: name, id: id };
       }
+      if (searchAllMode) exitSearchAllMode();
       fetchAndDisplayRankings(name, id);
     }
   });
@@ -585,6 +592,7 @@ function revalidateInBackground(encounterId) {
     .then(function(res) { return res.ok ? res.json() : null; })
     .then(function(data) {
       if (!data) return;
+      if (data.encounterId && data.encounterId !== encounterId) return;
       var serverTs = data.cachedAt || (new Date()).toISOString();
       writeCache(encounterId, data, serverTs);
       // Only re-render if user is still viewing this boss
@@ -611,7 +619,9 @@ function prefetchRaidBosses(raidKey) {
       fetch(API_URL(id), { headers: { 'accept': 'application/json' } })
         .then(function(res) { return res.ok ? res.json() : null; })
         .then(function(data) {
-          if (data) writeCache(id, data, data.cachedAt || (new Date()).toISOString());
+          if (data && (!data.encounterId || data.encounterId === id)) {
+            writeCache(id, data, data.cachedAt || (new Date()).toISOString());
+          }
         })
         .catch(function() {});
     }, Math.random() * 2000);
@@ -640,6 +650,11 @@ async function fetchAndDisplayRankings(name, encounterId) {
 
   // Stale-while-revalidate: show cached data immediately, fetch fresh in background
   var cached = readCache(encounterId);
+  // Verify cached data belongs to this encounter
+  if (cached && cached.data && cached.data.encounterId && cached.data.encounterId !== encounterId) {
+    try { localStorage.removeItem(CACHE_KEY(encounterId)); } catch(e) {}
+    cached = null;
+  }
   var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
 
   if (cached) {
@@ -748,11 +763,21 @@ function getTierEncounters(tierKey) {
 
 function fetchBossData(encounterId) {
   var cached = readCache(encounterId);
-  if (cached && cached.data) return Promise.resolve(cached.data);
+  if (cached && cached.data) {
+    // Verify cached data belongs to this encounter (guard against CDN cross-contamination)
+    if (!cached.data.encounterId || cached.data.encounterId === encounterId) {
+      return Promise.resolve(cached.data);
+    }
+    // Mismatched data — purge and re-fetch
+    try { localStorage.removeItem(CACHE_KEY(encounterId)); } catch(e) {}
+  }
   return fetch(API_URL(encounterId), { headers: { 'accept': 'application/json' } })
     .then(function(res) { return res.ok ? res.json() : null; })
     .then(function(data) {
-      if (data) writeCache(encounterId, data, data.cachedAt || (new Date()).toISOString());
+      if (!data) return null;
+      // Verify API response matches requested encounter
+      if (data.encounterId && data.encounterId !== encounterId) return null;
+      writeCache(encounterId, data, data.cachedAt || (new Date()).toISOString());
       return data;
     })
     .catch(function() { return null; });
@@ -821,6 +846,33 @@ async function searchAllBosses(query) {
   renderSearchAllResults(matches, query);
 }
 
+function sortSearchAllMatches() {
+  var field = searchAllSortField;
+  var dir = searchAllSortDir;
+  searchAllMatches.sort(function(a, b) {
+    var aVal, bVal;
+    switch (field) {
+      case 'rank':    aVal = a.rank; bVal = b.rank; break;
+      case 'dps':     aVal = (a.entry && typeof a.entry.total === 'number') ? a.entry.total : 0;
+                      bVal = (b.entry && typeof b.entry.total === 'number') ? b.entry.total : 0; break;
+      case 'ilvl':    aVal = (a.entry && a.entry.itemLevel) || 0;
+                      bVal = (b.entry && b.entry.itemLevel) || 0; break;
+      case 'date':    aVal = (a.entry && a.entry.startTime) || 0;
+                      bVal = (b.entry && b.entry.startTime) || 0; break;
+      case 'duration':aVal = (a.entry && a.entry.duration) || 0;
+                      bVal = (b.entry && b.entry.duration) || 0; break;
+      default:        aVal = 0; bVal = 0;
+    }
+    return dir === 'desc' ? bVal - aVal : aVal - bVal;
+  });
+}
+
+function sortAndRenderSearchAll() {
+  if (!searchAllMatches.length) return;
+  sortSearchAllMatches();
+  renderSearchAllResults(searchAllMatches, currentSearch.toLowerCase().trim());
+}
+
 function renderSearchAllResults(matches, query) {
   if (!rankingsDiv) return;
 
@@ -830,21 +882,18 @@ function renderSearchAllResults(matches, query) {
     return;
   }
 
-  // Sort by DPS descending
-  matches.sort(function(a, b) {
-    var aDps = (a.entry && typeof a.entry.total === 'number') ? a.entry.total : 0;
-    var bDps = (b.entry && typeof b.entry.total === 'number') ? b.entry.total : 0;
-    return bDps - aDps;
-  });
+  // Store matches for re-sorting
+  searchAllMatches = matches;
+  sortSearchAllMatches();
 
   var header = '<div class="rank-table-header search-all-header">' +
-    '<span class="col-rank">#</span>' +
+    '<span class="col-rank" data-sort="rank"># <span class="sort-arrow"></span></span>' +
     '<span class="col-boss">Boss</span>' +
     '<span class="col-name">Player</span>' +
-    '<span class="col-ilvl">iLvl</span>' +
-    '<span class="col-dps">DPS</span>' +
-    '<span class="col-date">Date</span>' +
-    '<span class="col-time">Time</span>' +
+    '<span class="col-ilvl" data-sort="ilvl">iLvl <span class="sort-arrow"></span></span>' +
+    '<span class="col-dps" data-sort="dps">DPS <span class="sort-arrow"></span></span>' +
+    '<span class="col-date" data-sort="date">Date <span class="sort-arrow"></span></span>' +
+    '<span class="col-time" data-sort="duration">Time <span class="sort-arrow"></span></span>' +
     '<span class="col-talents">Talents</span>' +
     '<span class="col-trinkets">Trinkets</span>' +
     '</div>';
@@ -873,6 +922,7 @@ function renderSearchAllResults(matches, query) {
   }
 
   rankingsDiv.innerHTML = header + rows;
+  updateHeaderSortIndicators();
 
   if (resultCountEl) resultCountEl.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
 
@@ -904,6 +954,9 @@ function renderSearchAllResults(matches, query) {
 
 function enterSearchAllMode() {
   searchAllMode = true;
+  searchAllSortField = 'dps';
+  searchAllSortDir = 'desc';
+  searchAllMatches = [];
   if (searchAllToggle) {
     searchAllToggle.classList.add('active');
     searchAllToggle.setAttribute('aria-pressed', 'true');
@@ -986,7 +1039,7 @@ if (searchAllToggle) {
   });
 }
 // Sort via column headers
-var defaultDirs = { dps: 'desc', ilvl: 'desc', duration: 'asc', date: 'desc' };
+var defaultDirs = { rank: 'asc', dps: 'desc', ilvl: 'desc', duration: 'asc', date: 'desc' };
 
 function updateHeaderSortIndicators() {
   if (!rankingsDiv) return;
@@ -994,9 +1047,11 @@ function updateHeaderSortIndicators() {
   for (var i = 0; i < headers.length; i++) {
     var field = headers[i].getAttribute('data-sort');
     var arrow = headers[i].querySelector('.sort-arrow');
-    if (field === currentSortField) {
+    var activeField = searchAllMode ? searchAllSortField : currentSortField;
+    var activeDir = searchAllMode ? searchAllSortDir : currentSortDir;
+    if (field === activeField) {
       headers[i].classList.add('active-sort');
-      if (arrow) arrow.textContent = currentSortDir === 'desc' ? '\u25BC' : '\u25B2';
+      if (arrow) arrow.textContent = activeDir === 'desc' ? '\u25BC' : '\u25B2';
     } else {
       headers[i].classList.remove('active-sort');
       if (arrow) arrow.textContent = '';
@@ -1013,14 +1068,25 @@ if (rankingsDiv) {
     var header = e.target.closest('.rank-table-header [data-sort]');
     if (!header) return;
     var field = header.getAttribute('data-sort');
-    if (field === currentSortField) {
-      currentSortDir = currentSortDir === 'desc' ? 'asc' : 'desc';
+    if (searchAllMode) {
+      if (field === searchAllSortField) {
+        searchAllSortDir = searchAllSortDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        searchAllSortField = field;
+        searchAllSortDir = defaultDirs[field] || 'desc';
+      }
+      updateHeaderSortIndicators();
+      sortAndRenderSearchAll();
     } else {
-      currentSortField = field;
-      currentSortDir = defaultDirs[field];
+      if (field === currentSortField) {
+        currentSortDir = currentSortDir === 'desc' ? 'asc' : 'desc';
+      } else {
+        currentSortField = field;
+        currentSortDir = defaultDirs[field];
+      }
+      updateHeaderSortIndicators();
+      applyFiltersAndSort();
     }
-    updateHeaderSortIndicators();
-    applyFiltersAndSort();
   });
 }
 if (regionFilter) {

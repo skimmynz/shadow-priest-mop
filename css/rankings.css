@@ -202,7 +202,7 @@
 .toolbar-search {
   position: relative;
   flex: 0 1 220px;
-  max-width: 320px;
+  max-width: 220px;
 }
 
 .toolbar-search-icon {
@@ -1016,16 +1016,19 @@ a.wowhead del {
     padding: 1.25rem 0.75rem;
   }
 
-  /* Toolbar stacks vertically */
+  /* Toolbar wraps on mobile */
   .toolbar {
-    flex-direction: column;
-    align-items: stretch;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
   .toolbar-search {
     max-width: none;
-    flex: none;
+    flex: 1 1 150px;
+  }
+
+  .search-all-toggle {
+    align-self: center;
   }
 
   .toolbar-sort {
@@ -1036,14 +1039,16 @@ a.wowhead del {
   }
 
   .toolbar .last-updated {
+    flex-basis: 100%;
     text-align: left;
     font-size: 0.75rem;
+    order: 3;
   }
 
   .toolbar-right {
+    flex-basis: 100%;
     margin-left: 0;
-    flex-direction: column;
-    gap: 8px;
+    order: 4;
   }
 
   .toolbar-right .toolbar-sort {
@@ -1262,10 +1267,6 @@ a.wowhead del {
 
 /* Toggle button */
 .search-all-toggle {
-  position: absolute;
-  right: -90px;
-  top: 50%;
-  transform: translateY(-50%);
   background: rgba(124, 58, 237, 0.1);
   border: 1px solid rgba(124, 58, 237, 0.25);
   color: var(--text-secondary);
@@ -1278,6 +1279,7 @@ a.wowhead del {
   white-space: nowrap;
   transition: all 0.2s ease;
   letter-spacing: 0.02em;
+  flex-shrink: 0;
 }
 
 .search-all-toggle:hover {
@@ -1359,17 +1361,11 @@ a.wowhead del {
   display: none;
 }
 
-/* Responsive */
+/* Responsive — search-all results */
 @media (max-width: 1100px) {
-  .search-all-toggle {
-    position: static;
-    transform: none;
-    margin-top: 6px;
-  }
-
   .search-all-header,
   .search-all-entry {
-    grid-template-columns: 22px minmax(80px, 1fr) 1fr 60px 130px !important;
+    grid-template-columns: 28px minmax(80px, 1.2fr) 1fr 44px 72px !important;
   }
 
   .search-all-entry .col-date,
@@ -1387,7 +1383,7 @@ a.wowhead del {
 @media (max-width: 600px) {
   .search-all-header,
   .search-all-entry {
-    grid-template-columns: 20px minmax(70px, 1fr) 1fr 52px 108px !important;
+    grid-template-columns: 26px minmax(60px, 1fr) 1fr 68px !important;
   }
 
   .col-boss .boss-label {
