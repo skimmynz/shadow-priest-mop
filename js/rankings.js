@@ -71,6 +71,7 @@ class OptimizedRenderer {
   constructor() { this.renderCache = new Map(); }
 
   renderRankings(data, topByTier) {
+    this.renderCache.clear();
     var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     var visible = rankings.slice(0, 100);
     var maxDps = 0;
@@ -395,7 +396,7 @@ function applyFiltersAndSort() {
 
   // Update result count
   if (resultCountEl) {
-    if (query) {
+    if (query || regionVal) {
       resultCountEl.textContent = visibleCount + ' of ' + entryArr.length + ' players';
     } else {
       resultCountEl.textContent = '';
