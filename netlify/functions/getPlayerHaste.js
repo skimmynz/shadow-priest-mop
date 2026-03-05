@@ -1,20 +1,5 @@
 const fetch = require('node-fetch');
 
-const rateLimiter = new Map();
-
-setInterval(() => {
-  const now = Date.now();
-  const windowStart = now - 60000;
-  for (const [ip, requests] of rateLimiter.entries()) {
-    const validRequests = requests.filter(time => time > windowStart);
-    if (validRequests.length === 0) {
-      rateLimiter.delete(ip);
-    } else {
-      rateLimiter.set(ip, validRequests);
-    }
-  }
-}, 30000);
-
 exports.handler = async function(event, context) {
   const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -25,28 +10,6 @@ exports.handler = async function(event, context) {
 
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
-  }
-
-  // Rate limiting
-  const clientIP = event.headers['client-ip'] ||
-                   event.headers['x-forwarded-for'] ||
-                   event.headers['x-real-ip'] ||
-                   'unknown';
-  const now = Date.now();
-  const windowStart = now - 60000;
-  if (rateLimiter.has(clientIP)) {
-    const requests = rateLimiter.get(clientIP).filter(time => time > windowStart);
-    if (requests.length >= 60) {
-      return {
-        statusCode: 429,
-        headers,
-        body: JSON.stringify({ error: 'Rate limit exceeded. Please wait before making more requests.', retryAfter: 60 })
-      };
-    }
-    requests.push(now);
-    rateLimiter.set(clientIP, requests);
-  } else {
-    rateLimiter.set(clientIP, [now]);
   }
 
   const reportID = event.queryStringParameters && event.queryStringParameters.reportID;

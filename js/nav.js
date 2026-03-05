@@ -47,14 +47,22 @@
     });
   }
 
+  // Set dynamic footer year
+  function setFooterYear() {
+    var el = document.querySelector('.footer-year');
+    if (el) el.textContent = new Date().getFullYear();
+  }
+
   // Initialize on DOM load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initMobileMenu();
       setActiveNavLink();
+      setFooterYear();
     });
   } else {
     initMobileMenu();
     setActiveNavLink();
+    setFooterYear();
   }
 })();

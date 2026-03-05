@@ -180,7 +180,7 @@ document.addEventListener('click', (e) => {
 /* --------------------------------------------------------------------------------
    Interactive UI map hotspots
    -------------------------------------------------------------------------------- */
-function getScaleAndPosition(hotspot, coords) {
+function getScaleAndPosition(coords) {
   const rect = wrapper.getBoundingClientRect();
   const scaleX = rect.width / BASE_WIDTH;
   const scaleY = rect.height / BASE_HEIGHT;
@@ -194,7 +194,7 @@ function getScaleAndPosition(hotspot, coords) {
 }
 
 function applyHotspotPosition(el, coords) {
-  const pos = getScaleAndPosition(el, coords);
+  const pos = getScaleAndPosition(coords);
   el.style.left = `${pos.left}px`;
   el.style.top = `${pos.top}px`;
   el.style.width = `${pos.width}px`;

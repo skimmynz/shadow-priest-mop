@@ -1,23 +1,5 @@
 const fetch = require('node-fetch');
 
-// Rate limiting storage (in production, consider using a database)
-const rateLimiter = new Map();
-
-// Clean up old entries periodically
-setInterval(() => {
-  const now = Date.now();
-  const windowStart = now - 60000; // 1 minute window
-  
-  for (const [ip, requests] of rateLimiter.entries()) {
-    const validRequests = requests.filter(time => time > windowStart);
-    if (validRequests.length === 0) {
-      rateLimiter.delete(ip);
-    } else {
-      rateLimiter.set(ip, validRequests);
-    }
-  }
-}, 30000); // Clean every 30 seconds
-
 exports.handler = async function(event, context) {
   // CORS headers for all responses
   const headers = {
@@ -34,33 +16,6 @@ exports.handler = async function(event, context) {
       headers,
       body: ''
     };
-  }
-
-  // Rate limiting
-  const clientIP = event.headers['client-ip'] || 
-                   event.headers['x-forwarded-for'] || 
-                   event.headers['x-real-ip'] || 
-                   'unknown';
-  
-  const now = Date.now();
-  const windowStart = now - 60000; // 1 minute window
-  
-  if (rateLimiter.has(clientIP)) {
-    const requests = rateLimiter.get(clientIP).filter(time => time > windowStart);
-    if (requests.length >= 30) { // Max 30 requests per minute
-      return {
-        statusCode: 429,
-        headers,
-        body: JSON.stringify({ 
-          error: 'Rate limit exceeded. Please wait before making more requests.',
-          retryAfter: 60 
-        })
-      };
-    }
-    requests.push(now);
-    rateLimiter.set(clientIP, requests);
-  } else {
-    rateLimiter.set(clientIP, [now]);
   }
 
   // Validate encounterId
