@@ -102,8 +102,8 @@
 }
 
 .hero-logo {
-  height: 48px;
-  margin-bottom: 1.5rem;
+  height: 80px;
+  margin-bottom: 1rem;
   opacity: .85;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .4));
 }
@@ -319,7 +319,7 @@
 @media (max-width: 768px) {
   .hero { min-height: 85vh; padding: 2rem 1.5rem; }
   .hero-title { letter-spacing: .04em; }
-  .hero-logo { height: 40px; }
+  .hero-logo { height: 64px; }
   .feature-strip { flex-direction: column; }
   .feature-item {
     border-right: none;
