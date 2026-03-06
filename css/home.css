@@ -31,15 +31,6 @@
   filter: blur(2px) brightness(.35) saturate(.7);
   transform: scale(1.05);
 }
-.hero-bg img,
-.hero-bg video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  filter: blur(2px) brightness(.35) saturate(.7);
-  transform: scale(1.05);
-}
 
 .hero-overlay {
   position: absolute;
@@ -338,5 +329,4 @@
 
 @media (max-width: 480px) {
   .hero-author { flex-wrap: wrap; justify-content: center; }
-  .feature-item { padding: 1.25rem 1.25rem; }
 }
