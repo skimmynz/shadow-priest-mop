@@ -686,6 +686,11 @@ a.wowhead del {
 .gear-strip-icon.legendary { border-color: #ff8000; }
 .gear-strip-icon.common { border-color: #9d9d9d; }
 
+/* Inline trinkets (mobile-only, hidden on desktop) */
+.inline-trinkets {
+  display: none;
+}
+
 /* Trinkets column */
 .gear-trinkets {
   gap: 2px;
@@ -1121,29 +1126,28 @@ a.wowhead del {
   .col-ilvl   { grid-column: 3; grid-row: 1; text-align: center; font-size: 0.75rem; }
   .col-dps    { grid-column: 4; grid-row: 1; text-align: right; padding-right: 8px; }
 
-  /* Row 2: talents + trinkets flowing as one strip */
-  .rank-entry .col-talents {
-    display: contents;
-  }
-
-  .rank-entry .talent-row {
-    grid-column: 2;
+  /* Row 2: talents + trinkets as one inline strip */
+  .col-talents {
+    grid-column: 2 / -1;
     grid-row: 2;
     padding: 2px 0 2px 4px;
   }
 
-  .rank-entry .col-trinkets {
-    display: contents;
+  .rank-entry .talent-row {
+    display: inline-flex;
   }
 
-  .rank-entry .col-trinkets .gear-strip {
-    grid-column: 3 / -1;
-    grid-row: 2;
+  .col-trinkets {
+    display: none;
+  }
+
+  .inline-trinkets {
+    display: inline-flex;
     align-items: center;
-    padding-left: 4px;
+    margin-left: 6px;
   }
 
-  .rank-entry .col-trinkets .gear-strip-icon {
+  .inline-trinkets .gear-strip-icon {
     width: 22px;
     height: 22px;
   }
@@ -1286,7 +1290,7 @@ a.wowhead del {
     height: 18px;
   }
 
-  .col-trinkets .gear-strip-icon {
+  .inline-trinkets .gear-strip-icon {
     width: 18px;
     height: 18px;
   }

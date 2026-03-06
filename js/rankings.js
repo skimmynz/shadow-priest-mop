@@ -121,7 +121,7 @@ class OptimizedRenderer {
       '<span class="col-dps">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span>' +
       '<span class="col-date">' + killDate + '</span>' +
       '<span class="col-time">' + duration + '</span>' +
-      '<span class="col-talents">' + perPlayerTalents + '</span>' +
+      '<span class="col-talents">' + perPlayerTalents + (gear.trinkets ? '<span class="inline-trinkets">' + gear.trinkets + '</span>' : '') + '</span>' +
       '<span class="col-trinkets">' + gear.trinkets + '</span>' +
       '</div>';
 
@@ -916,7 +916,7 @@ function renderSearchAllResults(matches, query) {
       '<span class="col-dps">' + dps.toLocaleString() + '</span>' +
       '<span class="col-date">' + formatKillDate(r.startTime) + '</span>' +
       '<span class="col-time">' + formatDuration(r.duration) + '</span>' +
-      '<span class="col-talents">' + talentIcons + '</span>' +
+      '<span class="col-talents">' + talentIcons + (gear.trinkets ? '<span class="inline-trinkets">' + gear.trinkets + '</span>' : '') + '</span>' +
       '<span class="col-trinkets">' + gear.trinkets + '</span>' +
       '</div>';
   }
@@ -994,8 +994,11 @@ function exitSearchAllMode() {
   if (rules) rules.style.display = '';
   // Reset placeholder
   if (searchInput) searchInput.placeholder = 'Search player...';
-  // Restore current boss view
+  // Restore current boss view and last-updated badge
   if (currentData && currentEncounterId) {
+    var cached = readCache(currentEncounterId);
+    var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
+    updateLastUpdated(cachedAt);
     renderContent(currentData, currentEncounterId);
   }
 }
