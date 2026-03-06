@@ -637,15 +637,12 @@ async function fetchAndDisplayRankings(name, encounterId) {
   currentEncounterId = encounterId;
   selectActiveBossNav(encounterId);
 
-  // Reset search/sort on boss change
-  currentSearch = '';
+  // Reset sort/region on boss change, preserve search
   currentSortField = 'dps';
   currentSortDir = 'desc';
   currentRegionFilter = '';
-  if (searchInput) searchInput.value = '';
   updateHeaderSortIndicators();
   if (regionFilter) regionFilter.value = '';
-  if (searchClear) searchClear.style.display = 'none';
   if (resultCountEl) resultCountEl.classList.add('hidden');
 
   // Stale-while-revalidate: show cached data immediately, fetch fresh in background
