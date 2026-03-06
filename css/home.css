@@ -114,6 +114,10 @@
   font-weight: 400;
   margin-bottom: 1rem;
   line-height: 1.6;
+  max-width: 20ch;
+  margin-left: auto;
+  margin-right: auto;
+  text-wrap: balance;
 }
 
 .hero-author {
@@ -300,6 +304,7 @@
   font-size: .8125rem;
   color: var(--text-muted);
   line-height: 1.45;
+  text-wrap: balance;
 }
 
 .feature-item-arrow {
