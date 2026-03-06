@@ -394,7 +394,10 @@ function applyFiltersAndSort() {
     }
     return dir === 'desc' ? bVal - aVal : aVal - bVal;
   });
-  sorted.forEach(function(el) { parent.appendChild(el); });
+  var header = parent.querySelector('.rank-table-header');
+  var frag = document.createDocumentFragment();
+  sorted.forEach(function(el) { frag.appendChild(el); });
+  parent.appendChild(frag);
 
   // Count visible
   entryArr.forEach(function(el) {
