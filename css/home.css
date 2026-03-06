@@ -299,9 +299,9 @@
 }
 
 .feature-item-desc {
-  font-size: .875rem;
+  font-size: .8125rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .feature-item-arrow {
