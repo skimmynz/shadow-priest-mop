@@ -218,10 +218,10 @@
 
 .toolbar-search-input {
   width: 100%;
-  padding: 9px 36px 9px 36px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: rgba(15, 17, 23, 0.6);
+  padding: 8px 36px 8px 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-primary);
   font-size: 0.8125rem;
   font-family: inherit;
@@ -237,7 +237,7 @@
 
 .toolbar-search-input:focus {
   border-color: var(--accent-color);
-  background: rgba(15, 17, 23, 0.8);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .toolbar-search-clear {
@@ -279,10 +279,10 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 12px;
-  border-radius: 20px;
+  padding: 7px 12px;
+  border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.75rem;
   color: var(--text-muted);
 }
@@ -317,27 +317,31 @@
   color: var(--text-muted);
   font-weight: 500;
   white-space: nowrap;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .toolbar-sort {
-  padding: 9px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
-  background: var(--secondary-bg);
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
   color: var(--text-secondary);
   font-size: 0.75rem;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
-  padding-right: 30px;
+  padding-right: 28px;
 }
 
 .toolbar-sort:focus {
@@ -1016,23 +1020,27 @@ a.wowhead del {
     padding: 1.25rem 0.75rem;
   }
 
-  /* Toolbar wraps on mobile — 2 rows */
+  /* Toolbar: 2-row aligned layout */
   .toolbar {
     flex-wrap: wrap;
-    gap: 6px 8px;
+    gap: 8px;
   }
 
+  /* Row 1: search + All Bosses */
   .toolbar-search {
     max-width: none;
-    flex: 1 1 150px;
+    flex: 1 1 0;
+    min-width: 0;
     order: 1;
   }
 
   .search-all-toggle {
     order: 2;
+    flex: 0 0 auto;
     align-self: center;
   }
 
+  /* Row 2: updated badge (left) + result count & region (right) */
   .toolbar .last-updated {
     flex: 1 1 auto;
     text-align: left;
@@ -1040,17 +1048,19 @@ a.wowhead del {
     order: 3;
     margin: 0;
     min-width: 0;
+    overflow: hidden;
   }
 
   .toolbar-right {
     margin-left: auto;
     order: 4;
-    flex-shrink: 0;
+    flex: 0 0 auto;
   }
 
   .toolbar-right .toolbar-sort {
     font-size: 0.75rem;
     padding: 6px 8px;
+    padding-right: 26px;
   }
 
   /* Two-row card strip: row 1 = rank | name | dps, row 2 = talents */
@@ -1164,6 +1174,15 @@ a.wowhead del {
 
 /* ----- Small mobile (≤480px): minimal layout ----- */
 @media (max-width: 480px) {
+  .toolbar {
+    gap: 6px;
+  }
+
+  .last-updated-badge {
+    font-size: 0.6875rem;
+    padding: 4px 8px;
+  }
+
   .content-area {
     padding: 1rem 0.5rem;
   }
@@ -1286,11 +1305,11 @@ a.wowhead del {
   background: rgba(124, 58, 237, 0.1);
   border: 1px solid rgba(124, 58, 237, 0.25);
   color: var(--text-secondary);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-family: inherit;
   font-weight: 600;
-  padding: 5px 10px;
-  border-radius: 20px;
+  padding: 7px 12px;
+  border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
