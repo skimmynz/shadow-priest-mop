@@ -1029,7 +1029,7 @@ a.wowhead del {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 8px;
-    align-items: center;
+    align-items: stretch;
   }
 
   /* Row 1: search (left) + All Bosses (right) */
@@ -1042,7 +1042,9 @@ a.wowhead del {
   .search-all-toggle {
     grid-column: 2;
     grid-row: 1;
-    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Row 2: updated badge (left) + region (right) */
@@ -1053,13 +1055,15 @@ a.wowhead del {
     margin: 0;
     min-width: 0;
     overflow: hidden;
+    display: flex;
+    align-items: stretch;
   }
 
   .toolbar .last-updated-badge {
     width: 100%;
     box-sizing: border-box;
-    padding: 8px 12px;
-    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1077,6 +1081,8 @@ a.wowhead del {
     grid-column: 2;
     grid-row: 2;
     margin-left: 0;
+    display: flex;
+    align-items: stretch;
   }
 
   /* Hide result count on mobile — shown in search-all mode via JS */
@@ -1085,9 +1091,8 @@ a.wowhead del {
   }
 
   .toolbar-right .toolbar-sort {
-    font-size: 0.8125rem;
-    padding: 8px 14px;
-    padding-right: 28px;
+    display: flex;
+    align-items: center;
   }
 
   /* Two-row card strip */
@@ -1116,22 +1121,29 @@ a.wowhead del {
   .col-ilvl   { grid-column: 3; grid-row: 1; text-align: center; font-size: 0.75rem; }
   .col-dps    { grid-column: 4; grid-row: 1; text-align: right; padding-right: 8px; }
 
-  /* Row 2: talents + trinkets inline, left-aligned */
-  .col-talents {
+  /* Row 2: talents + trinkets flowing as one strip */
+  .rank-entry .col-talents {
+    display: contents;
+  }
+
+  .rank-entry .talent-row {
     grid-column: 2;
     grid-row: 2;
     padding: 2px 0 2px 4px;
   }
 
-  .col-trinkets {
-    display: flex;
+  .rank-entry .col-trinkets {
+    display: contents;
+  }
+
+  .rank-entry .col-trinkets .gear-strip {
     grid-column: 3 / -1;
     grid-row: 2;
     align-items: center;
     padding-left: 4px;
   }
 
-  .col-trinkets .gear-strip-icon {
+  .rank-entry .col-trinkets .gear-strip-icon {
     width: 22px;
     height: 22px;
   }
