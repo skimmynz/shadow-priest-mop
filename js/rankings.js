@@ -969,8 +969,10 @@ function enterSearchAllMode() {
   // Hide parsing rules
   var rules = document.getElementById('sidebar-parsing-rules');
   if (rules) rules.style.display = 'none';
-  // Hide region filter
-  if (regionFilter) regionFilter.style.display = 'none';
+  // Hide region filter and result count, reset region state
+  if (regionFilter) { regionFilter.value = ''; regionFilter.style.display = 'none'; }
+  currentRegionFilter = '';
+  if (resultCountEl) { resultCountEl.textContent = ''; resultCountEl.style.display = 'none'; }
   // Save and clear last-updated area
   var cached = readCache(currentEncounterId);
   savedCachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
@@ -996,9 +998,10 @@ function exitSearchAllMode() {
   // Show parsing rules
   var rules = document.getElementById('sidebar-parsing-rules');
   if (rules) rules.style.display = '';
-  // Show region filter and reset it
+  // Show region filter and result count, reset state
   if (regionFilter) { regionFilter.style.display = ''; regionFilter.value = ''; }
   currentRegionFilter = '';
+  if (resultCountEl) resultCountEl.style.display = '';
   // Restore current boss view and last-updated badge
   if (currentData && currentEncounterId) {
     updateLastUpdated(savedCachedAt);

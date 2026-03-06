@@ -197,6 +197,7 @@
   padding: 12px 0;
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
 }
 
 .toolbar-search {
@@ -269,10 +270,16 @@
 }
 
 .toolbar .last-updated {
-  margin: 0 auto;
   text-align: center;
   white-space: nowrap;
-  flex: 1 1 auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.toolbar .last-updated * {
+  pointer-events: auto;
 }
 
 .last-updated-badge {
@@ -1059,6 +1066,9 @@ a.wowhead del {
 
   /* Row 2: updated badge (left) + region (right) */
   .toolbar .last-updated {
+    position: static;
+    transform: none;
+    pointer-events: auto;
     grid-column: 1;
     grid-row: 2;
     text-align: left;
