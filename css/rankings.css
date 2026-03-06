@@ -323,6 +323,10 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.toolbar-result-count:empty {
+  display: none;
+}
+
 .toolbar-sort {
   padding: 7px 12px;
   border-radius: 8px;
@@ -1042,13 +1046,19 @@ a.wowhead del {
 
   /* Row 2: updated badge (left) + result count & region (right) */
   .toolbar .last-updated {
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-width: 0;
     text-align: left;
-    font-size: 0.7rem;
     order: 3;
     margin: 0;
-    min-width: 0;
     overflow: hidden;
+  }
+
+  .toolbar .last-updated-badge {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .toolbar-right {
@@ -1059,7 +1069,7 @@ a.wowhead del {
 
   .toolbar-right .toolbar-sort {
     font-size: 0.75rem;
-    padding: 6px 8px;
+    padding: 7px 10px;
     padding-right: 26px;
   }
 
