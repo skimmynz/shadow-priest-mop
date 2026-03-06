@@ -279,11 +279,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--text-muted);
 }
 
@@ -328,12 +328,12 @@
 }
 
 .toolbar-sort {
-  padding: 7px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
@@ -1085,9 +1085,9 @@ a.wowhead del {
   }
 
   .toolbar-right .toolbar-sort {
-    font-size: 0.75rem;
-    padding: 7px 10px;
-    padding-right: 26px;
+    font-size: 0.8125rem;
+    padding: 8px 14px;
+    padding-right: 28px;
   }
 
   /* Two-row card strip */
@@ -1116,25 +1116,24 @@ a.wowhead del {
   .col-ilvl   { grid-column: 3; grid-row: 1; text-align: center; font-size: 0.75rem; }
   .col-dps    { grid-column: 4; grid-row: 1; text-align: right; padding-right: 8px; }
 
-  /* Row 2: talents left, trinkets right */
+  /* Row 2: talents + trinkets inline, left-aligned */
   .col-talents {
-    grid-column: 2 / 4;
+    grid-column: 2;
     grid-row: 2;
     padding: 2px 0 2px 4px;
   }
 
   .col-trinkets {
     display: flex;
-    grid-column: 4;
+    grid-column: 3 / -1;
     grid-row: 2;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 4px;
+    padding-left: 4px;
   }
 
   .col-trinkets .gear-strip-icon {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 
   .rank-entry > span,
@@ -1366,10 +1365,10 @@ a.wowhead del {
   background: rgba(124, 58, 237, 0.1);
   border: 1px solid rgba(124, 58, 237, 0.25);
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-family: inherit;
   font-weight: 600;
-  padding: 7px 12px;
+  padding: 8px 14px;
   border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;
