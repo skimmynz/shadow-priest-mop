@@ -1062,6 +1062,14 @@ a.wowhead del {
     white-space: nowrap;
   }
 
+  .last-updated-label {
+    display: none;
+  }
+
+  .last-updated-separator {
+    display: none;
+  }
+
   .toolbar-right {
     grid-column: 2;
     grid-row: 2;
@@ -1079,19 +1087,19 @@ a.wowhead del {
     padding-right: 26px;
   }
 
-  /* Two-row card strip: row 1 = rank | name | dps, row 2 = talents */
+  /* Two-row card strip */
+  /* Row 1: rank | name | dps */
+  /* Row 2: talents (left) ... ilvl + trinkets (right) */
   #rankings {
-    --cols: 28px 1fr auto;
+    --cols: 28px 1fr auto auto auto;
   }
 
   .rank-entry {
     grid-template-rows: auto auto;
   }
 
-  .col-ilvl,
   .col-date,
-  .col-time,
-  .col-trinkets {
+  .col-time {
     display: none;
   }
 
@@ -1099,13 +1107,40 @@ a.wowhead del {
     display: none;
   }
 
+  /* Row 1: dps spans cols 3-5 */
   .col-rank   { grid-column: 1; grid-row: 1; }
   .col-name   { grid-column: 2; grid-row: 1; }
-  .col-dps    { grid-column: 3; grid-row: 1; text-align: right; padding-right: 8px; }
+  .col-dps    { grid-column: 3 / -1; grid-row: 1; text-align: right; padding-right: 8px; }
+
+  /* Row 2: talents left, ilvl + trinkets right */
   .col-talents {
-    grid-column: 2 / -1;
+    grid-column: 2;
     grid-row: 2;
     padding: 2px 0 2px 4px;
+  }
+
+  .col-ilvl {
+    display: flex;
+    grid-column: 3;
+    grid-row: 2;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    padding-right: 2px;
+  }
+
+  .col-trinkets {
+    display: flex;
+    grid-column: 4 / -1;
+    grid-row: 2;
+    align-items: center;
+    padding-right: 4px;
+  }
+
+  .col-trinkets .gear-strip-icon {
+    width: 20px;
+    height: 20px;
   }
 
   .rank-entry > span,
@@ -1141,6 +1176,12 @@ a.wowhead del {
   .rank-table-header .col-date,
   .rank-table-header .col-time {
     display: none;
+  }
+
+  .rank-table-header .col-dps {
+    grid-column: 3;
+    text-align: right;
+    padding-right: 8px;
   }
 
   /* Raid nav: tighter on mobile */
@@ -1225,7 +1266,7 @@ a.wowhead del {
 
   /* Tighter two-row grid */
   #rankings {
-    --cols: 24px 1fr auto;
+    --cols: 24px 1fr auto auto auto;
   }
 
   .rank-entry > span,
@@ -1235,8 +1276,13 @@ a.wowhead del {
   }
 
   .rank-entry .talent-icon-img {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .col-trinkets .gear-strip-icon {
+    width: 18px;
+    height: 18px;
   }
 
   .rank-table-header {
