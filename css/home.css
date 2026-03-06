@@ -101,13 +101,11 @@
   margin-bottom: .5rem;
 }
 
-.hero-subtitle {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: .12em;
-  text-transform: uppercase;
+.hero-logo {
+  height: 48px;
   margin-bottom: 1.5rem;
+  opacity: .85;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .4));
 }
 
 .hero-tagline {
@@ -321,6 +319,7 @@
 @media (max-width: 768px) {
   .hero { min-height: 85vh; padding: 2rem 1.5rem; }
   .hero-title { letter-spacing: .04em; }
+  .hero-logo { height: 40px; }
   .feature-strip { flex-direction: column; }
   .feature-item {
     border-right: none;
