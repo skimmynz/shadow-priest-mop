@@ -1077,6 +1077,7 @@ a.wowhead del {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    padding-left: 12px;
   }
 
   .last-updated-label {
