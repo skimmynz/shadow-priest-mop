@@ -973,8 +973,6 @@ function enterSearchAllMode() {
   var cached = readCache(currentEncounterId);
   savedCachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
   updateLastUpdated(null);
-  // Update placeholder
-  if (searchInput) searchInput.placeholder = 'Search all bosses...';
   // Trigger search if there's already text
   if (currentSearch.trim().length >= 2) {
     debouncedSearchAll();
@@ -996,8 +994,6 @@ function exitSearchAllMode() {
   // Show parsing rules
   var rules = document.getElementById('sidebar-parsing-rules');
   if (rules) rules.style.display = '';
-  // Reset placeholder
-  if (searchInput) searchInput.placeholder = 'Search player...';
   // Restore current boss view and last-updated badge
   if (currentData && currentEncounterId) {
     updateLastUpdated(savedCachedAt);
