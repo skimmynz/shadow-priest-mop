@@ -155,10 +155,6 @@ class OptimizedRenderer {
   }
 }
 
-/* --------------------------------------------------------------------------------
-   (Dropdown removed — all data shown inline)
-   -------------------------------------------------------------------------------- */
-
 var optimizedRenderer = new OptimizedRenderer();
 var currentData = null;
 
@@ -394,7 +390,6 @@ function applyFiltersAndSort() {
     }
     return dir === 'desc' ? bVal - aVal : aVal - bVal;
   });
-  var header = parent.querySelector('.rank-table-header');
   var frag = document.createDocumentFragment();
   sorted.forEach(function(el) { frag.appendChild(el); });
   parent.appendChild(frag);
@@ -638,7 +633,6 @@ async function fetchAndDisplayRankings(name, encounterId) {
   currentController = new AbortController();
 
   // Update state
-  currentBossName = name;
   currentEncounterId = encounterId;
   selectActiveBossNav(encounterId);
 
@@ -648,7 +642,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
   currentSortDir = 'desc';
   currentRegionFilter = '';
   if (searchInput) searchInput.value = '';
-  resetSortToggles();
+  updateHeaderSortIndicators();
   if (regionFilter) regionFilter.value = '';
   if (searchClear) searchClear.style.display = 'none';
   if (resultCountEl) resultCountEl.classList.add('hidden');
@@ -711,7 +705,6 @@ function clearHash() {
   try { history.replaceState(null, '', location.pathname); } catch(e) {}
 }
 
-
 /* --------------------------------------------------------------------------------
    Cache helpers
    -------------------------------------------------------------------------------- */
@@ -746,9 +739,6 @@ function updateLastUpdated(iso) {
     '</span>';
 }
 
-/* --------------------------------------------------------------------------------
-   Button state (no-op now — boss chips handle their own state)
-   -------------------------------------------------------------------------------- */
 var currentController = null;
 
 /* --------------------------------------------------------------------------------
@@ -1075,9 +1065,6 @@ function updateHeaderSortIndicators() {
   }
 }
 
-function resetSortToggles() {
-  updateHeaderSortIndicators();
-}
 
 if (rankingsDiv) {
   rankingsDiv.addEventListener('click', function(e) {

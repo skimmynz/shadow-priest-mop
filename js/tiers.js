@@ -19,7 +19,6 @@ var TIERS = {
 };
 var currentTierKey = 't15';
 var currentRaidKey = 'tot';
-var currentBossName = '';
 var currentEncounterId = null;
 var lastBossPerRaid = {};
 
