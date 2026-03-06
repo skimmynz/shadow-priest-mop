@@ -1053,9 +1053,13 @@ a.wowhead del {
     padding: 6px 8px;
   }
 
-  /* Grid: only show #, Player, DPS, Talents */
+  /* Two-row card strip: row 1 = rank | name | dps, row 2 = talents */
   #rankings {
-    --cols: 22px 1fr 60px 130px;
+    --cols: 28px 1fr auto;
+  }
+
+  .rank-entry {
+    grid-template-rows: auto auto;
   }
 
   .col-ilvl,
@@ -1069,35 +1073,48 @@ a.wowhead del {
     display: none;
   }
 
-  .col-rank { grid-column: 1; }
-  .col-name { grid-column: 2; }
-  .col-dps { grid-column: 3; }
-  .col-talents { grid-column: 4; }
+  .col-rank   { grid-column: 1; grid-row: 1; }
+  .col-name   { grid-column: 2; grid-row: 1; }
+  .col-dps    { grid-column: 3; grid-row: 1; text-align: right; padding-right: 8px; }
+  .col-talents {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    padding: 2px 0 2px 4px;
+  }
 
   .rank-entry > span,
   .rank-entry > div,
   .rank-table-header > span {
-    padding: 0 2px;
+    padding: 0 4px;
   }
 
   .col-dps {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
   }
 
   .rank-entry .talent-icon-img {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
   }
 
   .rank-entry .talent-row {
-    gap: 1px;
+    gap: 2px;
   }
 
   .rank-table-header {
+    --cols: 28px 1fr auto;
     margin: 0 -0.75rem 2px;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     top: 60px;
+  }
+
+  .rank-table-header .col-talents,
+  .rank-table-header .col-trinkets,
+  .rank-table-header .col-ilvl,
+  .rank-table-header .col-date,
+  .rank-table-header .col-time {
+    display: none;
   }
 
   /* Raid nav: tighter on mobile */
@@ -1171,9 +1188,9 @@ a.wowhead del {
     font-size: 0.6875rem;
   }
 
-  /* Tighter grid */
+  /* Tighter two-row grid */
   #rankings {
-    --cols: 20px 1fr 52px 108px;
+    --cols: 24px 1fr auto;
   }
 
   .rank-entry > span,
@@ -1183,11 +1200,12 @@ a.wowhead del {
   }
 
   .rank-entry .talent-icon-img {
-    width: 17px;
-    height: 17px;
+    width: 20px;
+    height: 20px;
   }
 
   .rank-table-header {
+    --cols: 24px 1fr auto;
     margin: 0 -0.5rem 2px;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -1200,11 +1218,11 @@ a.wowhead del {
   }
 
   .col-name {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
   }
 
   .col-dps {
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
   }
 
   /* Raid nav: minimal */
@@ -1378,10 +1396,49 @@ a.wowhead del {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  /* Two-row card layout for search-all: row 1 = rank + boss, row 2 = player + dps */
   .search-all-header,
   .search-all-entry {
-    grid-template-columns: 26px minmax(60px, 1fr) 1fr 68px !important;
+    grid-template-columns: 28px 1fr auto !important;
+    grid-template-rows: auto auto !important;
+  }
+
+  .search-all-entry .col-rank { grid-column: 1; grid-row: 1 / 3; align-self: center; }
+  .search-all-entry .col-boss { grid-column: 2 / -1; grid-row: 1; padding: 2px 4px; }
+  .search-all-entry .col-name { grid-column: 2; grid-row: 2; }
+  .search-all-entry .col-dps  { grid-column: 3; grid-row: 2; text-align: right; padding-right: 8px; }
+
+  .search-all-entry .col-talents,
+  .search-all-entry .col-trinkets,
+  .search-all-entry .col-ilvl,
+  .search-all-entry .col-date,
+  .search-all-entry .col-time,
+  .search-all-header .col-talents,
+  .search-all-header .col-trinkets,
+  .search-all-header .col-ilvl,
+  .search-all-header .col-date,
+  .search-all-header .col-time {
+    display: none;
+  }
+
+  .search-all-header .col-boss { grid-column: 2; grid-row: 1; }
+  .search-all-header .col-name { display: none; }
+  .search-all-header .col-dps { grid-column: 3; grid-row: 1; text-align: right; padding-right: 8px; }
+
+  .col-boss .boss-label {
+    font-size: 0.8125rem;
+  }
+
+  .col-boss .raid-label {
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-all-header,
+  .search-all-entry {
+    grid-template-columns: 24px 1fr auto !important;
   }
 
   .col-boss .boss-label {
@@ -1389,11 +1446,6 @@ a.wowhead del {
   }
 
   .col-boss .raid-label {
-    display: none;
-  }
-
-  .search-all-entry .col-ilvl,
-  .search-all-header .col-ilvl {
     display: none;
   }
 }
