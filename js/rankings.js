@@ -408,8 +408,9 @@ function applyFiltersAndSort() {
   if (resultCountEl) {
     if (query || regionVal) {
       resultCountEl.textContent = visibleCount + ' of ' + entryArr.length + ' players';
+      resultCountEl.classList.remove('hidden');
     } else {
-      resultCountEl.textContent = '';
+      resultCountEl.classList.add('hidden');
     }
   }
 
@@ -650,7 +651,7 @@ async function fetchAndDisplayRankings(name, encounterId) {
   resetSortToggles();
   if (regionFilter) regionFilter.value = '';
   if (searchClear) searchClear.style.display = 'none';
-  if (resultCountEl) resultCountEl.textContent = '';
+  if (resultCountEl) resultCountEl.classList.add('hidden');
 
   // Stale-while-revalidate: show cached data immediately, fetch fresh in background
   var cached = readCache(encounterId);
@@ -792,7 +793,7 @@ var debouncedSearchAll = createDebounced(function() {
   var query = currentSearch.toLowerCase().trim();
   if (!query || query.length < 2) {
     if (rankingsDiv) rankingsDiv.innerHTML = '<div class="search-all-prompt">Type a player name to search across all ' + TIERS[currentTierKey].name + ' bosses</div>';
-    if (resultCountEl) resultCountEl.textContent = '';
+    if (resultCountEl) resultCountEl.classList.add('hidden');
     return;
   }
   searchAllBosses(query);
@@ -883,7 +884,7 @@ function renderSearchAllResults(matches, query) {
 
   if (matches.length === 0) {
     rankingsDiv.innerHTML = '<div class="search-all-prompt">No results for "' + query + '" in ' + TIERS[currentTierKey].name + '</div>';
-    if (resultCountEl) resultCountEl.textContent = '';
+    if (resultCountEl) resultCountEl.classList.add('hidden');
     return;
   }
 
@@ -929,7 +930,10 @@ function renderSearchAllResults(matches, query) {
   rankingsDiv.innerHTML = header + rows;
   updateHeaderSortIndicators();
 
-  if (resultCountEl) resultCountEl.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
+  if (resultCountEl) {
+    resultCountEl.textContent = matches.length + ' result' + (matches.length !== 1 ? 's' : '');
+    resultCountEl.classList.remove('hidden');
+  }
 
   // Click to navigate to boss
   rankingsDiv.querySelectorAll('.search-all-entry').forEach(function(el) {
@@ -975,7 +979,7 @@ function enterSearchAllMode() {
   // Hide region filter and result count, reset region state
   if (regionFilter) { regionFilter.value = ''; regionFilter.style.display = 'none'; }
   currentRegionFilter = '';
-  if (resultCountEl) { resultCountEl.textContent = ''; resultCountEl.style.display = 'none'; }
+  if (resultCountEl) { resultCountEl.classList.add('hidden'); resultCountEl.style.display = 'none'; }
   // Save and clear last-updated area
   var cached = readCache(currentEncounterId);
   savedCachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
@@ -1004,7 +1008,7 @@ function exitSearchAllMode() {
   // Show region filter and result count, reset state
   if (regionFilter) { regionFilter.style.display = ''; regionFilter.value = ''; }
   currentRegionFilter = '';
-  if (resultCountEl) resultCountEl.style.display = '';
+  if (resultCountEl) { resultCountEl.style.display = ''; resultCountEl.classList.add('hidden'); }
   // Restore current boss view and last-updated badge
   if (currentData && currentEncounterId) {
     updateLastUpdated(savedCachedAt);
@@ -1034,7 +1038,7 @@ if (searchClear) {
     searchClear.style.display = 'none';
     if (searchAllMode) {
       if (rankingsDiv) rankingsDiv.innerHTML = '<div class="search-all-prompt">Type a player name to search across all ' + TIERS[currentTierKey].name + ' bosses</div>';
-      if (resultCountEl) resultCountEl.textContent = '';
+      if (resultCountEl) resultCountEl.classList.add('hidden');
     } else {
       applyFiltersAndSort();
     }

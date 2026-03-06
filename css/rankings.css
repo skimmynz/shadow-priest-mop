@@ -336,8 +336,8 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.toolbar-result-count:empty {
-  display: none;
+.toolbar-result-count.hidden {
+  visibility: hidden;
 }
 
 .toolbar-sort {
