@@ -139,31 +139,6 @@
 .hero-social svg { width: 20px; height: 20px; }
 
 
-.scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .4rem;
-  color: var(--text-muted);
-  font-size: .65rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  opacity: .45;
-  animation: bounce 2.5s ease-in-out infinite;
-  z-index: 3;
-}
-.scroll-hint svg { width: 16px; height: 16px; }
-
-@keyframes bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(6px); }
-}
-
 /* ── Shared Section ───────────────────────────────────── */
 .home-section {
   max-width: 1200px;
@@ -346,8 +321,6 @@
 @media (max-width: 768px) {
   .hero { min-height: 85vh; padding: 2rem 1.5rem; }
   .hero-title { letter-spacing: .04em; }
-  .scroll-hint { display: none; }
-
   .feature-strip { flex-direction: column; }
   .feature-item {
     border-right: none;
