@@ -70,8 +70,8 @@ exports.handler = async function(event, context) {
       statusCode: 200,
       headers: {
         ...headers,
-        'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
-        'CDN-Cache-Control': 'public, max-age=300, stale-while-revalidate=3600'
+        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=7200',
+        'CDN-Cache-Control': 'public, max-age=3600, stale-while-revalidate=7200'
       },
       body: JSON.stringify(processedData)
     };

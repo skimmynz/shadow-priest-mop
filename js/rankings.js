@@ -595,8 +595,8 @@ function revalidateInBackground(encounterId) {
       if (data.encounterId && data.encounterId !== encounterId) return;
       var serverTs = data.cachedAt || (new Date()).toISOString();
       writeCache(encounterId, data, serverTs);
-      // Only re-render if user is still viewing this boss
-      if (currentEncounterId === encounterId) {
+      // Only re-render if user is still viewing this boss (not in search-all mode)
+      if (currentEncounterId === encounterId && !searchAllMode) {
         updateLastUpdated(serverTs);
         renderContent(data, encounterId);
       }
@@ -609,12 +609,12 @@ function prefetchRaidBosses(raidKey) {
   var raids = TIERS[currentTierKey] && TIERS[currentTierKey].raids;
   if (!raids || !raids[raidKey]) return;
   var encounters = raids[raidKey].encounters;
+  var delay = 0;
   Object.keys(encounters).forEach(function(bossName) {
     var id = encounters[bossName];
-    if (id === currentEncounterId) return; // skip current boss
+    if (id === currentEncounterId) return;
     var cached = readCache(id);
-    if (cached && isFresh(cached.cachedAt || (cached.data && cached.data.cachedAt))) return; // already fresh
-    // Stagger prefetches to avoid flooding
+    if (cached && isFresh(cached.cachedAt || (cached.data && cached.data.cachedAt))) return;
     setTimeout(function() {
       fetch(API_URL(id), { headers: { 'accept': 'application/json' } })
         .then(function(res) { return res.ok ? res.json() : null; })
@@ -624,7 +624,8 @@ function prefetchRaidBosses(raidKey) {
           }
         })
         .catch(function() {});
-    }, Math.random() * 2000);
+    }, delay);
+    delay += 200;
   });
 }
 
