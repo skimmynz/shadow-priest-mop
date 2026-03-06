@@ -1056,7 +1056,10 @@ a.wowhead del {
   }
 
   .toolbar .last-updated-badge {
-    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    font-size: 0.8125rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1088,10 +1091,10 @@ a.wowhead del {
   }
 
   /* Two-row card strip */
-  /* Row 1: rank | name | dps */
-  /* Row 2: talents (left) ... ilvl + trinkets (right) */
+  /* Row 1: rank | name | ilvl | dps */
+  /* Row 2: talents (left) ... trinkets (right) */
   #rankings {
-    --cols: 28px 1fr auto auto auto;
+    --cols: 28px 1fr 40px 72px;
   }
 
   .rank-entry {
@@ -1107,34 +1110,25 @@ a.wowhead del {
     display: none;
   }
 
-  /* Row 1: dps spans cols 3-5 */
+  /* Row 1 */
   .col-rank   { grid-column: 1; grid-row: 1; }
   .col-name   { grid-column: 2; grid-row: 1; }
-  .col-dps    { grid-column: 3 / -1; grid-row: 1; text-align: right; padding-right: 8px; }
+  .col-ilvl   { grid-column: 3; grid-row: 1; text-align: center; font-size: 0.75rem; }
+  .col-dps    { grid-column: 4; grid-row: 1; text-align: right; padding-right: 8px; }
 
-  /* Row 2: talents left, ilvl + trinkets right */
+  /* Row 2: talents left, trinkets right */
   .col-talents {
-    grid-column: 2;
+    grid-column: 2 / 4;
     grid-row: 2;
     padding: 2px 0 2px 4px;
   }
 
-  .col-ilvl {
+  .col-trinkets {
     display: flex;
-    grid-column: 3;
+    grid-column: 4;
     grid-row: 2;
     align-items: center;
     justify-content: flex-end;
-    font-size: 0.6875rem;
-    color: var(--text-muted);
-    padding-right: 2px;
-  }
-
-  .col-trinkets {
-    display: flex;
-    grid-column: 4 / -1;
-    grid-row: 2;
-    align-items: center;
     padding-right: 4px;
   }
 
@@ -1163,23 +1157,24 @@ a.wowhead del {
   }
 
   .rank-table-header {
-    --cols: 28px 1fr auto;
+    --cols: 28px 1fr 40px 72px;
     margin: 0 -0.75rem 2px;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
     top: 60px;
   }
 
-  .rank-table-header .col-talents,
   .rank-table-header .col-trinkets,
-  .rank-table-header .col-ilvl,
   .rank-table-header .col-date,
   .rank-table-header .col-time {
     display: none;
   }
 
+  .rank-table-header .col-ilvl {
+    text-align: center;
+  }
+
   .rank-table-header .col-dps {
-    grid-column: 3;
     text-align: right;
     padding-right: 8px;
   }
@@ -1266,7 +1261,7 @@ a.wowhead del {
 
   /* Tighter two-row grid */
   #rankings {
-    --cols: 24px 1fr auto auto auto;
+    --cols: 24px 1fr 36px 64px;
   }
 
   .rank-entry > span,
@@ -1285,8 +1280,12 @@ a.wowhead del {
     height: 18px;
   }
 
+  .col-ilvl {
+    font-size: 0.6875rem;
+  }
+
   .rank-table-header {
-    --cols: 24px 1fr auto;
+    --cols: 24px 1fr 36px 64px;
     margin: 0 -0.5rem 2px;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
