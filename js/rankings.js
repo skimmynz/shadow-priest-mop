@@ -171,6 +171,7 @@ var currentSortDir = 'desc';
 var currentRegionFilter = '';
 var searchAllMode = false;
 var searchAllController = null;
+var savedCachedAt = null;
 var searchAllToggle = document.getElementById('search-all-toggle');
 var searchAllMatches = [];
 var searchAllSortField = 'dps';
@@ -735,6 +736,7 @@ function updateLastUpdated(iso) {
   lastUpdatedEl.innerHTML = '<span class="last-updated-badge">' +
     '<img class="last-updated-icon" src="https://assets.rpglogs.com/img/warcraft/favicon.png?v=4" alt="">' +
     '<span class="last-updated-label">Updated from WarcraftLogs</span>' +
+    '<span class="last-updated-label-mobile">Last Updated:</span>' +
     '<span class="last-updated-separator"></span>' +
     '<span class="last-updated-time">' + formatAgo(iso) + '</span>' +
     '</span>';
@@ -967,10 +969,12 @@ function enterSearchAllMode() {
   // Hide parsing rules
   var rules = document.getElementById('sidebar-parsing-rules');
   if (rules) rules.style.display = 'none';
-  // Update last-updated area
+  // Save and clear last-updated area
+  var cached = readCache(currentEncounterId);
+  savedCachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
   updateLastUpdated(null);
   // Update placeholder
-  if (searchInput) searchInput.placeholder = 'Search player across ' + TIERS[currentTierKey].name + '...';
+  if (searchInput) searchInput.placeholder = 'Search all bosses...';
   // Trigger search if there's already text
   if (currentSearch.trim().length >= 2) {
     debouncedSearchAll();
@@ -996,9 +1000,7 @@ function exitSearchAllMode() {
   if (searchInput) searchInput.placeholder = 'Search player...';
   // Restore current boss view and last-updated badge
   if (currentData && currentEncounterId) {
-    var cached = readCache(currentEncounterId);
-    var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
-    updateLastUpdated(cachedAt);
+    updateLastUpdated(savedCachedAt);
     renderContent(currentData, currentEncounterId);
   }
 }

@@ -298,6 +298,11 @@
   font-weight: 500;
 }
 
+.last-updated-label-mobile {
+  display: none;
+  font-weight: 500;
+}
+
 .last-updated-separator {
   width: 3px;
   height: 3px;
@@ -1076,6 +1081,10 @@ a.wowhead del {
 
   .last-updated-label {
     display: none;
+  }
+
+  .last-updated-label-mobile {
+    display: inline;
   }
 
   .last-updated-separator {
