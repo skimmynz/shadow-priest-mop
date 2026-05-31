@@ -270,17 +270,11 @@
 }
 
 .toolbar .last-updated {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
   text-align: center;
   white-space: nowrap;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-.toolbar .last-updated * {
-  pointer-events: auto;
 }
 
 .last-updated-badge {
