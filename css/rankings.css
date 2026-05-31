@@ -192,12 +192,12 @@
    ================================================================= */
 .toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 10px 12px;
   padding: 12px 0;
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-  position: relative;
 }
 
 .toolbar-search {
@@ -271,8 +271,7 @@
 
 .toolbar .last-updated {
   flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
+  min-width: max-content;
   text-align: center;
   white-space: nowrap;
 }
