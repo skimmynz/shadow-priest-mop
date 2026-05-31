@@ -1018,6 +1018,16 @@ if (searchInput) {
     }
   });
   searchInput.addEventListener('focus', function() { this.select(); });
+
+  // Press "/" anywhere to jump to the search box (unless already typing in a field)
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+    var t = e.target;
+    var tag = t && t.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (t && t.isContentEditable)) return;
+    e.preventDefault();
+    searchInput.focus();
+  });
 }
 if (searchClear) {
   searchClear.addEventListener('click', function() {

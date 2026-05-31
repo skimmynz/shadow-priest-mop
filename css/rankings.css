@@ -190,19 +190,38 @@
 /* =================================================================
    Toolbar (search + sort)
    ================================================================= */
+/* ── Unified Glass Bar ─────────────────────────────────── */
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  margin-bottom: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  gap: 8px;
+  padding: 6px;
+  margin-bottom: 14px;
+  background: linear-gradient(180deg, rgba(35, 38, 58, 0.7), rgba(26, 29, 41, 0.7));
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.toolbar:focus-within {
+  border-color: rgba(124, 58, 237, 0.45);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 0 3px var(--accent-glow);
 }
 
+/* Vertical hairline between search and the controls cluster */
+.toolbar-divider {
+  width: 1px;
+  align-self: stretch;
+  margin: 5px 2px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+/* Search — transparent, flush, grows to fill the bar */
 .toolbar-search {
   position: relative;
-  flex: 0 1 220px;
-  max-width: 220px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .toolbar-search-icon {
@@ -218,16 +237,14 @@
 
 .toolbar-search-input {
   width: 100%;
-  padding: 8px 36px 8px 36px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
+  padding: 9px 64px 9px 36px;
+  border: 0;
+  background: none;
   color: var(--text-primary);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-family: inherit;
   font-weight: 500;
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .toolbar-search-input::placeholder {
@@ -235,14 +252,9 @@
   font-weight: 400;
 }
 
-.toolbar-search-input:focus {
-  border-color: var(--accent-color);
-  background: rgba(255, 255, 255, 0.06);
-}
-
 .toolbar-search-clear {
   position: absolute;
-  right: 8px;
+  right: 38px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -261,60 +273,83 @@
   color: var(--text-primary);
 }
 
-.toolbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: auto;
+/* "/" keyboard shortcut hint — hidden once the user is typing */
+.toolbar-kbd {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font: 600 0.7rem/1 inherit;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  padding: 0.2rem 0.4rem;
+  pointer-events: none;
+}
+.toolbar-search-input:not(:placeholder-shown) ~ .toolbar-kbd {
+  display: none;
 }
 
+/* Region group (select + transient result count) */
+.toolbar-region {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Sync status — compact: WCL icon + live dot + relative time */
 .toolbar .last-updated {
-  flex: 1 1 auto;
-  min-width: max-content;
-  text-align: center;
+  flex-shrink: 0;
   white-space: nowrap;
 }
 
 .last-updated-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.8125rem;
+  gap: 7px;
+  padding: 0 10px 0 8px;
+  font-size: 0.78rem;
   color: var(--text-muted);
 }
 
 .last-updated-icon {
-  width: 14px;
-  height: 14px;
-  border-radius: 2px;
+  width: 15px;
+  height: 15px;
+  border-radius: 3px;
   flex-shrink: 0;
 }
 
-.last-updated-label {
-  font-weight: 500;
-}
-
-.last-updated-label-mobile {
-  display: none;
-  font-weight: 500;
-}
-
+/* Verbose label + dot separator are hidden in the glass bar */
+.last-updated-label,
+.last-updated-label-mobile,
 .last-updated-separator {
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  opacity: 0.5;
-  flex-shrink: 0;
+  display: none;
 }
 
 .last-updated-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   font-weight: 600;
   color: var(--text-secondary);
+}
+.last-updated-time::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--success-color);
+  box-shadow: 0 0 0 0 var(--success-glow);
+  animation: tb-pulse 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes tb-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
 .toolbar-result-count {
@@ -362,74 +397,23 @@
   color: var(--text-secondary);
 }
 
-/* Compact 2×2 toolbar when the content column itself is narrow — e.g.
-   squeezed between the two sidebars on mid-width desktops. Container-query
-   based so it reacts to the toolbar's real width, not the viewport. */
-@container content-col (max-width: 800px) {
-  .toolbar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    align-items: stretch;
-  }
+/* When the content column itself is narrow — e.g. squeezed between the two
+   sidebars on mid-width desktops — the glass bar relaxes into stacked rows:
+   row 1 search · row 2 segmented + region · row 3 sync. Container-query based
+   so it reacts to the toolbar's real width, not the viewport. */
+@container content-col (max-width: 680px) {
+  .toolbar { flex-wrap: wrap; }
 
-  /* Row 1: search (left) + All Bosses (right) */
-  .toolbar-search {
-    max-width: none;
-    grid-column: 1;
-    grid-row: 1;
-  }
+  .toolbar-divider { display: none; }
 
-  .search-all-toggle {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  /* Row 1 — search full width */
+  .toolbar-search { flex: 1 1 100%; }
 
-  /* Row 2: updated badge (left) + region (right) */
-  .toolbar .last-updated {
-    flex: initial;
-    min-width: 0;
-    overflow: hidden;
-    grid-column: 1;
-    grid-row: 2;
-    text-align: left;
-    display: flex;
-    align-items: stretch;
-  }
+  /* Row 2 — segmented toggle (left) + region (right) */
+  .toolbar-region { margin-left: auto; }
 
-  .toolbar .last-updated-badge {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 12px;
-  }
-
-  .last-updated-label { display: none; }
-  .last-updated-label-mobile { display: inline; }
-  .last-updated-separator { display: none; }
-
-  .toolbar-right {
-    grid-column: 2;
-    grid-row: 2;
-    margin-left: 0;
-    display: flex;
-    align-items: stretch;
-  }
-
-  /* Result count hidden when compact — shown in search-all mode via JS */
-  .toolbar-result-count { display: none; }
-
-  .toolbar-right .toolbar-sort {
-    display: flex;
-    align-items: center;
-  }
+  /* Row 3 — sync status on its own line */
+  .toolbar .last-updated { flex: 1 1 100%; }
 }
 
 /* =================================================================
@@ -1382,31 +1366,46 @@ a.wowhead del {
    ════════════════════════════════════════════════════════ */
 
 /* Toggle button */
+/* Segmented "This Boss / All Bosses" control (single toggle button) */
 .search-all-toggle {
-  background: rgba(124, 58, 237, 0.1);
-  border: 1px solid rgba(124, 58, 237, 0.25);
-  color: var(--text-secondary);
-  font-size: 0.8125rem;
-  font-family: inherit;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-  letter-spacing: 0.02em;
+  display: inline-flex;
   flex-shrink: 0;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: inherit;
 }
 
-.search-all-toggle:hover {
-  background: rgba(124, 58, 237, 0.2);
-  border-color: rgba(124, 58, 237, 0.4);
-  color: var(--text-primary);
+.search-all-toggle .seg-opt {
+  padding: 0.4rem 0.7rem;
+  border-radius: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.search-all-toggle.active {
+/* Default = current-boss view → "This Boss" lit. Active = search-all → "All Bosses" lit. */
+.search-all-toggle .seg-this,
+.search-all-toggle.active .seg-all {
   background: var(--accent-color);
-  border-color: var(--accent-color);
+  color: #fff;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+.search-all-toggle.active .seg-this {
+  background: none;
+  color: var(--text-muted);
+  box-shadow: none;
+}
+.search-all-toggle:hover .seg-opt {
+  color: var(--text-secondary);
+}
+.search-all-toggle:hover .seg-this,
+.search-all-toggle.active:hover .seg-all {
   color: #fff;
 }
 
