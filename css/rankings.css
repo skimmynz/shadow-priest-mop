@@ -192,9 +192,8 @@
    ================================================================= */
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 10px 12px;
+  gap: 12px;
   padding: 12px 0;
   margin-bottom: 8px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
@@ -363,6 +362,76 @@
   color: var(--text-secondary);
 }
 
+/* Compact 2×2 toolbar when the content column itself is narrow — e.g.
+   squeezed between the two sidebars on mid-width desktops. Container-query
+   based so it reacts to the toolbar's real width, not the viewport. */
+@container content-col (max-width: 800px) {
+  .toolbar {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: stretch;
+  }
+
+  /* Row 1: search (left) + All Bosses (right) */
+  .toolbar-search {
+    max-width: none;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .search-all-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Row 2: updated badge (left) + region (right) */
+  .toolbar .last-updated {
+    flex: initial;
+    min-width: 0;
+    overflow: hidden;
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    display: flex;
+    align-items: stretch;
+  }
+
+  .toolbar .last-updated-badge {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 12px;
+  }
+
+  .last-updated-label { display: none; }
+  .last-updated-label-mobile { display: inline; }
+  .last-updated-separator { display: none; }
+
+  .toolbar-right {
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 0;
+    display: flex;
+    align-items: stretch;
+  }
+
+  /* Result count hidden when compact — shown in search-all mode via JS */
+  .toolbar-result-count { display: none; }
+
+  .toolbar-right .toolbar-sort {
+    display: flex;
+    align-items: center;
+  }
+}
+
 /* =================================================================
    Page Grid Layout
    ================================================================= */
@@ -378,6 +447,7 @@
   width: 100%;
   min-width: 0;
   padding: 1rem 2.5rem 2rem;
+  container: content-col / inline-size;
 }
 
 /* Talent sidebar */
@@ -1032,84 +1102,8 @@ a.wowhead del {
     padding: 1.25rem 0.75rem;
   }
 
-  /* Toolbar: 2-row grid layout */
-  .toolbar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
-    align-items: stretch;
-  }
-
-  /* Row 1: search (left) + All Bosses (right) */
-  .toolbar-search {
-    max-width: none;
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .search-all-toggle {
-    grid-column: 2;
-    grid-row: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Row 2: updated badge (left) + region (right) */
-  .toolbar .last-updated {
-    position: static;
-    transform: none;
-    pointer-events: auto;
-    grid-column: 1;
-    grid-row: 2;
-    text-align: left;
-    margin: 0;
-    min-width: 0;
-    overflow: hidden;
-    display: flex;
-    align-items: stretch;
-  }
-
-  .toolbar .last-updated-badge {
-    width: 100%;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding-left: 12px;
-  }
-
-  .last-updated-label {
-    display: none;
-  }
-
-  .last-updated-label-mobile {
-    display: inline;
-  }
-
-  .last-updated-separator {
-    display: none;
-  }
-
-  .toolbar-right {
-    grid-column: 2;
-    grid-row: 2;
-    margin-left: 0;
-    display: flex;
-    align-items: stretch;
-  }
-
-  /* Hide result count on mobile — shown in search-all mode via JS */
-  .toolbar-result-count {
-    display: none;
-  }
-
-  .toolbar-right .toolbar-sort {
-    display: flex;
-    align-items: center;
-  }
+  /* Toolbar compaction is handled by the @container query above, which
+     reacts to the content column's real width on every screen size. */
 
   /* Two-row card strip */
   /* Row 1: rank | name | ilvl | dps */
