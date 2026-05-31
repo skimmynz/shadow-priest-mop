@@ -72,6 +72,13 @@ body {
   flex-direction: column;
 }
 
+/* Body is a flex column (for the sticky footer). Without this, page
+   sections that center themselves with `max-width` + `margin: 0 auto`
+   would shrink to their content width instead of spanning the page. */
+body > * {
+  width: 100%;
+}
+
 /* Top Navigation Bar */
 .top-nav {
   position: sticky;
