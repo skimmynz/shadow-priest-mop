@@ -313,12 +313,14 @@
   gap: 7px;
   padding: 0 10px 0 8px;
   font-size: 0.78rem;
+  line-height: 1;
   color: var(--text-muted);
 }
 
 .last-updated-icon {
-  width: 15px;
-  height: 15px;
+  display: block;
+  width: 14px;
+  height: 14px;
   border-radius: 3px;
   flex-shrink: 0;
 }
@@ -334,6 +336,7 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
+  line-height: 1;
   font-weight: 600;
   color: var(--text-secondary);
 }
