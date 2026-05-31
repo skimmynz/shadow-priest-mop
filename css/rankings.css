@@ -300,6 +300,9 @@
 
 /* Sync status — compact: WCL icon + live dot + relative time */
 .toolbar .last-updated {
+  display: flex;
+  align-items: center;
+  height: 38px;
   flex-shrink: 0;
   white-space: nowrap;
 }
