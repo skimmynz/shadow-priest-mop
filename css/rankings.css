@@ -194,7 +194,7 @@
 .toolbar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 6px;
   margin-bottom: 14px;
   background: linear-gradient(180deg, rgba(35, 38, 58, 0.7), rgba(26, 29, 41, 0.7));
@@ -203,25 +203,23 @@
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.toolbar:focus-within {
-  border-color: rgba(124, 58, 237, 0.45);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 0 3px var(--accent-glow);
-}
 
-/* Vertical hairline between search and the controls cluster */
-.toolbar-divider {
-  width: 1px;
-  align-self: stretch;
-  margin: 5px 2px;
-  background: rgba(255, 255, 255, 0.08);
-  flex-shrink: 0;
-}
-
-/* Search — transparent, flush, grows to fill the bar */
+/* Search — a defined field inside the bar that grows to fill the space */
 .toolbar-search {
   position: relative;
+  display: flex;
+  align-items: center;
   flex: 1 1 auto;
   min-width: 0;
+  height: 38px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 9px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.toolbar-search:focus-within {
+  border-color: rgba(124, 58, 237, 0.5);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .toolbar-search-icon {
@@ -353,22 +351,28 @@
 }
 
 .toolbar-result-count {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  box-sizing: border-box;
   font-size: 0.75rem;
   color: var(--text-muted);
   font-weight: 500;
   white-space: nowrap;
-  padding: 7px 12px;
+  padding: 0 12px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .toolbar-result-count.hidden {
-  visibility: hidden;
+  display: none;
 }
 
 .toolbar-sort {
-  padding: 8px 14px;
+  height: 38px;
+  box-sizing: border-box;
+  padding: 0 32px 0 14px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
@@ -403,8 +407,6 @@
    so it reacts to the toolbar's real width, not the viewport. */
 @container content-col (max-width: 680px) {
   .toolbar { flex-wrap: wrap; }
-
-  .toolbar-divider { display: none; }
 
   /* Row 1 — search full width */
   .toolbar-search { flex: 1 1 100%; }
@@ -1369,7 +1371,10 @@ a.wowhead del {
 /* Segmented "This Boss / All Bosses" control (single toggle button) */
 .search-all-toggle {
   display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
+  height: 38px;
+  box-sizing: border-box;
   gap: 2px;
   padding: 3px;
   background: rgba(0, 0, 0, 0.25);
@@ -1380,7 +1385,10 @@ a.wowhead del {
 }
 
 .search-all-toggle .seg-opt {
-  padding: 0.4rem 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 0.75rem;
   border-radius: 7px;
   font-size: 0.8rem;
   font-weight: 600;
