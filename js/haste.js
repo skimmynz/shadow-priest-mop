@@ -127,7 +127,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
       } else {
         nextBPValue = data.points[i];
         nextBPRating = bpRating(data, i, isGoblin, nextBPValue);
-        nextBPDisplayPct = bpDisplayPct(data, i, isGoblin);
+        nextBPDisplayPct = bpDisplayPct(data, i, isGoblin).toFixed(2);
         nextBP = nextBPDisplayPct + '% (' + nextBPRating.toLocaleString() + ' rating)';
         break;
       }
