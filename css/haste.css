@@ -650,7 +650,7 @@ html { scroll-behavior: smooth; }
 
   .spells-table { border-radius: 16px; }
   .spell-row {
-    grid-template-columns: minmax(0, 1.6fr) auto minmax(0, 1.2fr);
+    grid-template-columns: auto auto minmax(0, 1.4fr);
     gap: .75rem;
     text-align: left;
     padding: 1rem .875rem;
@@ -661,15 +661,14 @@ html { scroll-behavior: smooth; }
     gap: .6rem;
     min-width: 0;
   }
-  .spell-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .spell-name { display: none; }
   .base-ticks { display: none; }
   .ticks-badge { justify-self: center; min-width: 0; padding: .4rem .6rem; font-size: .7rem; }
   .breakpoint-info { align-items: flex-start; text-align: left; }
   .progress-container { max-width: 100%; }
   .table-header { padding: 1rem 1.25rem; }
   .table-title { font-size: 1.1rem; }
-  .spell-icon { width: 48px; height: 48px; }
-  .spell-name { font-size: .9rem; }
+  .spell-icon { width: 48px; height: 48px; object-fit: contain; box-sizing: border-box; }
 
   .breakpoint-explainer { padding: 1rem 1.25rem; }
   .breakpoint-explainer p { font-size: .75rem; }
