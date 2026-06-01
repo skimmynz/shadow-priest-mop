@@ -14,7 +14,7 @@ const weakauras = [
   { name: "Fojji - Shadow Priest UI [MoP] | skimmy edit", url: "https://wago.io/ri2lfOS8b", preview: "https://media.wago.io/screenshots/ri2lfOS8b/688dc81ab1debd7388acf2da.gif" },
   { name: "DragonKarsh CastBars | skimmy edit", url: "https://wago.io/dnDdk1mhh", preview: "https://media.wago.io/screenshots/dnDdk1mhh/688483a02acbf36327ec9c9e.gif" },
   { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", preview: "https://media.wago.io/screenshots/UWa_HeEta/68846df1a40570447822e19e.gif" },
-  { name: "Haste Breakpoints (T14, T15)", url: "https://wago.io/7m5gdIAts", preview: "https://media.wago.io/screenshots/7m5gdIAts/6967395d359f134f4939ccd7.gif" },
+  { name: "Haste Breakpoints", url: "https://wago.io/7m5gdIAts", preview: "https://media.wago.io/screenshots/7m5gdIAts/69f844d2181c615631129b53.gif" },
   { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", preview: "https://media.wago.io/screenshots/8Xgm0DEZW/69672ac8309543a4f7f46443.gif" },
 ];
 
