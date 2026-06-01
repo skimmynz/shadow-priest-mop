@@ -650,20 +650,22 @@ html { scroll-behavior: smooth; }
 
   .spells-table { border-radius: 16px; }
   .spell-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    text-align: center;
-    padding: 1.25rem 1rem;
-  }
-  .spell-info { justify-content: center; }
-  .base-ticks { justify-self: center; }
-  .ticks-badge { justify-self: center; }
-  .breakpoint-info {
-    text-align: center;
+    grid-template-columns: minmax(0, 1.6fr) auto auto minmax(0, 1.2fr);
+    gap: .75rem;
+    text-align: left;
+    padding: 1rem .875rem;
     align-items: center;
-    margin: 0 auto;
   }
-  .progress-container { max-width: 200px; }
+  .spell-info {
+    justify-content: flex-start;
+    gap: .6rem;
+    min-width: 0;
+  }
+  .spell-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .base-ticks { justify-self: center; padding: .35rem .5rem; font-size: .7rem; }
+  .ticks-badge { justify-self: center; min-width: 0; padding: .4rem .6rem; font-size: .7rem; }
+  .breakpoint-info { align-items: flex-start; text-align: left; }
+  .progress-container { max-width: 100%; }
   .table-header { padding: 1rem 1.25rem; }
   .table-title { font-size: 1.1rem; }
   .spell-icon { width: 44px; height: 44px; }
