@@ -83,10 +83,15 @@
   flex-shrink: 0;
 }
 
-/* Brand tints on hover */
+/* Brand tiles */
+.guide-watch-link--youtube {
+  background: #ffffff;
+  border-color: #ffffff;
+}
+
 .guide-watch-link--youtube:hover {
-  background: rgba(255, 0, 0, 0.1);
-  border-color: rgba(255, 0, 0, 0.4);
+  background: #f0f0f0;
+  border-color: #f0f0f0;
 }
 
 .guide-watch-link--twitch {
