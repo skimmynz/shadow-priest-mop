@@ -2,7 +2,6 @@ const breakpoints = {
   "Shadow Word: Pain": {
     id: 589,
     points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69],
-    // Hard-coded non-goblin rating per breakpoint (1:1 with points). null = no fixed value, fall back to formula.
     ratings: [1345, 8085, 14846, 21596, 28325, 35066, 41855, 48561, 55308, 62045, 68852, 75564],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
