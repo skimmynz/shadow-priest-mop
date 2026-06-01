@@ -5,11 +5,11 @@
 
 /* ── Doc Layout: video (left) + content + sticky TOC ─── */
 .guide-layout {
-  max-width: 1320px;
+  max-width: 1560px;
   margin: 0 auto;
   padding: 2rem 2rem 4rem;
   display: grid;
-  grid-template-columns: 420px minmax(0, 1fr) 200px;
+  grid-template-columns: 380px minmax(0, 1fr) 200px;
   gap: 2rem;
   align-items: start;
 }
