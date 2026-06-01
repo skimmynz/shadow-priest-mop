@@ -89,9 +89,14 @@
   border-color: rgba(255, 0, 0, 0.4);
 }
 
+.guide-watch-link--twitch {
+  background: #9146FF;
+  border-color: #9146FF;
+}
+
 .guide-watch-link--twitch:hover {
-  background: rgba(145, 70, 255, 0.12);
-  border-color: rgba(145, 70, 255, 0.45);
+  background: #7d2ff5;
+  border-color: #7d2ff5;
 }
 
 .guide-watch-img {
