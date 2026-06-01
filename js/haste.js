@@ -158,7 +158,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
           '<a href="' + data.url + '" target="_blank" class="spell-name" data-wowhead="spell=' + data.id + '&domain=mop-classic">' +
             '<img src="' + data.icon + '" alt="' + spell + '" class="spell-icon">' +
           '</a>' +
-          '<a href="' + data.url + '" target="_blank" class="spell-name" data-wowhead="spell=' + data.id + '&domain=mop-classic">' +
+          '<a href="' + data.url + '" target="_blank" class="spell-name spell-name-text" data-wowhead="spell=' + data.id + '&domain=mop-classic">' +
             spell +
           '</a>' +
         '</div>' +

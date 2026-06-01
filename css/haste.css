@@ -661,7 +661,7 @@ html { scroll-behavior: smooth; }
     gap: .6rem;
     min-width: 0;
   }
-  .spell-name { display: none; }
+  .spell-name-text { display: none; }
   .base-ticks { display: none; }
   .ticks-badge { justify-self: center; min-width: 0; padding: .4rem .6rem; font-size: .7rem; }
   .breakpoint-info { align-items: flex-start; text-align: left; }
