@@ -50,76 +50,206 @@
   border: 0;
 }
 
-/* ── Tab Section ─────────────────────────────────────── */
-.guide-content {
-  max-width: 1000px;
+/* ── Doc Layout: content + sticky TOC rail ───────────── */
+.guide-layout {
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 0 2rem 4rem;
+  padding: 1.5rem 2rem 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 2.5rem;
+  align-items: start;
 }
 
-.guide-tabs {
+.guide-content {
+  min-width: 0;
+}
+
+/* Sections — stacked, scroll-margin clears sticky nav */
+.guide-section {
+  scroll-margin-top: 84px;
+}
+
+.guide-section + .guide-section {
+  margin-top: 1.75rem;
+}
+
+/* ── Sticky TOC rail (desktop) ───────────────────────── */
+.guide-toc {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+}
+
+.guide-toc-heading {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  padding: 0 0.75rem 0.5rem;
+}
+
+.guide-toc-nav {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  padding: 1.5rem 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  flex-direction: column;
+  gap: 0.15rem;
+  border-left: 1px solid var(--border-color);
 }
 
-.guide-tabs::-webkit-scrollbar {
-  display: none;
-}
-
-.guide-tab {
-  flex-shrink: 0;
-  display: inline-flex;
+.guide-toc-link {
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
+  gap: 0.55rem;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.guide-toc-link svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.guide-toc-link:hover {
+  color: var(--text-accent);
+  background: rgba(124, 58, 237, 0.06);
+}
+
+.guide-toc-link.active {
+  color: var(--text-primary);
+  border-left-color: var(--accent-color);
+}
+
+.guide-toc-link.active svg {
+  opacity: 1;
+  color: var(--text-accent);
+}
+
+/* ── Mobile "Jump to" dropdown (hidden on desktop) ───── */
+.guide-toc-mobile {
+  display: none;
+  position: sticky;
+  top: 64px;
+  z-index: 20;
+  margin: 0 0 1rem;
+}
+
+.guide-toc-mobile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
   font-family: inherit;
   font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: var(--secondary-bg);
   border: 1px solid var(--border-color);
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.guide-tab:hover {
+.guide-toc-mobile-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: var(--text-accent);
+}
+
+.guide-toc-mobile-btn #tocMobileLabel {
+  flex: 1;
+  text-align: left;
+}
+
+.guide-toc-mobile-caret {
+  transition: transform 0.2s ease;
+}
+
+.guide-toc-mobile-btn[aria-expanded="true"] .guide-toc-mobile-caret {
+  transform: rotate(180deg);
+}
+
+.guide-toc-mobile-menu {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.35rem;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+}
+
+.guide-toc-mobile-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.guide-toc-mobile-menu a {
+  display: block;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.guide-toc-mobile-menu a:hover {
   background: rgba(124, 58, 237, 0.1);
   color: var(--text-accent);
-  border-color: rgba(124, 58, 237, 0.3);
-  transform: translateY(-1px);
 }
 
-.guide-tab.active {
+/* ── Back-to-top FAB ─────────────────────────────────── */
+.guide-top-fab {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 30;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
   background: var(--accent-color);
-  color: #ffffff;
-  border-color: var(--accent-color);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s, background 0.15s;
 }
 
-.guide-tab svg {
-  width: 16px;
-  height: 16px;
+.guide-top-fab.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
-/* ── Content Panels ──────────────────────────────────── */
-.guide-panel {
-  display: none;
+.guide-top-fab:hover {
+  background: #6d28d9;
 }
 
-.guide-panel.active {
-  display: block;
-  animation: guideTabFadeUp 0.2s ease;
-}
-
-@keyframes guideTabFadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+.guide-top-fab svg {
+  width: 20px;
+  height: 20px;
 }
 
 .guide-panel-body {
@@ -1040,24 +1170,31 @@
 }
 
 /* ── Responsive ──────────────────────────────────────── */
+
+/* Tablet/narrow desktop — drop the sticky TOC rail, use mobile dropdown */
+@media (max-width: 900px) {
+  .guide-layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 1.25rem 1.5rem 3.5rem;
+  }
+
+  .guide-toc {
+    display: none;
+  }
+
+  .guide-toc-mobile {
+    display: block;
+  }
+}
+
 @media (max-width: 768px) {
   .guide-hero {
     padding: 2rem 1.25rem 0.75rem;
   }
 
-  .guide-content {
-    padding: 0 1.25rem 3rem;
-  }
-
-  .guide-tabs {
-    justify-content: flex-start;
-    padding: 1.25rem 0;
-    gap: 0.4rem;
-  }
-
-  .guide-tab {
-    padding: 0.5rem 1rem;
-    font-size: 0.8125rem;
+  .guide-layout {
+    padding: 1rem 1.25rem 3rem;
   }
 
   .guide-panel-body {
@@ -1118,8 +1255,8 @@
     padding: 1.5rem 1rem 0.5rem;
   }
 
-  .guide-content {
-    padding: 0 1rem 2.5rem;
+  .guide-layout {
+    padding: 0.75rem 1rem 2.5rem;
   }
 
   .guide-subtitle {

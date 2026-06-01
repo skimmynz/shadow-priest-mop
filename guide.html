@@ -99,36 +99,30 @@
   </section>
 
   <!-- ════════════════════════════════════════════════════
-       Guide Content — Tabs + Panels
+       Guide Content — Single-Scroll Doc + Sticky TOC
        ════════════════════════════════════════════════════ -->
-  <section class="guide-content">
+  <div class="guide-layout">
 
-    <!-- Tab Bar -->
-    <div class="guide-tabs" role="tablist">
-      <button class="guide-tab active" data-tab="talents" role="tab" aria-selected="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Talents
+    <!-- Mobile "Jump to" dropdown -->
+    <div class="guide-toc-mobile">
+      <button class="guide-toc-mobile-btn" id="tocMobileBtn" aria-expanded="false" aria-controls="tocMobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span id="tocMobileLabel">Jump to…</span>
+        <svg class="guide-toc-mobile-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <button class="guide-tab" data-tab="rotation" role="tab" aria-selected="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        Rotation
-      </button>
-      <button class="guide-tab" data-tab="macros" role="tab" aria-selected="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        Macros
-      </button>
-      <button class="guide-tab" data-tab="stats" role="tab" aria-selected="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        Stats
-      </button>
-      <button class="guide-tab" data-tab="tot-tips" role="tab" aria-selected="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        T15 Tips
-      </button>
+      <ul class="guide-toc-mobile-menu" id="tocMobileMenu">
+        <li><a href="#talents">Talents</a></li>
+        <li><a href="#rotation">Rotation</a></li>
+        <li><a href="#macros">Macros</a></li>
+        <li><a href="#stats">Stats</a></li>
+        <li><a href="#tot-tips">T15 Tips</a></li>
+      </ul>
     </div>
 
-    <!-- Panels -->
-    <div class="guide-panel active" data-panel="talents" role="tabpanel">
+    <main class="guide-content">
+
+    <!-- Talents -->
+    <section class="guide-section" id="talents">
       <div class="guide-panel-body">
         <h2 class="guide-panel-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -217,9 +211,10 @@
 
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="guide-panel" data-panel="rotation" role="tabpanel">
+    <!-- Rotation -->
+    <section class="guide-section" id="rotation">
       <div class="guide-panel-body">
         <h2 class="guide-panel-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
@@ -280,9 +275,10 @@
         </div>
 
       </div>
-    </div>
+    </section>
 
-    <div class="guide-panel" data-panel="macros" role="tabpanel">
+    <!-- Macros -->
+    <section class="guide-section" id="macros">
       <div class="guide-panel-body">
         <h2 class="guide-panel-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
@@ -346,9 +342,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="guide-panel" data-panel="stats" role="tabpanel">
+    <!-- Stats -->
+    <section class="guide-section" id="stats">
       <div class="guide-panel-body">
         <h2 class="guide-panel-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -465,10 +462,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-
-    <div class="guide-panel" data-panel="tot-tips" role="tabpanel">
+    <!-- T15 Tips -->
+    <section class="guide-section" id="tot-tips">
       <div class="guide-panel-body">
         <h2 class="guide-panel-title">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -687,24 +684,117 @@
         </div>
 
       </div>
-    </div>
+    </section>
 
-  </section>
+    </main>
+
+    <!-- Desktop sticky TOC rail -->
+    <aside class="guide-toc" aria-label="Guide sections">
+      <span class="guide-toc-heading">On this page</span>
+      <nav class="guide-toc-nav">
+        <a href="#talents" class="guide-toc-link" data-toc="talents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Talents
+        </a>
+        <a href="#rotation" class="guide-toc-link" data-toc="rotation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Rotation
+        </a>
+        <a href="#macros" class="guide-toc-link" data-toc="macros">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Macros
+        </a>
+        <a href="#stats" class="guide-toc-link" data-toc="stats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Stats
+        </a>
+        <a href="#tot-tips" class="guide-toc-link" data-toc="tot-tips">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          T15 Tips
+        </a>
+      </nav>
+    </aside>
+
+  </div>
+
+  <!-- Back to top -->
+  <button class="guide-top-fab" id="guideTopFab" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
   <script defer src="js/nav.js"></script>
   <script>
-    document.querySelectorAll('.guide-tab').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var prev = document.querySelector('.guide-tab.active');
-        if (prev) { prev.classList.remove('active'); prev.setAttribute('aria-selected', 'false'); }
-        var prevPanel = document.querySelector('.guide-panel.active');
-        if (prevPanel) prevPanel.classList.remove('active');
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
-        var panel = document.querySelector('[data-panel="' + btn.dataset.tab + '"]');
-        if (panel) panel.classList.add('active');
+    // ── Scrollspy: highlight current section in TOC ──────
+    (function () {
+      var sections = Array.prototype.slice.call(document.querySelectorAll('.guide-section'));
+      var deskLinks = document.querySelectorAll('.guide-toc-link');
+      var mobileLabel = document.getElementById('tocMobileLabel');
+      var labels = { talents: 'Talents', rotation: 'Rotation', macros: 'Macros', stats: 'Stats', 'tot-tips': 'T15 Tips' };
+      if (!sections.length) return;
+
+      function setActive(id) {
+        deskLinks.forEach(function (a) {
+          a.classList.toggle('active', a.dataset.toc === id);
+        });
+        if (mobileLabel && labels[id]) mobileLabel.textContent = labels[id];
+      }
+
+      if ('IntersectionObserver' in window) {
+        var visible = {};
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+          var best = null, bestRatio = 0;
+          sections.forEach(function (s) {
+            var r = visible[s.id] || 0;
+            if (r > bestRatio) { bestRatio = r; best = s.id; }
+          });
+          if (best) setActive(best);
+        }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] });
+        sections.forEach(function (s) { obs.observe(s); });
+      }
+
+      // Smooth scroll for all in-page TOC links (offset for sticky nav)
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          var target = document.getElementById(a.getAttribute('href').slice(1));
+          if (!target) return;
+          e.preventDefault();
+          var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+          closeMobileToc();
+          history.replaceState(null, '', a.getAttribute('href'));
+        });
       });
-    });
+
+      // ── Mobile "Jump to" dropdown ──────────────────────
+      var mBtn = document.getElementById('tocMobileBtn');
+      var mMenu = document.getElementById('tocMobileMenu');
+      function closeMobileToc() {
+        if (!mBtn) return;
+        mBtn.setAttribute('aria-expanded', 'false');
+        mMenu.classList.remove('open');
+      }
+      if (mBtn) {
+        mBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var open = mBtn.getAttribute('aria-expanded') === 'true';
+          mBtn.setAttribute('aria-expanded', String(!open));
+          mMenu.classList.toggle('open', !open);
+        });
+        document.addEventListener('click', closeMobileToc);
+      }
+
+      // ── Back-to-top FAB ────────────────────────────────
+      var fab = document.getElementById('guideTopFab');
+      if (fab) {
+        window.addEventListener('scroll', function () {
+          fab.classList.toggle('show', window.pageYOffset > 600);
+        }, { passive: true });
+        fab.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    })();
 
     document.querySelectorAll('.boss-accordion-header').forEach(function(btn) {
       btn.addEventListener('click', function() {
