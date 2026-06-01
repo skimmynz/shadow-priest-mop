@@ -3,33 +3,37 @@
    Depends on css/base.css (tokens + nav)
    ═══════════════════════════════════════════════════════ */
 
-/* ── Hero / Video Section ────────────────────────────── */
-.guide-hero {
-  max-width: 1000px;
+/* ── Doc Layout: video (left) + content + sticky TOC ─── */
+.guide-layout {
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 3rem 2rem 1rem;
-  text-align: center;
+  padding: 2rem 2rem 4rem;
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr) 200px;
+  gap: 2rem;
+  align-items: start;
 }
 
-.guide-subtitle {
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 2rem;
+.guide-content {
+  min-width: 0;
+}
+
+/* ── Video — sticky left column ──────────────────────── */
+.guide-video-col {
+  position: sticky;
+  top: 84px;
 }
 
 .guide-video-card {
   background: var(--secondary-bg);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.guide-video-card:hover {
+.guide-video-col .guide-video-card:hover {
   border-color: var(--border-hover);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
@@ -48,21 +52,6 @@
   width: 100%;
   height: 100%;
   border: 0;
-}
-
-/* ── Doc Layout: content + sticky TOC rail ───────────── */
-.guide-layout {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 1.5rem 2rem 4rem;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 220px;
-  gap: 2.5rem;
-  align-items: start;
-}
-
-.guide-content {
-  min-width: 0;
 }
 
 /* Sections — stacked, scroll-margin clears sticky nav */
@@ -1171,12 +1160,19 @@
 
 /* ── Responsive ──────────────────────────────────────── */
 
-/* Tablet/narrow desktop — drop the sticky TOC rail, use mobile dropdown */
+/* Tablet/narrow desktop — video on top, content below, TOC → dropdown */
 @media (max-width: 900px) {
   .guide-layout {
     grid-template-columns: 1fr;
     gap: 0;
-    padding: 1.25rem 1.5rem 3.5rem;
+    padding: 1.5rem 1.5rem 3.5rem;
+  }
+
+  .guide-video-col {
+    position: static;
+    max-width: 640px;
+    margin: 0 auto 1.25rem;
+    width: 100%;
   }
 
   .guide-toc {
@@ -1189,10 +1185,6 @@
 }
 
 @media (max-width: 768px) {
-  .guide-hero {
-    padding: 2rem 1.25rem 0.75rem;
-  }
-
   .guide-layout {
     padding: 1rem 1.25rem 3rem;
   }
@@ -1251,17 +1243,8 @@
 }
 
 @media (max-width: 480px) {
-  .guide-hero {
-    padding: 1.5rem 1rem 0.5rem;
-  }
-
   .guide-layout {
     padding: 0.75rem 1rem 2.5rem;
-  }
-
-  .guide-subtitle {
-    font-size: 0.85rem;
-    letter-spacing: 0.08em;
   }
 
   .guide-panel-body {
