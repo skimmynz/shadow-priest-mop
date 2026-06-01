@@ -2,18 +2,22 @@ const breakpoints = {
   "Shadow Word: Pain": {
     id: 589,
     points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69],
+    // Hard-coded non-goblin rating per breakpoint (1:1 with points). null = no fixed value, fall back to formula.
+    ratings: [1345, 8085, 14846, 21596, 28325, 35066, 41855, 48561, 55308, 62045, 68852, 75564],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
   },
   "Vampiric Touch": {
     id: 34914,
     points: [9.99, 30.01, 49.96, 70.02, 90.05, 110.01, 129.97, 150.10, 169.91, 190.00, 210.08],
+    ratings: [null, 10124, 18200, 26318, 34427, 42505, 50585, 58733, 66748, 74880, 83008],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
   },
   "Devouring Plague": {
     id: 2944,
     points: [8.28, 24.92, 41.74, 58.35, 74.98, 91.75, 108.55, 124.97, 141.84, 158.06, 175.10, 191.97, 208.17, 225.20, 241.88, 257.78],
+    ratings: [null, 8064, 14873, 21596, 28325, 35115, 41914, 48561, 55387, 61955, 68852, 75679, 82235, 89130, 95881, 102317],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
   }
@@ -116,7 +120,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
         extraTicks++;
       } else {
         nextBPValue = data.points[i];
-        nextBPRating = calculateRatingFromPercent(nextBPValue, isGoblin);
+        nextBPRating = bpRating(data, i, isGoblin, nextBPValue);
         nextBP = nextBPValue + '% (' + nextBPRating.toLocaleString() + ' rating)';
         break;
       }
@@ -172,6 +176,16 @@ function updateSpellTable(effectiveHaste, isGoblin) {
   if (typeof $WowheadPower !== 'undefined') {
     $WowheadPower.refreshLinks();
   }
+}
+
+// Rating for a breakpoint: hard-coded (non-goblin) table value, goblin-scaled to the
+// same haste%; falls back to the formula when no fixed value exists (ratings[i] == null).
+function bpRating(data, i, isGoblin, pct) {
+  var base = data.ratings ? data.ratings[i] : null;
+  if (base == null) return calculateRatingFromPercent(pct, isGoblin);
+  if (!isGoblin) return base;
+  // Goblins gain +1% haste, so they reach the same breakpoint at a lower rating.
+  return Math.max(0, Math.ceil(((42500 + base) / 1.01) - 42500));
 }
 
 // Calculate rating from percentage
