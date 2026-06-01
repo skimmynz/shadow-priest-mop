@@ -116,7 +116,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
 
     var nextBPRating = null;
     for (var i = 0; i < data.points.length; i++) {
-      if (effectiveHaste >= data.points[i]) {
+      if (effectiveHaste >= thresholdPct(data, i)) {
         extraTicks++;
       } else {
         nextBPValue = data.points[i];
@@ -176,6 +176,15 @@ function updateSpellTable(effectiveHaste, isGoblin) {
   if (typeof $WowheadPower !== 'undefined') {
     $WowheadPower.refreshLinks();
   }
+}
+
+// Exact haste% threshold for a breakpoint, derived from its hard-coded base rating at
+// full precision (the 2-decimal points value is rounded and triggers ~1 rating early).
+// Falls back to the displayed points value when no fixed rating exists (ratings[i] == null).
+function thresholdPct(data, i) {
+  var base = data.ratings ? data.ratings[i] : null;
+  if (base == null) return data.points[i];
+  return ((1 + base / 42500) * 1.05 - 1) * 100;
 }
 
 // Rating for a breakpoint: hard-coded (non-goblin) table value, goblin-scaled to the
