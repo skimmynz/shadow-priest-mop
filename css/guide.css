@@ -81,7 +81,17 @@
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  color: var(--text-accent);
+}
+
+/* Brand tints on hover */
+.guide-watch-link--youtube:hover {
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.4);
+}
+
+.guide-watch-link--twitch:hover {
+  background: rgba(145, 70, 255, 0.12);
+  border-color: rgba(145, 70, 255, 0.45);
 }
 
 .guide-watch-img {
@@ -189,6 +199,7 @@
   margin: 0 0 1rem;
 }
 
+
 .guide-toc-mobile-btn {
   display: flex;
   align-items: center;
@@ -227,7 +238,11 @@
 
 .guide-toc-mobile-menu {
   list-style: none;
-  margin: 0.4rem 0 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  margin: 0;
   padding: 0.35rem;
   background: var(--secondary-bg);
   border: 1px solid var(--border-color);
