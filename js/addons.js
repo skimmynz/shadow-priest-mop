@@ -11,7 +11,7 @@ const addons = [
 ];
 
 const weakauras = [
-  { name: "Fojji - Shadow Priest UI [MoP] | skimmy edit", url: "https://wago.io/ri2lfOS8b", preview: "https://media.wago.io/screenshots/ri2lfOS8b/688dc81ab1debd7388acf2da.gif" },
+  { name: "Fojji Spriest UI | skimmy edit", url: "https://wago.io/ri2lfOS8b", preview: "https://media.wago.io/screenshots/ri2lfOS8b/688dc81ab1debd7388acf2da.gif" },
   { name: "DragonKarsh CastBars | skimmy edit", url: "https://wago.io/dnDdk1mhh", preview: "https://media.wago.io/screenshots/dnDdk1mhh/688483a02acbf36327ec9c9e.gif" },
   { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", preview: "https://media.wago.io/screenshots/UWa_HeEta/68846df1a40570447822e19e.gif" },
   { name: "Haste Breakpoints", url: "https://wago.io/7m5gdIAts", preview: "https://media.wago.io/screenshots/7m5gdIAts/69f844d2181c615631129b53.gif" },
@@ -21,7 +21,7 @@ const weakauras = [
 // Hotspot data (single source of truth)
 const HOTSPOTS = [
   {
-    name: "Fojji - Shadow Priest UI [MoP] | skimmy edit",
+    name: "Fojji Spriest UI | skimmy edit",
     url: "https://wago.io/ri2lfOS8b",
     coords: { x1: 857, y1: 598, x2: 1064, y2: 773 }
   },
