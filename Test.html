@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="PROTOTYPE — Alternative A: Unified Panel with Sticky Result. Shadow Priest Haste Calculator redesign preview.">
+  <title>Test — Haste Calculator (Unified Panel) | skimmynz</title>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
+
+  <!-- Stylesheets (reuse base tokens + nav; haste.css for shared spell-row visuals) -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/haste.css" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Wowhead Tooltips -->
+  <script>window.whTooltips = { colorLinks: true, iconizeLinks: false, renameLinks: false };</script>
+  <script src="https://wow.zamimg.com/widgets/power.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════════
+       Alternative A overrides — scoped to .haste-panel.
+       Inline so prototype is self-contained and prod CSS untouched.
+       ═══════════════════════════════════════════════════════ -->
+  <style>
+    /* Outer unified surface — one card, internal dividers (no detached cards) */
+    .haste-panel {
+      max-width: 1100px;
+      margin: 2rem auto;
+      background: linear-gradient(160deg, rgba(26,29,41,.9) 0%, rgba(30,33,48,.95) 100%);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
+      overflow: visible;
+    }
+
+    /* ── Zone 1: fused Result Bar (result + input + controls) ── */
+    .haste-resultbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.5rem 2rem;
+      padding: 1.5rem 1.75rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: rgba(0,0,0,.12);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .rb-result {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-shrink: 0;
+      min-width: 180px;
+      position: relative;
+    }
+    .rb-result .result-value {
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -.03em;
+      margin: 0;
+      color: var(--text-primary);
+    }
+    .rb-result .result-label {
+      font-size: .65rem;
+      letter-spacing: 2.5px;
+      margin: .35rem 0 0;
+      color: var(--text-accent);
+    }
+    .rb-result .conversion-text {
+      font-size: .75rem;
+      margin-top: .35rem;
+      min-height: 0;
+      text-align: left;
+    }
+
+    .rb-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1.25rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .rb-field { display: flex; flex-direction: column; gap: .4rem; }
+    .rb-field > .control-header { text-align: left; border: none; padding: 0; margin: 0; }
+
+    .rb-field .haste-input {
+      width: 150px;
+      padding: .65rem .75rem;
+      font-size: 1.1rem;
+      border-radius: 10px;
+    }
+
+    .rb-toggles { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .rb-toggles .buff-toggle { min-height: 44px; padding: .4rem .6rem; }
+    .rb-toggles .buff-name { font-size: .75rem; }
+
+    /* GCD warning re-anchored inside bar (override absolute prod rule) */
+    .haste-resultbar #gcdWarningInput {
+      position: static;
+      width: 100%;
+      padding-top: 0;
+      flex-basis: 100%;
+    }
+    .haste-resultbar .gcd-warning { text-align: left; }
+
+    /* ── Zone 2: breakpoint header ── */
+    .haste-bp-header {
+      padding: 1rem 1.75rem;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .haste-bp-header h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    /* ── Zone 3: compact single-line spell rows ──
+       Override prod 4-col grid with a tighter horizontal layout. */
+    .haste-panel .spell-row {
+      grid-template-columns: minmax(150px,1.6fr) auto auto minmax(160px,1.4fr);
+      gap: 1rem;
+      padding: .85rem 1.75rem;
+      align-items: center;
+    }
+    .haste-panel .spell-icon { width: 38px; height: 38px; border-radius: 9px; }
+    .haste-panel .spell-info { gap: .65rem; }
+    .haste-panel .breakpoint-info {
+      flex-direction: row;
+      align-items: center;
+      gap: .75rem;
+      justify-content: flex-end;
+    }
+    .haste-panel .breakpoint-text { flex-direction: row; align-items: baseline; gap: .4rem; }
+    .haste-panel .progress-container { width: 90px; flex-shrink: 0; }
+
+    /* ── Zone 4: compact WeakAura import (GIF demoted to button) ── */
+    .haste-wa {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .haste-wa .weakaura-title { margin: 0; font-size: .8rem; }
+    .haste-wa .wago-import-btn { margin: 0; }
+
+    /* ═══════════ Mobile reflow + STICKY result ═══════════ */
+    @media (max-width: 768px) {
+      .haste-panel { margin: 1rem; border-radius: 16px; }
+
+      .haste-resultbar {
+        position: sticky;
+        top: 64px;               /* .top-nav height */
+        z-index: 50;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1.1rem 1.1rem;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 6px 18px rgba(0,0,0,.45);
+      }
+      .rb-result { align-items: center; min-width: 0; }
+      .rb-result .result-value { font-size: 2.4rem; }
+      .rb-result .conversion-text { text-align: center; }
+      .rb-controls { flex-direction: column; align-items: stretch; gap: .9rem; }
+      .rb-field { align-items: center; }
+      .rb-field > .control-header { text-align: center; }
+      .rb-field .haste-input { width: 100%; max-width: 220px; align-self: center; }
+      .rb-toggles { justify-content: center; }
+
+      /* Spell row → single compact horizontal line (no 250px tower) */
+      .haste-panel .spell-row {
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "icon name bp";
+        gap: .6rem .75rem;
+        padding: .7rem 1rem;
+        text-align: left;
+      }
+      .haste-panel .spell-info { grid-area: name; justify-content: flex-start; }
+      .haste-panel .spell-name { font-size: .82rem; }
+      .haste-panel .spell-icon { grid-area: icon; width: 34px; height: 34px; }
+      .haste-panel .base-ticks { display: none; }      /* drop to fit one line */
+      .haste-panel .ticks-badge {
+        grid-area: name;
+        justify-self: end;
+        min-width: 0;
+        padding: .25rem .55rem;
+        font-size: .7rem;
+      }
+      .haste-panel .breakpoint-info {
+        grid-area: bp;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: .3rem;
+      }
+      .haste-panel .breakpoint-text { flex-direction: column; align-items: flex-end; gap: 0; }
+      .haste-panel .bp-pct { font-size: .8rem; }
+      .haste-panel .bp-rating { font-size: .65rem; }
+      .haste-panel .progress-container { width: 70px; height: 6px; }
+
+      .haste-wa { flex-direction: column; align-items: stretch; text-align: center; }
+      .haste-wa .wago-import-btn { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="/">Home</a></li>
+        <li><a href="/rankings">Top 100</a></li>
+        <li><a href="/guide">Guide</a></li>
+        <li><a href="/haste" class="active">Haste Calculator</a></li>
+        <li><a href="/addons">Addons &amp; WAs</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <h1 class="sr-only">Shadow Priest Haste Calculator – MoP Classic (Unified Panel prototype)</h1>
+
+  <!-- ═══ Alternative A: single unified panel ═══ -->
+  <div class="haste-panel">
+
+    <!-- Zone 1 · fused result + input + controls (sticky on mobile) -->
+    <section class="haste-resultbar" aria-live="polite">
+      <div class="rb-result">
+        <div class="result-value" id="hasteResult">5.00%</div>
+        <div class="result-label">Effective Haste</div>
+        <div class="conversion-text" id="conversionText">includes <img src="https://wow.zamimg.com/images/wow/icons/tiny/spell_shadow_shadowform.gif" alt="Shadowform" class="explainer-icon" data-wowhead="spell=15473&domain=mop-classic"> Shadowform</div>
+        <div id="gcdWarningInput"></div>
+      </div>
+
+      <div class="rb-controls">
+        <div class="rb-field">
+          <h3 class="control-header">Haste Rating</h3>
+          <input type="text" inputmode="numeric" pattern="[0-9]*" id="hasteInput" class="haste-input" placeholder="0" aria-label="Haste input value" />
+        </div>
+
+        <div class="rb-field">
+          <h3 class="control-header">Race</h3>
+          <div class="rb-toggles">
+            <label class="buff-toggle">
+              <input type="checkbox" id="goblinRacial" class="race-checkbox buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=69042/time-is-money" data-wowhead="spell=69042&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <span class="buff-name">Goblin</span>
+            </label>
+            <label class="buff-toggle">
+              <input type="checkbox" id="trollRacial" class="race-checkbox buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <span class="buff-name">Troll</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="rb-field">
+          <h3 class="control-header">Active Buffs</h3>
+          <div class="rb-toggles">
+            <label class="buff-toggle">
+              <input type="checkbox" id="powerInfusion" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=10060/power-infusion" data-wowhead="spell=10060&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <span class="buff-name">Power Infusion</span>
+            </label>
+            <label class="buff-toggle" id="berserkingToggle" style="display: none;">
+              <input type="checkbox" id="berserking" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=26297/berserking" data-wowhead="spell=26297&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <span class="buff-name">Berserking</span>
+            </label>
+            <label class="buff-toggle">
+              <input type="checkbox" id="bloodlust" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/spell=2825/bloodlust" data-wowhead="spell=2825&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <span class="buff-name">Bloodlust / Heroism</span>
+            </label>
+            <label class="buff-toggle">
+              <input type="checkbox" id="sinisterPrimal" class="buff-checkbox">
+              <span class="buff-switch" aria-hidden="true"></span>
+              <a href="https://www.wowhead.com/mop-classic/item=95347/sinister-primal-diamond" data-wowhead="item=95347&domain=mop-classic" class="buff-tooltip-wrap">
+                <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg" alt="" class="buff-icon" aria-hidden="true">
+              </a>
+              <span class="buff-name">Sinister Primal Diamond</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Zone 2 · breakpoint header -->
+    <div class="haste-bp-header">
+      <h2>DoT Breakpoint Analysis</h2>
+    </div>
+
+    <!-- Zone 3 · compact breakpoint rows (JS-populated) -->
+    <div class="spells-container" id="spellsContainer" role="region" aria-label="Spell breakpoints"></div>
+
+    <!-- Zone 4 · compact WeakAura import -->
+    <div class="haste-wa">
+      <h3 class="weakaura-title">Track your haste in-game</h3>
+      <a href="https://wago.io/7m5gdIAts" target="_blank" rel="noopener" class="wago-import-btn">
+        <img src="https://media.wago.io/favicon/favicon-32x32.png" alt="" class="wago-icon">
+        Import from Wago.io
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Scripts — unchanged calc logic -->
+  <script src="js/haste.js"></script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; <span class="footer-year"></span> skimmynz &middot; Prototype: Alternative A (Unified Panel)</p>
+    </div>
+  </footer>
+</body>
+</html>
