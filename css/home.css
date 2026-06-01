@@ -29,7 +29,7 @@
   background-image: url('/img/hero-bg.webp');
   background-size: cover;
   background-position: center 20%;
-  filter: blur(2px) brightness(.35) saturate(.7);
+  filter: blur(1px) brightness(.35) saturate(.7);
   transform: scale(1.05);
 }
 
@@ -84,17 +84,19 @@
 }
 
 .hero-title {
-  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+  font-size: clamp(2.6rem, 5.4vw, 4.8rem);
   font-weight: 900;
   color: #a78bfa;
-  letter-spacing: .08em;
+  letter-spacing: .02em;
   line-height: 1;
-  text-shadow: 0 0 60px rgba(167,139,250,.3);
+  text-transform: uppercase;
+  text-shadow: 0 0 60px rgba(167,139,250,.35);
   margin-bottom: .35rem;
 }
 
 .hero-logo {
-  height: 58px;
+  height: 92px;
   margin-bottom: .3rem;
   opacity: .85;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .4));
@@ -247,8 +249,8 @@
 
 @media (max-width: 768px) {
   .hero { min-height: 0; padding: 1.5rem 1.25rem; }
-  .hero-title { letter-spacing: .04em; }
-  .hero-logo { height: 56px; }
+  .hero-title { letter-spacing: .02em; }
+  .hero-logo { height: 78px; }
 
   .home-section { padding: 3.5rem 1.25rem; }
   .section-title { font-size: 1.25rem; }
