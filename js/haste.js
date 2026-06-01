@@ -3,6 +3,8 @@ const breakpoints = {
     id: 589,
     points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69],
     ratings: [1345, 8085, 14846, 21596, 28325, 35066, 41855, 48561, 55308, 62045, 68852, 75564],
+    goblinPoints: [7.25, 23.74, 40.27, 56.79, 73.25, 89.73, 106.34, 122.74, 139.25, 155.73, 172.38, 188.80],
+    goblinRatings: [911, 7584, 14278, 20961, 27624, 34298, 41020, 47659, 54340, 61010, 67749, 74395],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
   },
@@ -10,6 +12,8 @@ const breakpoints = {
     id: 34914,
     points: [9.99, 30.01, 49.96, 70.02, 90.05, 110.01, 129.97, 150.10, 169.91, 190.00, 210.08],
     ratings: [null, 10124, 18200, 26318, 34427, 42505, 50585, 58733, 66748, 74880, 83008],
+    goblinPoints: [null, 28.72, 48.48, 68.34, 88.17, 107.93, 127.70, 147.63, 167.23, 187.12, 207.01],
+    goblinRatings: [null, 9603, 17599, 25637, 33665, 41663, 49663, 57731, 65666, 73717, 81765],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
   },
@@ -17,6 +21,8 @@ const breakpoints = {
     id: 2944,
     points: [8.28, 24.92, 41.74, 58.35, 74.98, 91.75, 108.55, 124.97, 141.84, 158.06, 175.10, 191.97, 208.17, 225.20, 241.88, 257.78],
     ratings: [null, 8064, 14873, 21596, 28325, 35115, 41914, 48561, 55387, 61955, 68852, 75679, 82235, 89130, 95881, 102317],
+    goblinPoints: [null, 23.69, 40.34, 56.79, 73.25, 89.86, 106.49, 122.74, 139.44, 155.51, 172.38, 189.08, 205.12, 221.98, 238.50, 254.24],
+    goblinRatings: [null, 7564, 14305, 20961, 27624, 34347, 41078, 47659, 54418, 60921, 67749, 74509, 81000, 87827, 94511, 100883],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=2944/devouring-plague"
   }
@@ -188,24 +194,27 @@ function thresholdPct(data, i) {
   return ((1 + base / 42500) * 1.05 - 1) * 100;
 }
 
-// Rating for a breakpoint: hard-coded (non-goblin) table value, goblin-scaled to the
-// same haste%; falls back to the formula when no fixed value exists (ratings[i] == null).
+// Rating for a breakpoint. Goblin: hard-coded goblinRatings table value. Non-goblin:
+// hard-coded ratings table value. Falls back to the formula when no fixed value exists.
 function bpRating(data, i, isGoblin, pct) {
+  if (isGoblin) {
+    var gr = data.goblinRatings ? data.goblinRatings[i] : null;
+    if (gr != null) return gr;
+    return calculateRatingFromPercent(pct, true);
+  }
   var base = data.ratings ? data.ratings[i] : null;
-  if (base == null) return calculateRatingFromPercent(pct, isGoblin);
-  if (!isGoblin) return base;
-  // Goblins gain +1% haste, so they reach the same breakpoint at a lower rating.
-  return Math.max(0, Math.ceil(((42500 + base) / 1.01) - 42500));
+  if (base == null) return calculateRatingFromPercent(pct, false);
+  return base;
 }
 
-// Display haste% for a breakpoint. Non-goblin: the listed points value. Goblin: the
-// pre-racial "gear" haste of the goblin rating (i.e. excluding the 1.01 racial), matching
-// what the character sheet shows before the racial pushes it to the proc threshold.
+// Display haste% for a breakpoint. Goblin: hard-coded goblinPoints (pre-racial gear haste).
+// Non-goblin: the listed points value. Falls back to points when no fixed value exists.
 function bpDisplayPct(data, i, isGoblin) {
-  if (!isGoblin || !data.ratings || data.ratings[i] == null) return data.points[i];
-  var goblinRating = bpRating(data, i, true, data.points[i]);
-  var pct = ((1 + goblinRating / 42500) * 1.05 - 1) * 100;
-  return Math.round(pct * 100) / 100; // 2dp, like points
+  if (isGoblin) {
+    var gp = data.goblinPoints ? data.goblinPoints[i] : null;
+    return gp != null ? gp : data.points[i];
+  }
+  return data.points[i];
 }
 
 // Calculate rating from percentage
