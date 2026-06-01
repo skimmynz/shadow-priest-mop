@@ -413,16 +413,24 @@
    row 1 search · row 2 segmented + region · row 3 sync. Container-query based
    so it reacts to the toolbar's real width, not the viewport. */
 @container content-col (max-width: 680px) {
-  .toolbar { flex-wrap: wrap; }
+  .toolbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 8px;
+  }
 
   /* Row 1 — search full width */
   .toolbar-search { flex: 1 1 100%; }
 
-  /* Row 2 — segmented toggle (left) + region (right) */
-  .toolbar-region { margin-left: auto; }
+  /* Row 2 — segmented toggle + region, centered as a group */
+  .search-all-toggle,
+  .toolbar-region { margin: 0; }
 
-  /* Row 3 — sync status on its own line */
-  .toolbar .last-updated { flex: 1 1 100%; }
+  /* Row 3 — sync status centered on its own line */
+  .toolbar .last-updated {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
 }
 
 /* =================================================================
