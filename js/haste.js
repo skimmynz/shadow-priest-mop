@@ -162,6 +162,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
             spell +
           '</a>' +
         '</div>' +
+        '<div class="base-ticks">' + baseTicks[spell] + ' ticks base</div>' +
         '<div class="ticks-badge ' + ticksClass + '">+' + extraTicks + ' tick' + (extraTicks !== 1 ? 's' : '') + '</div>' +
         '<div class="breakpoint-info">' +
           breakpointContent +

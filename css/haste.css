@@ -650,7 +650,7 @@ html { scroll-behavior: smooth; }
 
   .spells-table { border-radius: 16px; }
   .spell-row {
-    grid-template-columns: minmax(0, 1.6fr) auto auto minmax(0, 1.2fr);
+    grid-template-columns: minmax(0, 1.6fr) auto minmax(0, 1.2fr);
     gap: .75rem;
     text-align: left;
     padding: 1rem .875rem;
@@ -662,13 +662,13 @@ html { scroll-behavior: smooth; }
     min-width: 0;
   }
   .spell-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .base-ticks { justify-self: center; padding: .35rem .5rem; font-size: .7rem; }
+  .base-ticks { display: none; }
   .ticks-badge { justify-self: center; min-width: 0; padding: .4rem .6rem; font-size: .7rem; }
   .breakpoint-info { align-items: flex-start; text-align: left; }
   .progress-container { max-width: 100%; }
   .table-header { padding: 1rem 1.25rem; }
   .table-title { font-size: 1.1rem; }
-  .spell-icon { width: 44px; height: 44px; }
+  .spell-icon { width: 60px; height: 60px; }
   .spell-name { font-size: .9rem; }
 
   .breakpoint-explainer { padding: 1rem 1.25rem; }
@@ -702,7 +702,7 @@ html { scroll-behavior: smooth; }
 
   .spells-table { border-radius: 14px; }
   .spell-row { padding: 1rem .875rem; gap: .75rem; }
-  .spell-icon { width: 40px; height: 40px; border-radius: 10px; }
+  .spell-icon { width: 54px; height: 54px; border-radius: 10px; }
   .spell-name { font-size: .85rem; }
   .base-ticks { font-size: .75rem; padding: .35rem .5rem; }
   .ticks-badge { font-size: .75rem; padding: .4rem .75rem; min-width: 75px; }
@@ -731,7 +731,7 @@ html { scroll-behavior: smooth; }
   .result-card { padding: 1rem .875rem; }
 
   .spell-row { padding: .875rem .75rem; }
-  .spell-icon { width: 36px; height: 36px; }
+  .spell-icon { width: 48px; height: 48px; }
   .spell-name { font-size: .8rem; }
 
   .buff-toggle { padding: .4rem .45rem; min-height: 42px; border-radius: 10px; }
