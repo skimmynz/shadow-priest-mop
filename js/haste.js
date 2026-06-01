@@ -1,13 +1,13 @@
 const breakpoints = {
   "Shadow Word: Pain": {
     id: 589,
-    points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69, 208.48],
+    points: [8.32, 24.97, 41.68, 58.35, 74.98, 91.63, 108.41, 124.97, 141.64, 158.29, 175.10, 191.69,
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=589/shadow-word-pain"
   },
   "Vampiric Touch": {
     id: 34914,
-    points: [9.99, 30.01, 49.95, 70.02, 90.05, 110.01, 129.97, 150.10, 169.91, 190.00, 210.08],
+    points: [9.99, 30.01, 49.96, 70.02, 90.05, 110.01, 129.97, 150.10, 169.91, 190.00, 210.08],
     icon: "https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg",
     url: "https://www.wowhead.com/mop-classic/spell=34914/vampiric-touch"
   },
