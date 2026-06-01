@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Layout 1 — Shrink hero, videos below</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary-bg:#0f1117; --secondary-bg:#1a1d29; --card-bg:#1e2130;
+    --accent-color:#7c3aed; --accent-hover:#8b5cf6;
+    --text-primary:#fff; --text-secondary:#e5e7eb; --text-muted:#9ca3af; --text-accent:#a78bfa;
+    --border-color:#2d3142; --border-hover:#3d4158; --glass-border:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased;}
+  body{background:var(--primary-bg);color:var(--text-primary);
+    font-family:'Inter','Segoe UI',system-ui,sans-serif;line-height:1.6;}
+  .nav{position:fixed;top:0;left:0;right:0;z-index:50;height:58px;display:flex;align-items:center;
+    gap:.4rem;padding:0 1.25rem;background:rgba(15,17,23,.85);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--glass-border);font-size:.9rem;}
+  .nav a{display:inline-flex;align-items:center;gap:.45rem;color:var(--text-secondary);
+    text-decoration:none;padding:.45rem .7rem;border-radius:8px;font-weight:500;}
+  .nav a.active{background:linear-gradient(135deg,var(--accent-color),var(--accent-hover));color:#fff;font-weight:700;}
+  .nav svg{width:16px;height:16px;} .nav .spacer{flex:1;}
+
+  /* hero — now compact, NOT full height */
+  .hero{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;
+    overflow:hidden;padding:6rem 2rem 1.5rem;}
+  .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+  .hero-bg::before{content:'';position:absolute;inset:0;background-image:url('/img/hero-bg.webp');
+    background-size:cover;background-position:center 25%;filter:blur(2px) brightness(.35) saturate(.7);transform:scale(1.05);}
+  .hero-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 60% 60% at 50% 40%,rgba(124,58,237,.2) 0%,transparent 70%),
+      linear-gradient(180deg,rgba(15,17,23,.25) 0%,rgba(15,17,23,.55) 60%,rgba(15,17,23,.95) 100%);}
+  .hero-glow{position:absolute;border-radius:50%;pointer-events:none;filter:blur(100px);z-index:2;}
+  .hero-glow--1{width:45vw;height:45vw;max-width:480px;max-height:480px;
+    background:radial-gradient(circle,rgba(124,58,237,.22) 0%,transparent 70%);top:-5%;left:18%;}
+  .hero-content{position:relative;z-index:3;max-width:1100px;width:100%;}
+  .hero-logo{height:64px;margin-bottom:.35rem;opacity:.85;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4));}
+  .hero-title{font-size:clamp(2.6rem,5.5vw,4.8rem);font-weight:900;color:#a78bfa;letter-spacing:.08em;
+    line-height:1;text-shadow:0 0 60px rgba(167,139,250,.3);margin-bottom:.4rem;}
+  .hero-author{display:flex;align-items:center;justify-content:center;gap:.75rem;
+    font-size:.95rem;color:var(--text-muted);}
+  .hero-author strong{color:var(--text-accent);font-weight:700;}
+  .hero-social{display:inline-flex;align-items:center;color:var(--text-muted);transition:color .2s,transform .2s;}
+  .hero-social svg{width:20px;height:20px;}
+
+  /* watch — pulled up, header dropped, less padding */
+  .watch{max-width:1200px;margin:0 auto;padding:1.5rem 2rem 2.5rem;}
+  .streams-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+  .stream-card{background:var(--secondary-bg);border:1px solid var(--border-color);border-radius:16px;
+    overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.3);transition:all .3s cubic-bezier(.4,0,.2,1);}
+  .stream-card:hover{border-color:var(--border-hover);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+  .stream-label{display:flex;align-items:center;gap:.5rem;padding:.875rem 1.25rem;font-weight:700;
+    font-size:.8125rem;color:var(--text-secondary);border-bottom:1px solid var(--border-color);
+    text-transform:uppercase;letter-spacing:.06em;}
+  .stream-label svg{width:18px;height:18px;}
+  .stream-label--twitch svg{color:#9146ff;} .stream-label--yt svg{color:#ff0000;}
+  .stream-embed{position:relative;padding-bottom:56.25%;height:0;background:var(--card-bg);
+    display:flex;align-items:center;justify-content:center;}
+  .stream-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:.75rem;color:var(--text-muted);font-size:.85rem;font-weight:500;}
+  .stream-placeholder svg{width:40px;height:40px;opacity:.2;}
+
+  @media (max-width:860px){
+    .streams-grid{grid-template-columns:1fr;}
+    .hero{padding:5rem 1.25rem 1rem;}
+  }
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>Top 100</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Guide</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Haste Calculator</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>Addons &amp; WAs</a>
+  <span class="spacer"></span>
+  <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>YouTube</a>
+  <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>Twitch</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="hero-glow hero-glow--1" aria-hidden="true"></div>
+  <div class="hero-content">
+    <img src="/img/1232243.webp" alt="MoP Classic" class="hero-logo" />
+    <h1 class="hero-title">Shadow Priest</h1>
+    <div class="hero-author">
+      <span>by <strong>skimmynz</strong></span>
+      <a href="#" class="hero-social"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+      <a href="#" class="hero-social"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<section class="watch">
+  <div class="streams-grid">
+    <div class="stream-card">
+      <div class="stream-label stream-label--twitch"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>Twitch — Live Stream</div>
+      <div class="stream-embed"><div class="stream-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>Twitch player</div></div>
+    </div>
+    <div class="stream-card">
+      <div class="stream-label stream-label--yt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>YouTube — Featured</div>
+      <div class="stream-embed"><div class="stream-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>YouTube player</div></div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
