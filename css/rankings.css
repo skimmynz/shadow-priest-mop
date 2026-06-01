@@ -303,6 +303,7 @@
   display: flex;
   align-items: center;
   height: 38px;
+  margin-bottom: 0;
   flex-shrink: 0;
   white-space: nowrap;
 }
