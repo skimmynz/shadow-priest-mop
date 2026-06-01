@@ -9,7 +9,7 @@
   margin: 0 auto;
   padding: 2rem 2rem 4rem;
   display: grid;
-  grid-template-columns: 340px minmax(0, 1fr) 200px;
+  grid-template-columns: 420px minmax(0, 1fr) 200px;
   gap: 2rem;
   align-items: start;
 }
@@ -52,6 +52,43 @@
   width: 100%;
   height: 100%;
   border: 0;
+}
+
+/* Watch links beneath video — fill the left column */
+.guide-watch-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.875rem;
+}
+
+.guide-watch-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.875rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.guide-watch-link svg {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  color: var(--text-accent);
+}
+
+.guide-watch-link:hover {
+  color: var(--text-primary);
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.35);
+  transform: translateY(-1px);
 }
 
 /* Sections — stacked, scroll-margin clears sticky nav */
