@@ -115,13 +115,15 @@ function updateSpellTable(effectiveHaste, isGoblin) {
     var nextBPValue = null;
 
     var nextBPRating = null;
+    var nextBPDisplayPct = null;
     for (var i = 0; i < data.points.length; i++) {
       if (effectiveHaste >= thresholdPct(data, i)) {
         extraTicks++;
       } else {
         nextBPValue = data.points[i];
         nextBPRating = bpRating(data, i, isGoblin, nextBPValue);
-        nextBP = nextBPValue + '% (' + nextBPRating.toLocaleString() + ' rating)';
+        nextBPDisplayPct = bpDisplayPct(data, i, isGoblin);
+        nextBP = nextBPDisplayPct + '% (' + nextBPRating.toLocaleString() + ' rating)';
         break;
       }
     }
@@ -141,7 +143,7 @@ function updateSpellTable(effectiveHaste, isGoblin) {
     var breakpointContent = isMaxed
       ? '<div class="breakpoint-text breakpoint-maxed">Maxed</div>'
       : '<div class="breakpoint-text">' +
-          '<span class="bp-pct">' + nextBPValue + '%</span>' +
+          '<span class="bp-pct">' + nextBPDisplayPct + '%</span>' +
           '<span class="bp-rating">' + nextBPRating.toLocaleString() + ' rating</span>' +
         '</div>';
 
@@ -195,6 +197,16 @@ function bpRating(data, i, isGoblin, pct) {
   if (!isGoblin) return base;
   // Goblins gain +1% haste, so they reach the same breakpoint at a lower rating.
   return Math.max(0, Math.ceil(((42500 + base) / 1.01) - 42500));
+}
+
+// Display haste% for a breakpoint. Non-goblin: the listed points value. Goblin: the
+// pre-racial "gear" haste of the goblin rating (i.e. excluding the 1.01 racial), matching
+// what the character sheet shows before the racial pushes it to the proc threshold.
+function bpDisplayPct(data, i, isGoblin) {
+  if (!isGoblin || !data.ratings || data.ratings[i] == null) return data.points[i];
+  var goblinRating = bpRating(data, i, true, data.points[i]);
+  var pct = ((1 + goblinRating / 42500) * 1.05 - 1) * 100;
+  return Math.round(pct * 100) / 100; // 2dp, like points
 }
 
 // Calculate rating from percentage
