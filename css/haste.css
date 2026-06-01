@@ -668,7 +668,7 @@ html { scroll-behavior: smooth; }
   .progress-container { max-width: 100%; }
   .table-header { padding: 1rem 1.25rem; }
   .table-title { font-size: 1.1rem; }
-  .spell-icon { width: 60px; height: 60px; }
+  .spell-icon { width: 56px; height: 56px; }
   .spell-name { font-size: .9rem; }
 
   .breakpoint-explainer { padding: 1rem 1.25rem; }
