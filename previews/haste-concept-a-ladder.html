@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Haste · Concept A — Breakpoint Ladder</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary-bg:#0f1117;--card-bg:#1e2130;--surface-bg:#23263a;--hover-bg:#2a2d42;
+  --accent:#7c3aed;--accent-hover:#8b5cf6;--accent-glow:rgba(124,58,237,.3);
+  --success:#10b981;--warning:#f59e0b;--gold:#fbbf24;
+  --text-primary:#fff;--text-secondary:#e5e7eb;--text-muted:#9ca3af;--text-accent:#a78bfa;
+  --border:#2d3142;--border-hover:#3d4158;
+  --swp:#ef4444;--vt:#a855f7;--dp:#22d3ee;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:
+  radial-gradient(1200px 600px at 80% -10%,rgba(124,58,237,.18),transparent 60%),
+  var(--primary-bg);color:var(--text-primary);min-height:100vh;padding:clamp(12px,3vw,40px)}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.tag{display:inline-block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-accent);
+  background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);padding:5px 12px;border-radius:999px}
+.panel{background:linear-gradient(180deg,var(--card-bg),#171a26);border:1px solid var(--border);
+  border-radius:20px;padding:clamp(16px,2.4vw,28px);box-shadow:0 20px 50px -20px rgba(0,0,0,.8)}
+.bar{display:grid;grid-template-columns:minmax(180px,1fr) 2fr;gap:20px;align-items:center}
+@media(max-width:760px){.bar{grid-template-columns:1fr}}
+.field label{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+.field input{width:100%;background:var(--surface-bg);border:1px solid var(--border);border-radius:14px;
+  color:#fff;font-size:34px;font-weight:800;padding:12px 18px;letter-spacing:.02em;outline:none}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:var(--surface-bg);border:1px solid var(--border);
+  padding:8px 13px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text-secondary);
+  user-select:none;transition:.15s}
+.chip:hover{border-color:var(--border-hover);background:var(--hover-bg)}
+.chip.on{background:rgba(124,58,237,.18);border-color:var(--accent);color:#fff;box-shadow:0 0 0 1px var(--accent-glow)}
+.chip .dot{width:9px;height:9px;border-radius:50%;background:#454a63}
+.chip.on .dot{background:var(--accent-hover);box-shadow:0 0 8px var(--accent-hover)}
+.hero{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:18px}
+.hero .big{font-size:clamp(40px,7vw,64px);font-weight:900;background:linear-gradient(135deg,#a78bfa,#7c3aed);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.hero .sub{color:var(--text-muted);font-size:14px}
+.gcd{margin-top:14px}
+.gcd .track{height:10px;border-radius:999px;background:var(--surface-bg);overflow:hidden;border:1px solid var(--border)}
+.gcd .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-hover));transition:width .25s}
+.gcd .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-top:6px;gap:10px}
+.gcd .warn{color:var(--warning);font-weight:600}
+.ladder{position:relative;margin-top:8px}
+.axis{position:relative;height:26px;margin:0 6px 4px}
+.axis .gl{position:absolute;font-size:11px;color:var(--text-muted);transform:translateX(-50%);top:6px}
+.axis .gridline{position:absolute;top:18px;height:9999px;width:1px;background:rgba(255,255,255,.04)}
+.rows{position:relative;display:flex;flex-direction:column;gap:14px;padding:6px;overflow:hidden}
+.lane{position:relative;height:46px;background:var(--surface-bg);border:1px solid var(--border);border-radius:12px}
+.lane .lbl{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:700;font-size:13px;z-index:3;
+  display:flex;align-items:center;gap:7px;background:linear-gradient(90deg,var(--surface-bg) 78%,transparent);padding-right:26px}
+.lane .lbl .sw{width:10px;height:10px;border-radius:3px}
+.notch{position:absolute;top:8px;bottom:8px;width:3px;border-radius:2px;background:#3a3f57;transform:translateX(-50%);z-index:1}
+.notch.hit{background:currentColor;opacity:.5}
+.notch.next{width:4px;background:currentColor;opacity:1;box-shadow:0 0 10px currentColor;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(-50%) scaleY(1.14)}}
+.notch .tip{position:absolute;bottom:130%;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;
+  background:#0b0d14;border:1px solid var(--border);padding:4px 8px;border-radius:7px;opacity:0;pointer-events:none;transition:.12s;z-index:5}
+.notch:hover .tip{opacity:1}
+.you{position:absolute;top:-9px;bottom:-9px;width:2px;background:var(--gold);z-index:4;transform:translateX(-50%);box-shadow:0 0 12px var(--gold)}
+.you::after{content:"";position:absolute;top:-5px;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--gold)}
+.nextcall{position:absolute;top:50%;transform:translateY(-50%);right:12px;font-size:12px;font-weight:600;z-index:3}
+.nextcall b{color:#fff}
+.maxed-tag{position:absolute;top:50%;right:12px;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--success);z-index:3}
+.vtrack{display:none}
+@media(max-width:640px){
+  .axis{display:none}
+  .rows{gap:10px}
+  .lane{height:auto;padding:12px 12px 14px}
+  .lane .lbl{position:static;transform:none;background:none;padding:0;margin-bottom:10px;justify-content:space-between}
+  .vtrack{display:block;position:relative;height:12px;border-radius:999px;background:#13151f;overflow:hidden}
+  .vfill{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:currentColor;opacity:.85}
+  .notch,.you{display:none}
+  .nextcall,.maxed-tag{position:static;transform:none;display:block;margin-top:9px;text-align:right}
+}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-muted);margin-top:16px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.hint{font-size:12px;color:var(--text-muted);margin-top:10px}
+.note{font-size:12px;color:var(--text-muted);text-align:center;margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div><span class="tag">Concept A · Breakpoint Ladder</span></div>
+  <section class="panel">
+    <div class="bar">
+      <div class="field">
+        <label>Haste Rating</label>
+        <input id="rating" inputmode="numeric" pattern="[0-9]*" value="12562" maxlength="5">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">Race &amp; Buffs</label>
+        <div class="chips" id="chips">
+          <span class="chip" data-k="goblin"><i class="dot"></i>Goblin</span>
+          <span class="chip" data-k="troll"><i class="dot"></i>Troll</span>
+          <span class="chip" data-k="pi"><i class="dot"></i>Power Infusion</span>
+          <span class="chip" data-k="bloodlust"><i class="dot"></i>Bloodlust</span>
+          <span class="chip" data-k="spd"><i class="dot"></i>Sinister Primal</span>
+          <span class="chip" data-k="berserking" style="display:none"><i class="dot"></i>Berserking</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero">
+      <div class="big" id="effOut">5.00%</div>
+      <div class="sub">effective haste · includes Shadowform</div>
+    </div>
+    <div class="gcd">
+      <div class="track"><div class="fill" id="gcdFill" style="width:0%"></div></div>
+      <div class="meta"><span id="gcdLeft">GCD cap headroom</span><span id="gcdRight"></span></div>
+    </div>
+  </section>
+  <section class="panel">
+    <div class="ladder">
+      <div class="axis" id="axis"></div>
+      <div class="rows" id="rows"></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--swp)"></i>Shadow Word: Pain</span>
+      <span><i style="background:var(--vt)"></i>Vampiric Touch</span>
+      <span><i style="background:var(--dp)"></i>Devouring Plague</span>
+      <span><i style="background:var(--gold)"></i>You</span>
+    </div>
+    <p class="hint">Hover any notch for its exact rating &amp; %. Pulsing notch = your next tick. Resize narrow to see the mobile layout.</p>
+  </section>
+  <p class="note">Concept preview · live calc shares the production breakpoint data &amp; formula.</p>
+</div>
+<script src="concept-core.js"></script>
+<script>
+const COLORS={"Shadow Word: Pain":"var(--swp)","Vampiric Touch":"var(--vt)","Devouring Plague":"var(--dp)"};
+const SHORT={"Shadow Word: Pain":"SW:P","Vampiric Touch":"V.Touch","Devouring Plague":"Dev.Plague"};
+let state={goblin:false,troll:false,pi:false,bloodlust:false,spd:false,berserking:false};
+function render(){
+  const rating=clampRating(document.getElementById('rating').value);
+  const s=compute(rating,state);
+  document.getElementById('effOut').textContent=s.eff.toFixed(2)+'%';
+  const pct=Math.min(100,rating/s.gcdCap*100);
+  document.getElementById('gcdFill').style.width=pct+'%';
+  const gR=document.getElementById('gcdRight');
+  if(rating>=s.gcdCap){
+    document.getElementById('gcdLeft').textContent='GCD cap reached';
+    gR.textContent='⚠ '+s.gcdCap.toLocaleString()+' — extra haste still adds DoT ticks';gR.className='warn';
+  }else{
+    document.getElementById('gcdLeft').textContent='GCD cap headroom';
+    gR.textContent=(s.gcdCap-rating).toLocaleString()+' rating to cap';gR.className='';
+  }
+  const maxPct=Math.max(60,s.eff*1.25);
+  const ax=document.getElementById('axis');ax.innerHTML='';
+  const step=maxPct>120?30:(maxPct>60?20:10);
+  for(let g=0;g<=maxPct;g+=step){
+    const x=g/maxPct*100;
+    ax.insertAdjacentHTML('beforeend',`<div class="gridline" style="left:${x}%"></div><div class="gl" style="left:${x}%">${g}%</div>`);
+  }
+  const rows=document.getElementById('rows');rows.innerHTML='';
+  const youX=Math.min(100,s.eff/maxPct*100);
+  const mobile=window.innerWidth<=640;
+  for(const spell in BREAKPOINTS){
+    const a=analyze(spell,s.eff,state.goblin,rating);
+    const col=COLORS[spell];const data=BREAKPOINTS[spell];
+    let notches='';
+    for(let i=0;i<data.points.length;i++){
+      const p=bpDisplayPct(data,i,state.goblin);if(p>maxPct)continue;
+      const x=p/maxPct*100;const hit=i<a.ticksNow;const isNext=(i===a.ticksNow);
+      const r=bpRating(data,i,state.goblin,p);
+      notches+=`<div class="notch ${hit?'hit':''} ${isNext?'next':''}" style="left:${x}%;color:${col}"><span class="tip"><b>+${i+1}</b> · ${p.toFixed(2)}% · ${r.toLocaleString()} rating</span></div>`;
+    }
+    const call=a.isMaxed?`<span class="maxed-tag">✓ Maxed (${a.ticksNow} extra)</span>`
+      :`<span class="nextcall" style="color:${col}">+1 tick in <b>${a.ratingDelta.toLocaleString()}</b> rating</span>`;
+    const fillPct=a.isMaxed?100:a.progress;
+    rows.insertAdjacentHTML('beforeend',`
+      <div class="lane">
+        <div class="lbl"><span><span class="sw" style="background:${col}"></span>${SHORT[spell]} <span style="color:var(--text-muted);font-weight:500">· ${a.baseTicks+a.ticksNow} ticks</span></span></div>
+        ${notches}
+        <div class="vtrack"><div class="vfill" style="width:${fillPct}%;color:${col}"></div></div>
+        ${call}
+      </div>`);
+  }
+  if(!mobile){
+    rows.querySelectorAll('.lane').forEach(l=>{const y=document.createElement('div');y.className='you';y.style.left=youX+'%';l.appendChild(y);});
+  }
+}
+document.getElementById('chips').addEventListener('click',e=>{
+  const c=e.target.closest('.chip');if(!c)return;const k=c.dataset.k;state[k]=!state[k];
+  if(k==='goblin'&&state.goblin){state.troll=false;state.berserking=false;}
+  if(k==='troll'){if(state.troll)state.goblin=false;else state.berserking=false;}
+  document.querySelectorAll('.chip').forEach(ch=>ch.classList.toggle('on',!!state[ch.dataset.k]));
+  document.querySelector('[data-k=berserking]').style.display=state.troll?'inline-flex':'none';
+  render();
+});
+document.getElementById('rating').addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,5);render();});
+window.addEventListener('resize',render);
+render();
+</script>
+</body>
+</html>

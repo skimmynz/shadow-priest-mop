@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Haste · Concept C — Live Sim Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary-bg:#0f1117;--card-bg:#1e2130;--surface-bg:#23263a;--hover-bg:#2a2d42;
+  --accent:#7c3aed;--accent-hover:#8b5cf6;--accent-glow:rgba(124,58,237,.3);
+  --success:#10b981;--warning:#f59e0b;--gold:#fbbf24;
+  --text-primary:#fff;--text-secondary:#e5e7eb;--text-muted:#9ca3af;--text-accent:#a78bfa;
+  --border:#2d3142;--border-hover:#3d4158;
+  --swp:#ef4444;--vt:#a855f7;--dp:#22d3ee;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:
+  radial-gradient(1000px 600px at 100% -5%,rgba(124,58,237,.16),transparent 55%),
+  var(--primary-bg);color:var(--text-primary);min-height:100vh;padding:clamp(12px,2.4vw,32px)}
+.wrap{max-width:1240px;margin:0 auto}
+.tag{display:inline-block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-accent);
+  background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);padding:5px 12px;border-radius:999px;margin-bottom:16px}
+.layout{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+.panel{background:linear-gradient(180deg,var(--card-bg),#171a26);border:1px solid var(--border);
+  border-radius:18px;padding:20px;box-shadow:0 20px 50px -24px rgba(0,0,0,.8)}
+.rail{position:sticky;top:18px;display:flex;flex-direction:column;gap:20px}
+.sec h4{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px}
+.rnum input[type=text]{background:var(--surface-bg);border:1px solid var(--border);border-radius:12px;color:#fff;
+  font-size:26px;font-weight:800;padding:8px 14px;width:100%;outline:none}
+.rnum input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow)}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:999px;background:var(--surface-bg);margin-top:14px;outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;
+  background:var(--accent-hover);box-shadow:0 0 0 4px var(--accent-glow);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:20px;height:20px;border:0;border-radius:50%;background:var(--accent-hover);cursor:pointer}
+.toggles{display:flex;flex-direction:column;gap:8px}
+.tg{display:flex;align-items:center;gap:10px;background:var(--surface-bg);border:1px solid var(--border);
+  border-radius:12px;padding:10px 12px;cursor:pointer;user-select:none;transition:.15s;position:relative}
+.tg:hover{border-color:var(--border-hover);background:var(--hover-bg)}
+.tg.on{background:rgba(124,58,237,.16);border-color:var(--accent)}
+.tg .sw{width:34px;height:20px;border-radius:999px;background:#3a3f57;position:relative;flex:none;transition:.15s}
+.tg .sw::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.tg.on .sw{background:var(--accent)}
+.tg.on .sw::after{transform:translateX(14px)}
+.tg .nm{font-weight:600;font-size:14px}
+.tg .delta{margin-left:auto;font-size:12px;font-weight:700;color:var(--success);opacity:0;transition:.15s;white-space:nowrap}
+.tg:hover .delta.show{opacity:1}
+.tg .delta.neg{color:var(--warning)}
+.results{display:flex;flex-direction:column;gap:18px}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hero .v{font-size:clamp(40px,6vw,58px);font-weight:900;background:linear-gradient(135deg,#a78bfa,#7c3aed);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+.hero .l{font-size:12px;color:var(--text-muted)}
+.hero .tot{text-align:right}
+.hero .tot b{font-size:26px;font-weight:900}
+.gcd .track{height:9px;border-radius:999px;background:var(--surface-bg);overflow:hidden;border:1px solid var(--border);margin-top:14px}
+.gcd .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-hover));transition:width .25s}
+.gcd .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-top:6px;gap:10px}
+.gcd .warn{color:var(--warning);font-weight:600}
+.ruler{position:relative;margin:6px 0 0}
+.ruler .scale{position:relative;height:18px;margin-bottom:8px}
+.ruler .scale span{position:absolute;font-size:10px;color:var(--text-muted);transform:translateX(-50%)}
+.ruler .lane{position:relative;height:30px;display:flex;align-items:center}
+.ruler .lane .nm{position:absolute;left:0;width:56px;font-size:12px;font-weight:800;z-index:2}
+.ruler .track{position:absolute;left:64px;right:0;height:8px;border-radius:999px;background:var(--surface-bg);border:1px solid var(--border)}
+.ruler .n{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px;background:#3a3f57;transform:translateX(-50%)}
+.ruler .n.hit{background:currentColor;opacity:.55}
+.ruler .n.next{background:currentColor;opacity:1;box-shadow:0 0 8px currentColor}
+.ruler .you{position:absolute;top:-7px;height:22px;width:2px;background:var(--gold);transform:translateX(-50%);box-shadow:0 0 10px var(--gold);z-index:3}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:12px 4px;border-top:1px solid var(--border)}
+.row:first-child{border-top:0}
+.row .lhs{display:flex;align-items:center;gap:12px}
+.row img{width:34px;height:34px;border-radius:9px;border:1px solid var(--border)}
+.row .nm{font-weight:700;font-size:14px}
+.row .tk{font-size:12px;color:var(--text-muted)}
+.row .badge{font-size:13px;font-weight:800;padding:5px 11px;border-radius:9px;background:rgba(124,58,237,.16);color:#cbb6ff;white-space:nowrap}
+.row .badge.maxed{background:rgba(16,185,129,.16);color:#6ee7b7}
+.row .next{font-size:12px;color:var(--text-secondary);text-align:right;min-width:120px}
+.row .next b{color:#fff}
+.whatif{font-size:13px;color:var(--text-muted);background:rgba(124,58,237,.08);border:1px dashed rgba(124,58,237,.35);
+  border-radius:12px;padding:12px 14px}
+.whatif b{color:var(--text-accent)}
+.note{font-size:12px;color:var(--text-muted);text-align:center;margin-top:14px}
+@media(max-width:900px){
+  .rail{position:fixed;left:0;right:0;bottom:0;top:auto;z-index:50;border-radius:18px 18px 0 0;
+    background:rgba(20,22,32,.97);backdrop-filter:blur(10px);border-top:1px solid var(--border);
+    max-height:62vh;overflow:auto;padding:14px 16px 20px;box-shadow:0 -20px 50px -10px rgba(0,0,0,.7)}
+  .rail::before{content:"";display:block;width:42px;height:4px;border-radius:999px;background:#3a3f57;margin:0 auto 12px}
+  .results{padding-bottom:240px}
+  .toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tg .delta{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="tag">Concept C · Live Sim Dashboard</span>
+  <div class="layout">
+    <aside class="panel rail">
+      <div class="sec">
+        <h4>Haste Rating</h4>
+        <div class="rnum"><input id="rating" type="text" inputmode="numeric" pattern="[0-9]*" value="12562" maxlength="5"></div>
+        <input id="slider" type="range" min="0" max="20000" step="1" value="12562">
+      </div>
+      <div class="sec">
+        <h4>Race</h4>
+        <div class="toggles">
+          <div class="tg" data-k="goblin"><span class="sw"></span><span class="nm">Goblin</span><span class="delta" data-d="goblin"></span></div>
+          <div class="tg" data-k="troll"><span class="sw"></span><span class="nm">Troll</span><span class="delta" data-d="troll"></span></div>
+        </div>
+      </div>
+      <div class="sec">
+        <h4>Buffs <span style="text-transform:none;letter-spacing:0;color:#6b7280">· hover = Δ ticks</span></h4>
+        <div class="toggles">
+          <div class="tg" data-k="pi"><span class="sw"></span><span class="nm">Power Infusion</span><span class="delta" data-d="pi"></span></div>
+          <div class="tg" data-k="berserking" style="display:none"><span class="sw"></span><span class="nm">Berserking</span><span class="delta" data-d="berserking"></span></div>
+          <div class="tg" data-k="bloodlust"><span class="sw"></span><span class="nm">Bloodlust / Heroism</span><span class="delta" data-d="bloodlust"></span></div>
+          <div class="tg" data-k="spd"><span class="sw"></span><span class="nm">Sinister Primal Diamond</span><span class="delta" data-d="spd"></span></div>
+        </div>
+      </div>
+    </aside>
+    <main class="panel results">
+      <div class="hero">
+        <div>
+          <div class="v" id="effOut">5.00%</div>
+          <div class="l">effective haste · includes Shadowform</div>
+        </div>
+        <div class="tot"><b id="totTicks">0</b><div class="l">total bonus ticks</div></div>
+      </div>
+      <div class="gcd">
+        <div class="track"><div class="fill" id="gcdFill" style="width:0%"></div></div>
+        <div class="meta"><span id="gcdL">GCD cap headroom</span><span id="gcdR"></span></div>
+      </div>
+      <div class="ruler" id="ruler"></div>
+      <div class="rows" id="rows"></div>
+      <div class="whatif" id="whatif"></div>
+    </main>
+  </div>
+  <p class="note">Concept preview · live calc shares the production breakpoint data &amp; formula. Resize narrow → controls become a bottom sheet.</p>
+</div>
+<script src="concept-core.js"></script>
+<script>
+const COL={"Shadow Word: Pain":"var(--swp)","Vampiric Touch":"var(--vt)","Devouring Plague":"var(--dp)"};
+const SHORT={"Shadow Word: Pain":"SW:P","Vampiric Touch":"VT","Devouring Plague":"DP"};
+const NAME={"Shadow Word: Pain":"Shadow Word: Pain","Vampiric Touch":"Vampiric Touch","Devouring Plague":"Devouring Plague"};
+const LBL={pi:'Power Infusion',bloodlust:'Bloodlust',spd:'Sinister Primal Diamond',berserking:'Berserking'};
+let state={goblin:false,troll:false,pi:false,bloodlust:false,spd:false,berserking:false};
+
+function totalTicks(rating,st){
+  const eff=compute(rating,st).eff;
+  return Object.keys(BREAKPOINTS).reduce((n,sp)=>n+analyze(sp,eff,st.goblin,rating).ticksNow,0);
+}
+function render(){
+  const rating=clampRating(document.getElementById('rating').value);
+  const s=compute(rating,state);
+  document.getElementById('effOut').textContent=s.eff.toFixed(2)+'%';
+  document.getElementById('gcdFill').style.width=Math.min(100,rating/s.gcdCap*100)+'%';
+  const gR=document.getElementById('gcdR');
+  if(rating>=s.gcdCap){document.getElementById('gcdL').textContent='GCD cap reached';gR.textContent='⚠ '+s.gcdCap.toLocaleString()+' — haste still buys DoT ticks';gR.className='warn';}
+  else{document.getElementById('gcdL').textContent='GCD cap headroom';gR.textContent=(s.gcdCap-rating).toLocaleString()+' to cap';gR.className='';}
+
+  const results=Object.keys(BREAKPOINTS).map(sp=>analyze(sp,s.eff,state.goblin,rating));
+  const tot=results.reduce((n,r)=>n+r.ticksNow,0);
+  document.getElementById('totTicks').textContent=tot;
+
+  // ruler — track starts at 64px; breakpoint at fraction f sits at calc(64px + (100% - 64px)*f)
+  const maxPct=Math.max(60,s.eff*1.25);
+  const youF=Math.min(1,s.eff/maxPct);
+  const step=maxPct>120?30:(maxPct>60?20:10);
+  let scale='<div class="scale">';
+  for(let g=0;g<=maxPct;g+=step){const f=g/maxPct;scale+=`<span style="left:calc(64px + (100% - 64px) * ${f})">${g}%</span>`;}
+  scale+='</div>';
+  let lanes='';
+  results.forEach(r=>{
+    const data=BREAKPOINTS[r.spell];const col=COL[r.spell];let ns='';
+    for(let i=0;i<data.points.length;i++){
+      const p=bpDisplayPct(data,i,state.goblin);if(p>maxPct)continue;
+      const f=p/maxPct*100;const hit=i<r.ticksNow;const isNext=(i===r.ticksNow);
+      ns+=`<div class="n ${hit?'hit':''} ${isNext?'next':''}" style="left:${f}%;color:${col}"></div>`;
+    }
+    lanes+=`<div class="lane"><span class="nm" style="color:${col}">${SHORT[r.spell]}</span>
+      <div class="track">${ns}<div class="you" style="left:${youF*100}%"></div></div></div>`;
+  });
+  document.getElementById('ruler').innerHTML=scale+lanes;
+
+  const rows=document.getElementById('rows');rows.innerHTML='';
+  results.forEach(r=>{
+    const badge=r.isMaxed?`<span class="badge maxed">Maxed</span>`:`<span class="badge">+${r.ticksNow} tick${r.ticksNow!==1?'s':''}</span>`;
+    const next=r.isMaxed?`<span style="color:var(--success)">all breakpoints hit</span>`
+      :`+<b>${r.ratingDelta.toLocaleString()}</b> rating<br><span style="color:var(--text-muted)">→ +1 tick @ ${r.nextDisplayPct.toFixed(2)}%</span>`;
+    rows.insertAdjacentHTML('beforeend',`
+      <div class="row">
+        <div class="lhs"><img src="${r.icon}" alt=""><div><div class="nm">${NAME[r.spell]}</div><div class="tk">${r.baseTicks} base · ${r.baseTicks+r.ticksNow} total</div></div></div>
+        ${badge}
+        <div class="next">${next}</div>
+      </div>`);
+  });
+
+  // what-if: best single untoggled buff
+  let bestBuff=null,bestGain=0;
+  const candidates=['pi','bloodlust','spd'].concat(state.troll?['berserking']:[]);
+  candidates.forEach(k=>{
+    if(state[k])return;const g=totalTicks(rating,{...state,[k]:true})-tot;
+    if(g>bestGain){bestGain=g;bestBuff=k;}
+  });
+  document.getElementById('whatif').innerHTML=bestBuff
+    ? `What-if: enabling <b>${LBL[bestBuff]}</b> would add <b>+${bestGain} ticks</b> across your DoTs right now.`
+    : `What-if: no inactive buff adds an extra tick at this rating — you're between breakpoints.`;
+
+  // hover delta badges per toggle
+  document.querySelectorAll('.delta').forEach(d=>{
+    const k=d.dataset.d;const alt={...state,[k]:!state[k]};
+    if(k==='goblin'&&!state.goblin)alt.troll=false;
+    if(k==='troll'&&!state.troll)alt.goblin=false;
+    const g=totalTicks(rating,alt)-tot;
+    d.textContent=(g>=0?'+':'')+g+' ticks';
+    d.classList.toggle('show',g!==0);
+    d.classList.toggle('neg',g<0);
+  });
+}
+function syncToggles(){
+  document.querySelectorAll('.tg').forEach(t=>t.classList.toggle('on',!!state[t.dataset.k]));
+  document.querySelector('[data-k=berserking]').style.display=state.troll?'flex':'none';
+}
+document.querySelectorAll('.tg').forEach(t=>t.addEventListener('click',()=>{
+  const k=t.dataset.k;state[k]=!state[k];
+  if(k==='goblin'&&state.goblin){state.troll=false;state.berserking=false;}
+  if(k==='troll'){if(state.troll)state.goblin=false;else state.berserking=false;}
+  syncToggles();render();
+}));
+const ri=document.getElementById('rating'),sl=document.getElementById('slider');
+ri.addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'').slice(0,5);sl.value=clampRating(e.target.value);render();});
+sl.addEventListener('input',e=>{ri.value=e.target.value;render();});
+window.addEventListener('resize',render);
+syncToggles();render();
+</script>
+</body>
+</html>
