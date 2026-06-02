@@ -261,3 +261,14 @@ if (prefill && /^\d{1,5}$/.test(prefill)) {
 
 // Init
 calculateHaste();
+
+// Bind Wowhead tooltips to the static race/buff icons. The DoT table binds its own
+// links inside calculateHaste(); these icons are never re-rendered, so they need one
+// explicit refreshLinks() pass. power.js loads async, so retry until $WowheadPower exists.
+(function bindStaticTooltips() {
+  if (typeof $WowheadPower !== 'undefined') {
+    $WowheadPower.refreshLinks();
+  } else {
+    setTimeout(bindStaticTooltips, 200);
+  }
+})();
