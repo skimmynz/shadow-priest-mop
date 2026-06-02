@@ -141,7 +141,6 @@
             placeholder="0"
             aria-label="Haste input value"
           />
-          <div id="gcdWarningInput"></div>
         </div>
 
         <!-- (b) Live effective haste result -->
@@ -200,13 +199,18 @@
         </div>
       </section>
 
+      <!-- GCD Cap banner (in-flow; populated by js/haste.js) -->
+      <div id="gcdWarningInput"></div>
+
       <!-- Two Column Layout: Result + Breakpoints -->
       <div class="haste-results-layout">
 <!-- Left: WeakAura Card -->
-        <section class="result-card">
+        <section class="result-card spells-table">
+          <div class="table-header">
+            <h2 class="table-title">Track your haste in-game</h2>
+          </div>
           <!-- WeakAura Display -->
           <div class="weakaura-container">
-            <h3 class="weakaura-title">Track your haste in-game</h3>
             <a href="https://wago.io/7m5gdIAts" target="_blank" rel="noopener" class="weakaura-link">
               <img src="https://media.wago.io/screenshots/7m5gdIAts/69f844d2181c615631129b53.gif"
                    alt="Shadow Priest DoT Tracker WeakAura"

@@ -8,7 +8,7 @@ html { scroll-behavior: smooth; }
 /* ── Container ────────────────────────────────────────── */
 .haste-container {
   padding: 2.5rem 2.5rem 3rem;
-  max-width: 1600px;
+  max-width: 1180px;
   margin: 0 auto;
   position: relative;
 }
@@ -47,15 +47,15 @@ html { scroll-behavior: smooth; }
   /* Toggles column is a FIXED width sized for the widest state (4 buff
      icons). Keeps the input + result columns stable so the panel never
      reflows when the Berserking icon appears on Troll selection. */
-  grid-template-columns: 1.1fr 1fr 17rem;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr 17rem;
+  gap: 1.75rem;
   align-items: center;
   background: linear-gradient(135deg, rgba(26,29,41,.9) 0%, rgba(30,33,48,.95) 100%);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
   border-radius: 20px;
-  padding: 1.6rem 1.75rem;
-  margin-bottom: 2rem;
+  padding: 1.4rem 1.75rem;
+  margin-bottom: 1.5rem;
   box-shadow:
     0 8px 32px rgba(0,0,0,.35),
     inset 0 1px 0 rgba(255,255,255,.04);
@@ -78,8 +78,8 @@ html { scroll-behavior: smooth; }
 
 .haste-input {
   width: 100%;
-  padding: .95rem .75rem;
-  font-size: 1.5rem;
+  padding: .6rem .75rem;
+  font-size: 1.6rem;
   font-weight: 800;
   font-family: inherit;
   background: rgba(15,17,23,.6);
@@ -115,8 +115,17 @@ html { scroll-behavior: smooth; }
   border-right: 1px solid var(--border-color);
   padding: 0 1.5rem;
 }
+/* Match the "Haste Rating" label exactly so both bar labels read as siblings */
+.cb-result .result-label {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--text-accent);
+  margin: 0 0 .5rem 0;
+}
 .cb-result .result-value {
-  font-size: 2.7rem;
+  font-size: 2.6rem;
   margin-bottom: 0;
 }
 .shadow-chip {
@@ -195,23 +204,19 @@ html { scroll-behavior: smooth; }
    ═══════════════════════════════════════════════════════ */
 .haste-results-layout {
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 2rem;
-  align-items: start;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-/* ── Result Card ──────────────────────────────────────── */
+/* ── Result Card ──────────────────────────────────────────
+   Shares .spells-table chrome (bg/border/radius/shadow/height).
+   Flex column so the WeakAura body fills to match the table height. */
 .result-card {
   text-align: center;
-  background: linear-gradient(160deg, rgba(26,29,41,.9) 0%, rgba(30,33,48,.95) 100%);
-  backdrop-filter: blur(16px);
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  padding: 1.5rem 1.25rem;
-  box-shadow:
-    0 8px 32px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.03);
-  transition: border-color .3s ease, box-shadow .3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
 }
 
 .result-label {
@@ -232,18 +237,9 @@ html { scroll-behavior: smooth; }
   letter-spacing: -.03em;
 }
 
-/* GCD warning — absolutely positioned under the command bar so it
-   never shifts layout (anchored to .command-bar via position:relative) */
-#gcdWarningInput {
-  position: absolute;
-  top: 100%;
-  left: 1.75rem;
-  right: 1.75rem;
-  z-index: 20;
-  padding-top: .6rem;
-  pointer-events: none;
-}
-#gcdWarningInput .gcd-warning { pointer-events: auto; }
+/* GCD warning — in normal flow between the command bar and results.
+   Empty until js/haste.js fills it, so it collapses (no gap) when absent. */
+#gcdWarningInput:not(:empty) { margin-bottom: 1.5rem; }
 
 .gcd-warning {
   background: linear-gradient(135deg, rgba(245,158,11,.9), rgba(234,88,12,.9));
@@ -296,25 +292,13 @@ html { scroll-behavior: smooth; }
   opacity: 1;
 }
 
-/* ── WeakAura promo ───────────────────────────────────── */
+/* ── WeakAura promo (result-card body) ────────────────── */
 .weakaura-container {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(255,255,255,.06);
-}
-/* Sole occupant of the result card — drop the separating top border */
-.result-card > .weakaura-container:first-child {
-  margin-top: 0;
-  padding-top: 0;
-  border-top: none;
-}
-.weakaura-title {
-  font-size: .8rem;
-  font-weight: 700;
-  margin-bottom: .75rem;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  color: var(--text-accent);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem 1.25rem;
 }
 .weakaura-link {
   display: block;
@@ -621,7 +605,7 @@ html { scroll-behavior: smooth; }
   .command-bar { padding: 1.25rem; border-radius: 16px; }
 
   .haste-results-layout { grid-template-columns: 1fr; }
-  .result-card { padding: 1.75rem 1.25rem; border-radius: 16px; }
+  .weakaura-container { padding: 1.5rem 1.25rem; }
   .result-value { font-size: 2.75rem; }
 
   .spells-table { border-radius: 16px; }
@@ -661,7 +645,7 @@ html { scroll-behavior: smooth; }
   .tg-label { width: 100%; }
   .toggle-group { flex-wrap: wrap; }
 
-  .result-card { padding: 1.25rem 1rem; border-radius: 14px; }
+  .weakaura-container { padding: 1.25rem 1rem; }
   .cb-result .result-value { font-size: 2.25rem; }
   .result-label { font-size: .6rem; letter-spacing: 2px; }
 
@@ -678,7 +662,6 @@ html { scroll-behavior: smooth; }
   .table-header { padding: .875rem 1rem; }
   .table-title { font-size: 1rem; }
 
-  .weakaura-title { font-size: .72rem; }
   .wago-import-btn { font-size: .75rem; padding: .55rem 1rem; }
 
   .breakpoint-explainer { padding: .875rem 1rem; }
@@ -695,7 +678,7 @@ html { scroll-behavior: smooth; }
   .command-bar { padding: .875rem; }
 
   .cb-result .result-value { font-size: 2rem; }
-  .result-card { padding: 1rem .875rem; }
+  .weakaura-container { padding: 1rem .875rem; }
 
   .spell-row { padding: .875rem .75rem; }
   .spell-icon { width: 40px; height: 40px; }
