@@ -254,6 +254,63 @@
   .soo-sep { padding-bottom: .9rem; }
 }
 
+/* ── Concept A: Banner variant (Garrosh art bg + SoO logo) ── */
+.soo-countdown--banner {
+  position: relative;
+  max-width: 760px;
+  padding: 0;
+  overflow: hidden;
+  background:
+    url('/img/Garrosh.webp') center 30% / cover no-repeat,
+    rgba(26, 29, 41, 0.78);
+}
+
+/* Dark + purple gradient so logo/numbers stay legible over art */
+.soo-countdown-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, rgba(124,58,237,.25) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(15,17,23,.55) 0%, rgba(15,17,23,.4) 45%, rgba(15,17,23,.88) 100%);
+}
+
+.soo-countdown-inner {
+  position: relative;
+  z-index: 1;
+  padding: 1.75rem 1.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.soo-countdown-logo {
+  width: auto;
+  max-width: min(420px, 78%);
+  height: auto;
+  margin-bottom: 1.25rem;
+  filter: drop-shadow(0 4px 18px rgba(0,0,0,.7));
+}
+
+/* Stronger glow on numbers for contrast over the battle art */
+.soo-countdown--banner .soo-num {
+  color: #c4b0fd;
+  text-shadow: 0 0 8px rgba(0,0,0,.8), 0 0 30px rgba(167,139,250,.5);
+}
+.soo-countdown--banner .soo-tag {
+  color: var(--text-secondary);
+  text-shadow: 0 1px 4px rgba(0,0,0,.8);
+}
+.soo-countdown--banner .soo-sep {
+  text-shadow: 0 1px 4px rgba(0,0,0,.8);
+}
+
+@media (max-width: 480px) {
+  .soo-countdown-logo { max-width: 88%; margin-bottom: 1rem; }
+  .soo-countdown-inner { padding: 1.25rem 1rem; }
+}
+
 /* ── Streams (inside hero) ────────────────────────────── */
 .streams-grid {
   display: grid;
