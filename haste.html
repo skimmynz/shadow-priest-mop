@@ -176,12 +176,6 @@
               <span class="check" aria-hidden="true">✓</span>
               <span class="sr-only">Power Infusion</span>
             </label>
-            <label class="icon-toggle" id="berserkingToggle" title="Berserking" style="display: none;">
-              <input type="checkbox" id="berserking" class="buff-checkbox">
-              <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" data-wowhead="spell=26297&domain=mop-classic">
-              <span class="check" aria-hidden="true">✓</span>
-              <span class="sr-only">Berserking</span>
-            </label>
             <label class="icon-toggle" title="Bloodlust / Heroism">
               <input type="checkbox" id="bloodlust" class="buff-checkbox">
               <img src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg" alt="" data-wowhead="spell=2825&domain=mop-classic">
@@ -193,6 +187,14 @@
               <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg" alt="" data-wowhead="item=95347&domain=mop-classic">
               <span class="check" aria-hidden="true">✓</span>
               <span class="sr-only">Sinister Primal Diamond</span>
+            </label>
+            <!-- Berserking sits last: appears at the right end on Troll
+                 selection so no other buff icon shifts position. -->
+            <label class="icon-toggle" id="berserkingToggle" title="Berserking" style="display: none;">
+              <input type="checkbox" id="berserking" class="buff-checkbox">
+              <img src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg" alt="" data-wowhead="spell=26297&domain=mop-classic">
+              <span class="check" aria-hidden="true">✓</span>
+              <span class="sr-only">Berserking</span>
             </label>
           </div>
         </div>

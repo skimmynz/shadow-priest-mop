@@ -44,7 +44,10 @@ html { scroll-behavior: smooth; }
 .command-bar {
   position: relative;
   display: grid;
-  grid-template-columns: 1.1fr 1fr auto;
+  /* Toggles column is a FIXED width sized for the widest state (4 buff
+     icons). Keeps the input + result columns stable so the panel never
+     reflows when the Berserking icon appears on Troll selection. */
+  grid-template-columns: 1.1fr 1fr 17rem;
   gap: 1.5rem;
   align-items: center;
   background: linear-gradient(135deg, rgba(26,29,41,.9) 0%, rgba(30,33,48,.95) 100%);
