@@ -15,6 +15,13 @@ var TIERS = {
     raids: {
       tot: { short: 'ToT', name: 'Throne of Thunder', encounters: { "Jin'rokh the Breaker": 51577, "Horridon": 51575, "Council of Elders": 51570, "Tortos": 51565, "Megaera": 51578, "Ji-Kun": 51573, "Durumu the Forgotten": 51572, "Primordius": 51574, "Dark Animus": 51576, "Iron Qon": 51559, "Twin Empyreans": 51560, "Lei Shen": 51579, "Ra-den": 51580 } }
     }
+  },
+  t16: {
+    name: 'T16',
+    // Disabled until Siege of Orgrimmar goes live. To activate: remove `disabled`
+    // and fill in `raids` with the SoO encounters (see t15 for shape).
+    disabled: true,
+    raids: {}
   }
 };
 var currentTierKey = 't15';

@@ -436,7 +436,8 @@ function buildRaidNav() {
   // Tier tabs
   var html = '<div class="tier-tabs">';
   for (var tierKey in TIERS) {
-    html += '<button type="button" class="tier-tab' + (tierKey === currentTierKey ? ' active' : '') + '" data-tier="' + tierKey + '">' + TIERS[tierKey].name + '</button>';
+    var isDisabled = TIERS[tierKey].disabled;
+    html += '<button type="button" class="tier-tab' + (tierKey === currentTierKey ? ' active' : '') + (isDisabled ? ' disabled' : '') + '" data-tier="' + tierKey + '"' + (isDisabled ? ' disabled aria-disabled="true" title="Coming with Siege of Orgrimmar"' : '') + '>' + TIERS[tierKey].name + '</button>';
   }
   html += '</div>';
 
@@ -492,6 +493,7 @@ if (raidNavEl) {
     var tierTab = e.target.closest('.tier-tab');
     if (tierTab) {
       var newTier = tierTab.dataset.tier;
+      if (TIERS[newTier] && TIERS[newTier].disabled) return;
       if (newTier === currentTierKey) return;
       currentTierKey = newTier;
       var raids = TIERS[newTier].raids;

@@ -58,6 +58,16 @@
   color: #ffffff;
 }
 
+.tier-tab.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tier-tab.disabled:hover {
+  color: var(--text-muted);
+  background: transparent;
+}
+
 /* Raid section headers (accordion) */
 .raid-section {
   margin-bottom: 2px;
