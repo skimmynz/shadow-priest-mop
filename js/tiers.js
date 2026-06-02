@@ -56,4 +56,4 @@ if (!lastUpdatedEl) {
    -------------------------------------------------------------------------------- */
 var CACHE_TTL_MS = 60 * 60 * 1000;
 var CACHE_KEY = function(id) { return 'spriest_rankings_' + id; };
-var API_URL = function(id) { return '/.netlify/functions/getLogs?encounterId=' + id; };
+var API_URL = function(id) { return '/api/logs?encounterId=' + id; };

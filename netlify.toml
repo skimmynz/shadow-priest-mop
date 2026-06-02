@@ -1,6 +1,28 @@
 [functions]
   directory = "netlify/functions"
 
+# Rate-limited proxy paths for the serverless functions.
+# Per-IP cap on cache-miss calls to protect the WCL API key quota and
+# Netlify function invocations. window_size max is 180s. Free plan allows
+# 2 rate-limit rules per project — these two use the budget exactly.
+[[redirects]]
+  from = "/api/logs"
+  to = "/.netlify/functions/getLogs"
+  status = 200
+  [redirects.rate_limit]
+    window_limit = 50
+    window_size = 60
+    aggregate_by = ["ip", "domain"]
+
+[[redirects]]
+  from = "/api/haste"
+  to = "/.netlify/functions/getPlayerHaste"
+  status = 200
+  [redirects.rate_limit]
+    window_limit = 50
+    window_size = 60
+    aggregate_by = ["ip", "domain"]
+
 [[redirects]]
   from = "/rankings"
   to = "/rankings.html"
