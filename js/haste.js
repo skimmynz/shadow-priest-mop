@@ -262,9 +262,19 @@ if (prefill && /^\d{1,5}$/.test(prefill)) {
 // Init
 calculateHaste();
 
-// Bind Wowhead tooltips to the static race/buff icons. The DoT table binds its own
-// links inside calculateHaste(); these icons are never re-rendered, so they need one
-// explicit refreshLinks() pass. power.js loads async, so retry until $WowheadPower exists.
+// Race/buff icons are <a href> so Wowhead Power binds tooltips (power.js only scans
+// document.links). An anchor inside a <label> swallows the toggle click, so toggle the
+// checkbox manually and suppress navigation to Wowhead.
+document.querySelectorAll('.icon-toggle .wh-icon').forEach(function(anchor) {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    var cb = this.closest('.icon-toggle').querySelector('input[type="checkbox"]');
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  });
+});
+
+// power.js auto-binds document.links on load; this explicit pass covers the async case.
 (function bindStaticTooltips() {
   if (typeof $WowheadPower !== 'undefined') {
     $WowheadPower.refreshLinks();
