@@ -261,7 +261,7 @@
   padding: 0;
   overflow: hidden;
   background:
-    url('/img/Garrosh.webp') center 30% / cover no-repeat,
+    url('/img/Garrosh.webp') 80% 30% / 165% no-repeat,
     rgba(26, 29, 41, 0.78);
 }
 
@@ -295,8 +295,8 @@
 
 /* Stronger glow on numbers for contrast over the battle art */
 .soo-countdown--banner .soo-num {
-  color: #c4b0fd;
-  text-shadow: 0 0 8px rgba(0,0,0,.8), 0 0 30px rgba(167,139,250,.5);
+  color: #f6c445;
+  text-shadow: 0 0 8px rgba(0,0,0,.85), 0 0 28px rgba(246,160,40,.6);
 }
 .soo-countdown--banner .soo-tag {
   color: var(--text-secondary);
