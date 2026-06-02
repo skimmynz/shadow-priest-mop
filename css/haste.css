@@ -295,10 +295,8 @@ html { scroll-behavior: smooth; }
 
 /* ── WeakAura promo (result-card body) ────────────────── */
 .weakaura-container {
-  padding: 1.5rem 1.25rem 1rem;
+  padding: 1.5rem 1.25rem;
 }
-/* Explainer lives in the left card (under the WeakAura); keep it readable */
-.result-card .breakpoint-explainer { text-align: left; }
 .weakaura-link {
   display: block;
   text-decoration: none;
