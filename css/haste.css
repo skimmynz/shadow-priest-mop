@@ -591,7 +591,8 @@ html { scroll-behavior: smooth; }
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  .result-card { position: relative; top: 0; }
+  /* Stacked order: DoT Breakpoint table first, Track-haste card last */
+  .result-card { position: relative; top: 0; order: 2; }
   .spell-row {
     grid-template-columns: 1fr 110px 95px 170px;
     gap: 1rem;
@@ -641,9 +642,11 @@ html { scroll-behavior: smooth; }
   .haste-header { margin-bottom: 1.25rem; }
   .haste-header h1 { font-size: 1.5rem; }
   .command-bar { padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
-  .cb-toggles { gap: 1rem; }
-  .tg-label { width: 100%; }
-  .toggle-group { flex-wrap: wrap; }
+  /* Race + Buffs: centered and enlarged to fill the stacked command bar */
+  .cb-toggles { gap: 1.25rem; align-items: center; }
+  .tg-label { width: 100%; text-align: center; }
+  .toggle-group { flex-wrap: wrap; justify-content: center; width: 100%; gap: .75rem; }
+  .icon-toggle { width: 56px; height: 56px; border-radius: 14px; }
 
   .weakaura-container { padding: 1.25rem 1rem; }
   .cb-result .result-value { font-size: 2.25rem; }
@@ -681,5 +684,5 @@ html { scroll-behavior: smooth; }
   .spell-row { padding: .875rem .75rem; }
   .spell-icon { width: 40px; height: 40px; }
   .spell-name { font-size: .8rem; }
-  .icon-toggle { width: 36px; height: 36px; border-radius: 9px; }
+  .icon-toggle { width: 48px; height: 48px; border-radius: 12px; }
 }
