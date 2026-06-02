@@ -8,7 +8,7 @@ html { scroll-behavior: smooth; }
 /* ── Container ────────────────────────────────────────── */
 .haste-container {
   padding: 2.5rem 2.5rem 3rem;
-  max-width: 1180px;
+  max-width: 1500px;
   margin: 0 auto;
   position: relative;
 }
@@ -206,7 +206,7 @@ html { scroll-behavior: smooth; }
   display: grid;
   grid-template-columns: 420px 1fr;
   gap: 1.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 /* ── Result Card ──────────────────────────────────────────
@@ -217,9 +217,6 @@ html { scroll-behavior: smooth; }
   display: flex;
   flex-direction: column;
   padding: 0;
-  /* Override the shared .spells-table height:100% so the card sizes to
-     its content instead of stretching to the taller DoT panel. */
-  height: auto;
 }
 
 .result-label {
@@ -296,7 +293,13 @@ html { scroll-behavior: smooth; }
 }
 
 /* ── WeakAura promo (result-card body) ────────────────── */
+/* Fills the stretched card and centers the gif + button vertically so
+   the leftover height splits evenly instead of pooling at the bottom. */
 .weakaura-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 1.5rem 1.25rem;
 }
 .weakaura-link {
