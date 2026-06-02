@@ -279,7 +279,7 @@ renderItems(addons, 'addons-grid');
 renderItems(weakauras, 'weakauras-grid');
 
 const bgImage = new Image();
-bgImage.src = 'img/ui.jpg';
+bgImage.src = 'img/ui.webp';
 bgImage.addEventListener('load', createHotspots);
 if (bgImage.complete) createHotspots();
 
