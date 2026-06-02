@@ -78,6 +78,7 @@ html { scroll-behavior: smooth; }
 
 .haste-input {
   width: 100%;
+  max-width: 360px;
   padding: .6rem .75rem;
   font-size: 1.6rem;
   font-weight: 800;
@@ -206,7 +207,7 @@ html { scroll-behavior: smooth; }
   display: grid;
   grid-template-columns: 420px 1fr;
   gap: 1.5rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 /* ── Result Card ──────────────────────────────────────────
@@ -293,15 +294,11 @@ html { scroll-behavior: smooth; }
 }
 
 /* ── WeakAura promo (result-card body) ────────────────── */
-/* Fills the stretched card and centers the gif + button vertically so
-   the leftover height splits evenly instead of pooling at the bottom. */
 .weakaura-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.5rem 1.25rem;
+  padding: 1.5rem 1.25rem 1rem;
 }
+/* Explainer lives in the left card (under the WeakAura); keep it readable */
+.result-card .breakpoint-explainer { text-align: left; }
 .weakaura-link {
   display: block;
   text-decoration: none;
@@ -581,6 +578,7 @@ html { scroll-behavior: smooth; }
   .command-bar { grid-template-columns: 1fr; }
   /* Centered to match the Effective Haste block below it */
   .cb-input { text-align: center; }
+  .cb-input .haste-input { margin-inline: auto; }
   .cb-result {
     border-left: none;
     border-right: none;
