@@ -206,7 +206,7 @@ html { scroll-behavior: smooth; }
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: 1.5rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 /* ── Result Card ──────────────────────────────────────────
@@ -217,6 +217,13 @@ html { scroll-behavior: smooth; }
   display: flex;
   flex-direction: column;
   padding: 0;
+}
+/* Keep the card title on one line so its header bar matches the
+   DoT panel header height (340px column would otherwise wrap it). */
+.result-card .table-title {
+  font-size: 1rem;
+  letter-spacing: .04em;
+  white-space: nowrap;
 }
 
 .result-label {
@@ -294,10 +301,6 @@ html { scroll-behavior: smooth; }
 
 /* ── WeakAura promo (result-card body) ────────────────── */
 .weakaura-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   padding: 1.5rem 1.25rem;
 }
 .weakaura-link {
