@@ -204,7 +204,7 @@ html { scroll-behavior: smooth; }
    ═══════════════════════════════════════════════════════ */
 .haste-results-layout {
   display: grid;
-  grid-template-columns: 340px 1fr;
+  grid-template-columns: 420px 1fr;
   gap: 1.5rem;
   align-items: start;
 }
@@ -217,13 +217,9 @@ html { scroll-behavior: smooth; }
   display: flex;
   flex-direction: column;
   padding: 0;
-}
-/* Keep the card title on one line so its header bar matches the
-   DoT panel header height (340px column would otherwise wrap it). */
-.result-card .table-title {
-  font-size: 1rem;
-  letter-spacing: .04em;
-  white-space: nowrap;
+  /* Override the shared .spells-table height:100% so the card sizes to
+     its content instead of stretching to the taller DoT panel. */
+  height: auto;
 }
 
 .result-label {
@@ -580,6 +576,8 @@ html { scroll-behavior: smooth; }
   }
   /* Stack the command bar: input · result · toggles vertically */
   .command-bar { grid-template-columns: 1fr; }
+  /* Centered to match the Effective Haste block below it */
+  .cb-input { text-align: center; }
   .cb-result {
     border-left: none;
     border-right: none;
