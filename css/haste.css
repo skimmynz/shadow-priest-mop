@@ -62,13 +62,14 @@ html { scroll-behavior: smooth; }
   transition: border-color .3s ease, box-shadow .3s ease;
 }
 
-/* Section label (reused) */
+/* Unified title style — shared by all four section titles
+   (Haste Rating, Effective Haste, Track Your Haste, DoT Breakpoint) */
 .control-header {
-  color: var(--text-accent);
-  font-size: .65rem;
+  color: var(--text-secondary);
+  font-size: .82rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1.4px;
+  letter-spacing: 2px;
   margin: 0 0 .5rem 0;
   display: block;
 }
@@ -112,17 +113,16 @@ html { scroll-behavior: smooth; }
 /* (b) Live result (center, flanked by dividers) */
 .cb-result {
   text-align: center;
-  border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
   padding: 0 1.5rem;
 }
-/* Match the "Haste Rating" label exactly so both bar labels read as siblings */
+/* Unified title style (see .control-header) */
 .cb-result .result-label {
-  font-size: .65rem;
+  font-size: .82rem;
   font-weight: 700;
-  letter-spacing: 1.4px;
+  letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--text-accent);
+  color: var(--text-secondary);
   margin: 0 0 .5rem 0;
 }
 .cb-result .result-value {
@@ -178,6 +178,7 @@ html { scroll-behavior: smooth; }
   user-select: none;
 }
 .icon-toggle:hover { transform: translateY(-1px); }
+.icon-toggle .wh-icon { display: block; width: 100%; height: 100%; }
 .icon-toggle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .icon-toggle .check {
   position: absolute;
@@ -378,12 +379,13 @@ html { scroll-behavior: smooth; }
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid rgba(255,255,255,.05);
 }
+/* Unified title style (see .control-header) */
 .table-title {
-  font-size: 1.15rem;
-  font-weight: 800;
+  font-size: .82rem;
+  font-weight: 700;
   text-align: center;
-  letter-spacing: .06em;
-  color: var(--text-primary);
+  letter-spacing: 2px;
+  color: var(--text-secondary);
   text-transform: uppercase;
 }
 
@@ -627,7 +629,6 @@ html { scroll-behavior: smooth; }
   .breakpoint-info { align-items: flex-start; text-align: left; }
   .progress-container { max-width: 100%; }
   .table-header { padding: 1rem 1.25rem; }
-  .table-title { font-size: 1.1rem; }
   .spell-icon { width: 48px; height: 48px; object-fit: contain; box-sizing: border-box; }
 
   .breakpoint-explainer { padding: 1rem 1.25rem; }
@@ -640,14 +641,12 @@ html { scroll-behavior: smooth; }
   .haste-header { margin-bottom: 1.25rem; }
   .haste-header h1 { font-size: 1.5rem; }
   .command-bar { padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
-  .control-header { font-size: .6rem; letter-spacing: 1px; }
   .cb-toggles { gap: 1rem; }
   .tg-label { width: 100%; }
   .toggle-group { flex-wrap: wrap; }
 
   .weakaura-container { padding: 1.25rem 1rem; }
   .cb-result .result-value { font-size: 2.25rem; }
-  .result-label { font-size: .6rem; letter-spacing: 2px; }
 
   .haste-input { font-size: 1.1rem; padding: .875rem .625rem; border-radius: 12px; }
 
@@ -660,7 +659,6 @@ html { scroll-behavior: smooth; }
   .breakpoint-text { font-size: .75rem; }
   .progress-container { max-width: 160px; height: 6px; }
   .table-header { padding: .875rem 1rem; }
-  .table-title { font-size: 1rem; }
 
   .wago-import-btn { font-size: .75rem; padding: .55rem 1rem; }
 
