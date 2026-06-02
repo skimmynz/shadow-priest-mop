@@ -178,7 +178,6 @@ html { scroll-behavior: smooth; }
   user-select: none;
 }
 .icon-toggle:hover { transform: translateY(-1px); }
-.icon-toggle .wh-icon { display: block; width: 100%; height: 100%; }
 .icon-toggle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .icon-toggle .check {
   position: absolute;
