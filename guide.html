@@ -503,11 +503,68 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           T15 Tips
         </h2>
-        <div class="boss-expand-bar">
-          <button class="boss-expand-btn" id="bossExpandAll">Expand All ▾</button>
-        </div>
+        <div class="boss-guide">
+          <nav class="boss-rail" aria-label="Bosses">
+            <span class="boss-rail-wing">Last Stand of the Zandalari</span>
+            <button class="boss-rail-item active" data-boss="jinrokh" title="Jin'rokh the Breaker">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1577-icon.jpg" alt="">
+              <span class="boss-rail-name">Jin'rokh the Breaker</span>
+            </button>
+            <button class="boss-rail-item" data-boss="horridon" title="Horridon">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1575-icon.jpg" alt="">
+              <span class="boss-rail-name">Horridon</span>
+            </button>
+            <button class="boss-rail-item" data-boss="council" title="Council of Elders">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1570-icon.jpg" alt="">
+              <span class="boss-rail-name">Council of Elders</span>
+            </button>
+            <span class="boss-rail-wing">Forgotten Depths</span>
+            <button class="boss-rail-item" data-boss="tortos" title="Tortos">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1565-icon.jpg" alt="">
+              <span class="boss-rail-name">Tortos</span>
+            </button>
+            <button class="boss-rail-item" data-boss="megaera" title="Megaera">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1578-icon.jpg" alt="">
+              <span class="boss-rail-name">Megaera</span>
+            </button>
+            <button class="boss-rail-item" data-boss="jikun" title="Ji-Kun">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1573-icon.jpg" alt="">
+              <span class="boss-rail-name">Ji-Kun</span>
+            </button>
+            <span class="boss-rail-wing">Halls of Flesh-Shaping</span>
+            <button class="boss-rail-item" data-boss="durumu" title="Durumu the Forgotten">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1572-icon.jpg" alt="">
+              <span class="boss-rail-name">Durumu the Forgotten</span>
+            </button>
+            <button class="boss-rail-item" data-boss="primordius" title="Primordius">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1574-icon.jpg" alt="">
+              <span class="boss-rail-name">Primordius</span>
+            </button>
+            <button class="boss-rail-item" data-boss="darkanimus" title="Dark Animus">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1576-icon.jpg" alt="">
+              <span class="boss-rail-name">Dark Animus</span>
+            </button>
+            <span class="boss-rail-wing">Pinnacle of Storms</span>
+            <button class="boss-rail-item" data-boss="ironqon" title="Iron Qon">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1559-icon.jpg" alt="">
+              <span class="boss-rail-name">Iron Qon</span>
+            </button>
+            <button class="boss-rail-item" data-boss="consorts" title="Twin Empyreans">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1560-icon.jpg" alt="">
+              <span class="boss-rail-name">Twin Empyreans</span>
+            </button>
+            <button class="boss-rail-item" data-boss="leishen" title="Lei Shen">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1579-icon.jpg" alt="">
+              <span class="boss-rail-name">Lei Shen</span>
+            </button>
+            <button class="boss-rail-item" data-boss="raden" title="Ra-den">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1580-icon.jpg" alt="">
+              <span class="boss-rail-name">Ra-den</span>
+            </button>
+          </nav>
+          <div class="boss-detail">
         <!-- Last Stand of the Zandalari -->
-        <div class="boss-accordion">
+        <div class="boss-accordion active">
           <button class="boss-accordion-header active" data-boss="jinrokh">
             <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1577-icon.jpg" alt="Jin'rokh the Breaker">
             <span class="boss-accordion-name">Jin'rokh the Breaker</span>
@@ -520,7 +577,6 @@
               <li>After you clear <a href="https://www.wowhead.com/mop-classic/spell=138732">Ionization</a>, get back into the <a href="https://www.wowhead.com/mop-classic/spell=138002">Fluidity</a> pool quickly and reapply DoTs.</li>
               <li>Use <a href="https://www.wowhead.com/mop-classic/spell=15286">Vampiric Embrace</a> during <a href="https://www.wowhead.com/mop-classic/spell=137313">Lightning Storm</a>.</li>
             </ul>
-            <p class="boss-rules">No rules.</p>
           </div>
         </div>
         <div class="boss-accordion">
@@ -710,6 +766,8 @@
             <p class="boss-rules">Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed.</p>
           </div>
         </div>
+          </div>
+        </div>
 
       </div>
     </section>
@@ -824,14 +882,20 @@
       }
     })();
 
-    document.querySelectorAll('.boss-accordion-header').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var body = btn.nextElementSibling;
-        var isOpen = btn.classList.contains('active');
-        btn.classList.toggle('active', !isOpen);
-        body.classList.toggle('active', !isOpen);
+    (function () {
+      var railItems = document.querySelectorAll('.boss-rail-item');
+      var panes = document.querySelectorAll('.boss-detail .boss-accordion');
+      railItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          var key = item.getAttribute('data-boss');
+          railItems.forEach(function (i) { i.classList.toggle('active', i === item); });
+          panes.forEach(function (p) {
+            var body = p.querySelector('[data-boss-body]');
+            p.classList.toggle('active', !!body && body.getAttribute('data-boss-body') === key);
+          });
+        });
       });
-    });
+    })();
 
     var svgCopy = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
     var svgCheck = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>';
@@ -861,18 +925,6 @@
       code.innerHTML = html;
     });
 
-    var expandBtn = document.getElementById('bossExpandAll');
-    if (expandBtn) {
-      expandBtn.addEventListener('click', function() {
-        var headers = document.querySelectorAll('.boss-accordion-header');
-        var allOpen = Array.prototype.every.call(headers, function(h) { return h.classList.contains('active'); });
-        headers.forEach(function(h) {
-          h.classList.toggle('active', !allOpen);
-          h.nextElementSibling.classList.toggle('active', !allOpen);
-        });
-        expandBtn.textContent = allOpen ? 'Expand All \u25BE' : 'Collapse All \u25B4';
-      });
-    }
   </script>
 
   <footer class="site-footer">
