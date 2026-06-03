@@ -157,6 +157,7 @@ class OptimizedRenderer {
 
 var optimizedRenderer = new OptimizedRenderer();
 var currentData = null;
+var revalidating = {};             // encounterId -> true while a background refresh is in flight
 
 /* --------------------------------------------------------------------------------
    Search & Sort State
@@ -579,6 +580,8 @@ function renderContent(data, encounterId) {
 
 /* Background revalidate — fetch fresh data and update if boss is still active */
 function revalidateInBackground(encounterId) {
+  if (revalidating[encounterId]) return; // refresh already in flight — don't stack fetches/renders
+  revalidating[encounterId] = true;
   fetch(API_URL(encounterId), { headers: { 'accept': 'application/json' } })
     .then(function(res) { return res.ok ? res.json() : null; })
     .then(function(data) {
@@ -592,7 +595,8 @@ function revalidateInBackground(encounterId) {
         renderContent(data, encounterId);
       }
     })
-    .catch(function() { /* silent — stale data is already displayed */ });
+    .catch(function() { /* silent — stale data is already displayed */ })
+    .finally(function() { revalidating[encounterId] = false; });
 }
 
 /* Prefetch all bosses in the current raid (background, low priority) */
@@ -621,6 +625,20 @@ function prefetchRaidBosses(raidKey) {
 }
 
 async function fetchAndDisplayRankings(name, encounterId) {
+  // Re-selecting the boss already active: don't re-paint the cached snapshot.
+  // Repeated/rapid clicks otherwise re-flash stale data while a refresh is in flight.
+  // Only short-circuit when cached data exists (so cold/errored bosses can still retry).
+  // If what's shown is stale, refresh it quietly in place (dedup'd) without a visible reset.
+  if (encounterId === currentEncounterId) {
+    var existing = readCache(encounterId);
+    if (existing) {
+      var existingAt = existing.cachedAt || (existing.data && existing.data.cachedAt);
+      if (!isFresh(existingAt)) revalidateInBackground(encounterId);
+      return;
+    }
+    // no cache (cold load in flight or prior load failed) — fall through to (re)fetch
+  }
+
   if (currentController) currentController.abort();
   currentController = new AbortController();
 
