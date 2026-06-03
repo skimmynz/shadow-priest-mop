@@ -8,7 +8,9 @@ html { scroll-behavior: smooth; }
 /* ── Container ────────────────────────────────────────── */
 .haste-container {
   padding: 2.5rem 2.5rem 3rem;
-  max-width: 1500px;
+  max-width: 1200px;
+  /* (narrowed from 1500 — slimmer, centered desktop layout; mobile
+     queries below override and remain unaffected) */
   margin: 0 auto;
   position: relative;
 }
@@ -49,7 +51,7 @@ html { scroll-behavior: smooth; }
      reflows when the Berserking icon appears on Troll selection. */
   grid-template-columns: 1fr 1fr 17rem;
   gap: 1.75rem;
-  align-items: center;
+  align-items: start;
   background: linear-gradient(135deg, rgba(26,29,41,.9) 0%, rgba(30,33,48,.95) 100%);
   backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
@@ -79,7 +81,9 @@ html { scroll-behavior: smooth; }
 
 .haste-input {
   width: 100%;
-  max-width: 360px;
+  /* fills its grid column on desktop so no dead slack sits beside the
+     input; mobile query (≤768) re-centers with max-width */
+  max-width: 100%;
   padding: .6rem .75rem;
   font-size: 1.6rem;
   font-weight: 800;
@@ -113,6 +117,7 @@ html { scroll-behavior: smooth; }
 /* (b) Live result (center, flanked by dividers) */
 .cb-result {
   text-align: center;
+  border-left: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
   padding: 0 1.5rem;
 }
@@ -150,7 +155,7 @@ html { scroll-behavior: smooth; }
 }
 
 /* (c) Compact icon-only toggles */
-.cb-toggles { display: flex; flex-direction: column; gap: .7rem; }
+.cb-toggles { display: flex; flex-direction: column; gap: .7rem; align-self: center; }
 .toggle-group { display: flex; gap: .5rem; align-items: center; }
 .tg-label {
   font-size: .58rem;
@@ -578,7 +583,7 @@ html { scroll-behavior: smooth; }
   .command-bar { grid-template-columns: 1fr; }
   /* Centered to match the Effective Haste block below it */
   .cb-input { text-align: center; }
-  .cb-input .haste-input { margin-inline: auto; }
+  .cb-input .haste-input { margin-inline: auto; max-width: 360px; }
   .cb-result {
     border-left: none;
     border-right: none;
