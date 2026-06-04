@@ -23,8 +23,8 @@ var TIERS = {
     }
   }
 };
-var currentTierKey = 't15';
-var currentRaidKey = 'tot';
+var currentTierKey = 't16';
+var currentRaidKey = 'soo';
 var currentEncounterId = null;
 var lastBossPerRaid = {};
 
