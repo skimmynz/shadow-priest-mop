@@ -35,7 +35,15 @@ function getBossIconId(encounterId) {
   if (encounterId >= 51559 && encounterId <= 51580) return encounterId - 50000;
   return encounterId;
 }
+// Siege of Orgrimmar bosses use local artwork instead of the rpglogs CDN icons.
+var SOO_BOSS_IMG = {
+  51602: 'immerseus', 51598: 'fallen-protectors', 51624: 'norushen', 51604: 'sha-of-pride',
+  51622: 'galakras', 51600: 'iron-juggernaut', 51606: 'korkron-dark-shaman', 51603: 'general-nazgrim',
+  51595: 'malkorok', 51594: 'spoils-of-pandaria', 51599: 'thok-the-bloodthirsty', 51601: 'siegecrafter-blackfuse',
+  51593: 'paragons-of-the-klaxxi', 51623: 'garrosh-hellscream'
+};
 function bossIconUrl(encounterId) {
+  if (SOO_BOSS_IMG[encounterId]) return 'img/SoO/' + SOO_BOSS_IMG[encounterId] + '.jpg';
   return 'https://assets.rpglogs.com/img/warcraft/bosses/' + getBossIconId(encounterId) + '-icon.jpg?v=2';
 }
 

@@ -18,10 +18,9 @@ var TIERS = {
   },
   t16: {
     name: 'T16',
-    // Disabled until Siege of Orgrimmar goes live. To activate: remove `disabled`
-    // and fill in `raids` with the SoO encounters (see t15 for shape).
-    disabled: true,
-    raids: {}
+    raids: {
+      soo: { short: 'SoO', name: 'Siege of Orgrimmar', encounters: { "Immerseus": 51602, "Fallen Protectors": 51598, "Norushen": 51624, "Sha of Pride": 51604, "Galakras": 51622, "Iron Juggernaut": 51600, "Kor'kron Dark Shaman": 51606, "General Nazgrim": 51603, "Malkorok": 51595, "Spoils of Pandaria": 51594, "Thok the Bloodthirsty": 51599, "Siegecrafter Blackfuse": 51601, "Paragons of the Klaxxi": 51593, "Garrosh Hellscream": 51623 } }
+    }
   }
 };
 var currentTierKey = 't15';

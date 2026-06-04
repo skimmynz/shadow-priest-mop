@@ -30,7 +30,21 @@ var PARSING_RULES = {
   51559: { title: "Iron Qon", rules: ["Damage done to Ice Tomb is removed."] },
   51560: { title: "Twin Empyreans", rules: ["Damage done to Lurker in the Night is removed."] },
   51579: { title: "Lei Shen", rules: ["Damage done to Unharnessed Power, Lesser Diffused Lightning, Greater Diffused Lightning, and Diffused Lightning is removed."] },
-  51580: { title: "Ra-den", rules: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."] }
+  51580: { title: "Ra-den", rules: ["Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed."] },
+  51602: { title: "Immerseus", noAsp: 'damage', rules: ["Immerseus is removed from Damage All Star Points."] },
+  51598: { title: "The Fallen Protectors", rules: ["On Heroic: Damage done to Despair Spawn and Desperation Spawn is removed."] },
+  51624: { title: "Norushen", noAsp: 'damage', rules: ["Norushen is removed from Damage All Star Points."] },
+  51604: { title: "Sha of Pride", noAsp: 'damage', rules: ["Sha of Pride is removed from Damage All Star Points."] },
+  51622: { title: "Galakras", noAsp: 'damage', rules: ["Galakras is removed from Damage All Star Points."] },
+  51600: { title: "Iron Juggernaut", rules: ["No rules."] },
+  51606: { title: "Kor'kron Dark Shaman", rules: ["On Heroic: Damage done to Darkfang, Bloodclaw, and Foul Slimes is removed."] },
+  51603: { title: "General Nazgrim", rules: ["No rules, but NOTE: You need to reset Nazgrim to despawn Orgrimmar Faithful to not invalidate via the bringing trash into bosses exploit."] },
+  51595: { title: "Malkorok", rules: ["On Heroic: Damage done to Living Corruption is removed."] },
+  51594: { title: "Spoils of Pandaria", noAsp: 'damage', rules: ["Spoils of Pandaria is removed from Damage All Star Points."] },
+  51599: { title: "Thok the Bloodthirsty", rules: ["Damage done to Kor'kron Jailer and Starved Yeti is removed."] },
+  51601: { title: "Siegecrafter Blackfuse", rules: ["No rules."] },
+  51593: { title: "Paragons of the Klaxxi", rules: ["Damage done to any Paragon that heals to full is excluded.","Amber Scorpion damage is reattributed to an NPC.","On Heroic: Damage done to Amber Parasites and Blood is removed."] },
+  51623: { title: "Garrosh Hellscream", rules: ["On Heroic: Damage done to Desecrated Weapon, Manifestation of Rage, and Minion of Y'Shaarj is removed.","Damage done to adds that don't die is removed."] }
 };
 function getNoAsp(encounterId) {
   var entry = PARSING_RULES[encounterId];
