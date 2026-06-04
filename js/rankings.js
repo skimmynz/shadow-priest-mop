@@ -7,6 +7,12 @@ var scheduler = window.scheduler || {
   }
 };
 
+// HTML escaping for untrusted strings (player/guild/server/region/item names from WCL)
+var HTML_ESCAPE_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return HTML_ESCAPE_MAP[c]; });
+}
+
 // Debounce
 function createDebounced(fn, delay = 100, immediate = false) {
   let timeoutId = null;
@@ -74,14 +80,9 @@ class OptimizedRenderer {
     this.renderCache.clear();
     var rankings = Array.isArray(data && data.rankings) ? data.rankings : [];
     var visible = rankings.slice(0, 100);
-    var maxDps = 0;
-    for (var i = 0; i < visible.length; i++) {
-      var d = (visible[i] && typeof visible[i].total === 'number') ? Math.round(visible[i].total) : 0;
-      if (d > maxDps) maxDps = d;
-    }
     var parts = [];
     for (var i = 0; i < visible.length; i++) {
-      parts.push(this.renderSingleEntry(visible[i], i, topByTier, maxDps));
+      parts.push(this.renderSingleEntry(visible[i], i, topByTier));
     }
     var header = '<div class="rank-table-header">' +
       '<span class="col-rank">#</span>' +
@@ -96,7 +97,7 @@ class OptimizedRenderer {
     return header + parts.join('');
   }
 
-  renderSingleEntry(r, index, topByTier, maxDps) {
+  renderSingleEntry(r, index, topByTier) {
     var cacheKey = r.reportID + '-' + r.fightID + '-' + index;
     if (this.renderCache.has(cacheKey)) return this.renderCache.get(cacheKey);
 
@@ -105,24 +106,25 @@ class OptimizedRenderer {
     var reportUrl = 'https://classic.warcraftlogs.com/reports/' + r.reportID + '?fight=' + r.fightID + '&type=damage-done';
     var dps = (r && typeof r.total === 'number') ? Math.round(r.total) : '—';
     var playerName = (r && r.name) ? r.name : 'Unknown';
+    var safeName = escapeHtml(playerName);
     var perPlayerTalents = this.buildPlayerTalentIcons(r && r.talents, topByTier);
     var duration = formatDuration(r.duration);
     var itemLevel = (r.itemLevel != null) ? r.itemLevel : 'N/A';
-    var server = formatServerInfo(r.guildName, r.serverName, r.regionName);
+    var server = escapeHtml(formatServerInfo(r.guildName, r.serverName, r.regionName));
     var killDate = formatKillDate(r.startTime);
-    var searchData = playerName.toLowerCase();
-    var gear = buildGearStrip(r.gear);
+    var searchData = escapeHtml(playerName.toLowerCase());
+    var trinkets = buildGearStrip(r.gear);
 
     var html =
-      '<div class="rank-entry" data-rank-tier="' + rankTier + '" data-original-rank="' + rank + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + playerName + '" data-search="' + searchData + '" data-region="' + (r.regionName || '').toLowerCase() + '">' +
+      '<div class="rank-entry" data-rank-tier="' + rankTier + '" data-original-rank="' + rank + '" data-dps="' + dps + '" data-ilvl="' + itemLevel + '" data-duration="' + (r.duration || 0) + '" data-date="' + (r.startTime || 0) + '" data-name="' + safeName + '" data-search="' + searchData + '" data-region="' + escapeHtml((r.regionName || '').toLowerCase()) + '">' +
       '<span class="col-rank">' + rank + '</span>' +
-      '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + playerName + '</a><span class="player-server">' + server + '</span></span>' +
+      '<span class="col-name"><a class="player-link" href="' + reportUrl + '" target="_blank" rel="noopener">' + safeName + '</a><span class="player-server">' + server + '</span></span>' +
       '<span class="col-ilvl">' + itemLevel + '</span>' +
       '<span class="col-dps">' + (typeof dps === 'number' ? dps.toLocaleString() : dps) + '</span>' +
       '<span class="col-date">' + killDate + '</span>' +
       '<span class="col-time">' + duration + '</span>' +
-      '<span class="col-talents">' + perPlayerTalents + (gear.trinkets ? '<span class="inline-trinkets">' + gear.trinkets + '</span>' : '') + '</span>' +
-      '<span class="col-trinkets">' + gear.trinkets + '</span>' +
+      '<span class="col-talents">' + perPlayerTalents + (trinkets ? '<span class="inline-trinkets">' + trinkets + '</span>' : '') + '</span>' +
+      '<span class="col-trinkets">' + trinkets + '</span>' +
       '</div>';
 
     this.renderCache.set(cacheKey, html);
@@ -199,45 +201,31 @@ function buildGearItemUrl(item, allItemIds) {
   return 'https://www.wowhead.com/mop-classic/item=' + item.id + (qs ? ('?' + qs) : '');
 }
 
-var GEAR_SKIP_SLOTS = new Set([3]); // Shirt
 var GEAR_TRINKET_SLOTS = new Set([12, 13]); // Trinket 1, Trinket 2
 
-function isTabardItem(item) {
-  if (!item) return false;
-  var name = (item.name || '').toLowerCase();
-  var icon = (item.icon || '').toLowerCase();
-  return name.indexOf('tabard') !== -1 || icon.indexOf('tabard') !== -1;
-}
-
+// Returns trinket-strip HTML (empty string if none). Main gear is not rendered.
 function buildGearStrip(gear) {
-  var empty = { main: '<div class="no-gear">No gear data</div>', trinkets: '' };
-  if (!Array.isArray(gear) || gear.length === 0) return empty;
+  if (!Array.isArray(gear) || gear.length === 0) return '';
   var allItemIds = gear.map(function(item) { return item ? item.id : 0; }).filter(Boolean).join(':');
-  var mainIcons = [];
   var trinketIcons = [];
   gear.forEach(function(item, index) {
-    if (!item || item.id === 0 || GEAR_SKIP_SLOTS.has(index) || isTabardItem(item)) return;
+    if (!item || item.id === 0 || !GEAR_TRINKET_SLOTS.has(index)) return;
     var iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + (item.icon || 'inv_misc_questionmark.jpg');
     var qualityClass = item.quality || 'common';
     var slotName = GEAR_SLOTS[index] || ('Slot ' + index);
     var itemUrl = buildGearItemUrl(item, allItemIds);
-    var isTrinket = GEAR_TRINKET_SLOTS.has(index);
-    var html =
-      '<a href="' + itemUrl + '" class="gear-strip-icon ' + qualityClass + ' wowhead' + (isTrinket ? ' is-trinket' : '') + '" data-gear-index="' + index + '"' +
-      ' data-item-name="' + (item.name || 'Unknown Item').replace(/"/g, '&quot;') + '"' +
+    trinketIcons.push(
+      '<a href="' + itemUrl + '" class="gear-strip-icon ' + qualityClass + ' wowhead is-trinket" data-gear-index="' + index + '"' +
+      ' data-item-name="' + escapeHtml(item.name || 'Unknown Item') + '"' +
       ' data-item-ilvl="' + (item.itemLevel || '0') + '"' +
       ' data-item-slot="' + slotName + '"' +
       ' data-item-quality="' + qualityClass + '"' +
       '>' +
       '<img src="' + iconSrc + '" alt="' + slotName + '" loading="lazy">' +
-      '</a>';
-    if (isTrinket) trinketIcons.push(html);
-    else mainIcons.push(html);
+      '</a>'
+    );
   });
-  return {
-    main: '<div class="gear-strip">' + mainIcons.join('') + '</div>',
-    trinkets: trinketIcons.length ? '<div class="gear-strip gear-trinkets">' + trinketIcons.join('') + '</div>' : ''
-  };
+  return trinketIcons.length ? '<div class="gear-strip gear-trinkets">' + trinketIcons.join('') + '</div>' : '';
 }
 
 /* --------------------------------------------------------------------------------
@@ -321,10 +309,11 @@ function renderTrinketSummary(data) {
     var barWidth = ((t.count / maxCount) * 100).toFixed(1);
     var iconSrc = 'https://assets.rpglogs.com/img/warcraft/abilities/' + t.icon;
     var itemUrl = 'https://www.wowhead.com/mop-classic/item=' + t.id;
+    var safeTrinketName = escapeHtml(t.name);
     html += '<a class="trinket-summary-item wowhead" href="' + itemUrl + '" target="_blank" rel="noopener">' +
-      '<span class="gear-strip-icon ' + t.quality + '"><img src="' + iconSrc + '" alt="' + t.name.replace(/"/g, '&quot;') + '" loading="lazy"></span>' +
+      '<span class="gear-strip-icon ' + t.quality + '"><img src="' + iconSrc + '" alt="' + safeTrinketName + '" loading="lazy"></span>' +
       '<span class="trinket-summary-info">' +
-        '<span class="trinket-summary-name ' + t.quality + '">' + t.name + '</span>' +
+        '<span class="trinket-summary-name ' + t.quality + '">' + safeTrinketName + '</span>' +
         '<span class="trinket-summary-bar"><span class="trinket-summary-bar-fill" style="width:' + barWidth + '%"></span></span>' +
       '</span>' +
       '<span class="trinket-summary-pct">' + pct + '%</span>' +
@@ -421,7 +410,8 @@ function populateFilterDropdowns(data) {
   if (regionFilter) {
     var regionHtml = '<option value="">Region: All</option>';
     Array.from(regions).sort().forEach(function(r) {
-      regionHtml += '<option value="' + r + '">' + r + '</option>';
+      var safeR = escapeHtml(r);
+      regionHtml += '<option value="' + safeR + '">' + safeR + '</option>';
     });
     regionFilter.innerHTML = regionHtml;
     regionFilter.value = '';
