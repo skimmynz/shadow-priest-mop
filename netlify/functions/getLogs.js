@@ -57,6 +57,13 @@ exports.handler = async function(event, context) {
     
     const data = await response.json();
 
+    // Top 100 only. WCL returns entries in rank order (DPS desc), so slicing the
+    // head gives the top 100 parses. This keeps the table, talent/trinket summaries,
+    // and localStorage all reading the same population — and shrinks the payload.
+    if (Array.isArray(data.rankings) && data.rankings.length > 100) {
+      data.rankings = data.rankings.slice(0, 100);
+    }
+
     // Add server timestamp for caching
     const processedData = {
       ...data,
