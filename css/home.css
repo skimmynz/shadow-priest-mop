@@ -196,7 +196,7 @@
   cursor: pointer;
   transition: color .2s, background .2s, border-color .2s;
 }
-.stream-tab svg { width: 20px; height: 20px; }
+.stream-tab svg { width: 30px; height: 30px; }
 .stream-tab:hover { color: var(--text-secondary); background: var(--hover-bg); }
 .stream-tab.is-active { color: #fff; }
 .stream-tab--twitch.is-active {
