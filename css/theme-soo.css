@@ -17,10 +17,12 @@
   --gold-color:    #ffb73d;
 }
 
-/* ── Hero background → Siege of Orgrimmar art ── */
+/* ── Hero background → Siege of Orgrimmar art (blurred, zoomed) ── */
 .hero-bg::before {
-  background-image: url('/img/soo-bg.webp');
+  background-image: url('/img/SoO/bg.jpg');
   background-position: center 30%;
+  filter: blur(8px) brightness(.4) saturate(.8);
+  transform: scale(1.25);
 }
 
 /* ── Hero overlay → ember/iron wash ── */
