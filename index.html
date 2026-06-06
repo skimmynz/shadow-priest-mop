@@ -155,7 +155,13 @@
 
   <!-- ════════════════════════════════════════════════════
        Zone 2 — Guild Progress (Warcraft Logs)
+       HIDDEN: WCL embed widgets block cross-origin iframing
+       (X-Frame-Options: SAMEORIGIN) and the server-side proxy
+       route is blocked by Cloudflare. To be replaced by a native
+       tile rendered from the WCL API. See getLogs.js for the
+       function pattern. Re-enable once the native tile ships.
        ════════════════════════════════════════════════════ -->
+  <!--
   <section class="home-section">
     <div class="section-header">
       <h2 class="section-title">Guild Progress</h2>
@@ -171,6 +177,8 @@
               title="Guild progress composition" loading="lazy" scrolling="no" allowtransparency="true" width="600" height="180"></iframe>
     </div>
   </section>
+  -->
+
 
   <script defer src="js/home.js"></script>
   <script defer src="js/nav.js"></script>
