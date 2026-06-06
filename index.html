@@ -30,8 +30,8 @@
   <meta name="twitter:description" content="Everything Shadow Priests need for MoP Classic: DPS rankings, haste breakpoints, a full PvE guide, boss tips, and the exact addons & WeakAuras Skimmy uses.">
   <meta name="twitter:image" content="https://skimmynz.com/img/og.png">
 
-  <!-- Preload LCP image -->
-  <link rel="preload" as="image" href="/img/hero-bg.webp" fetchpriority="high">
+  <!-- Preload LCP image (SoO seasonal hero bg — must match theme-soo.css .hero-bg) -->
+  <link rel="preload" as="image" href="/img/SoO/bg-blur.jpg" fetchpriority="high">
 
   <!-- Styles -->
   <link rel="stylesheet" href="css/base.css" />
@@ -152,33 +152,6 @@
     </div>
 
   </section>
-
-  <!-- ════════════════════════════════════════════════════
-       Zone 2 — Guild Progress (Warcraft Logs)
-       HIDDEN: WCL embed widgets block cross-origin iframing
-       (X-Frame-Options: SAMEORIGIN) and the server-side proxy
-       route is blocked by Cloudflare. To be replaced by a native
-       tile rendered from the WCL API. See getLogs.js for the
-       function pattern. Re-enable once the native tile ships.
-       ════════════════════════════════════════════════════ -->
-  <!--
-  <section class="home-section">
-    <div class="section-header">
-      <h2 class="section-title">Guild Progress</h2>
-      <hr class="section-divider" />
-    </div>
-
-    <div class="wcl-stack">
-      <iframe class="wcl-widget" src="https://classic.warcraftlogs.com/embed/guild-progress-tile/1054?difficulty=4&guild=605684&size=25"
-              title="Guild raid progress" loading="lazy" scrolling="no" allowtransparency="true" width="600" height="234"></iframe>
-      <iframe class="wcl-widget" src="https://classic.warcraftlogs.com/embed/latest-progress-updates-tile/1054?difficulty=4&guild=605684&size=25"
-              title="Latest progress updates" loading="lazy" scrolling="no" allowtransparency="true" width="600" height="290"></iframe>
-      <iframe class="wcl-widget" src="https://classic.warcraftlogs.com/embed/guild-progress-composition/1054?difficulty=4&guild=605684&size=25"
-              title="Guild progress composition" loading="lazy" scrolling="no" allowtransparency="true" width="600" height="180"></iframe>
-    </div>
-  </section>
-  -->
-
 
   <script defer src="js/home.js"></script>
   <script defer src="js/nav.js"></script>
