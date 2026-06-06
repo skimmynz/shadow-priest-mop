@@ -8,8 +8,8 @@
    ================================================================= */
 .raid-nav {
   position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
+  top: 65px;
+  height: calc(100vh - 65px);
   align-self: start;
   padding: 1rem 0;
   overflow-y: auto;
@@ -463,8 +463,8 @@
 /* Talent sidebar */
 .talent-sidebar {
   position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
+  top: 65px;
+  height: calc(100vh - 65px);
   align-self: start;
   padding: 1rem 1.25rem;
   overflow-y: auto;
@@ -566,7 +566,7 @@ a.wowhead del {
   padding-left: 2.5rem;
   padding-right: 2.5rem;
   position: sticky;
-  top: 60px;
+  top: 65px;
   z-index: 5;
   background: #0f1117;
   font-size: 0.75rem;
@@ -1098,7 +1098,7 @@ a.wowhead del {
     margin: 0 -2rem 2px;
     padding-left: 2rem;
     padding-right: 2rem;
-    top: 60px;
+    top: 65px;
   }
 }
 
@@ -1191,7 +1191,7 @@ a.wowhead del {
     margin: 0 -0.75rem 2px;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
-    top: 60px;
+    top: 65px;
   }
 
   .rank-table-header .col-trinkets,
@@ -1319,7 +1319,7 @@ a.wowhead del {
     margin: 0 -0.5rem 2px;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    top: 60px;
+    top: 65px;
     font-size: 0.6875rem;
   }
 

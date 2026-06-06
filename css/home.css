@@ -147,16 +147,13 @@
   margin-bottom: 2rem;
 }
 
+/* gradient-text from shared group in base.css */
 .section-title {
   font-size: 1.5rem;
   font-weight: 800;
   text-align: center;
   letter-spacing: .06em;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin-bottom: .5rem;
 }
 
@@ -166,14 +163,7 @@
   font-weight: 400;
 }
 
-.section-divider {
-  max-width: 200px;
-  margin: 0 auto;
-  border: none;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-  opacity: .3;
-}
+/* .section-divider — shared rule in base.css */
 
 /* ── Streams (inside hero) ────────────────────────────── */
 .streams-grid {

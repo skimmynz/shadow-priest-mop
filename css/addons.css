@@ -20,14 +20,11 @@
   margin-bottom: 0;
 }
 
+/* gradient-text from shared group in base.css */
 .page-header h1 {
   margin: 0 0 0.75rem 0;
   font-size: clamp(2rem, 3vw, 2.75rem);
   font-weight: 800;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   letter-spacing: 0.1em;
   line-height: 1.1;
   text-transform: uppercase;
@@ -62,16 +59,13 @@
   margin-bottom: 2rem;
 }
 
+/* gradient-text from shared group in base.css */
 .section-header h2 {
   font-size: 1.5rem;
   font-weight: 800;
   text-align: center;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin: 0;
 }
 
@@ -84,15 +78,7 @@
   font-weight: 700;
 }
 
-/* ── Section Divider ─────────────────────────────────── */
-.section-divider {
-  max-width: 200px;
-  margin: 0 auto;
-  border: none;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
-  opacity: .3;
-}
+/* .section-divider — shared rule in base.css (responsive override below) */
 
 /* ── UI Settings ─────────────────────────────────────── */
 .ui-settings {
@@ -279,32 +265,7 @@
   height: 16px;
 }
 
-/* ── Wago.io import button ───────────────────────────── */
-.wago-import-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  padding: .65rem 1.25rem;
-  background: linear-gradient(135deg, rgba(194,65,54,.85), rgba(168,50,42,.9));
-  color: #fff;
-  font-size: .8rem;
-  font-weight: 700;
-  text-decoration: none;
-  border-radius: 10px;
-  border: 1px solid rgba(194,65,54,.5);
-  transition: all .3s cubic-bezier(.4,0,.2,1);
-  letter-spacing: .03em;
-}
-.wago-import-btn:hover {
-  background: linear-gradient(135deg, rgba(214,75,64,.95), rgba(194,65,54,1));
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(194,65,54,.35);
-}
-.wago-icon {
-  width: 18px;
-  height: 18px;
-}
+/* .wago-import-btn / .wago-icon — shared rules in base.css */
 
 /* ── Instructions Card with Tabs ─────────────────────── */
 .instructions-card {
