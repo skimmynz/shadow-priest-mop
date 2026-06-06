@@ -96,7 +96,9 @@
 }
 
 .hero-logo {
-  height: 92px;
+  width: 646px;           /* native size — never upscaled */
+  height: auto;
+  max-width: 100%;        /* shrinks only when viewport is narrower */
   margin-bottom: .3rem;
   opacity: .85;
   filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .4));
@@ -291,7 +293,6 @@
 @media (max-width: 768px) {
   .hero { min-height: 0; padding: 1.5rem 1.25rem; }
   .hero-title { letter-spacing: .02em; }
-  .hero-logo { height: 78px; }
 
   .home-section { padding: 3.5rem 1.25rem; }
   .section-title { font-size: 1.25rem; }
