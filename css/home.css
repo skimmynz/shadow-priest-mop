@@ -26,7 +26,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('/img/hero-bg.webp');
+  background-image: url('/img/SoO/bg-blur.jpg');
   background-size: cover;
   background-position: center 20%;
   filter: blur(1px) brightness(.35) saturate(.7);
