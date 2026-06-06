@@ -21,7 +21,7 @@
 .hero-bg::before {
   background-image: url('/img/SoO/bg.jpg');
   background-position: center 30%;
-  filter: blur(8px) brightness(.4) saturate(.8);
+  filter: blur(2.5px) brightness(.4) saturate(.8);
   transform: scale(1.25);
 }
 
