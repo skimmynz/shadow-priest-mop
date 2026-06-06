@@ -19,9 +19,9 @@
 
 /* ── Hero background → Siege of Orgrimmar art (blurred, zoomed) ── */
 .hero-bg::before {
-  background-image: url('/img/SoO/bg.jpg');
+  background-image: url('/img/SoO/bg-blur.jpg');
   background-position: center 30%;
-  filter: blur(2.5px) brightness(.4) saturate(.8);
+  filter: brightness(.4) saturate(.8);
   transform: scale(1.25);
 }
 
