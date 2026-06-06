@@ -1,0 +1,48 @@
+/* ═══════════════════════════════════════════════════════
+   Siege of Orgrimmar — TEMPORARY home-page theme  (css/theme-soo.css)
+   Active only while progressing SoO. To revert to the default
+   purple theme: delete the single <link> to this file in index.html.
+   Loaded AFTER base.css + home.css so equal-specificity rules win.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Token overrides (scoped to home page — only index.html links this) ── */
+:root {
+  --accent-color:  #e8541e;   /* ember orange */
+  --accent-hover:  #ff7a33;
+  --accent-glow:   rgba(232, 84, 30, .32);
+  --shadow-color:  #e8541e;
+  --shadow-glow:   rgba(232, 84, 30, .4);
+  --text-accent:   #ffae5e;   /* warm gold-orange */
+  --border-hover:  #5a3320;   /* warm iron */
+  --gold-color:    #ffb73d;
+}
+
+/* ── Hero background → Siege of Orgrimmar art ── */
+.hero-bg::before {
+  background-image: url('/img/soo-bg.webp');
+  background-position: center 30%;
+}
+
+/* ── Hero overlay → ember/iron wash ── */
+.hero-overlay {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 45%, rgba(232,84,30,.22) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(15,12,9,.30) 0%, rgba(15,12,9,.62) 50%, rgba(12,9,7,.95) 100%);
+}
+
+/* ── Drifting glows → fire/amber ── */
+.hero-glow--1 { background: radial-gradient(circle, rgba(255,106,26,.22) 0%, transparent 70%); }
+.hero-glow--2 { background: radial-gradient(circle, rgba(255,170,80,.14) 0%, transparent 70%); }
+
+/* ── Headings recolored (home.css hardcodes purple here) ── */
+.hero-title {
+  color: #ffae5e;
+  background: none;                 /* drop base.css h1 purple gradient */
+  -webkit-text-fill-color: #ffae5e; /* override base.css h1 transparent fill */
+  text-shadow: 0 0 60px rgba(255,140,60,.4);
+}
+.section-title {
+  background: linear-gradient(135deg, #ffae5e 0%, #e8541e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
