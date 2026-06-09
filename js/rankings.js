@@ -663,10 +663,14 @@ async function fetchAndDisplayRankings(name, encounterId) {
   var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
 
   if (cached) {
-    updateLastUpdated(cachedAt);
+    var cachedFresh = isFresh(cachedAt);
+    // Only show the cached timestamp when it's still fresh. If stale, leave it
+    // blank so the old "4d ago" never flashes before revalidation lands the
+    // real "26m ago" (revalidateInBackground repaints it once fresh data arrives).
+    updateLastUpdated(cachedFresh ? cachedAt : null);
     renderContent(cached.data, encounterId);
     // If stale, revalidate in background (user already sees data)
-    if (!isFresh(cachedAt)) {
+    if (!cachedFresh) {
       revalidateInBackground(encounterId);
     }
     return;
