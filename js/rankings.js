@@ -653,7 +653,9 @@ async function fetchAndDisplayRankings(name, encounterId) {
   if (regionFilter) regionFilter.value = '';
   if (resultCountEl) resultCountEl.classList.add('hidden');
 
-  // Stale-while-revalidate: show cached data immediately, fetch fresh in background
+  // Fresh-only: serve cached data ONLY while it's still fresh. Stale cache is
+  // never rendered, so switching bosses can't flash the previous/old leaderboard
+  // (or an old timestamp) before the real data lands.
   var cached = readCache(encounterId);
   // Verify cached data belongs to this encounter
   if (cached && cached.data && cached.data.encounterId && cached.data.encounterId !== encounterId) {
@@ -662,21 +664,14 @@ async function fetchAndDisplayRankings(name, encounterId) {
   }
   var cachedAt = cached ? (cached.cachedAt || (cached.data && cached.data.cachedAt)) : null;
 
-  if (cached) {
-    var cachedFresh = isFresh(cachedAt);
-    // Only show the cached timestamp when it's still fresh. If stale, leave it
-    // blank so the old "4d ago" never flashes before revalidation lands the
-    // real "26m ago" (revalidateInBackground repaints it once fresh data arrives).
-    updateLastUpdated(cachedFresh ? cachedAt : null);
+  if (cached && isFresh(cachedAt)) {
+    updateLastUpdated(cachedAt);
     renderContent(cached.data, encounterId);
-    // If stale, revalidate in background (user already sees data)
-    if (!cachedFresh) {
-      revalidateInBackground(encounterId);
-    }
     return;
   }
 
-  // No cache at all — show loader and fetch
+  // No fresh cache — clear any stale view, show loader, fetch fresh only
+  updateLastUpdated(null);
   if (rankingsDiv) {
     rankingsDiv.innerHTML = '<div style="text-align:center;color:#bbb;margin-top:16px;"><div class="loader"></div><p>Loading ' + name + '…</p></div>';
   }
