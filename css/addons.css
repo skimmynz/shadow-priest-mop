@@ -273,16 +273,17 @@
   margin-top: 1rem;
   padding: 0.7rem 0.85rem;
   border-radius: 8px;
-  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
-  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
-  color: #fff;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  color: #111111;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .item-version:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.6);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
 }
 
 .item-version > svg {
@@ -303,13 +304,13 @@
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: #fff;
+  color: #111111;
 }
 
 .item-version-date {
   font-size: 0.72rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .item-version-cta {
@@ -320,7 +321,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
-  color: #fff;
+  color: #111111;
 }
 
 .item-version-cta svg {
