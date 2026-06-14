@@ -265,50 +265,67 @@
   height: 16px;
 }
 
-/* ── Version Disclaimer ──────────────────────────────── */
+/* ── Version Disclaimer (filled accent banner) ───────── */
 .item-version {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.85rem;
-  padding-top: 0.85rem;
-  border-top: 1px solid var(--border-color);
-  font-size: 0.75rem;
-  line-height: 1.4;
-  color: var(--text-muted);
+  gap: 0.6rem;
+  margin-top: 1rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
+  box-shadow: 0 2px 12px rgba(124, 58, 237, 0.4);
+  color: #fff;
   text-decoration: none;
-  flex-wrap: wrap;
-  transition: color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.item-version svg {
-  width: 13px;
-  height: 13px;
+.item-version:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.6);
+}
+
+.item-version > svg {
+  width: 17px;
+  height: 17px;
   flex-shrink: 0;
-  opacity: 0.85;
 }
 
-.item-version-label {
-  color: var(--text-muted);
-  transition: color 0.2s ease;
+.item-version-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1.25;
+}
+
+.item-version-build {
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.item-version-date {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .item-version-cta {
   margin-left: auto;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  color: var(--accent-color);
-  font-weight: 600;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 700;
   white-space: nowrap;
+  color: #fff;
 }
 
-.item-version:hover .item-version-label {
-  color: var(--text-secondary);
-}
-
-.item-version:hover .item-version-cta {
-  color: var(--accent-hover);
+.item-version-cta svg {
+  width: 14px;
+  height: 14px;
 }
 
 /* .wago-import-btn / .wago-icon — shared rules in base.css */

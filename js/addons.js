@@ -118,7 +118,10 @@ function renderItems(items, containerId) {
             <line x1="12" y1="16" x2="12" y2="12"/>
             <line x1="12" y1="8" x2="12.01" y2="8"/>
           </svg>
-          <span class="item-version-label">${item.versionNote.label} · as of ${item.versionNote.date}</span>
+          <span class="item-version-text">
+            <span class="item-version-build">${item.versionNote.label}</span>
+            <span class="item-version-date">as of ${item.versionNote.date}</span>
+          </span>
           <span class="item-version-cta">view version
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="7" y1="17" x2="17" y2="7"/>
