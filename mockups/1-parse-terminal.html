@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 1 — Parse-Color Terminal | Shadow Priest MoP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --panel: #10131a;
+  --panel-2: #141823;
+  --line: #1f2430;
+  --line-bright: #2c3445;
+  --text: #d7dce6;
+  --dim: #7c8596;
+  --faint: #4a5160;
+  /* Warcraft Logs parse brackets — every raider reads these instantly */
+  --p100: #e5cc80;  /* gold    · rank 1        */
+  --p99:  #e268a8;  /* pink    · 99            */
+  --p95:  #ff8000;  /* orange  · 95+           */
+  --p75:  #a335ee;  /* purple  · 75+           */
+  --p50:  #0070dd;  /* blue    · 50+           */
+  --p25:  #1eff00;  /* green   · 25+           */
+  --p0:   #666f7d;  /* grey    · the rest      */
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+a { color: inherit; text-decoration: none; }
+
+/* ── Status bar ─────────────────────────────── */
+.statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .45rem 1.5rem;
+  border-bottom: 1px solid var(--line);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: var(--dim);
+  letter-spacing: .04em;
+}
+.statusbar .live { color: var(--p25); }
+.statusbar .live::before { content: '●'; margin-right: .4em; animation: blink 2.4s steps(1) infinite; }
+@keyframes blink { 50% { opacity: .25; } }
+
+/* ── Nav ────────────────────────────────────── */
+nav {
+  display: flex; align-items: center; gap: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  position: sticky; top: 0; z-index: 10;
+}
+.brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: .95rem;
+  padding: .9rem 1.5rem;
+  border-right: 1px solid var(--line);
+  color: var(--p75);
+}
+.brand span { color: var(--faint); font-weight: 400; }
+nav .links { display: flex; flex-wrap: wrap; }
+nav .links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .08em;
+  padding: .95rem 1.25rem;
+  color: var(--dim);
+  border-right: 1px solid var(--line);
+  transition: color .15s, background .15s;
+}
+nav .links a:hover { color: var(--text); background: var(--panel-2); }
+nav .links a.active { color: var(--p100); background: var(--panel-2); box-shadow: inset 0 -2px 0 var(--p100); }
+
+/* ── Hero ───────────────────────────────────── */
+.hero {
+  max-width: 1180px; margin: 0 auto;
+  padding: 3.5rem 1.5rem 2.5rem;
+  display: grid; grid-template-columns: 1.25fr 1fr; gap: 3rem;
+  align-items: end;
+}
+.kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; letter-spacing: .18em;
+  color: var(--p75);
+  margin-bottom: 1rem;
+}
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: .98;
+  letter-spacing: -.02em;
+  color: #f2f4f8;
+}
+h1 em {
+  font-style: normal;
+  color: var(--p100);
+}
+.hero-sub {
+  margin-top: 1.1rem;
+  color: var(--dim);
+  max-width: 44ch;
+}
+.hero-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .75rem;
+  color: var(--faint);
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.hero-meta div {
+  display: flex; justify-content: space-between; gap: 2rem;
+  padding: .6rem .9rem;
+  border-bottom: 1px solid var(--line);
+}
+.hero-meta div:last-child { border-bottom: 0; }
+.hero-meta b { color: var(--text); font-weight: 500; }
+.hero-meta .up { color: var(--p25); }
+
+/* ── Sections ───────────────────────────────── */
+section { max-width: 1180px; margin: 0 auto; padding: 1.5rem; }
+.sec-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-bottom: 1px solid var(--line-bright);
+  padding-bottom: .6rem; margin-bottom: 0;
+}
+.sec-head h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.05rem; font-weight: 700; letter-spacing: .02em;
+}
+.sec-head .mono { font-size: .7rem; color: var(--faint); }
+
+/* ── Rankings table ─────────────────────────── */
+table { width: 100%; border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: .82rem; }
+th {
+  text-align: left; font-weight: 500; font-size: .68rem; letter-spacing: .12em;
+  color: var(--faint); padding: .7rem .75rem;
+  border-bottom: 1px solid var(--line);
+}
+td { padding: .58rem .75rem; border-bottom: 1px solid var(--line); }
+tr:hover td { background: var(--panel); }
+.rank { color: var(--faint); width: 3.5rem; }
+.player { font-weight: 700; }
+.r100 .player { color: var(--p100); }
+.r99  .player { color: var(--p99); }
+.r95  .player { color: var(--p95); }
+.r75  .player { color: var(--p75); }
+.guild { color: var(--dim); font-size: .76rem; }
+.parsebar {
+  display: flex; align-items: center; gap: .7rem; min-width: 220px;
+}
+.bar { flex: 1; height: 6px; background: var(--line); }
+.bar i { display: block; height: 100%; }
+.r100 .bar i { background: var(--p100); width: 100%; }
+.r99  .bar i { background: var(--p99);  width: 99%; }
+.r95  .bar i { background: var(--p95);  width: 96%; }
+.r75  .bar i { background: var(--p75);  width: 88%; }
+.pct { width: 3.2rem; text-align: right; font-weight: 700; }
+.r100 .pct { color: var(--p100); } .r99 .pct { color: var(--p99); }
+.r95 .pct { color: var(--p95); } .r75 .pct { color: var(--p75); }
+.dps { color: var(--dim); text-align: right; }
+
+/* ── Tool strip: haste / guide / addons ─────── */
+.grid3 {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  background: var(--line); border: 1px solid var(--line);
+  margin-top: 2.5rem;
+}
+.tool {
+  background: var(--panel); padding: 1.4rem;
+  display: flex; flex-direction: column; gap: .65rem;
+  transition: background .15s;
+}
+.tool:hover { background: var(--panel-2); }
+.tool .tag { font-family: 'JetBrains Mono', monospace; font-size: .66rem; letter-spacing: .15em; color: var(--faint); }
+.tool h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; }
+.tool p { font-size: .85rem; color: var(--dim); }
+.bp {
+  font-family: 'JetBrains Mono', monospace; font-size: .78rem;
+  display: flex; justify-content: space-between;
+  border-top: 1px dashed var(--line-bright); padding-top: .5rem; margin-top: auto;
+}
+.bp b { color: var(--p25); font-weight: 700; }
+.tool .go { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--p50); margin-top: auto; }
+.tool:hover .go { color: var(--text); }
+
+/* ── Footer ─────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--line); margin-top: 3rem;
+  padding: 1.2rem 1.5rem;
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--faint);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 1.5rem; }
+  .grid3 { grid-template-columns: 1fr; }
+  .dps, .guild, th:nth-child(3), th:nth-child(5) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <span>SHADOW PRIEST · MISTS OF PANDARIA CLASSIC</span>
+  <span class="live">SKIMMYNZ LIVE ON TWITCH</span>
+</div>
+
+<nav>
+  <a class="brand" href="#">skimmynz<span>_</span></a>
+  <div class="links">
+    <a class="active" href="#">HOME</a>
+    <a href="#">TOP 100</a>
+    <a href="#">GUIDE</a>
+    <a href="#">HASTE</a>
+    <a href="#">ADDONS</a>
+    <a href="#">TWITCH ↗</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div>
+    <p class="kicker">SIEGE OF ORGRIMMAR · 25 HEROIC · WEEK 7</p>
+    <h1>Read the logs.<br>Beat <em>the logs.</em></h1>
+    <p class="hero-sub">Rankings, haste breakpoints, and the full Shadow Priest playbook — maintained by a rank-1 parser, updated from live Warcraft Logs data.</p>
+  </div>
+  <aside class="hero-meta mono" aria-label="Site data status">
+    <div><span>LOGS PARSED</span><b>14,523</b></div>
+    <div><span>LAST SYNC</span><b>12 min ago</b></div>
+    <div><span>TOP PARSE THIS WEEK</span><b class="up">99.8 · Garrosh 25H</b></div>
+    <div><span>NEXT HASTE TICK</span><b>+247 rating → 13,163</b></div>
+  </aside>
+</header>
+
+<section aria-label="Top parses">
+  <div class="sec-head">
+    <h2>Top 100 — Garrosh Hellscream · 25H</h2>
+    <span class="mono">COLOR = PARSE BRACKET</span>
+  </div>
+  <table>
+    <thead><tr><th>#</th><th>PLAYER</th><th>GUILD</th><th>PARSE</th><th style="text-align:right">DPS</th></tr></thead>
+    <tbody>
+      <tr class="r100"><td class="rank">1</td><td class="player">Skimmynz</td><td class="guild">&lt;Casual&gt; — Arugal</td><td><div class="parsebar"><div class="bar"><i></i></div><span class="pct">100</span></div></td><td class="dps">412,380</td></tr>
+      <tr class="r99"><td class="rank">2</td><td class="player">Voidform</td><td class="guild">&lt;Vesper&gt; — Faerlina</td><td><div class="parsebar"><div class="bar"><i></i></div><span class="pct">99.2</span></div></td><td class="dps">405,114</td></tr>
+      <tr class="r95"><td class="rank">3</td><td class="player">Dotweaver</td><td class="guild">&lt;Onslaught&gt; — Gehennas</td><td><div class="parsebar"><div class="bar"><i></i></div><span class="pct">96.4</span></div></td><td class="dps">391,007</td></tr>
+      <tr class="r75"><td class="rank">4</td><td class="player">Mindspike</td><td class="guild">&lt;Dawn&gt; — Whitemane</td><td><div class="parsebar"><div class="bar"><i></i></div><span class="pct">88.1</span></div></td><td class="dps">377,562</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section aria-label="Tools">
+  <div class="grid3">
+    <a class="tool" href="#">
+      <span class="tag">CALCULATOR</span>
+      <h3>Haste breakpoints</h3>
+      <p>Enter your rating, get every DoT tick threshold — Shadow Word: Pain, Vampiric Touch, Devouring Plague.</p>
+      <span class="bp"><span>SWP +1 tick</span><b>8,085</b></span>
+    </a>
+    <a class="tool" href="#">
+      <span class="tag">PLAYBOOK</span>
+      <h3>Full PvE guide</h3>
+      <p>Stat priority, openers, cooldown mapping, and boss-by-boss notes for every Siege encounter.</p>
+      <span class="go">READ →</span>
+    </a>
+    <a class="tool" href="#">
+      <span class="tag">SETUP</span>
+      <h3>Addons &amp; WeakAuras</h3>
+      <p>The exact interface from the streams — one Wago import per pack, nothing you don't need.</p>
+      <span class="go">IMPORT →</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© skimmynz · not affiliated with Blizzard Entertainment</span>
+  <span>DATA: WARCRAFT LOGS API</span>
+</footer>
+
+</body>
+</html>

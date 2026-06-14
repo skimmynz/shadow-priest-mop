@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 4 — Broadcast · Rankings | Shadow Priest MoP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c12;
+  --panel: #15151e;
+  --panel-2: #1b1b26;
+  --edge: #23232f;
+  --white: #f4f4f8;
+  --grey: #8e8ea3;
+  --live: #ff4655;
+  --skin: #ff6a1a;
+  --skin-hot: #ffb35c;
+  --skin-dim: rgba(255, 106, 26, .14);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--white); font-family: 'Archivo', system-ui, sans-serif; line-height: 1.5; }
+a { color: inherit; text-decoration: none; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+nav.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 60px;
+  background: rgba(12,12,18,.92); backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 20;
+  border-bottom: 2px solid var(--skin);
+}
+.brand {
+  font-family: 'Archivo Black', sans-serif; font-size: 1.05rem; text-transform: uppercase;
+  background: var(--skin); color: #0c0c12; padding: .3rem .8rem;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+nav.top .links { display: flex; gap: .25rem; }
+nav.top .links a {
+  font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em;
+  padding: .5rem .9rem; color: var(--grey); transition: color .15s;
+}
+nav.top .links a:hover, nav.top .links a.active { color: var(--white); }
+nav.top .links a.active { box-shadow: inset 0 -3px 0 var(--skin); }
+.live-pill {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem; font-weight: 700;
+  background: var(--live); padding: .32rem .7rem;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.live-pill i { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .3; transform: scale(.7); } }
+
+/* page header strip */
+.pagebar {
+  max-width: 1280px; margin: 0 auto;
+  padding: 2.2rem 1.5rem 1.2rem;
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.pagebar h1 {
+  font-family: 'Archivo Black', sans-serif; text-transform: uppercase;
+  font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: .95;
+}
+.pagebar h1 .stroke { color: transparent; -webkit-text-stroke: 2px var(--skin); }
+.pagebar .updated { font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--grey); }
+.pagebar .updated b { color: var(--skin-hot); }
+
+/* layout: boss rail / table / talents */
+.layout {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+  display: grid; grid-template-columns: 200px 1fr 240px; gap: 1.25rem;
+  align-items: start;
+}
+
+/* boss rail */
+.rail { display: flex; flex-direction: column; gap: .35rem; }
+.rail .raid {
+  font-family: 'JetBrains Mono', monospace; font-size: .64rem; font-weight: 700;
+  letter-spacing: .14em; color: var(--skin-hot);
+  margin: .6rem 0 .3rem;
+}
+.rail button {
+  font-family: 'Archivo', sans-serif; font-weight: 700; font-size: .8rem;
+  text-align: left; text-transform: uppercase; letter-spacing: .03em;
+  background: var(--panel); color: var(--grey);
+  border: 0; padding: .55rem .8rem; cursor: pointer;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  transition: color .15s, background .15s;
+}
+.rail button:hover { color: var(--white); background: var(--panel-2); }
+.rail button.active { background: var(--skin); color: #0c0c12; }
+
+/* toolbar */
+.toolbar {
+  display: flex; gap: .75rem; align-items: center; flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.search {
+  flex: 1; min-width: 200px;
+  display: flex; align-items: center; gap: .6rem;
+  background: var(--panel); padding: .6rem .9rem;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  font-family: 'JetBrains Mono', monospace; font-size: .78rem; color: var(--grey);
+}
+.search input {
+  flex: 1; background: none; border: 0; outline: 0;
+  color: var(--white); font: inherit;
+}
+.search kbd { font-size: .62rem; border: 1px solid var(--edge); padding: .05rem .35rem; }
+.region {
+  font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 700;
+  background: var(--panel); color: var(--grey); border: 0;
+  padding: .65rem .9rem; cursor: pointer;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+
+/* rankings table */
+.board { background: var(--panel); clip-path: polygon(0 12px, 12px 0, 100% 0, 100% 100%, 0 100%); }
+.board-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .8rem 1rem;
+  border-bottom: 2px solid var(--skin);
+  font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: .85rem;
+}
+.board-head .mono { font-size: .64rem; color: var(--grey); font-weight: 500; }
+.row {
+  display: grid;
+  grid-template-columns: 3rem 1fr 9rem 7rem 5.5rem;
+  gap: .8rem; align-items: center;
+  padding: .55rem 1rem;
+  border-bottom: 1px solid var(--edge);
+  font-size: .86rem;
+}
+.row:hover { background: var(--panel-2); }
+.row .pos { font-family: 'Archivo Black', sans-serif; color: var(--grey); }
+.row.top3 .pos { color: var(--skin); }
+.row .who b { display: block; font-weight: 700; }
+.row .who span { font-family: 'JetBrains Mono', monospace; font-size: .66rem; color: var(--grey); }
+.row .bar { height: 8px; background: var(--edge); clip-path: polygon(3px 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.row .bar i { display: block; height: 100%; background: var(--skin); }
+.row .amt { font-family: 'JetBrains Mono', monospace; font-size: .78rem; text-align: right; color: var(--grey); }
+.row .parse {
+  font-family: 'Archivo Black', sans-serif; text-align: right; font-size: .95rem;
+  color: var(--skin-hot);
+}
+.row.top3 .parse { color: var(--skin); }
+
+/* talents sidebar */
+.talents { display: flex; flex-direction: column; gap: 1.25rem; }
+.side-card { background: var(--panel); clip-path: polygon(0 10px, 10px 0, 100% 0, 100% 100%, 0 100%); }
+.side-card h3 {
+  font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: .8rem;
+  padding: .7rem .9rem; border-bottom: 2px solid var(--skin);
+}
+.tal { display: flex; align-items: center; gap: .7rem; padding: .55rem .9rem; border-bottom: 1px solid var(--edge); font-size: .8rem; font-weight: 600; }
+.tal:last-child { border-bottom: 0; }
+.tal .ico { width: 26px; height: 26px; background: var(--skin-dim); border: 1px solid var(--edge); flex: none; }
+.tal .pickbar { flex: 1; height: 6px; background: var(--edge); }
+.tal .pickbar i { display: block; height: 100%; background: var(--skin); }
+.tal .pct { font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--skin-hot); width: 2.8rem; text-align: right; }
+
+footer { border-top: 1px solid var(--edge); padding: 1.5rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--grey); }
+
+@media (max-width: 1000px) {
+  .layout { grid-template-columns: 1fr; }
+  .rail { flex-direction: row; flex-wrap: wrap; }
+  .rail .raid { width: 100%; }
+  .talents { flex-direction: row; }
+  .side-card { flex: 1; }
+  .row { grid-template-columns: 2.4rem 1fr 6rem 4.5rem; }
+  .row .amt { display: none; }
+  nav.top .links a:nth-child(n+4) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .live-pill i { animation: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <a class="brand" href="#">Skimmynz</a>
+  <div class="links">
+    <a href="#">Home</a>
+    <a class="active" href="#">Top 100</a>
+    <a href="#">Guide</a>
+    <a href="#">Haste</a>
+    <a href="#">Addons</a>
+  </div>
+  <span class="live-pill"><i></i>LIVE</span>
+</nav>
+
+<div class="pagebar">
+  <h1>Top <span class="stroke">100</span></h1>
+  <span class="updated">UPDATED <b>12 MIN AGO</b> · WARCRAFT LOGS</span>
+</div>
+
+<div class="layout">
+
+  <aside class="rail" aria-label="Raid and boss selection">
+    <span class="raid">SIEGE OF ORGRIMMAR</span>
+    <button>Immerseus</button>
+    <button>Protectors</button>
+    <button>Norushen</button>
+    <button>Sha of Pride</button>
+    <button class="active">Garrosh</button>
+    <span class="raid">THRONE OF THUNDER</span>
+    <button>Jin'rokh</button>
+    <button>Megaera</button>
+  </aside>
+
+  <main>
+    <div class="toolbar">
+      <label class="search">⌕ <input placeholder="Search player…" aria-label="Search player"> <kbd>/</kbd></label>
+      <select class="region" aria-label="Filter by region"><option>REGION: ALL</option><option>US</option><option>EU</option><option>OC</option></select>
+    </div>
+
+    <section class="board" aria-label="Rankings">
+      <div class="board-head">
+        <span>Garrosh Hellscream · 25H</span>
+        <span class="mono">100 OF 100 PLAYERS</span>
+      </div>
+      <div class="row top3"><span class="pos">01</span><div class="who"><b>Skimmynz</b><span>&lt;CASUAL&gt; ARUGAL · OC</span></div><div class="bar"><i style="width:100%"></i></div><span class="amt">412,380</span><span class="parse">100</span></div>
+      <div class="row top3"><span class="pos">02</span><div class="who"><b>Voidform</b><span>&lt;VESPER&gt; FAERLINA · US</span></div><div class="bar"><i style="width:98%"></i></div><span class="amt">405,114</span><span class="parse">99</span></div>
+      <div class="row top3"><span class="pos">03</span><div class="who"><b>Dotweaver</b><span>&lt;ONSLAUGHT&gt; GEHENNAS · EU</span></div><div class="bar"><i style="width:95%"></i></div><span class="amt">391,007</span><span class="parse">98</span></div>
+      <div class="row"><span class="pos">04</span><div class="who"><b>Mindspike</b><span>&lt;DAWN&gt; WHITEMANE · US</span></div><div class="bar"><i style="width:91%"></i></div><span class="amt">377,562</span><span class="parse">97</span></div>
+      <div class="row"><span class="pos">05</span><div class="who"><b>Apparition</b><span>&lt;METHODICAL&gt; GOLEMAGG · EU</span></div><div class="bar"><i style="width:89%"></i></div><span class="amt">370,945</span><span class="parse">96</span></div>
+      <div class="row"><span class="pos">06</span><div class="who"><b>Plagueself</b><span>&lt;REKT&gt; ARUGAL · OC</span></div><div class="bar"><i style="width:87%"></i></div><span class="amt">364,201</span><span class="parse">95</span></div>
+    </section>
+  </main>
+
+  <aside class="talents" aria-label="Popular talents and trinkets">
+    <div class="side-card">
+      <h3>Popular talents</h3>
+      <div class="tal"><span class="ico"></span>Twist of Fate<div class="pickbar"><i style="width:84%"></i></div><span class="pct">84%</span></div>
+      <div class="tal"><span class="ico"></span>Mindbender<div class="pickbar"><i style="width:71%"></i></div><span class="pct">71%</span></div>
+      <div class="tal"><span class="ico"></span>Halo<div class="pickbar"><i style="width:62%"></i></div><span class="pct">62%</span></div>
+    </div>
+    <div class="side-card">
+      <h3>Popular trinkets</h3>
+      <div class="tal"><span class="ico"></span>Black Blood<div class="pickbar"><i style="width:91%"></i></div><span class="pct">91%</span></div>
+      <div class="tal"><span class="ico"></span>Kardris' Toxic Totem<div class="pickbar"><i style="width:66%"></i></div><span class="pct">66%</span></div>
+    </div>
+  </aside>
+
+</div>
+
+<footer>© SKIMMYNZ · NOT AFFILIATED WITH BLIZZARD ENTERTAINMENT</footer>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup 6 — Broadcast · Haste Calculator | Shadow Priest MoP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c12;
+  --panel: #15151e;
+  --panel-2: #1b1b26;
+  --edge: #23232f;
+  --white: #f4f4f8;
+  --grey: #8e8ea3;
+  --live: #ff4655;
+  --ok: #3ddc84;
+  --skin: #ff6a1a;
+  --skin-hot: #ffb35c;
+  --skin-dim: rgba(255, 106, 26, .14);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--white); font-family: 'Archivo', system-ui, sans-serif; line-height: 1.5; }
+a { color: inherit; text-decoration: none; }
+
+nav.top {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1.5rem; height: 60px;
+  background: rgba(12,12,18,.92); backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 20;
+  border-bottom: 2px solid var(--skin);
+}
+.brand {
+  font-family: 'Archivo Black', sans-serif; font-size: 1.05rem; text-transform: uppercase;
+  background: var(--skin); color: #0c0c12; padding: .3rem .8rem;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+nav.top .links { display: flex; gap: .25rem; }
+nav.top .links a {
+  font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em;
+  padding: .5rem .9rem; color: var(--grey); transition: color .15s;
+}
+nav.top .links a:hover, nav.top .links a.active { color: var(--white); }
+nav.top .links a.active { box-shadow: inset 0 -3px 0 var(--skin); }
+.live-pill {
+  display: inline-flex; align-items: center; gap: .45rem;
+  font-family: 'JetBrains Mono', monospace; font-size: .7rem; font-weight: 700;
+  background: var(--live); padding: .32rem .7rem;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.live-pill i { width: 7px; height: 7px; border-radius: 50%; background: #fff; animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .3; transform: scale(.7); } }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 2.2rem 1.5rem 3rem; }
+
+.pagebar { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.pagebar h1 {
+  font-family: 'Archivo Black', sans-serif; text-transform: uppercase;
+  font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: .95;
+}
+.pagebar h1 .stroke { color: transparent; -webkit-text-stroke: 2px var(--skin); }
+.pagebar > span { font-family: 'JetBrains Mono', monospace; font-size: .7rem; color: var(--grey); }
+
+/* scoreboard — input + live readout like a match HUD */
+.scoreboard {
+  display: grid; grid-template-columns: 1fr 1.2fr 1.4fr; gap: 2px;
+  background: var(--edge);
+  clip-path: polygon(0 14px, 14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  margin-bottom: 1.5rem;
+}
+.scoreboard > div { background: var(--panel); padding: 1.1rem 1.2rem; }
+.sb-label {
+  font-family: 'JetBrains Mono', monospace; font-size: .62rem; font-weight: 700;
+  letter-spacing: .15em; color: var(--grey); display: block; margin-bottom: .5rem;
+}
+.sb-input input {
+  width: 100%; background: var(--panel-2); border: 0; outline: 0;
+  border-bottom: 3px solid var(--skin);
+  color: var(--white);
+  font-family: 'Archivo Black', sans-serif; font-size: 2.2rem;
+  padding: .2rem .6rem;
+}
+.sb-result .big {
+  font-family: 'Archivo Black', sans-serif; font-size: 2.6rem; line-height: 1;
+  color: var(--skin);
+}
+.sb-result small { font-family: 'JetBrains Mono', monospace; font-size: .64rem; color: var(--grey); display: block; margin-top: .4rem; }
+.sb-toggles { display: flex; flex-direction: column; gap: .6rem; }
+.tg-row { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.tg-row .tg-label { font-family: 'JetBrains Mono', monospace; font-size: .6rem; font-weight: 700; letter-spacing: .12em; color: var(--grey); width: 3.2rem; }
+.chip {
+  font-family: 'JetBrains Mono', monospace; font-size: .64rem; font-weight: 700;
+  background: var(--panel-2); color: var(--grey);
+  border: 1px solid var(--edge); padding: .35rem .7rem; cursor: pointer;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.chip[aria-pressed="true"] { background: var(--skin); color: #0c0c12; border-color: var(--skin); }
+
+/* breakpoint board */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+.board { background: var(--panel); clip-path: polygon(0 12px, 12px 0, 100% 0, 100% 100%, 0 100%); }
+.board-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .8rem 1rem; border-bottom: 2px solid var(--skin);
+}
+.board-head h2 { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: .9rem; }
+.board-head .tag { font-family: 'JetBrains Mono', monospace; font-size: .6rem; color: var(--grey); }
+
+.spell { border-bottom: 1px solid var(--edge); }
+.spell:last-child { border-bottom: 0; }
+.spell-head {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .7rem 1rem .4rem;
+  font-weight: 700; font-size: .9rem;
+}
+.spell-head .ico { width: 26px; height: 26px; background: var(--skin-dim); border: 1px solid var(--edge); }
+.bp-row {
+  display: grid; grid-template-columns: 5rem 1fr auto; gap: 1rem; align-items: center;
+  padding: .35rem 1rem .35rem 3.3rem;
+  font-family: 'JetBrains Mono', monospace; font-size: .74rem;
+}
+.bp-row .ticks { color: var(--grey); }
+.bp-row .meter { height: 6px; background: var(--edge); }
+.bp-row .meter i { display: block; height: 100%; background: var(--skin); }
+.bp-row.hit .meter i { background: var(--ok); }
+.bp-row .rating { font-weight: 700; color: var(--skin-hot); }
+.bp-row.hit .rating { color: var(--ok); }
+.bp-row.hit .rating::after { content: ' ✓'; }
+.bp-row.next .rating { color: var(--white); }
+.spell .pad { height: .5rem; }
+
+/* next target banner */
+.next-up {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;
+  background: var(--skin-dim); border-left: 4px solid var(--skin);
+  padding: .8rem 1.1rem; margin-bottom: 1.5rem;
+}
+.next-up b { font-family: 'Archivo Black', sans-serif; text-transform: uppercase; font-size: .9rem; }
+.next-up span { font-family: 'JetBrains Mono', monospace; font-size: .72rem; color: var(--skin-hot); }
+
+/* weakaura card */
+.wa-body { padding: 1.1rem; display: flex; flex-direction: column; gap: .9rem; }
+.wa-shot {
+  aspect-ratio: 16/6;
+  background: radial-gradient(ellipse at center, var(--skin-dim), #08080c);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem; color: var(--grey);
+}
+.wa-btn {
+  align-self: flex-start;
+  font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em;
+  background: var(--skin); color: #0c0c12;
+  padding: .65rem 1.3rem;
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.wa-body p { font-size: .82rem; color: var(--grey); font-weight: 500; }
+
+footer { border-top: 1px solid var(--edge); padding: 1.5rem; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: .65rem; color: var(--grey); }
+
+@media (max-width: 900px) {
+  .scoreboard, .grid2 { grid-template-columns: 1fr; }
+  nav.top .links a:nth-child(n+4) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .live-pill i { animation: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <a class="brand" href="#">Skimmynz</a>
+  <div class="links">
+    <a href="#">Home</a>
+    <a href="#">Top 100</a>
+    <a href="#">Guide</a>
+    <a class="active" href="#">Haste</a>
+    <a href="#">Addons</a>
+  </div>
+  <span class="live-pill"><i></i>LIVE</span>
+</nav>
+
+<div class="wrap">
+
+  <div class="pagebar">
+    <h1>Haste <span class="stroke">Calc</span></h1>
+    <span>DOT TICK BREAKPOINTS · MOP CLASSIC</span>
+  </div>
+
+  <section class="scoreboard" aria-label="Haste input and result">
+    <div class="sb-input">
+      <span class="sb-label">HASTE RATING</span>
+      <input type="text" inputmode="numeric" value="12916" aria-label="Haste rating">
+    </div>
+    <div class="sb-result" aria-live="polite">
+      <span class="sb-label">EFFECTIVE HASTE</span>
+      <div class="big">35.42%</div>
+      <small>INCLUDES SHADOWFORM +5%</small>
+    </div>
+    <div class="sb-toggles">
+      <span class="sb-label">MODIFIERS</span>
+      <div class="tg-row"><span class="tg-label">RACE</span>
+        <button class="chip" aria-pressed="false">GOBLIN</button>
+        <button class="chip" aria-pressed="true">TROLL</button>
+      </div>
+      <div class="tg-row"><span class="tg-label">BUFFS</span>
+        <button class="chip" aria-pressed="true">5% SPELL HASTE</button>
+        <button class="chip" aria-pressed="false">BLOODLUST</button>
+        <button class="chip" aria-pressed="false">PI</button>
+        <button class="chip" aria-pressed="false">BERSERKING</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="next-up">
+    <b>Next breakpoint</b>
+    <span>SW:P 9 TICKS — NEED <strong>+247 RATING</strong> (13,163 TOTAL)</span>
+  </div>
+
+  <div class="grid2">
+
+    <section class="board" aria-label="DoT breakpoints">
+      <div class="board-head">
+        <h2>DoT breakpoints</h2>
+        <span class="tag">✓ = REACHED AT 12,916</span>
+      </div>
+
+      <div class="spell">
+        <div class="spell-head"><span class="ico"></span>Shadow Word: Pain</div>
+        <div class="bp-row hit"><span class="ticks">7 TICKS</span><div class="meter"><i style="width:100%"></i></div><span class="rating">4,717</span></div>
+        <div class="bp-row hit"><span class="ticks">8 TICKS</span><div class="meter"><i style="width:100%"></i></div><span class="rating">8,085</span></div>
+        <div class="bp-row next"><span class="ticks">9 TICKS</span><div class="meter"><i style="width:98%"></i></div><span class="rating">13,163</span></div>
+        <div class="pad"></div>
+      </div>
+
+      <div class="spell">
+        <div class="spell-head"><span class="ico"></span>Vampiric Touch</div>
+        <div class="bp-row hit"><span class="ticks">6 TICKS</span><div class="meter"><i style="width:100%"></i></div><span class="rating">5,652</span></div>
+        <div class="bp-row hit"><span class="ticks">7 TICKS</span><div class="meter"><i style="width:100%"></i></div><span class="rating">10,124</span></div>
+        <div class="bp-row"><span class="ticks">8 TICKS</span><div class="meter"><i style="width:84%"></i></div><span class="rating">15,320</span></div>
+        <div class="pad"></div>
+      </div>
+
+      <div class="spell">
+        <div class="spell-head"><span class="ico"></span>Devouring Plague</div>
+        <div class="bp-row hit"><span class="ticks">7 TICKS</span><div class="meter"><i style="width:100%"></i></div><span class="rating">6,330</span></div>
+        <div class="bp-row hit"><span class="ticks">8 TICKS</span><div class="meter"><i style="width:100%"></i></div><span class="rating">11,408</span></div>
+        <div class="bp-row"><span class="ticks">9 TICKS</span><div class="meter"><i style="width:79%"></i></div><span class="rating">16,486</span></div>
+        <div class="pad"></div>
+      </div>
+    </section>
+
+    <section class="board" aria-label="Track in game">
+      <div class="board-head">
+        <h2>Track it in-game</h2>
+        <span class="tag">WEAKAURA</span>
+      </div>
+      <div class="wa-body">
+        <div class="wa-shot">DOT TRACKER WEAKAURA PREVIEW</div>
+        <p>Skimmy's DoT tracker shows tick counts and pandemic windows live on your bars — same aura as the stream.</p>
+        <a class="wa-btn" href="#">Import from Wago.io</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<footer>© SKIMMYNZ · NOT AFFILIATED WITH BLIZZARD ENTERTAINMENT · BREAKPOINT VALUES ILLUSTRATIVE</footer>
+
+</body>
+</html>
