@@ -5,7 +5,7 @@ const addons = [
     url: "https://www.curseforge.com/wow/addons/plater-nameplates",
     profileUrl: "https://wago.io/pfxpBonVW",
     preview: "https://media.wago.io/screenshots/pfxpBonVW/674874e2db2a2863b9d60ecd.png",
-    versionNote: { label: "Using build 8212484", date: "Jun 14, 2026", url: "https://www.curseforge.com/wow/addons/plater-nameplates/files/8212484" }
+    versionNote: { label: "Alpha build", date: "Jun 14, 2026", url: "https://www.curseforge.com/wow/addons/plater-nameplates/files/8212484" }
   },
   {
     name: "Shadowed Unit Frames",
@@ -13,7 +13,7 @@ const addons = [
     profileUrl: "https://wago.io/3K-eb06qt",
     preview: "https://media.wago.io/screenshots/3K-eb06qt/688e04f139d99bcfd0194af7.gif",
     hasInstructions: true,
-    versionNote: { label: "Using SiegePTR build", date: "Jun 14, 2026", url: "https://siegeptr.pages.dev/" }
+    versionNote: { label: "siegeptr.pages.dev build", date: "Jun 14, 2026", url: "https://siegeptr.pages.dev/" }
   },
 ];
 

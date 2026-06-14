@@ -273,17 +273,19 @@
   margin-top: 1rem;
   padding: 0.7rem 0.85rem;
   border-radius: 8px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #16161f;
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--accent-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
-  color: #111111;
+  color: rgba(255, 255, 255, 0.65);
   text-decoration: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .item-version:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  border-left-color: #a78bfa;
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
 }
 
 .item-version > svg {
@@ -304,13 +306,13 @@
   font-weight: 800;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: #111111;
+  color: #a78bfa;
 }
 
 .item-version-date {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .item-version-cta {
@@ -321,7 +323,7 @@
   font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
-  color: #111111;
+  color: #a78bfa;
 }
 
 .item-version-cta svg {
