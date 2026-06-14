@@ -265,13 +265,23 @@
   height: 16px;
 }
 
-/* ── Version Disclaimer (filled accent banner) ───────── */
+/* ── Version Banners (strip below the addons grid) ───── */
+.version-strip {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.75rem;
+}
+
+.version-strip .item-version {
+  flex: 1 1 280px;
+}
+
 .item-version {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  margin-top: 1rem;
-  padding: 0.7rem 0.85rem;
+  padding: 0.8rem 1rem;
   border-radius: 8px;
   background: #16161f;
   border: 1px solid var(--border-color);
@@ -297,8 +307,15 @@
 .item-version-text {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
   line-height: 1.25;
+}
+
+.item-version-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
 }
 
 .item-version-build {

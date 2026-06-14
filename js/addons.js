@@ -111,26 +111,6 @@ function renderItems(items, containerId) {
         </a>`
       : '';
 
-    const versionHTML = item.versionNote
-      ? `<a href="${item.versionNote.url}" target="_blank" rel="noopener" class="item-version">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="16" x2="12" y2="12"/>
-            <line x1="12" y1="8" x2="12.01" y2="8"/>
-          </svg>
-          <span class="item-version-text">
-            <span class="item-version-build">${item.versionNote.label}</span>
-            <span class="item-version-date">as of ${item.versionNote.date}</span>
-          </span>
-          <span class="item-version-cta">view version
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="7" y1="17" x2="17" y2="7"/>
-              <polyline points="7 7 17 7 17 17"/>
-            </svg>
-          </span>
-        </a>`
-      : '';
-
     return `<div class="item-card ${item.hasInstructions ? 'has-instructions' : ''}">
       ${previewHTML}
       <div class="item-name">${item.name}</div>
@@ -150,7 +130,6 @@ function renderItems(items, containerId) {
             </a>`}
         ${profileBtn}
       </div>
-      ${versionHTML}
     </div>`;
   }
 
@@ -188,6 +167,39 @@ function renderItems(items, containerId) {
   });
 
   container.innerHTML = html;
+}
+
+/* --------------------------------------------------------------------------------
+   Version banners (rendered below the addons grid, not inside cards)
+   -------------------------------------------------------------------------------- */
+function renderVersionStrip(items, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = items
+    .filter(item => item.versionNote)
+    .map(item => {
+      const v = item.versionNote;
+      return `<a href="${v.url}" target="_blank" rel="noopener" class="item-version">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="16" x2="12" y2="12"/>
+          <line x1="12" y1="8" x2="12.01" y2="8"/>
+        </svg>
+        <span class="item-version-text">
+          <span class="item-version-name">${item.name}</span>
+          <span class="item-version-build">${v.label}</span>
+          <span class="item-version-date">as of ${v.date}</span>
+        </span>
+        <span class="item-version-cta">view version
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="7" y1="17" x2="17" y2="7"/>
+            <polyline points="7 7 17 7 17 17"/>
+          </svg>
+        </span>
+      </a>`;
+    })
+    .join('');
 }
 
 /* --------------------------------------------------------------------------------
@@ -305,6 +317,7 @@ function updateAllHotspots() {
    -------------------------------------------------------------------------------- */
 renderItems(addons, 'addons-grid');
 renderItems(weakauras, 'weakauras-grid');
+renderVersionStrip(addons, 'version-strip');
 
 const bgImage = new Image();
 bgImage.src = 'img/ui.webp';
