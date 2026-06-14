@@ -265,6 +265,52 @@
   height: 16px;
 }
 
+/* ── Version Disclaimer ──────────────────────────────── */
+.item-version {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-decoration: none;
+  flex-wrap: wrap;
+  transition: color 0.2s ease;
+}
+
+.item-version svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.item-version-label {
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.item-version-cta {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--accent-color);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.item-version:hover .item-version-label {
+  color: var(--text-secondary);
+}
+
+.item-version:hover .item-version-cta {
+  color: var(--accent-hover);
+}
+
 /* .wago-import-btn / .wago-icon — shared rules in base.css */
 
 /* ── Instructions Card with Tabs ─────────────────────── */

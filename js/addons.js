@@ -1,12 +1,19 @@
 // Addon & WeakAura data
 const addons = [
-  { name: "Plater Nameplates", url: "https://www.curseforge.com/wow/addons/plater-nameplates", profileUrl: "https://wago.io/pfxpBonVW", preview: "https://media.wago.io/screenshots/pfxpBonVW/674874e2db2a2863b9d60ecd.png" },
+  {
+    name: "Plater Nameplates",
+    url: "https://www.curseforge.com/wow/addons/plater-nameplates",
+    profileUrl: "https://wago.io/pfxpBonVW",
+    preview: "https://media.wago.io/screenshots/pfxpBonVW/674874e2db2a2863b9d60ecd.png",
+    versionNote: { label: "Using build 8212484", date: "Jun 14, 2026", url: "https://www.curseforge.com/wow/addons/plater-nameplates/files/8212484" }
+  },
   {
     name: "Shadowed Unit Frames",
     url: "https://www.curseforge.com/wow/addons/shadowed-unit-frames",
     profileUrl: "https://wago.io/3K-eb06qt",
     preview: "https://media.wago.io/screenshots/3K-eb06qt/688e04f139d99bcfd0194af7.gif",
-    hasInstructions: true
+    hasInstructions: true,
+    versionNote: { label: "Using SiegePTR build", date: "Jun 14, 2026", url: "https://siegeptr.pages.dev/" }
   },
 ];
 
@@ -104,6 +111,23 @@ function renderItems(items, containerId) {
         </a>`
       : '';
 
+    const versionHTML = item.versionNote
+      ? `<a href="${item.versionNote.url}" target="_blank" rel="noopener" class="item-version">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+          <span class="item-version-label">${item.versionNote.label} · as of ${item.versionNote.date}</span>
+          <span class="item-version-cta">view version
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="7" y1="17" x2="17" y2="7"/>
+              <polyline points="7 7 17 7 17 17"/>
+            </svg>
+          </span>
+        </a>`
+      : '';
+
     return `<div class="item-card ${item.hasInstructions ? 'has-instructions' : ''}">
       ${previewHTML}
       <div class="item-name">${item.name}</div>
@@ -123,6 +147,7 @@ function renderItems(items, containerId) {
             </a>`}
         ${profileBtn}
       </div>
+      ${versionHTML}
     </div>`;
   }
 
