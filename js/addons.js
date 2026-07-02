@@ -23,6 +23,7 @@ const weakauras = [
   { name: "Shadow Word: Death on Nameplates", url: "https://wago.io/UWa_HeEta", preview: "https://media.wago.io/screenshots/UWa_HeEta/68846df1a40570447822e19e.gif" },
   { name: "Haste Breakpoints", url: "https://wago.io/7m5gdIAts", preview: "https://media.wago.io/screenshots/7m5gdIAts/69f844d2181c615631129b53.gif" },
   { name: "UVLS Tracker", url: "https://wago.io/8Xgm0DEZW", preview: "https://media.wago.io/screenshots/8Xgm0DEZW/69672ac8309543a4f7f46443.gif" },
+  { name: "Fojji - Easy Talents & Glyphs 5.5.4 edit", url: "https://wago.io/-MSJDv5ti", preview: "https://media.wago.io/screenshots/-MSJDv5ti/6a4619d5b61a888f987311ca.gif" },
 ];
 
 // Hotspot data (single source of truth)
