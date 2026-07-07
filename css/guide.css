@@ -651,8 +651,7 @@
   line-height: 1.5;
 }
 
-.talent-tier-text p a,
-.talent-swap-chip a {
+.talent-tier-text p a {
   color: #ffd100 !important;
   font-weight: 700;
   text-decoration: none;
@@ -1596,26 +1595,6 @@ a.tier-pill:hover {
   opacity: 1;
   border-color: var(--warning-color);
   box-shadow: 0 0 0 2px var(--warning-color), 0 4px 12px var(--warning-glow);
-}
-
-/* ── Boss-swap chips under a talent tier ──────────────── */
-.talent-swaps {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.5rem;
-}
-
-.talent-swap-chip {
-  display: inline-block;
-  padding: 0.3rem 0.65rem;
-  border: 1px solid var(--border-color);
-  border-radius: 999px;
-  background: var(--card-bg);
-  font-size: 0.78rem;
-  line-height: 1.4;
-  color: var(--text-secondary);
 }
 
 /* ── Compact BiS extras list ──────────────────────────── */
