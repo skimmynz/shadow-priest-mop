@@ -45,43 +45,10 @@
     container.removeAttribute('data-src');
   }
 
-  /* ── Tabbed stream card (Twitch / YouTube) ─────────── */
-
-  function initStreamTabs() {
-    var cards = document.querySelectorAll('.stream-card--tabbed');
-
-    cards.forEach(function (card) {
-      var embed = card.querySelector('.stream-embed');
-      var tabs = card.querySelectorAll('.stream-tab');
-      if (!embed || !tabs.length) return;
-
-      tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          if (tab.classList.contains('is-active')) return;
-
-          tabs.forEach(function (t) {
-            t.classList.remove('is-active');
-            t.setAttribute('aria-selected', 'false');
-          });
-          tab.classList.add('is-active');
-          tab.setAttribute('aria-selected', 'true');
-
-          var existing = embed.querySelector('iframe');
-          if (existing) existing.remove();
-
-          embed.setAttribute('data-src', tab.getAttribute('data-src'));
-          embed.setAttribute('data-title', tab.getAttribute('data-title') || '');
-          loadStream(embed);
-        });
-      });
-    });
-  }
-
   /* ── Init ──────────────────────────────────────────── */
 
   function init() {
     initLazyStreams();
-    initStreamTabs();
   }
 
   if (document.readyState === 'loading') {

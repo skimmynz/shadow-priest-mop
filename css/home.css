@@ -170,44 +170,10 @@
 /* ── Streams (inside hero) ────────────────────────────── */
 .streams-grid {
   display: grid;
-  grid-template-columns: minmax(0, 760px);
+  grid-template-columns: repeat(2, minmax(0, 620px));
   justify-content: center;
   gap: 1.5rem;
   width: 100%;
-}
-
-/* ── Tabbed stream card (Twitch / YouTube) ────────────── */
-.stream-tabs {
-  display: flex;
-  gap: .35rem;
-  padding: .6rem .75rem;
-  border-bottom: 1px solid var(--glass-border);
-}
-.stream-tab {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 36px;
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color .2s, background .2s, border-color .2s;
-}
-.stream-tab svg { width: 30px; height: 30px; }
-.stream-tab:hover { color: var(--text-secondary); background: var(--hover-bg); }
-.stream-tab.is-active { color: #fff; }
-.stream-tab--twitch.is-active {
-  color: #9146ff;
-  background: rgba(145, 70, 255, .12);
-  border-color: rgba(145, 70, 255, .4);
-}
-.stream-tab--yt.is-active {
-  color: #ff0000;
-  background: rgba(255, 0, 0, .12);
-  border-color: rgba(255, 0, 0, .4);
 }
 
 .stream-card {
@@ -229,6 +195,7 @@
   display: flex;
   align-items: center;
   gap: .5rem;
+  text-decoration: none;
   padding: .875rem 1.25rem;
   font-weight: 700;
   font-size: .8125rem;
