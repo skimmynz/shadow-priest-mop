@@ -1,87 +1,123 @@
 # T15 Archive + T16 Guide Design
 
 **Date:** 2026-07-07
-**Status:** Approved (approach B, tier-sections-only scope)
+**Status:** Approved v2 (supersedes v1 — archive is now a full-page rename, not
+tier-sections-only; Way 2 presentation chosen)
 
 ## Goal
 
-Archive the Throne of Thunder (T15) tier-specific guide content and convert the live
-guide page to Siege of Orgrimmar (T16). SoO is the final MoP raid, so this is a
-one-time archive — no generalized multi-tier system needed.
+Archive the Throne of Thunder (T15) guide as its own page and rebuild the live
+guide for Siege of Orgrimmar (T16), with first-class cross-navigation so users
+always find the live guide and can still read the T15 material. SoO is the
+final MoP raid — one-time archive, no generalized tier system.
 
 ## Decisions
 
-- **Approach B — separate archive page.** Chosen over in-page tier tabs (SEO: two
-  URLs rank two search intents; `/guide` keeps its URL and backlinks) and over a
-  data-driven refactor (overkill for the final tier).
-- **Archive scope: tier sections only.** Talents, Stats, T15 Tips. Rotation and
-  Macros live only on the current guide and get updated for T16.
-- **T16 content supplied by the site owner.** Structure is built first; each
-  section's content (talent picks, BiS stats, boss tips) is filled in from
-  owner-provided data. No invented numbers.
+- **Full-page rename:** `git mv guide.html guide-t15.html` (preserves history).
+  Archive keeps all five sections including Rotation and Macros as a faithful
+  snapshot. New `guide.html` is created fresh, carrying over Rotation and
+  Macros verbatim.
+- **Way 2 presentation:** static tier pill switcher on both pages, boss-tagged
+  swap chips in Talents, BiS with featured secondaries + compact list.
+- **T16 Tips:** "Coming Soon" placeholder card.
+- **Owner-supplied content only** — talent text, EP values, and BiS numbers
+  below are the owner's data, no invented numbers.
 
 ## Deliverables
 
-### 1. New page: `guide-t15.html`
+### 1. Tier pill switcher (both pages)
 
-- Copied nav/head/footer from `guide.html`, then only three sections:
-  **Talents**, **Stats**, **T15 Tips** — content byte-identical to the current
-  live sections (frozen).
-- Archive banner at top: labels the page as the archived Throne of Thunder (T15)
-  guide, links back to the live guide (`/guide`).
-- Own metadata: title "Shadow Priest T15 Guide (Archive) | Throne of Thunder",
-  matching description/OG tags, canonical `https://skimmynz.com/guide-t15`.
-- No video column (video targets the current guide). Trimmed TOC: Talents,
-  Stats, T15 Tips only. Scrollspy/mobile-TOC labels updated to match.
-- Keeps Wowhead tooltip script and existing `guide.css` classes — no new CSS
-  file; archive banner styles added to `guide.css`.
+Static link pills at the top of the guide content column, zero JS:
 
-### 2. `guide.html` becomes T16
+```
+[ ◉ T16 · Siege of Orgrimmar ]  [ ○ T15 · Throne of Thunder — Archive ]
+```
 
-- **Talents section:** same tier-row structure; boss callouts in explanations
-  swap from ToT bosses to SoO bosses (owner content).
-- **Stats section:** "T15 BiS" block becomes "T16 BiS" with new values (owner
-  content); stat weights updated if owner supplies new EP values, otherwise
-  kept.
-- **Tips section:** id `tot-tips` → `soo-tips`; heading "T15 Tips" → "T16 Tips";
-  boss rail + accordions rebuilt for the 14 SoO encounters in `js/tiers.js`
-  (Immerseus → Garrosh Hellscream). Boss icons follow the existing pattern
-  `https://assets.rpglogs.com/img/warcraft/bosses/<id>-icon.jpg` where `<id>` is
-  the tiers.js encounter id minus the leading 5 (51602 → 1602); verify one URL
-  during build. Tip text per boss is owner content; until provided, accordion
-  bodies ship with structure and owner fills them.
-- **Rotation & Macros:** remain on the live page. T15-specific references
-  (Unerring Vision of Lei Shen prepull note) replaced with T16 equivalents
-  (owner content).
-- **TOC/scrollspy:** anchors and label maps updated (`tot-tips` → `soo-tips`,
-  "T15 Tips" → "T16 Tips") in the mobile menu, desktop TOC, and inline script.
-- **Archive link:** small link to `/guide-t15` placed at the bottom of the
-  desktop TOC rail and at the end of the T16 Tips section (so both desktop and
-  mobile users can find it).
-- Metadata description updated to mention Siege of Orgrimmar.
+- Active pill styled per page; inactive pill is a plain `<a>` to the other page.
+- On `guide-t15.html`, pair with a slim archive banner: "Archived — Throne of
+  Thunder (T15) era guide" + link to live guide.
 
-### 3. Routing
+### 2. `guide-t15.html` (renamed archive)
 
-- Netlify serves extensionless URLs already (`/guide` → `guide.html`);
-  `/guide-t15` resolves the same way. Add a redirect only if verification shows
-  extensionless resolution is not automatic (check `netlify.toml` during build).
+- Content unchanged except: pills + archive banner added; `<title>` →
+  "Shadow Priest T15 Guide (Archive) | Throne of Thunder | skimmynz";
+  description/OG updated to say archived T15 guide; canonical
+  `https://skimmynz.com/guide-t15`; nav "Guide" link still points to `/guide`
+  (not self-active).
+- Video column, TOC, scrollspy, boss rail all stay as-is.
 
-## Error handling / risks
+### 3. New `guide.html` (T16)
 
-- Broken boss icon IDs: verify one SoO icon URL before building all 14.
-- Anchor rename (`#tot-tips`): inbound links to `/guide#tot-tips` would silently
-  scroll to top. Acceptable — anchor traffic negligible; no redirect mechanism
-  exists for fragments.
+Same layout skeleton (video column, TOC rail, mobile Jump-to, FAB, inline JS).
+
+**Talents** — subheading "Default Raid Build". Six tier rows, same
+`talent-tier-row` markup; default cell `.active`; swap talents get an
+`.optional` cell state plus boss-tagged swap chips under the tier text:
+
+| Tier | Default | Text | Swaps (chips) |
+|---|---|---|---|
+| 15 | Void Tendrils | Useful for dealing with adds. | — |
+| 30 | Angelic Feather | No longer a wheelchair class. Far stronger than the Retail version. | — |
+| 45 | Solace and Insanity | Strongest single-target option. | — |
+| 60 | Angelic Bulwark | Passive shield that procs at low health. | Spectral Guise ([spell=112833]) on Siegecrafter Blackfuse to cancel Launch Sawblade ([spell=143291]); on Paragons of the Klaxxi to cancel Aim ([spell=142948]) and Mesmerize ([spell=142671]) |
+| 75 | Twist of Fate | Snipe low-health adds with Shadow Word: Pain and Shadow Word: Death to maintain high uptime. | Divine Insight ([spell=109175]) on Iron Juggernaut, Thok the Bloodthirsty, Paragons of the Klaxxi |
+| 90 | Halo | Default at 20+ yards. | Divine Star on Norushen, Thok, Garrosh |
+
+All talent/boss names link to `wowhead.com/mop-classic/...` per existing
+convention.
+
+**Rotation & Macros** — copied verbatim from the current guide (owner's
+instruction; the Unerring Vision of Lei Shen note is retained as-is).
+
+**Stats** — priority chain row and WowSims CTA retained. Two blocks:
+
+- *T16 Preset BiS* (featured secondaries as bars, same `stat-bar-row` style):
+  - Haste 17,232 (47.57%) — hero row, links `/haste?rating=17232`
+  - Mastery 15,210 (60.03%)
+  - Crit 8,694 (32.88%)
+  - Hit 3,363 (15.07%)
+  - Compact key-value list beneath: Health 694,699 · Mana 300,000 ·
+    Stamina 39,164 · Intellect 30,774 · Spirit 3,520 · Spell Power 55,763 ·
+    Expertise 1,760 (5.18%)
+- *Stat Weights (EP)* — note "Item Level ≥ 560"; bars sorted descending:
+  Spirit 1.51, Hit 1.45, Intellect 1.00, Haste 1.00, Mastery 0.75, Crit 0.74,
+  Spell Power 0.73.
+
+**T16 Tips** — section id `soo-tips`, heading "T16 Tips". Coming Soon card:
+SoO-flavored empty state + line linking to the T15 tips on the archive page
+("Boss tips are being written — read the T15 tips in the meantime"). TOC,
+mobile menu, and scrollspy label map use `soo-tips` / "T16 Tips".
+
+**Metadata** — description/OG updated to mention Siege of Orgrimmar; canonical
+stays `https://skimmynz.com/guide`.
+
+### 4. CSS (`guide.css` additions)
+
+`.tier-pills`, `.tier-pill(--active)`, `.archive-banner`, `.talent-cell.optional`,
+`.talent-swaps` chip row, `.stats-compact` key-value list, `.coming-soon` card.
+Match existing dark theme tokens; no new CSS file.
+
+### 5. Routing
+
+`/guide-t15` served extensionless like other pages; verify against
+`netlify.toml` during build, add redirect only if needed.
+
+## Risks
+
+- Anchor `#tot-tips` no longer on live page (now `#soo-tips`) — acceptable,
+  fragment traffic negligible; archive page still has `#tot-tips`.
+- Rotation retains a T15 trinket note (UVLS) by explicit owner instruction —
+  revisit when owner supplies T16 rotation updates.
 
 ## Testing
 
-- Open both pages locally; verify scrollspy, mobile Jump-to, boss rail/accordion
-  switching, macro copy buttons (live page), Wowhead tooltips on both pages.
-- Check all 14 SoO boss icons render.
-- Lighthouse/manual check: no console errors, nav active states correct.
+- Both pages: pills navigate correctly, active states right; Wowhead tooltips
+  fire on new talent/swap links; scrollspy + mobile Jump-to track sections;
+  archive page boss rail/accordions still work; macro copy buttons work on both.
+- Haste breakpoint link carries `?rating=17232`.
+- No console errors; mobile layout for pills/chips/compact list wraps cleanly.
 
 ## Out of scope
 
-- T14 archive, tier switcher UI, data-driven guide refactor.
-- Home page / rankings changes (already on T16).
-- Broadcast Overlay redesign (separate design track).
+- T16 boss tips content (future task once written).
+- T14 archive, tier tabs, data-driven refactor, Broadcast Overlay redesign.
