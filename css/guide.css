@@ -1594,8 +1594,7 @@ a.tier-pill:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem 1rem;
-  margin-top: 0.9rem;
-  padding-top: 0.9rem;
+  padding: 0.9rem 1rem;
   border-top: 1px solid var(--border-color);
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -1608,7 +1607,7 @@ a.tier-pill:hover {
 
 /* ── EP block note ────────────────────────────────────── */
 .stats-ep-note {
-  margin: -0.4rem 0 0.6rem;
+  margin: 0.6rem 1rem 0;
   font-size: 0.75rem;
   color: var(--text-muted);
 }
