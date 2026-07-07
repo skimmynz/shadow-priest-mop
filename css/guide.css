@@ -1521,6 +1521,76 @@ a.tier-pill:hover {
   color: var(--text-accent);
 }
 
+/* ── Rank 1 credential card (video column) ────────────── */
+.guide-rank-card {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.guide-rank-card:hover {
+  border-color: var(--gold-color);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.guide-rank-trophy {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--gold-color);
+}
+
+.guide-rank-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.guide-rank-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.guide-rank-pill {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid var(--gold-color);
+  color: var(--gold-color);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.guide-rank-meta {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.guide-rank-ext {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--text-muted);
+}
+
 /* ── Optional talent pick (amber, vs green default) ───── */
 .talent-cell.optional {
   opacity: 1;
