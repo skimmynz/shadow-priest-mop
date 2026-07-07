@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="google-adsense-account" content="ca-pub-5698535707794768">
+  <meta name="description" content="Master Shadow Priest in MoP Classic with a complete PvE guide covering Talents, Rotation, Macros, Stats and boss-by-boss raid tips.">
+  <meta name="keywords" content="shadow priest, guide, MoP Classic, talents, rotation, gear, BiS, glyphs, World of Warcraft, skimmynz">
+
+  <title>Shadow Priest PvE Guide | MoP Classic | skimmynz</title>
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/16.png">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="canonical" href="https://skimmynz.com/guide">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="skimmynz">
+  <meta property="og:title" content="Shadow Priest PvE Guide | MoP Classic">
+  <meta property="og:description" content="Master Shadow Priest in MoP Classic with a complete PvE guide covering Talents, Rotation, Macros, Stats and boss-by-boss raid tips.">
+  <meta property="og:url" content="https://skimmynz.com/guide">
+  <meta property="og:image" content="https://skimmynz.com/img/og.png">
+  <meta property="og:image:width" content="1260">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Shadow Priest in Mists of Pandaria Classic">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shadow Priest PvE Guide | MoP Classic">
+  <meta name="twitter:description" content="Master Shadow Priest in MoP Classic with a complete PvE guide covering Talents, Rotation, Macros, Stats and boss-by-boss raid tips.">
+  <meta name="twitter:image" content="https://skimmynz.com/img/og.png">
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/guide.css" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>window.whTooltips = { colorLinks: true, iconizeLinks: true, renameLinks: false };</script>
+  <script defer src="https://wow.zamimg.com/widgets/power.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5698535707794768" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════
+       Navigation
+       ════════════════════════════════════════════════════ -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">☰</button>
+      <ul class="nav-links" id="navLinks">
+        <li>
+          <a href="/">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="/rankings">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+            Top 100
+          </a>
+        </li>
+        <li>
+          <a href="/guide" class="active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Guide
+          </a>
+        </li>
+        <li>
+          <a href="/haste">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Haste Calculator
+          </a>
+        </li>
+        <li>
+          <a href="/addons">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            Addons &amp; WAs
+          </a>
+        </li>
+        <li>
+          <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+            Twitch
+          </a>
+        </li>
+        <li>
+          <a href="https://youtube.com/@skimmynz" target="_blank" rel="noopener">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            YouTube
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <h1 class="sr-only">Shadow Priest Guide — Mists of Pandaria Classic</h1>
+
+  <!-- ════════════════════════════════════════════════════
+       Guide Content — Video (left) + Doc + Sticky TOC
+       ════════════════════════════════════════════════════ -->
+  <div class="guide-layout">
+
+    <!-- Video — sticky left column -->
+    <aside class="guide-video-col">
+      <div class="guide-video-card">
+        <div class="guide-video">
+          <iframe
+            src="https://www.youtube.com/embed/LH5aODSFQ1o?autoplay=1&mute=1&cc_load_policy=1"
+            title="Shadow Priest MoP Classic Guide — skimmynz"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </div>
+
+      <div class="guide-watch-links">
+        <a href="https://youtube.com/@skimmynz" target="_blank" rel="noopener" class="guide-watch-link guide-watch-link--youtube" aria-label="Watch on YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#FF0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/>
+            <path fill="#FFFFFF" d="M9.545 15.568V8.432L15.818 12z"/>
+          </svg>
+          <span>Watch on YouTube</span>
+        </a>
+        <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" class="guide-watch-link guide-watch-link--twitch" aria-label="Live on Twitch">
+          <svg viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+          <span>Live on Twitch</span>
+        </a>
+        <a href="https://www.wowsims.com/mop/priest/shadow/" target="_blank" rel="noopener" class="guide-watch-link" aria-label="Sim on WowSims">
+          <img src="https://www.wowsims.com/assets/WoW-Simulator-Icon-0WxURMuu.png" alt="" class="guide-watch-img">
+          <span>Sim on WowSims</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Mobile "Jump to" dropdown -->
+    <div class="guide-toc-mobile">
+      <button class="guide-toc-mobile-btn" id="tocMobileBtn" aria-expanded="false" aria-controls="tocMobileMenu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span id="tocMobileLabel">Jump to…</span>
+        <svg class="guide-toc-mobile-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <ul class="guide-toc-mobile-menu" id="tocMobileMenu">
+        <li><a href="#talents">Talents</a></li>
+        <li><a href="#rotation">Rotation</a></li>
+        <li><a href="#macros">Macros</a></li>
+        <li><a href="#stats">Stats</a></li>
+        <li><a href="#tot-tips">T15 Tips</a></li>
+      </ul>
+    </div>
+
+    <main class="guide-content">
+
+    <!-- Talents -->
+    <section class="guide-section" id="talents">
+      <div class="guide-panel-body">
+        <h2 class="guide-panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Talents
+        </h2>
+        <div class="talent-build">
+          <div class="talent-tier-row">
+            <span class="talent-tier-label">15</span>
+            <div class="talent-tier-icons">
+              <a href="https://www.wowhead.com/mop-classic/spell=108920" class="talent-cell active"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg" alt="Void Tendrils"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=108921" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_psyfiend.jpg" alt="Psyfiend"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=605" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_shadowworddominate.jpg" alt="Dominate Mind"></a>
+            </div>
+            <div class="talent-tier-text">
+              <strong class="talent-explain-name"><a href="https://www.wowhead.com/mop-classic/spell=108920">Void Tendrils</a></strong>
+              <p>Useful for dealing with <a href="https://www.wowhead.com/mop-classic/spell=137203">Blessed Loa Spirit</a> and <a href="https://www.wowhead.com/mop-classic/npc=69013">Diffused Lightning</a>.</p>
+            </div>
+          </div>
+
+          <div class="talent-tier-row">
+            <span class="talent-tier-label">30</span>
+            <div class="talent-tier-icons">
+              <a href="https://www.wowhead.com/mop-classic/spell=64129" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_symbolofhope.jpg" alt="Body and Soul"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=121536" class="talent-cell active"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_angelicfeather.jpg" alt="Angelic Feather"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=108942" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_phantasm.jpg" alt="Phantasm"></a>
+            </div>
+            <div class="talent-tier-text">
+              <strong class="talent-explain-name"><a href="https://www.wowhead.com/mop-classic/spell=121536">Angelic Feather</a></strong>
+              <p>No longer a wheelchair class. Far stronger than the <a href="https://www.wowhead.com/spell=121536">Retail</a> version.</p>
+            </div>
+          </div>
+
+          <div class="talent-tier-row">
+            <span class="talent-tier-label">45</span>
+            <div class="talent-tier-icons">
+              <a href="https://www.wowhead.com/mop-classic/spell=109186" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_surgeoflight.jpg" alt="From Darkness, Comes Light"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=123040" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_soulleech_3.jpg" alt="Mindbender"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=129250" class="talent-cell active"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg" alt="Solace and Insanity"></a>
+            </div>
+            <div class="talent-tier-text">
+              <strong class="talent-explain-name"><a href="https://www.wowhead.com/mop-classic/spell=129250">Solace and Insanity</a></strong>
+              <p>Strongest single-target option. Swap to <a href="https://www.wowhead.com/mop-classic/spell=123040">Mindbender</a> on Council and Primordius.</p>
+            </div>
+          </div>
+
+          <div class="talent-tier-row">
+            <span class="talent-tier-label">60</span>
+            <div class="talent-tier-icons">
+              <a href="https://www.wowhead.com/mop-classic/spell=19236" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_testoffaith.jpg" alt="Desperate Prayer"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=112833" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_spectralguise.jpg" alt="Spectral Guise"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=108945" class="talent-cell active"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_angelicbulwark.jpg" alt="Angelic Bulwark"></a>
+            </div>
+            <div class="talent-tier-text">
+              <strong class="talent-explain-name"><a href="https://www.wowhead.com/mop-classic/spell=108945">Angelic Bulwark</a></strong>
+              <p>Passive shield that procs at low health — set and forget.</p>
+            </div>
+          </div>
+
+          <div class="talent-tier-row">
+            <span class="talent-tier-label">75</span>
+            <div class="talent-tier-icons">
+              <a href="https://www.wowhead.com/mop-classic/spell=109142" class="talent-cell active"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg" alt="Twist of Fate"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=10060" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_powerinfusion.jpg" alt="Power Infusion"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=109175" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_burningwill.jpg" alt="Divine Insight"></a>
+            </div>
+            <div class="talent-tier-text">
+              <strong class="talent-explain-name"><a href="https://www.wowhead.com/mop-classic/spell=109142">Twist of Fate</a></strong>
+              <p>Snipe low-health adds with <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> to maintain high uptime.</p>
+            </div>
+          </div>
+
+          <div class="talent-tier-row">
+            <span class="talent-tier-label">90</span>
+            <div class="talent-tier-icons">
+              <a href="https://www.wowhead.com/mop-classic/spell=121135" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_cascade.jpg" alt="Cascade"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=110744" class="talent-cell"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_divinestar.jpg" alt="Divine Star"></a>
+              <a href="https://www.wowhead.com/mop-classic/spell=120517" class="talent-cell active"><img loading="lazy" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg" alt="Halo"></a>
+            </div>
+            <div class="talent-tier-text">
+              <strong class="talent-explain-name"><a href="https://www.wowhead.com/mop-classic/spell=120517">Halo</a></strong>
+              <p>Default at 20+ yards.<br>
+              <a href="https://www.wowhead.com/mop-classic/spell=121135">Cascade</a> on Primordius and Dark Animus.<br>
+              <a href="https://www.wowhead.com/mop-classic/spell=110744">Divine Star</a> on Council and Ra-den (Megaera if healers need help).</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Rotation -->
+    <section class="guide-section" id="rotation">
+      <div class="guide-panel-body">
+        <h2 class="guide-panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Rotation
+        </h2>
+        <!-- Opener -->
+        <h3 class="rot-section-heading">Opener</h3>
+        <div class="rot-prepull-block">
+          <span class="rot-prepull-heading">Pre Pull</span>
+          <ul class="rot-prepull-list">
+            <li>Stand 25 yards away, use <a href="https://www.wowhead.com/mop-classic/item=76093">Potion of the Jade Serpent</a> at 2.5s and cast <a href="https://www.wowhead.com/mop-classic/spell=120517">Halo</a></li>
+            <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=73510">Mind Spike</a></li>
+          </ul>
+        </div>
+        <ol class="rot-steps">
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=34433">Shadowfiend</a></li>
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=26297">Berserking</a> and <a href="https://www.wowhead.com/mop-classic/spell=126731">Synapse Springs</a></li>
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a></li>
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a></li>
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a></li>
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=8092">Mind Blast</a></li>
+          <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a></li>
+        </ol>
+        <p class="rot-note">Interrupt and recast <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> if <a href="https://www.wowhead.com/mop-classic/item=94524">Unerring Vision of Lei Shen</a> procs.</p>
+
+        <!-- Priority -->
+        <h3 class="rot-section-heading">Spell Priority (highest → lowest)</h3>
+        <ol class="rot-priority">
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> — 3 <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a> only.
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=8092">Mind Blast</a> — Use on cooldown.
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> — Use both charges on cooldown.
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a> — Recast just before <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> expires to snapshot the channel.
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> / <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> — Aim for 100% uptime.
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=73510">Mind Spike</a> — Only with <a href="https://www.wowhead.com/mop-classic/spell=109186">From Darkness, Comes Light</a>.
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=120517">Halo</a> — Use on cooldown with proper positioning (20+ yards).
+          </li>
+          <li>
+            <a href="https://www.wowhead.com/mop-classic/spell=15407">Mind Flay</a> — Interrupt early for higher priorities.
+          </li>
+        </ol>
+
+        <!-- DoT rule -->
+        <div class="rot-rule">
+          Before casting <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a>, make sure <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> both have at least 8 seconds remaining — so you won't need to interrupt <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a> to refresh them.
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Macros -->
+    <section class="guide-section" id="macros">
+      <div class="guide-panel-body">
+        <h2 class="guide-panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Macros
+        </h2>
+        <div class="macro-grid">
+          <div class="macro-card">
+            <h3 class="macro-name">CDs</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast Berserking
+/cast Power Infusion
+/use 10
+/use 13
+/use 14</code></pre>
+            <p class="macro-desc">Pops all our major cooldowns at once.<br>
+              <span class="macro-slots">
+                <span><code>/use 10</code> — Gloves (<a href="https://www.wowhead.com/mop-classic/spell=126731">Synapse Springs</a>)</span>
+                <span><code>/use 13</code> — Trinket 1</span>
+                <span><code>/use 14</code> — Trinket 2</span>
+              </span>
+            </p>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Shadowfiend</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast Shadowfiend
+/cleartarget [dead][noharm]
+/targetenemy [noexists]
+/petattack</code></pre>
+            <p class="macro-desc">Casts <a href="https://www.wowhead.com/mop-classic/spell=34433">Shadowfiend</a> and forces it to attack your target.</p>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">SWD</h3>
+            <pre class="macro-code"><code>#showtooltip Shadow Word: Death
+/cleartarget [dead][noharm]
+/targetenemy [noexists]
+/cast [stance] Shadow Word: Death; [nostance] Shadowform
+/cast Shadow Word: Death</code></pre>
+            <p class="macro-desc">Ensures you're in <a href="https://www.wowhead.com/mop-classic/spell=15473">Shadowform</a> before casting <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a>. Automatically targets a new enemy if your current target is dead — useful for sniping low-health adds like <a href="https://www.wowhead.com/mop-classic/npc=69232/ball-lightning">Ball Lightning</a>.</p>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">MOP</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast [talent:6/1]Cascade
+/cast [talent:6/2]Divine Star
+/cast [talent:6/3]Halo</code></pre>
+            <p class="macro-desc">Automatically uses whichever Level 90 talent you have selected — <a href="https://www.wowhead.com/mop-classic/spell=121135">Cascade</a>, <a href="https://www.wowhead.com/mop-classic/spell=110744">Divine Star</a>, or <a href="https://www.wowhead.com/mop-classic/spell=120517">Halo</a> — with the correct tooltip.</p>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Dispersion</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast Dispersion
+/cancelaura Dispersion</code></pre>
+            <p class="macro-desc">Press once to activate <a href="https://www.wowhead.com/mop-classic/spell=47585">Dispersion</a>, press again to cancel.</p>
+          </div>
+          <div class="macro-card">
+            <h3 class="macro-name">Feather</h3>
+            <pre class="macro-code"><code>#showtooltip
+/cast [@player] Angelic Feather</code></pre>
+            <p class="macro-desc">Automatically places <a href="https://www.wowhead.com/mop-classic/spell=121536">Angelic Feather</a> at your feet.<br>If stacked in a group, step slightly away from others to make sure you still receive it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="guide-section" id="stats">
+      <div class="guide-panel-body">
+        <h2 class="guide-panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Stats
+        </h2>
+        <div class="stats-card">
+          <div class="stats-priority">
+            <span class="stats-priority-label">Priority</span>
+            <span class="stats-priority-chain">
+              <span>Hit cap</span>
+              <span class="stats-priority-arrow">→</span>
+              <span>Haste</span>
+              <span class="stats-priority-arrow">→</span>
+              <span>Mastery</span>
+              <span class="stats-priority-arrow">→</span>
+              <span>Crit</span>
+            </span>
+            <a href="https://www.wowsims.com/mop/priest/shadow/" target="_blank" rel="noopener noreferrer" class="stats-wowsims-cta">
+              <img src="https://www.wowsims.com/assets/WoW-Simulator-Icon-0WxURMuu.png" alt="" class="stats-source-icon">
+              <span>WowSims</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="11" height="11"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+          <div class="stats-grid">
+
+            <!-- T15 BiS -->
+            <div class="stats-block">
+              <h3 class="stats-block-heading">T15 BiS</h3>
+              <div class="stats-bars">
+                <div class="stat-bar-row stat-bar-row--hero">
+                  <div class="stat-bar-header">
+                    <span class="stat-bar-name">Haste</span>
+                    <a href="/haste?rating=15294" class="stat-bar-link" title="Check haste breakpoints at 15,294">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                      Haste Breakpoints
+                    </a>
+                  </div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:100%"></div></div>
+                  <div class="stat-bar-meta">
+                    <span class="stat-bar-pct">42.79%</span>
+                    <span class="stat-bar-val">15,294</span>
+                  </div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Mastery</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:62.5%"></div></div>
+                  <div class="stat-bar-meta">
+                    <span class="stat-bar-pct">43.09%</span>
+                    <span class="stat-bar-val">9,564</span>
+                  </div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Hit</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:33.5%"></div></div>
+                  <div class="stat-bar-meta">
+                    <span class="stat-bar-pct">15.07%</span>
+                    <span class="stat-bar-val">5,123</span>
+                  </div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Crit</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:23.2%"></div></div>
+                  <div class="stat-bar-meta">
+                    <span class="stat-bar-pct">21.62%</span>
+                    <span class="stat-bar-val">3,545</span>
+                  </div>
+                  <p class="stat-bar-caption"><a href="https://www.wowhead.com/mop-classic/item=94524">Unerring Vision of Lei Shen</a> grants 100% crit on proc.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stat Weights -->
+            <div class="stats-block">
+              <h3 class="stats-block-heading">Stat Weights (EP)</h3>
+              <div class="stats-bars">
+                <div class="stat-bar-row stat-bar-row--highlight">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Intellect</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:100%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">1.00</span></div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Spell Power</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:98%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">0.98</span></div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Spirit</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:90%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">0.90</span></div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Hit</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:85%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">0.85</span></div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Haste</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:75%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">0.75</span></div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Mastery</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:51%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">0.51</span></div>
+                </div>
+                <div class="stat-bar-row">
+                  <div class="stat-bar-header"><span class="stat-bar-name">Crit</span></div>
+                  <div class="stat-bar-track"><div class="stat-bar-fill" style="width:49%"></div></div>
+                  <div class="stat-bar-meta"><span class="stat-bar-val">0.49</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- T15 Tips -->
+    <section class="guide-section" id="tot-tips">
+      <div class="guide-panel-body">
+        <h2 class="guide-panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          T15 Tips
+        </h2>
+        <div class="boss-guide">
+          <nav class="boss-rail" aria-label="Bosses">
+            <button class="boss-rail-item active" data-boss="jinrokh" title="Jin'rokh the Breaker">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1577-icon.jpg" alt="">
+              <span class="boss-rail-name">Jin'rokh the Breaker</span>
+            </button>
+            <button class="boss-rail-item" data-boss="horridon" title="Horridon">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1575-icon.jpg" alt="">
+              <span class="boss-rail-name">Horridon</span>
+            </button>
+            <button class="boss-rail-item" data-boss="council" title="Council of Elders">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1570-icon.jpg" alt="">
+              <span class="boss-rail-name">Council of Elders</span>
+            </button>
+            <button class="boss-rail-item" data-boss="tortos" title="Tortos">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1565-icon.jpg" alt="">
+              <span class="boss-rail-name">Tortos</span>
+            </button>
+            <button class="boss-rail-item" data-boss="megaera" title="Megaera">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1578-icon.jpg" alt="">
+              <span class="boss-rail-name">Megaera</span>
+            </button>
+            <button class="boss-rail-item" data-boss="jikun" title="Ji-Kun">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1573-icon.jpg" alt="">
+              <span class="boss-rail-name">Ji-Kun</span>
+            </button>
+            <button class="boss-rail-item" data-boss="durumu" title="Durumu the Forgotten">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1572-icon.jpg" alt="">
+              <span class="boss-rail-name">Durumu the Forgotten</span>
+            </button>
+            <button class="boss-rail-item" data-boss="primordius" title="Primordius">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1574-icon.jpg" alt="">
+              <span class="boss-rail-name">Primordius</span>
+            </button>
+            <button class="boss-rail-item" data-boss="darkanimus" title="Dark Animus">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1576-icon.jpg" alt="">
+              <span class="boss-rail-name">Dark Animus</span>
+            </button>
+            <button class="boss-rail-item" data-boss="ironqon" title="Iron Qon">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1559-icon.jpg" alt="">
+              <span class="boss-rail-name">Iron Qon</span>
+            </button>
+            <button class="boss-rail-item" data-boss="consorts" title="Twin Empyreans">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1560-icon.jpg" alt="">
+              <span class="boss-rail-name">Twin Empyreans</span>
+            </button>
+            <button class="boss-rail-item" data-boss="leishen" title="Lei Shen">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1579-icon.jpg" alt="">
+              <span class="boss-rail-name">Lei Shen</span>
+            </button>
+            <button class="boss-rail-item" data-boss="raden" title="Ra-den">
+              <img loading="lazy" class="boss-rail-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1580-icon.jpg" alt="">
+              <span class="boss-rail-name">Ra-den</span>
+            </button>
+          </nav>
+          <div class="boss-detail">
+        <!-- Last Stand of the Zandalari -->
+        <div class="boss-accordion active">
+          <button class="boss-accordion-header active" data-boss="jinrokh">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1577-icon.jpg" alt="Jin'rokh the Breaker">
+            <span class="boss-accordion-name">Jin'rokh the Breaker</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body active" data-boss-body="jinrokh">
+            <ul class="boss-tips">
+              <li>Prepot <a href="https://www.wowhead.com/mop-classic/item=76093">Potion of the Jade Serpent</a> at 15s and hold your cooldowns.</li>
+              <li>With <a href="https://www.wowhead.com/mop-classic/spell=2825">Bloodlust</a> and <a href="https://www.wowhead.com/mop-classic/spell=138002">Fluidity</a>, use your CDs and 2nd <a href="https://www.wowhead.com/mop-classic/item=76093">Potion of the Jade Serpent</a>. RNG <a href="https://www.wowhead.com/mop-classic/item=94524">Unerring Vision of Lei Shen</a> procs.</li>
+              <li>After you clear <a href="https://www.wowhead.com/mop-classic/spell=138732">Ionization</a>, get back into the <a href="https://www.wowhead.com/mop-classic/spell=138002">Fluidity</a> pool quickly and reapply DoTs.</li>
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=15286">Vampiric Embrace</a> during <a href="https://www.wowhead.com/mop-classic/spell=137313">Lightning Storm</a>.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="horridon">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1575-icon.jpg" alt="Horridon">
+            <span class="boss-accordion-name">Horridon</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="horridon">
+            <ul class="boss-tips">
+              <li>Apply <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> to small adds. Keep <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> on marked elite adds.</li>
+              <li>Double DoT the <a href="https://www.wowhead.com/mop-classic/npc=70688">Direhorn Spirit</a> to benefit from the <a href="https://www.wowhead.com/mop-classic/spell=138156">Tier 15 Shadow Priest 2P bonus</a>.</li>
+              <li>Spend <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> and <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a> on Horridon.</li>
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=15286">Vampiric Embrace</a> during high <a href="https://www.wowhead.com/mop-classic/spell=136817">Bestial Cry</a> stacks.</li>
+            </ul>
+            <p class="boss-rules">Horridon is removed from Damage All Star Points.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="council">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1570-icon.jpg" alt="Council of Elders">
+            <span class="boss-accordion-name">Council of Elders</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="council">
+            <ul class="boss-tips">
+              <li>Stack in melee so you can hit multiple targets with <a href="https://www.wowhead.com/mop-classic/spell=110744">Divine Star</a> on cooldown.</li>
+              <li>Keep DoTs rolling on all bosses and fill with <a href="https://www.wowhead.com/mop-classic/spell=48045">Mind Sear</a>.</li>
+              <li>Recast DoTs when <a href="https://www.wowhead.com/mop-classic/item=94524">Unerring Vision of Lei Shen</a> procs.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Living Sand is removed.</p>
+          </div>
+        </div>
+
+        <!-- Forgotten Depths -->
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="tortos">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1565-icon.jpg" alt="Tortos">
+            <span class="boss-accordion-name">Tortos</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="tortos">
+            <ul class="boss-tips">
+              <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> and <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> on adds to trigger <a href="https://www.wowhead.com/mop-classic/spell=109142">Twist of Fate</a> and generate <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a>.</li>
+              <li>Maintain <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> on a <a href="https://www.wowhead.com/mop-classic/npc=69639">Humming Crystal</a> for the shield.</li>
+              <li>Stay spread to reduce the chance of being knocked up by the <a href="https://www.wowhead.com/mop-classic/npc=67966">Whirl Turtles</a>.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Humming Crystal is removed. Heroic: Damage done to Vampiric Cave Bat is removed. Only damage done to Whirl Turtles that cast <a href="https://www.wowhead.com/mop-classic/spell=134092">Shell Concussion</a> counts.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="megaera">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1578-icon.jpg" alt="Megaera">
+            <span class="boss-accordion-name">Megaera</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="megaera">
+            <ul class="boss-tips">
+              <li>Ignore the <a href="https://www.wowhead.com/mop-classic/npc=70247">Venomous Head</a>.</li>
+              <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> on <a href="https://www.wowhead.com/mop-classic/npc=70507">Nether Wyrms</a> to generate <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a>.</li>
+              <li>Swap to <a href="https://www.wowhead.com/mop-classic/spell=110744">Divine Star</a> if your raid needs extra healing throughput.</li>
+            </ul>
+            <p class="boss-rules">Damage done to heads that don't die is removed. 25m Heroic: Damage done to Nether Wyrm is removed.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="jikun">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1573-icon.jpg" alt="Ji-Kun">
+            <span class="boss-accordion-name">Ji-Kun</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="jikun">
+            <ul class="boss-tips">
+              <li>Use feather charges to intercept <a href="https://www.wowhead.com/mop-classic/spell=137528">Feed Young</a> and gain <a href="https://www.wowhead.com/mop-classic/spell=140741">Primal Nutriment</a>.</li>
+              <li>Cast DoTs on the <a href="https://www.wowhead.com/mop-classic/npc=70134">Nest Guardian</a>. Use <a href="https://www.wowhead.com/mop-classic/spell=48045">Mind Sear</a> and <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> otherwise.</li>
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=15286">Vampiric Embrace</a> during <a href="https://www.wowhead.com/mop-classic/spell=134380">Quills</a> if raid is low.</li>
+            </ul>
+            <p class="boss-rules">Ji-Kun is removed from Damage All Star Points.</p>
+          </div>
+        </div>
+
+        <!-- Halls of Flesh-Shaping -->
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="durumu">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1572-icon.jpg" alt="Durumu the Forgotten">
+            <span class="boss-accordion-name">Durumu the Forgotten</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="durumu">
+            <ul class="boss-tips">
+              <li>Snipe <a href="https://www.wowhead.com/mop-classic/npc=69050">Crimson Fog</a> adds with <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> for <a href="https://www.wowhead.com/mop-classic/spell=109142">Twist of Fate</a> uptime and <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a>.</li>
+              <li>Cast <a href="https://www.wowhead.com/mop-classic/spell=120517">Halo</a> and DoTs on the Ice Walls.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Wandering Eye is removed.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="primordius">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1574-icon.jpg" alt="Primordius">
+            <span class="boss-accordion-name">Primordius</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="primordius">
+            <ul class="boss-tips">
+              <li>Keep DoTs on all <a href="https://www.wowhead.com/mop-classic/npc=71199">Living Fluids</a> (unless your Warlocks know how to play Affliction).</li>
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=121135">Cascade</a> on cooldown.</li>
+              <li>Adjust your camera angle to help dodge puddles and avoid unwanted debuffs.</li>
+            </ul>
+            <p class="boss-rules">Primordius is removed from Damage and Healing All Star Points.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="darkanimus">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1576-icon.jpg" alt="Dark Animus">
+            <span class="boss-accordion-name">Dark Animus</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="darkanimus">
+            <ul class="boss-tips">
+              <li>DoT as many Anima Golems as possible to maintain <a href="https://www.wowhead.com/mop-classic/spell=109142">Twist of Fate</a>.</li>
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=121135">Cascade</a> on cooldown for efficient multi-target damage.</li>
+              <li>Focus your <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> and <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a> into the boss.</li>
+            </ul>
+            <p class="boss-rules">Heroic: Damage to Large Anima Golem and Massive Anima Golem is removed. Only count damage done to Anima Golems that die.</p>
+          </div>
+        </div>
+
+        <!-- Pinnacle of Storms -->
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="ironqon">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1559-icon.jpg" alt="Iron Qon">
+            <span class="boss-accordion-name">Iron Qon</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="ironqon">
+            <ul class="boss-tips">
+              <li>Recast DoTs on <a href="https://www.wowhead.com/mop-classic/npc=68078">Iron Qon</a> during mount transitions (<a href="https://www.wowhead.com/mop-classic/npc=68079">Ro'shak</a> → <a href="https://www.wowhead.com/mop-classic/npc=68080">Quet'zal</a> → <a href="https://www.wowhead.com/mop-classic/npc=68081">Dam'ren</a>).</li>
+              <li>Hold your 2nd cooldowns and <a href="https://www.wowhead.com/mop-classic/item=76093">Potion of the Jade Serpent</a> for the final phase, when all four targets are active.</li>
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=15286">Vampiric Embrace</a> during <a href="https://www.wowhead.com/mop-classic/spell=136147">Fist Smash</a> if raid is low.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Ice Tomb is removed.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="consorts">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1560-icon.jpg" alt="Twin Empyreans">
+            <span class="boss-accordion-name">Twin Empyreans</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="consorts">
+            <ul class="boss-tips">
+              <li>Precast <a href="https://www.wowhead.com/mop-classic/spell=34914">Vampiric Touch</a> on <a href="https://www.wowhead.com/mop-classic/npc=68904">Suen</a> then <a href="https://www.wowhead.com/mop-classic/spell=589">Shadow Word: Pain</a> before she vanishes.</li>
+              <li>Refresh DoTs on <a href="https://www.wowhead.com/mop-classic/npc=68904">Suen</a> during <a href="https://www.wowhead.com/mop-classic/spell=137405">Tears of the Sun</a>.</li>
+              <li>During <a href="https://www.wowhead.com/mop-classic/spell=137491">Nuclear Inferno</a> (boss immune), focus on off-healing.</li>
+              <li> Use <a href="https://www.wowhead.com/mop-classic/spell=15286">Vampiric Embrace</a> when <a href="https://www.wowhead.com/mop-classic/spell=139412">Blazing Radiance</a> stacks get high.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Lurker in the Night is removed.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="leishen">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1579-icon.jpg" alt="Lei Shen">
+            <span class="boss-accordion-name">Lei Shen</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="leishen">
+            <ul class="boss-tips">
+              <li>Use <a href="https://www.wowhead.com/mop-classic/spell=120517">Halo</a> and <a href="https://www.wowhead.com/mop-classic/spell=48045">Mind Sear</a> to handle <a href="https://www.wowhead.com/mop-classic/npc=69232">Ball Lightnings</a>.</li>
+              <li>Snipe low adds with <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a> to generate <a href="https://www.wowhead.com/mop-classic/spell=95740">Shadow Orbs</a>.</li>
+              <li>Save your CDs and 2nd <a href="https://www.wowhead.com/mop-classic/item=76093">Potion of the Jade Serpent</a> for <a href="https://www.wowhead.com/mop-classic/spell=2825">Bloodlust</a>.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Unharnessed Power, Lesser Diffused Lightning, Greater Diffused Lightning, and Diffused Lightning is removed.</p>
+          </div>
+        </div>
+        <div class="boss-accordion">
+          <button class="boss-accordion-header" data-boss="raden">
+            <img loading="lazy" class="boss-accordion-icon" src="https://assets.rpglogs.com/img/warcraft/bosses/1580-icon.jpg" alt="Ra-den">
+            <span class="boss-accordion-name">Ra-den</span>
+            <span class="boss-accordion-chevron">▾</span>
+          </button>
+          <div class="boss-accordion-body" data-boss-body="raden">
+            <ul class="boss-tips">
+              <li>DoT the <a href="https://www.wowhead.com/mop-classic/spell=138339">Crackling Stalker</a>, then burst it with <a href="https://www.wowhead.com/mop-classic/spell=110744">Divine Star</a> and <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a>.</li>
+              <li>Snipe the first <a href="https://www.wowhead.com/mop-classic/npc=69869">Essence of Anima</a> with <a href="https://www.wowhead.com/mop-classic/spell=32379">Shadow Word: Death</a>. Burn the remaining ones with <a href="https://www.wowhead.com/mop-classic/spell=2944">Devouring Plague</a> and <a href="https://www.wowhead.com/mop-classic/spell=129197">Mind Flay: Insanity</a>.</li>
+              <li>Sub 40%, use <a href="https://www.wowhead.com/mop-classic/spell=110744">Divine Star</a> on cooldown to help with the HPS check.</li>
+            </ul>
+            <p class="boss-rules">Damage done to Sanguine Horror, Corrupted Anima, Corrupted Vita, and Essence of Vita is removed.</p>
+          </div>
+        </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    </main>
+
+    <!-- Desktop sticky TOC rail -->
+    <aside class="guide-toc" aria-label="Guide sections">
+      <span class="guide-toc-heading">On this page</span>
+      <nav class="guide-toc-nav">
+        <a href="#talents" class="guide-toc-link" data-toc="talents">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Talents
+        </a>
+        <a href="#rotation" class="guide-toc-link" data-toc="rotation">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          Rotation
+        </a>
+        <a href="#macros" class="guide-toc-link" data-toc="macros">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Macros
+        </a>
+        <a href="#stats" class="guide-toc-link" data-toc="stats">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Stats
+        </a>
+        <a href="#tot-tips" class="guide-toc-link" data-toc="tot-tips">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          T15 Tips
+        </a>
+      </nav>
+    </aside>
+
+  </div>
+
+  <!-- Back to top -->
+  <button class="guide-top-fab" id="guideTopFab" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script defer src="js/nav.js"></script>
+  <script>
+    // ── Scrollspy: highlight current section in TOC ──────
+    (function () {
+      var sections = Array.prototype.slice.call(document.querySelectorAll('.guide-section'));
+      var deskLinks = document.querySelectorAll('.guide-toc-link');
+      var mobileLabel = document.getElementById('tocMobileLabel');
+      var labels = { talents: 'Talents', rotation: 'Rotation', macros: 'Macros', stats: 'Stats', 'tot-tips': 'T15 Tips' };
+      if (!sections.length) return;
+
+      function setActive(id) {
+        deskLinks.forEach(function (a) {
+          a.classList.toggle('active', a.dataset.toc === id);
+        });
+        if (mobileLabel && labels[id]) mobileLabel.textContent = labels[id];
+      }
+
+      if ('IntersectionObserver' in window) {
+        var visible = {};
+        var obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+          var best = null, bestRatio = 0;
+          sections.forEach(function (s) {
+            var r = visible[s.id] || 0;
+            if (r > bestRatio) { bestRatio = r; best = s.id; }
+          });
+          if (best) setActive(best);
+        }, { rootMargin: '-80px 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] });
+        sections.forEach(function (s) { obs.observe(s); });
+      }
+
+      // Smooth scroll for all in-page TOC links (offset for sticky nav)
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+          var target = document.getElementById(a.getAttribute('href').slice(1));
+          if (!target) return;
+          e.preventDefault();
+          var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+          closeMobileToc();
+          history.replaceState(null, '', a.getAttribute('href'));
+        });
+      });
+
+      // ── Mobile "Jump to" dropdown ──────────────────────
+      var mBtn = document.getElementById('tocMobileBtn');
+      var mMenu = document.getElementById('tocMobileMenu');
+      function closeMobileToc() {
+        if (!mBtn) return;
+        mBtn.setAttribute('aria-expanded', 'false');
+        mMenu.classList.remove('open');
+      }
+      if (mBtn) {
+        mBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          var open = mBtn.getAttribute('aria-expanded') === 'true';
+          mBtn.setAttribute('aria-expanded', String(!open));
+          mMenu.classList.toggle('open', !open);
+        });
+        document.addEventListener('click', closeMobileToc);
+      }
+
+      // ── Back-to-top FAB ────────────────────────────────
+      var fab = document.getElementById('guideTopFab');
+      if (fab) {
+        window.addEventListener('scroll', function () {
+          fab.classList.toggle('show', window.pageYOffset > 600);
+        }, { passive: true });
+        fab.addEventListener('click', function () {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    })();
+
+    (function () {
+      var railItems = document.querySelectorAll('.boss-rail-item');
+      var panes = document.querySelectorAll('.boss-detail .boss-accordion');
+      railItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+          var key = item.getAttribute('data-boss');
+          railItems.forEach(function (i) { i.classList.toggle('active', i === item); });
+          panes.forEach(function (p) {
+            var body = p.querySelector('[data-boss-body]');
+            p.classList.toggle('active', !!body && body.getAttribute('data-boss-body') === key);
+          });
+        });
+      });
+    })();
+
+    var svgCopy = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+    var svgCheck = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>';
+    document.querySelectorAll('.macro-code').forEach(function(pre) {
+      var wrap = document.createElement('div');
+      wrap.className = 'macro-code-wrap';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+      var btn = document.createElement('button');
+      btn.className = 'macro-copy-btn';
+      btn.innerHTML = svgCopy + ' Copy';
+      btn.addEventListener('click', function() {
+        var text = (pre.querySelector('code') || pre).innerText;
+        navigator.clipboard.writeText(text).then(function() {
+          btn.innerHTML = svgCheck + ' Copied!';
+          btn.classList.add('copied');
+          setTimeout(function() { btn.innerHTML = svgCopy + ' Copy'; btn.classList.remove('copied'); }, 2000);
+        });
+      });
+      wrap.insertBefore(btn, pre);
+    });
+    document.querySelectorAll('.macro-code code').forEach(function(code) {
+      var html = code.innerHTML;
+      html = html.replace(/(#showtooltip[^\n]*)/g, '<span class="mc-comment">$1</span>');
+      html = html.replace(/^(\/\w+)/gm, '<span class="mc-cmd">$1</span>');
+      html = html.replace(/(\[[^\]]+\])/g, '<span class="mc-cond">$1</span>');
+      code.innerHTML = html;
+    });
+
+  </script>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-social">
+        <a href="https://youtube.com/@skimmynz" target="_blank" rel="noopener" class="footer-link" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          YouTube
+        </a>
+        <a href="https://twitch.tv/skimmynz" target="_blank" rel="noopener" class="footer-link" aria-label="Twitch">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"/></svg>
+          Twitch
+        </a>
+      </div>
+      <p class="footer-copy">&copy; <span class="footer-year"></span> skimmynz</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -34,3 +34,8 @@
   to = "/guide.html"
   status = 200
 
+[[redirects]]
+  from = "/guide-t15"
+  to = "/guide-t15.html"
+  status = 200
+
