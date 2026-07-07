@@ -651,7 +651,8 @@
   line-height: 1.5;
 }
 
-.talent-tier-text p a {
+.talent-tier-text p a,
+.talent-swap-chip a {
   color: #ffd100 !important;
   font-weight: 700;
   text-decoration: none;
@@ -1520,40 +1521,6 @@ a.tier-pill:hover {
   color: var(--text-accent);
 }
 
-/* ── Archive banner (guide-t15 only) ──────────────────── */
-.archive-banner {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.7rem 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  border-radius: 10px;
-  background: rgba(245, 158, 11, 0.08);
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-}
-
-.archive-banner strong {
-  color: var(--warning-color);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.archive-banner a {
-  margin-left: auto;
-  color: var(--text-accent);
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.archive-banner a:hover {
-  text-decoration: underline;
-}
-
 /* ── Optional talent pick (amber, vs green default) ───── */
 .talent-cell.optional {
   opacity: 1;
@@ -1568,14 +1535,6 @@ a.tier-pill:hover {
   align-items: center;
   gap: 0.4rem;
   margin-top: 0.5rem;
-}
-
-.talent-swaps-label {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--warning-color);
 }
 
 .talent-swap-chip {
