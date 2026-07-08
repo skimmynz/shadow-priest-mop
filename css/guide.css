@@ -1565,6 +1565,28 @@ a.tier-pill:hover {
   font-weight: 600;
 }
 
+/* ── Hit conversion note ──────────────────────────────── */
+.stats-hit-note {
+  padding: 0.9rem 1rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.stats-hit-note p {
+  margin: 0 0 0.35rem;
+}
+
+.stats-hit-note p:last-child {
+  margin-bottom: 0;
+}
+
+.stats-hit-note strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
 /* ── EP block note ────────────────────────────────────── */
 .stats-ep-note {
   margin: 0.6rem 1rem 0;
