@@ -1602,12 +1602,19 @@ a.tier-pill:hover {
   min-width: 0;
 }
 
+.gear-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
 /* mirror right column like WowSims */
-.gear-row:nth-child(even) {
+.gear-col--right .gear-row {
   flex-direction: row-reverse;
 }
 
-.gear-row:nth-child(even) .gear-info {
+.gear-col--right .gear-info {
   align-items: flex-end;
   text-align: right;
 }
@@ -1699,10 +1706,10 @@ a.tier-pill:hover {
     grid-template-columns: 1fr;
     gap: 0.3rem;
   }
-  .gear-row:nth-child(even) {
+  .gear-col--right .gear-row {
     flex-direction: row;
   }
-  .gear-row:nth-child(even) .gear-info {
+  .gear-col--right .gear-info {
     align-items: flex-start;
     text-align: left;
   }
