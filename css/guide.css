@@ -1587,6 +1587,61 @@ a.tier-pill:hover {
   font-weight: 600;
 }
 
+/* ── BiS gear list ────────────────────────────────────── */
+.gear-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gear-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border-color);
+  min-width: 0;
+}
+
+.gear-row:nth-child(-n+2) {
+  border-top: none;
+}
+
+.gear-row:nth-child(odd) {
+  border-right: 1px solid var(--border-color);
+}
+
+.gear-slot {
+  flex: 0 0 4.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.gear-row a {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 720px) {
+  .gear-grid {
+    grid-template-columns: 1fr;
+  }
+  .gear-row:nth-child(odd) {
+    border-right: none;
+  }
+  .gear-row:nth-child(2) {
+    border-top: 1px solid var(--border-color);
+  }
+}
+
 /* ── EP block note ────────────────────────────────────── */
 .stats-ep-note {
   margin: 0.6rem 1rem 0;
