@@ -1625,6 +1625,11 @@ a.tier-pill:hover {
   line-height: 0;
 }
 
+.gear-icon-link {
+  display: block;
+  line-height: 0;
+}
+
 .gear-icon img {
   width: 48px;
   height: 48px;
@@ -1659,14 +1664,6 @@ a.tier-pill:hover {
   min-width: 0;
 }
 
-.gear-slot {
-  font-size: 0.62rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
-}
-
 .gear-name {
   font-size: 0.85rem;
   font-weight: 600;
@@ -1688,16 +1685,18 @@ a.tier-pill:hover {
 }
 
 .gear-gems {
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
   display: flex;
-  gap: 3px;
-  margin-top: 2px;
+  gap: 1px;
 }
 
 .gear-gems img {
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
-  border: 1px solid var(--border-color);
+  width: 15px;
+  height: 15px;
+  border-radius: 2px;
+  border: 1px solid #0b0b12;
   display: block;
 }
 
