@@ -1328,9 +1328,13 @@
 }
 
 .tier-pill {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  padding: 0.45rem 1rem;
+  max-width: 100%;
+  padding: 0.5rem 1.1rem;
   border: 1px solid var(--border-color);
   border-radius: 999px;
   background: var(--card-bg);
@@ -1338,18 +1342,62 @@
   font-size: 0.82rem;
   font-weight: 600;
   text-decoration: none;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Raid artwork layer (same banners as the Top 100 raid headers) */
+.tier-pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transition: transform 0.3s ease;
+}
+
+.tier-pill--t16::before {
+  background-image: url('../img/SoO/SoO_p5.webp');
+  background-position: center 30%;
+}
+
+.tier-pill--t15::before {
+  background-image: url('../img/tot.webp');
+  background-position: center 35%;
+}
+
+/* Darkening scrim so the label stays readable */
+.tier-pill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to right, rgba(10, 8, 18, 0.82), rgba(10, 8, 18, 0.6));
+  transition: background 0.2s ease;
 }
 
 a.tier-pill:hover {
   border-color: var(--accent-color);
-  color: var(--text-primary);
+  color: #ffffff;
+}
+
+a.tier-pill:hover::before {
+  transform: scale(1.06);
+}
+
+a.tier-pill:hover::after {
+  background: linear-gradient(to right, rgba(10, 8, 18, 0.6), rgba(10, 8, 18, 0.35));
 }
 
 .tier-pill--active {
-  background: rgba(124, 58, 237, 0.15);
   border-color: var(--accent-color);
-  color: var(--text-accent);
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.35), inset 0 0 0 1px rgba(124, 58, 237, 0.25);
+}
+
+.tier-pill--active::after {
+  background: linear-gradient(to right, rgba(48, 22, 96, 0.55), rgba(10, 8, 18, 0.4));
 }
 
 /* ── Rank 1 credential banner (top of guide content) ──── */
