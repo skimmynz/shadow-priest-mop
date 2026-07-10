@@ -230,6 +230,7 @@
 .item-version {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.6rem;
   padding: 0.8rem 1rem;
   border-radius: 8px;
@@ -259,6 +260,11 @@
   flex-direction: column;
   gap: 2px;
   line-height: 1.25;
+  min-width: 0;
+}
+
+.item-version-build {
+  overflow-wrap: anywhere;
 }
 
 .item-version-name {
