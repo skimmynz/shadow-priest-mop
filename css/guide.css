@@ -54,72 +54,6 @@
   border: 0;
 }
 
-/* Watch links beneath video — one row of enlarged icons */
-.guide-watch-links {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-top: 0.875rem;
-}
-
-.guide-watch-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  color: var(--text-secondary);
-  text-decoration: none;
-  background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
-}
-
-.guide-watch-link svg {
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-}
-
-/* Brand tiles */
-.guide-watch-link--youtube {
-  background: #ffffff;
-  border-color: #ffffff;
-}
-
-.guide-watch-link--youtube:hover {
-  background: #f0f0f0;
-  border-color: #f0f0f0;
-}
-
-.guide-watch-link--twitch {
-  background: #9146FF;
-  border-color: #9146FF;
-}
-
-.guide-watch-link--twitch:hover {
-  background: #7d2ff5;
-  border-color: #7d2ff5;
-}
-
-.guide-watch-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-/* Icon-only — text labels hidden via shared .sr-only group in base.css */
-
-.guide-watch-link:hover {
-  color: var(--text-primary);
-  background: rgba(124, 58, 237, 0.08);
-  border-color: rgba(124, 58, 237, 0.35);
-  transform: translateY(-2px);
-}
-
 /* Sections — stacked, scroll-margin clears sticky nav */
 .guide-section {
   scroll-margin-top: 84px;
@@ -1418,20 +1352,22 @@ a.tier-pill:hover {
   color: var(--text-accent);
 }
 
-/* ── Rank 1 credential card (video column) ────────────── */
+/* ── Rank 1 credential banner (top of guide content) ──── */
 .guide-rank-card {
   display: block;
-  margin-top: 0.75rem;
+  margin-bottom: 1.25rem;
   background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(251, 191, 36, 0.35);
   border-radius: 14px;
   overflow: hidden;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .guide-rank-card:hover {
   border-color: var(--gold-color);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 24px rgba(251, 191, 36, 0.18);
+  transform: translateY(-2px);
 }
 
 .guide-rank-img {

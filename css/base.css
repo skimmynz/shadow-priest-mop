@@ -35,8 +35,7 @@
 }
 
 /* Screen-reader only utility */
-.sr-only,
-.guide-watch-link span {
+.sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
