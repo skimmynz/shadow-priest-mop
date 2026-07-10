@@ -69,57 +69,7 @@
   margin: 0;
 }
 
-.section-count {
-  background: var(--accent-color);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 700;
-}
-
 /* .section-divider — shared rule in base.css (responsive override below) */
-
-/* ── UI Settings ─────────────────────────────────────── */
-.ui-settings {
-  background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  display: flex;
-  justify-content: center;
-  gap: 3rem;
-  flex-wrap: wrap;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.ui-settings:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-.ui-setting {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.ui-setting-label {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.ui-setting-value {
-  color: var(--accent-color);
-  font-size: 1.25rem;
-  font-weight: 700;
-}
 
 /* ── Grid layout for items ───────────────────────────── */
 .items-grid {
@@ -564,10 +514,6 @@
 
   .section-header h2 {
     font-size: 1.25rem;
-  }
-
-  .ui-settings {
-    gap: 1.5rem;
   }
 
   .ui-map-wrapper {

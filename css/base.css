@@ -174,11 +174,10 @@ h1 {
 }
 
 /* Shared purple gradient-text — h1 + page/section titles.
-   theme-soo.css recolors .section-title / .hero-title; loaded after, wins. */
+   theme-soo.css recolors .hero-title; loaded after, wins. */
 h1,
 .page-header h1,
-.section-header h2,
-.section-title {
+.section-header h2 {
   background: linear-gradient(135deg, #a78bfa 0%, #7c3aed 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -270,10 +269,6 @@ h1,
 
   body {
     padding: 1rem;
-  }
-
-  .unified-container {
-    border-radius: 16px;
   }
 
   h1 {
