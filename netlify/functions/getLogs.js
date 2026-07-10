@@ -1,11 +1,15 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(event, context) {
-  // CORS headers for all responses
+  // CORS headers for all responses — same-site only, so other origins can't
+  // consume the rate-limited WCL proxy from the browser.
+  const ALLOWED_ORIGINS = ['https://skimmynz.com', 'https://www.skimmynz.com'];
+  const origin = event.headers?.origin;
   const headers = {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0],
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Vary': 'Origin',
     'Content-Type': 'application/json'
   };
 

@@ -237,9 +237,10 @@ hasteInput.addEventListener('paste', function() {
 
 // Desktop nicety: block non-numeric keys before they land
 hasteInput.addEventListener('keydown', function(e) {
-  var allow = ['Backspace','Delete','Tab','Escape','Enter','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'];
-  if (allow.indexOf(e.key) !== -1 || e.ctrlKey || e.metaKey) return;
-  if (e.key < '0' || e.key > '9') { e.preventDefault(); }
+  if (e.ctrlKey || e.metaKey) return;
+  // Only block single printable characters that aren't digits; multi-char
+  // key names (Home, End, F5, Backspace, arrows…) pass through untouched.
+  if (e.key.length === 1 && (e.key < '0' || e.key > '9')) { e.preventDefault(); }
 });
 
 // Select-all on focus for quick overwrite

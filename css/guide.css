@@ -1684,11 +1684,19 @@ a.tier-pill:hover {
   color: #3fbf3f;
 }
 
+.gear-sub a,
+.gear-sub a:hover {
+  color: #3fbf3f !important;
+  text-decoration: none;
+}
+
 .gear-gems {
   position: absolute;
   bottom: 1px;
-  left: 1px;
+  left: 0;
+  right: 0;
   display: flex;
+  justify-content: center;
   gap: 1px;
 }
 

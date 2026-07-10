@@ -29,19 +29,15 @@
 
   // Set active nav link based on current page
   function setActiveNavLink() {
-    const currentPath = window.location.pathname;
+    // Normalize so /rankings.html matches the nav's /rankings link
+    const normalize = p => p.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+    const currentPath = normalize(window.location.pathname);
     const navLinks = document.querySelectorAll('.nav-links a');
-    
+
     navLinks.forEach(link => {
       link.classList.remove('active');
-      const linkPath = new URL(link.href).pathname;
-      
-      // Handle root path
-      if (currentPath === '/' || currentPath === '/index.html') {
-        if (linkPath === '/' || linkPath === '/index.html') {
-          link.classList.add('active');
-        }
-      } else if (linkPath === currentPath) {
+      const linkPath = normalize(new URL(link.href).pathname);
+      if (linkPath === currentPath) {
         link.classList.add('active');
       }
     });
