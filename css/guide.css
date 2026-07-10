@@ -1400,6 +1400,13 @@ a.tier-pill:hover::after {
   background: linear-gradient(to right, rgba(48, 22, 96, 0.55), rgba(10, 8, 18, 0.4));
 }
 
+@media (max-width: 600px) {
+  .tier-pill {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 /* ── Rank 1 credential banner (top of guide content) ──── */
 .guide-rank-card {
   display: block;
