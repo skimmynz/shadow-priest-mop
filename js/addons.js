@@ -4,8 +4,7 @@ const addons = [
     name: "Plater Nameplates",
     url: "https://www.curseforge.com/wow/addons/plater-nameplates",
     profileUrl: "https://wago.io/pfxpBonVW",
-    preview: "https://media.wago.io/screenshots/pfxpBonVW/674874e2db2a2863b9d60ecd.png",
-    versionNote: { label: "Alpha build", date: "Jun 14, 2026", url: "https://www.curseforge.com/wow/addons/plater-nameplates/files/8212484" }
+    preview: "https://media.wago.io/screenshots/pfxpBonVW/674874e2db2a2863b9d60ecd.png"
   },
   {
     name: "Shadowed Unit Frames",
