@@ -43,6 +43,20 @@
     });
   }
 
+  // The guide video column is display:none under 1400px (see css/guide.css),
+  // so only pay for the YouTube embed once it's actually visible.
+  function initGuideVideo() {
+    const frame = document.querySelector('.guide-video iframe[data-src]');
+    if (!frame) return;
+
+    const wide = window.matchMedia('(min-width: 1400px)');
+    const load = () => {
+      if (wide.matches && !frame.src) frame.src = frame.dataset.src;
+    };
+    wide.addEventListener('change', load);
+    load();
+  }
+
   // Set dynamic footer year
   function setFooterYear() {
     var el = document.querySelector('.footer-year');
@@ -54,11 +68,13 @@
     document.addEventListener('DOMContentLoaded', () => {
       initMobileMenu();
       setActiveNavLink();
+      initGuideVideo();
       setFooterYear();
     });
   } else {
     initMobileMenu();
     setActiveNavLink();
+    initGuideVideo();
     setFooterYear();
   }
 })();

@@ -993,6 +993,36 @@ a.wowhead del {
 /* =================================================================
    Responsive Design
    ================================================================= */
+/* ----- Mid desktop (1025–1399px): two columns -----
+   Two 320px rails leave the table under 500px here, which crushes the
+   player-name column. Keep the boss rail (primary navigation) and drop the
+   talent/trinket panel to a full-width band under the table — the same place
+   it lands at ≤1024px, so resizing across the breakpoint stays continuous. */
+@media (min-width: 1025px) and (max-width: 1399px) {
+  .page-grid {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+
+  .content-area {
+    padding: 1rem 1.5rem 2rem;
+  }
+
+  .rank-table-header {
+    margin: 0 -1.5rem 2px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .talent-sidebar {
+    grid-column: 1 / -1;
+    position: static;
+    height: auto;
+    padding: 1.5rem 2rem;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+}
+
 /* ----- Tablet (≤1024px): single column stacked layout ----- */
 @media (max-width: 1024px) {
   .page-grid {

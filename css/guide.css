@@ -1106,19 +1106,25 @@
 
 /* ── Responsive ──────────────────────────────────────── */
 
-/* Tablet/narrow desktop — video on top, content below, TOC → dropdown */
+/* Narrow desktop — the 380px video rail leaves the doc under 500px wide.
+   Drop the video and give the space back to the content.
+   Kept in sync with the data-src loader in js/nav.js. */
+@media (max-width: 1399px) {
+  .guide-layout {
+    grid-template-columns: minmax(0, 1fr) 200px;
+  }
+
+  .guide-video-col {
+    display: none;
+  }
+}
+
+/* Tablet/mobile — TOC → dropdown */
 @media (max-width: 900px) {
   .guide-layout {
     grid-template-columns: 1fr;
     gap: 0;
     padding: 1.5rem 1.5rem 3.5rem;
-  }
-
-  .guide-video-col {
-    position: static;
-    max-width: 640px;
-    margin: 0 auto 1.25rem;
-    width: 100%;
   }
 
   .guide-toc {
