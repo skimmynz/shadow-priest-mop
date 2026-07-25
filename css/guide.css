@@ -1109,7 +1109,7 @@
 /* Narrow desktop — the 380px video rail leaves the doc under 500px wide.
    Drop the video and give the space back to the content.
    Kept in sync with the data-src loader in js/nav.js. */
-@media (max-width: 1399px) {
+@media (max-width: 1399.98px) {
   .guide-layout {
     grid-template-columns: minmax(0, 1fr) 200px;
   }

@@ -993,12 +993,18 @@ a.wowhead del {
 /* =================================================================
    Responsive Design
    ================================================================= */
-/* ----- Mid desktop (1025–1399px): two columns -----
+/* ----- Below the 3-column threshold: two columns -----
    Two 320px rails leave the table under 500px here, which crushes the
    player-name column. Keep the boss rail (primary navigation) and drop the
    talent/trinket panel to a full-width band under the table — the same place
-   it lands at ≤1024px, so resizing across the breakpoint stays continuous. */
-@media (min-width: 1025px) and (max-width: 1399px) {
+   it lands at ≤1024px, so resizing across the breakpoint stays continuous.
+
+   Deliberately open-ended at the bottom, with no min-width: the ≤1024px block
+   below re-stacks it. Pairing `min-width: 1025px` with `max-width: 1024px`
+   leaves (1024, 1025) matching neither, and browser zoom lands on fractional
+   viewport widths (a 922px window at 90% zoom is 1024.44px), which then falls
+   through to the unscoped 3-column rule that needs 1400px to fit. */
+@media (max-width: 1399.98px) {
   .page-grid {
     grid-template-columns: 300px minmax(0, 1fr);
   }

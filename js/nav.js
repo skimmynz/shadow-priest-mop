@@ -49,7 +49,9 @@
     const frame = document.querySelector('.guide-video iframe[data-src]');
     if (!frame) return;
 
-    const wide = window.matchMedia('(min-width: 1400px)');
+    // Same boundary as the guide.css rule that hides the column, so a
+    // fractional viewport can't show an empty card with no embed in it.
+    const wide = window.matchMedia('(min-width: 1399.98px)');
     const load = () => {
       if (wide.matches && !frame.src) frame.src = frame.dataset.src;
     };
