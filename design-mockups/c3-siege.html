@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Concept 3 — Siege Cinematic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0906; --bg2:#140e09; --glass:rgba(30,20,13,.62); --glass2:rgba(38,26,17,.78);
+  --ember:#ff6a1a; --ember2:#ffa23d; --gold:#ffc75a; --cream:#f5efe7; --ash:#b6a798; --ash2:#7d7168;
+  --edge:rgba(255,170,90,.20); --edge2:rgba(255,170,90,.42);
+  --disp:'Anton',Impact,sans-serif; --sans:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{background:#000;color:var(--cream);font-family:var(--sans)}
+.screen{width:1440px;position:relative;overflow:hidden;background:var(--bg)}
+.screen + .screen{margin-top:64px}
+.emberglow{position:absolute;pointer-events:none;border-radius:50%;filter:blur(90px);z-index:1}
+
+/* ── nav ───────────────────────────────────────── */
+.nav{position:absolute;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:34px;
+  padding:22px 48px;background:linear-gradient(180deg,rgba(13,9,6,.92),transparent)}
+.nav.solid{position:relative;background:rgba(13,9,6,.94);border-bottom:1px solid var(--edge);backdrop-filter:blur(14px)}
+.wm{display:flex;align-items:center;gap:11px;font-weight:900;font-size:17px;letter-spacing:.02em}
+.wm .b{width:30px;height:30px;border-radius:9px;background:linear-gradient(140deg,var(--ember),#c0390a);
+  display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-size:17px;color:#fff;
+  box-shadow:0 6px 22px rgba(255,106,26,.45)}
+.nav ul{display:flex;gap:6px;list-style:none;margin-left:14px}
+.nav ul a{display:block;padding:9px 17px;border-radius:999px;text-decoration:none;color:var(--ash);
+  font-size:14px;font-weight:600;letter-spacing:.01em}
+.nav ul a.on{background:rgba(255,106,26,.16);color:var(--gold);box-shadow:inset 0 0 0 1px var(--edge2)}
+.nav .right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.livepill{display:flex;align-items:center;gap:8px;padding:8px 15px;border-radius:999px;background:rgba(233,64,52,.16);
+  color:#ff7b6e;font-size:12.5px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(233,64,52,.35)}
+.livepill i{width:7px;height:7px;border-radius:50%;background:#ff4d3d;box-shadow:0 0 12px #ff4d3d}
+.cta{padding:10px 20px;border-radius:999px;background:linear-gradient(135deg,var(--ember),#e0480c);color:#fff;
+  font-size:13.5px;font-weight:700;text-decoration:none;box-shadow:0 8px 26px rgba(255,106,26,.35)}
+
+/* ── HOME hero ─────────────────────────────────── */
+.hero{position:relative;height:820px;overflow:hidden}
+.hero .art{position:absolute;inset:0;background:url('../img/SoO/bg-blur.jpg') center 30%/cover;
+  transform:scale(1.14);filter:brightness(.62) saturate(1.05) contrast(1.05)}
+.hero .scrim{position:absolute;inset:0;background:
+  radial-gradient(ellipse 60% 65% at 26% 58%,rgba(255,106,26,.30),transparent 70%),
+  linear-gradient(90deg,rgba(13,9,6,.96) 0%,rgba(13,9,6,.82) 34%,rgba(13,9,6,.28) 62%,rgba(13,9,6,.62) 100%),
+  linear-gradient(180deg,rgba(13,9,6,.86) 0%,rgba(13,9,6,.30) 26%,rgba(13,9,6,.88) 72%,var(--bg) 100%)}
+.hero .in{position:relative;z-index:10;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 54px}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:12px;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.eyebrow .dash{width:44px;height:2px;background:var(--ember)}
+.bigtitle{font-family:var(--disp);font-size:168px;line-height:.82;letter-spacing:-.01em;text-transform:uppercase;
+  color:#fff;text-shadow:0 8px 60px rgba(0,0,0,.65)}
+.bigtitle span{display:block;background:linear-gradient(100deg,#fff 10%,var(--gold) 55%,var(--ember) 92%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lede3{margin-top:24px;max-width:560px;font-size:16.5px;line-height:1.72;color:#e0d5c8;font-weight:300}
+.lede3 b{font-weight:700;color:#fff}
+.herobtns{margin-top:30px;display:flex;gap:14px;align-items:center}
+.bigbtn{display:inline-flex;align-items:center;gap:11px;padding:16px 30px;border-radius:999px;text-decoration:none;
+  font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--ember),#e0480c);color:#fff;
+  box-shadow:0 14px 40px rgba(255,106,26,.4)}
+.bigbtn.ghost{background:rgba(255,255,255,.06);color:var(--cream);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.credcard{position:absolute;right:48px;bottom:54px;z-index:10;width:330px;border-radius:20px;padding:24px;
+  background:var(--glass);backdrop-filter:blur(18px);box-shadow:inset 0 0 0 1px var(--edge),0 26px 60px rgba(0,0,0,.55)}
+.credcard .t{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ash2)}
+.credcard .who{display:flex;align-items:center;gap:13px;margin:14px 0 18px}
+.credcard .who img{width:52px;height:52px;border-radius:14px;box-shadow:0 0 0 1px var(--edge2)}
+.credcard .who .n{font-size:20px;font-weight:800}
+.credcard .who .s{font-size:12.5px;color:var(--ash)}
+.credgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.credgrid div{border-radius:13px;padding:12px 14px;background:rgba(255,255,255,.045)}
+.credgrid .k{font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ash2)}
+.credgrid .v{font-size:23px;font-weight:800;margin-top:4px;color:var(--gold)}
+
+/* home feature cards */
+.feat{position:relative;z-index:10;margin-top:-40px;padding:0 48px 56px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fcard{border-radius:22px;overflow:hidden;background:var(--glass2);backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px var(--edge),0 22px 50px rgba(0,0,0,.5)}
+.fcard .ph{height:168px;position:relative;overflow:hidden}
+.fcard .ph img{width:100%;height:100%;object-fit:cover;filter:saturate(.95) brightness(.82)}
+.fcard .ph .tag{position:absolute;left:16px;top:16px;padding:7px 13px;border-radius:999px;background:rgba(13,9,6,.72);
+  backdrop-filter:blur(8px);font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.fcard .bd{padding:22px 24px 26px}
+.fcard h3{font-family:var(--disp);font-size:30px;letter-spacing:.01em;text-transform:uppercase;line-height:1}
+.fcard p{margin-top:11px;font-size:14px;line-height:1.65;color:var(--ash);font-weight:300}
+.fcard .lk{margin-top:18px;font-size:13.5px;font-weight:700;color:var(--ember2)}
+.stripbar{padding:0 48px 54px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.sb{border-radius:18px;padding:22px 24px;background:linear-gradient(150deg,rgba(255,106,26,.14),rgba(255,255,255,.03));
+  box-shadow:inset 0 0 0 1px var(--edge)}
+.sb .k{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ash2)}
+.sb .v{font-family:var(--disp);font-size:44px;line-height:1;margin-top:8px;color:#fff}
+.sb .d{margin-top:6px;font-size:12.5px;color:var(--ash)}
+
+/* ── GUIDE ─────────────────────────────────────── */
+.gband{position:relative;height:300px;overflow:hidden}
+.gband .art{position:absolute;inset:0;background:url('../img/SoO/bg-blur.jpg') center 40%/cover;
+  filter:brightness(.42) saturate(.95);transform:scale(1.1)}
+.gband .sc{position:absolute;inset:0;background:
+  radial-gradient(ellipse 50% 70% at 20% 60%,rgba(255,106,26,.32),transparent 70%),
+  linear-gradient(90deg,rgba(13,9,6,.94) 0%,rgba(13,9,6,.7) 42%,rgba(13,9,6,.35) 100%),
+  linear-gradient(180deg,rgba(13,9,6,.82),rgba(13,9,6,.42) 45%,var(--bg) 100%)}
+.gband .in{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 30px}
+.gband h1{font-family:var(--disp);font-size:82px;line-height:.9;text-transform:uppercase;color:#fff}
+.gband h1 em{font-style:normal;color:var(--ember2)}
+.gmeta{display:flex;gap:24px;margin-top:16px;align-items:center;font-size:13px;color:var(--ash)}
+.gmeta b{color:var(--cream)}
+.gmeta .sep{width:4px;height:4px;border-radius:50%;background:var(--ash2)}
+.gswitch{display:flex;gap:10px;margin-top:20px}
+.gswitch a{padding:11px 20px;border-radius:999px;text-decoration:none;font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.05);color:var(--ash);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.gswitch a.on{background:linear-gradient(135deg,var(--ember),#e0480c);color:#fff;box-shadow:0 10px 26px rgba(255,106,26,.35)}
+.gbody{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:44px;padding:44px 48px 70px;position:relative;z-index:5}
+.chapter{position:relative;margin-bottom:52px}
+.chapter .ghost{position:absolute;right:-8px;top:-46px;font-family:var(--disp);font-size:150px;line-height:1;
+  color:rgba(255,170,90,.055);pointer-events:none}
+.chapter h2{font-family:var(--disp);font-size:46px;text-transform:uppercase;line-height:1;display:flex;align-items:baseline;gap:16px}
+.chapter h2 i{font-style:normal;font-family:var(--sans);font-size:13px;font-weight:800;letter-spacing:.2em;color:var(--ember2)}
+.chapter .sub{margin-top:14px;font-size:16px;line-height:1.75;color:var(--ash);font-weight:300;max-width:70ch}
+.tal3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.tcard{border-radius:18px;padding:18px;background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge)}
+.tcard .row{display:flex;gap:8px}
+.tcard .row img{width:46px;height:46px;border-radius:11px;filter:grayscale(1) brightness(.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.tcard .row img.on{filter:none;box-shadow:0 0 0 2px var(--ember),0 0 22px rgba(255,106,26,.4)}
+.tcard .lv{margin-top:14px;font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--ash2)}
+.tcard h4{font-size:17px;font-weight:800;margin-top:5px}
+.tcard p{margin-top:7px;font-size:13px;line-height:1.6;color:var(--ash);font-weight:300}
+.pull{margin:30px 0;padding:26px 30px;border-radius:20px;background:linear-gradient(120deg,rgba(255,106,26,.16),rgba(255,255,255,.02));
+  box-shadow:inset 0 0 0 1px var(--edge2);font-size:19px;line-height:1.6;font-weight:600}
+.pull span{color:var(--gold)}
+.steps{margin-top:24px;display:grid;gap:10px}
+.step{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:15px;background:rgba(255,255,255,.035);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.step .n{font-family:var(--disp);font-size:24px;color:var(--ember2);min-width:34px}
+.step img{width:36px;height:36px;border-radius:9px}
+.step .nm{font-size:16px;font-weight:700}
+.step .d{margin-left:auto;font-size:13px;color:var(--ash)}
+.grail{position:relative}
+.grail .box{border-radius:20px;padding:20px;background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge);margin-bottom:16px}
+.grail .box h5{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--ash2);margin-bottom:14px}
+.prog{display:grid;gap:9px}
+.prog a{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ash);font-size:14px;font-weight:600}
+.prog a .bar{width:4px;height:20px;border-radius:2px;background:rgba(255,255,255,.12)}
+.prog a.on{color:#fff}
+.prog a.on .bar{background:var(--ember);box-shadow:0 0 12px rgba(255,106,26,.6)}
+.vidbox{border-radius:18px;overflow:hidden;position:relative;box-shadow:inset 0 0 0 1px var(--edge)}
+.vidbox img{width:100%;display:block}
+.vidbox .pl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.vidbox .pl span{width:56px;height:56px;border-radius:50%;background:rgba(255,106,26,.9);display:flex;align-items:center;
+  justify-content:center;color:#fff;font-size:19px;box-shadow:0 10px 30px rgba(255,106,26,.5)}
+.kvline{display:flex;justify-content:space-between;padding:9px 0;font-size:13.5px;color:var(--ash);
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.kvline b{color:var(--cream)}
+
+/* ── RANKINGS ──────────────────────────────────── */
+.rhead{position:relative;padding:38px 48px 0}
+.rhead h1{font-family:var(--disp);font-size:60px;text-transform:uppercase;line-height:1}
+.rhead .s{margin-top:10px;font-size:14px;color:var(--ash)}
+.bossrow{display:flex;gap:9px;padding:26px 48px 0;overflow:hidden}
+.bt{flex:1;border-radius:14px;padding:10px 6px 12px;text-align:center;text-decoration:none;
+  background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.bt img{width:34px;height:34px;border-radius:9px;filter:grayscale(.6) brightness(.85)}
+.bt .n{margin-top:7px;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ash2)}
+.bt.on{background:linear-gradient(160deg,rgba(255,106,26,.28),rgba(255,106,26,.06));box-shadow:inset 0 0 0 1px var(--edge2)}
+.bt.on img{filter:none} .bt.on .n{color:var(--gold)}
+.podium{display:grid;grid-template-columns:1fr 1.16fr 1fr;gap:18px;align-items:end;padding:34px 48px 0}
+.pod{border-radius:22px;padding:26px 24px;position:relative;overflow:hidden;background:var(--glass2);
+  box-shadow:inset 0 0 0 1px var(--edge);text-align:center}
+.pod.first{padding:34px 24px 30px;background:linear-gradient(170deg,rgba(255,106,26,.24),rgba(255,255,255,.02));
+  box-shadow:inset 0 0 0 1px var(--edge2),0 22px 60px rgba(255,106,26,.16)}
+.pod .rank{font-family:var(--disp);font-size:16px;letter-spacing:.2em;color:var(--ash2)}
+.pod.first .rank{color:var(--gold)}
+.pod .av{width:66px;height:66px;border-radius:18px;margin:14px auto 0;box-shadow:0 0 0 2px var(--edge2)}
+.pod.first .av{width:82px;height:82px;box-shadow:0 0 0 2px var(--ember),0 0 34px rgba(255,106,26,.5)}
+.pod .nm{margin-top:14px;font-size:21px;font-weight:800}
+.pod.first .nm{font-size:26px}
+.pod .gd{font-size:12.5px;color:var(--ash);margin-top:4px}
+.pod .dps{font-family:var(--disp);font-size:44px;margin-top:14px;color:#fff}
+.pod.first .dps{font-size:58px;background:linear-gradient(100deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.pod .u{font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--ash2)}
+.pod .ic{display:flex;gap:5px;justify-content:center;margin-top:16px}
+.pod .ic img{width:28px;height:28px;border-radius:8px}
+.rlist{padding:30px 48px 60px}
+.rlist .hd{display:grid;grid-template-columns:56px 1fr 150px 90px 90px 190px;gap:16px;padding:0 22px 12px;
+  font-size:10.5px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--ash2)}
+.rrow{display:grid;grid-template-columns:56px 1fr 150px 90px 90px 190px;gap:16px;align-items:center;
+  padding:15px 22px;border-radius:16px;background:rgba(255,255,255,.028);margin-bottom:8px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.rrow .r{font-family:var(--disp);font-size:22px;color:var(--ash2)}
+.rrow .who{display:flex;align-items:center;gap:13px}
+.rrow .who img{width:38px;height:38px;border-radius:11px}
+.rrow .who .n{font-size:16px;font-weight:700}
+.rrow .who .g{font-size:12px;color:var(--ash2)}
+.rrow .dps{font-family:var(--disp);font-size:26px;color:var(--gold)}
+.rrow .mo{font-size:13.5px;color:var(--ash)}
+.rrow .ic{display:flex;gap:5px}
+.rrow .ic img{width:28px;height:28px;border-radius:8px}
+
+/* ── HASTE ─────────────────────────────────────── */
+.hwrap{padding:44px 48px 64px;display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start;position:relative}
+.hleft{border-radius:26px;padding:38px 34px;background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge);text-align:center;position:relative;overflow:hidden}
+.arc{width:330px;height:330px;margin:14px auto 0;border-radius:50%;position:relative;
+  background:conic-gradient(from 180deg,var(--ember) 0deg,var(--gold) 150deg,rgba(255,255,255,.08) 180deg,rgba(255,255,255,.08) 360deg)}
+.arc:before{content:'';position:absolute;inset:22px;border-radius:50%;background:#150e08;
+  box-shadow:inset 0 0 60px rgba(255,106,26,.22)}
+.arc .val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.arc .val .n{font-family:var(--disp);font-size:78px;line-height:1;color:#fff}
+.arc .val .n span{color:var(--ember2);font-size:40px}
+.arc .val .l{margin-top:6px;font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--ash2)}
+.hinput{margin-top:30px;display:flex;align-items:center;gap:14px;border-radius:18px;padding:16px 20px;
+  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px var(--edge2)}
+.hinput .k{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--ash2)}
+.hinput .v{margin-left:auto;font-family:var(--disp);font-size:34px;color:#fff}
+.hrow{display:flex;gap:24px;margin-top:24px;justify-content:center;flex-wrap:wrap}
+.hg .k{font-size:10.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--ash2);margin-bottom:11px}
+.hg .r{display:flex;gap:9px}
+.hg img{width:46px;height:46px;border-radius:12px;filter:grayscale(1) brightness(.42)}
+.hg img.on{filter:none;box-shadow:0 0 0 2px var(--ember),0 0 20px rgba(255,106,26,.45)}
+.bpcards{display:grid;gap:14px}
+.bpc{border-radius:20px;padding:20px 22px;background:var(--glass2);box-shadow:inset 0 0 0 1px var(--edge);
+  display:grid;grid-template-columns:52px 1fr 130px;gap:18px;align-items:center}
+.bpc.max{background:linear-gradient(120deg,rgba(255,106,26,.18),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px var(--edge2)}
+.bpc img{width:52px;height:52px;border-radius:14px}
+.bpc h4{font-size:18px;font-weight:800}
+.bpc .m{margin-top:5px;font-size:12.5px;color:var(--ash)}
+.bpc .tr{margin-top:11px;height:7px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}
+.bpc .tr i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--ember),var(--gold))}
+.bpc .rt{text-align:right}
+.bpc .rt .p{font-family:var(--disp);font-size:30px;color:var(--gold)}
+.bpc .rt .p.mx{color:var(--ember2)}
+.bpc .rt .s{font-size:11.5px;color:var(--ash2);margin-top:3px}
+.note3{margin-top:16px;border-radius:18px;padding:18px 22px;font-size:14px;font-weight:600;
+  background:linear-gradient(120deg,rgba(255,199,90,.16),rgba(255,255,255,.02));box-shadow:inset 0 0 0 1px rgba(255,199,90,.35);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ SCREEN 1 — HOME ══════════════ -->
+<section class="screen" id="s-home">
+  <nav class="nav">
+    <div class="wm"><span class="b">S</span>skimmynz</div>
+    <ul>
+      <li><a href="#" class="on">Home</a></li><li><a href="#">Top 100</a></li>
+      <li><a href="#">Guide</a></li><li><a href="#">Haste</a></li><li><a href="#">Addons</a></li>
+    </ul>
+    <div class="right">
+      <span class="livepill"><i></i> Live on Twitch</span>
+      <a class="cta" href="#">Read the guide</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="art"></div><div class="scrim"></div>
+    <div class="in">
+      <div class="eyebrow"><span class="dash"></span> Tier 16 · Siege of Orgrimmar</div>
+      <h1 class="bigtitle">Shadow<span>Priest</span></h1>
+      <p class="lede3">The complete Mists of Pandaria Classic resource — written and re-tested every reset by
+        <b>Skimmyxo</b>, the world's rank 1 Shadow Priest.</p>
+      <div class="herobtns">
+        <a class="bigbtn" href="#">Open the T16 guide →</a>
+        <a class="bigbtn ghost" href="#">▶ Watch the rank 1 kill</a>
+      </div>
+    </div>
+
+    <div class="credcard">
+      <div class="t">World rank · Siege heroic</div>
+      <div class="who">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+        <div><div class="n">Skimmyxo</div><div class="s">Built Diff · Arugal (AU)</div></div>
+      </div>
+      <div class="credgrid">
+        <div><div class="k">Rank</div><div class="v">#1</div></div>
+        <div><div class="k">All Stars</div><div class="v">1,054</div></div>
+        <div><div class="k">Progress</div><div class="v">14/14</div></div>
+        <div><div class="k">Best DPS</div><div class="v">312k</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="feat">
+    <a class="fcard" style="text-decoration:none;color:inherit;display:block">
+      <div class="ph"><img src="../img/SoO/SoO_p5.webp"><span class="tag">Guide</span></div>
+      <div class="bd">
+        <h3>Play it right</h3>
+        <p>Talents, opener, priority list and the snapshot rules that separate a 90 from a 99 parse.</p>
+        <div class="lk">Read the guide →</div>
+      </div>
+    </a>
+    <a class="fcard" style="text-decoration:none;color:inherit;display:block">
+      <div class="ph"><img src="../img/tot.webp"><span class="tag">Top 100</span></div>
+      <div class="bd">
+        <h3>Study the best</h3>
+        <p>Every top parse in the world, with the exact talents and trinkets behind each kill.</p>
+        <div class="lk">Browse rankings →</div>
+      </div>
+    </a>
+    <a class="fcard" style="text-decoration:none;color:inherit;display:block">
+      <div class="ph"><img src="../img/ui.webp"><span class="tag">Interface</span></div>
+      <div class="bd">
+        <h3>Copy the setup</h3>
+        <p>The addon list, WeakAuras and the exact 1920×1080 layout used at rank one.</p>
+        <div class="lk">Import everything →</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="stripbar">
+    <div class="sb"><div class="k">Best parse</div><div class="v">312,704</div><div class="d">Garrosh 25H · 21 Jul</div></div>
+    <div class="sb"><div class="k">Effective haste</div><div class="v">50.05%</div><div class="d">+3 / +3 / +2 ticks</div></div>
+    <div class="sb"><div class="k">Item level</div><div class="v">571</div><div class="d">Full heroic warforged</div></div>
+    <div class="sb"><div class="k">Guide updated</div><div class="v">24 Jul</div><div class="d">Verified vs 100 logs</div></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 2 — GUIDE ══════════════ -->
+<section class="screen" id="s-guide">
+  <nav class="nav solid">
+    <div class="wm"><span class="b">S</span>skimmynz</div>
+    <ul>
+      <li><a href="#">Home</a></li><li><a href="#">Top 100</a></li>
+      <li><a href="#" class="on">Guide</a></li><li><a href="#">Haste</a></li><li><a href="#">Addons</a></li>
+    </ul>
+    <div class="right"><span class="livepill"><i></i> Live on Twitch</span><a class="cta" href="#">Import UI</a></div>
+  </nav>
+
+  <div class="gband">
+    <div class="art"></div><div class="sc"></div>
+    <div class="in">
+      <div class="eyebrow"><span class="dash"></span> The complete guide</div>
+      <h1>Shadow Priest <em>· T16</em></h1>
+      <div class="gmeta">
+        <span>By <b>Skimmyxo</b></span><span class="sep"></span>
+        <span>Rank <b>1</b> world</span><span class="sep"></span>
+        <span>Updated <b>24 Jul 2026</b></span><span class="sep"></span>
+        <span><b>12</b> min read</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="gbody">
+    <main>
+      <div class="gswitch" style="margin-top:-8px;margin-bottom:34px">
+        <a href="#" class="on">T16 · Siege of Orgrimmar</a>
+        <a href="#">T15 · Throne of Thunder</a>
+      </div>
+
+      <section class="chapter">
+        <div class="ghost">01</div>
+        <h2><i>Chapter 01</i>Talents</h2>
+        <p class="sub">Six rows, one default build, and two swaps that actually change your parse. Everything
+           below is what the top 100 run — not what the tooltip suggests.</p>
+
+        <div class="tal3">
+          <div class="tcard">
+            <div class="row">
+              <img class="on" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+              <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_psyfiend.jpg">
+              <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_shadowworddominate.jpg">
+            </div>
+            <div class="lv">Level 15</div><h4>Void Tendrils</h4>
+            <p>Best add control in the row. Nothing else competes on a real pull.</p>
+          </div>
+          <div class="tcard">
+            <div class="row">
+              <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_surgeoflight.jpg">
+              <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_soulleech_3.jpg">
+              <img class="on" src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+            </div>
+            <div class="lv">Level 45</div><h4>Solace &amp; Insanity</h4>
+            <p>Strongest single target. Enables the Mind Flay: Insanity snapshot.</p>
+          </div>
+          <div class="tcard">
+            <div class="row">
+              <img class="on" src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+              <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_powerinfusion.jpg">
+              <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_burningwill.jpg">
+            </div>
+            <div class="lv">Level 75</div><h4>Twist of Fate</h4>
+            <p>Snipe dying adds with Pain and Death to keep the buff rolling.</p>
+          </div>
+        </div>
+
+        <div class="pull">“Before you cast <span>Devouring Plague</span>, both DoTs need 8 seconds left —
+          otherwise you clip Mind Flay: Insanity to refresh, and that's the parse.”</div>
+      </section>
+
+      <section class="chapter">
+        <div class="ghost">02</div>
+        <h2><i>Chapter 02</i>Opener</h2>
+        <p class="sub">Pre-pull at 25 yards, potion at 2.5 seconds, then this exact sequence.</p>
+        <div class="steps">
+          <div class="step"><span class="n">01</span>
+            <img src="https://wow.zamimg.com/images/wow/icons/large/ability_priest_halo.jpg">
+            <span class="nm">Halo</span><span class="d">Pre-pull · 25 yards</span></div>
+          <div class="step"><span class="n">02</span>
+            <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowfiend.jpg">
+            <span class="nm">Shadowfiend</span><span class="d">Then Berserking + Synapse</span></div>
+          <div class="step"><span class="n">03</span>
+            <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg">
+            <span class="nm">Shadow Word: Pain</span><span class="d">Into Vampiric Touch</span></div>
+          <div class="step"><span class="n">04</span>
+            <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg">
+            <span class="nm">Devouring Plague</span><span class="d">3 orbs · then Mind Blast</span></div>
+          <div class="step"><span class="n">05</span>
+            <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_siphonmana.jpg">
+            <span class="nm">Mind Flay: Insanity</span><span class="d">Channel to the end</span></div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="grail">
+      <div class="box">
+        <h5>Chapters</h5>
+        <div class="prog">
+          <a href="#" class="on"><span class="bar"></span>Talents</a>
+          <a href="#"><span class="bar"></span>Rotation</a>
+          <a href="#"><span class="bar"></span>Macros</a>
+          <a href="#"><span class="bar"></span>Stats</a>
+          <a href="#"><span class="bar"></span>BiS Gear</a>
+          <a href="#"><span class="bar"></span>Boss Tips</a>
+        </div>
+      </div>
+      <div class="vidbox"><img src="../img/SoO/SoO_p5.webp"><div class="pl"><span>▶</span></div></div>
+      <div class="box" style="margin-top:16px">
+        <h5>Stat priority</h5>
+        <div class="kvline">Intellect <b>1.00</b></div>
+        <div class="kvline">Haste <b>0.88</b></div>
+        <div class="kvline">Mastery <b>0.71</b></div>
+        <div class="kvline">Crit <b>0.62</b></div>
+        <div class="kvline" style="border:0">Hit <b>15% cap</b></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 3 — TOP 100 ══════════════ -->
+<section class="screen" id="s-rank">
+  <nav class="nav solid">
+    <div class="wm"><span class="b">S</span>skimmynz</div>
+    <ul>
+      <li><a href="#">Home</a></li><li><a href="#" class="on">Top 100</a></li>
+      <li><a href="#">Guide</a></li><li><a href="#">Haste</a></li><li><a href="#">Addons</a></li>
+    </ul>
+    <div class="right"><span class="livepill"><i></i> Live on Twitch</span><a class="cta" href="#">Import UI</a></div>
+  </nav>
+
+  <div class="rhead">
+    <div class="eyebrow"><span class="dash"></span> Siege of Orgrimmar · Heroic 25</div>
+    <h1>Garrosh Hellscream</h1>
+    <div class="s">Top 100 Shadow Priest parses · refreshed 2 minutes ago</div>
+  </div>
+
+  <div class="bossrow">
+    <a class="bt" href="#"><img src="../img/SoO/immerseus.jpg"><div class="n">Immerseus</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/fallen-protectors.jpg"><div class="n">Protectors</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/norushen.jpg"><div class="n">Norushen</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/sha-of-pride.jpg"><div class="n">Sha</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/galakras.jpg"><div class="n">Galakras</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/iron-juggernaut.jpg"><div class="n">Juggernaut</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/korkron-dark-shaman.jpg"><div class="n">Dark Shaman</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/general-nazgrim.jpg"><div class="n">Nazgrim</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/malkorok.jpg"><div class="n">Malkorok</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/spoils-of-pandaria.jpg"><div class="n">Spoils</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/thok-the-bloodthirsty.jpg"><div class="n">Thok</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/siegecrafter-blackfuse.jpg"><div class="n">Blackfuse</div></a>
+    <a class="bt" href="#"><img src="../img/SoO/paragons-of-the-klaxxi.jpg"><div class="n">Paragons</div></a>
+    <a class="bt on" href="#"><img src="../img/SoO/garrosh-hellscream.jpg"><div class="n">Garrosh</div></a>
+  </div>
+
+  <div class="podium">
+    <div class="pod">
+      <div class="rank">02</div>
+      <img class="av" src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+      <div class="nm">Nyamsus</div><div class="gd">Echo · Tarren Mill (EU)</div>
+      <div class="dps">304,118</div><div class="u">DPS · 7:20</div>
+      <div class="ic">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_holy_powerinfusion.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg"></div>
+    </div>
+    <div class="pod first">
+      <div class="rank">01 · World best</div>
+      <img class="av" src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+      <div class="nm">Skimmyxo</div><div class="gd">Built Diff · Arugal (AU)</div>
+      <div class="dps">312,704</div><div class="u">DPS · 7:12 · iLvl 571</div>
+      <div class="ic">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_angelicfeather.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg"></div>
+    </div>
+    <div class="pod">
+      <div class="rank">03</div>
+      <img class="av" src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+      <div class="nm">Dooskee</div><div class="gd">Method · Draenor (EU)</div>
+      <div class="dps">298,455</div><div class="u">DPS · 7:31</div>
+      <div class="ic">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_psyfiend.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_divinestar.jpg"></div>
+    </div>
+  </div>
+
+  <div class="rlist">
+    <div class="hd"><span>#</span><span>Player</span><span>DPS</span><span>iLvl</span><span>Time</span><span>Talents</span></div>
+    <div class="rrow"><span class="r">04</span>
+      <span class="who"><img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+        <span><span class="n">Trumptwntyfv</span><br><span class="g">Vodka · Illidan (US)</span></span></span>
+      <span class="dps">291,032</span><span class="mo">566</span><span class="mo">7:44</span>
+      <span class="ic"><img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg"></span></div>
+    <div class="rrow"><span class="r">05</span>
+      <span class="who"><img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+        <span><span class="n">Embracezug</span><br><span class="g">Aversion · Kazzak (EU)</span></span></span>
+      <span class="dps">287,610</span><span class="mo">565</span><span class="mo">7:52</span>
+      <span class="ic"><img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_soulleech_3.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg"></span></div>
+    <div class="rrow"><span class="r">06</span>
+      <span class="who"><img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+        <span><span class="n">Fruitytingle</span><br><span class="g">Honestly · Whitemane (US)</span></span></span>
+      <span class="dps">283,977</span><span class="mo">563</span><span class="mo">8:01</span>
+      <span class="ic"><img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_shadowworddominate.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_burningwill.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg"></span></div>
+    <div class="rrow"><span class="r">07</span>
+      <span class="who"><img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+        <span><span class="n">Shtickz</span><br><span class="g">Pieces · Ravencrest (EU)</span></span></span>
+      <span class="dps">279,240</span><span class="mo">562</span><span class="mo">8:09</span>
+      <span class="ic"><img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_cascade.jpg"></span></div>
+    <div class="rrow"><span class="r">08</span>
+      <span class="who"><img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowform.jpg">
+        <span><span class="n">Kaysee</span><br><span class="g">Limit · Mal'Ganis (US)</span></span></span>
+      <span class="dps">275,884</span><span class="mo">561</span><span class="mo">8:14</span>
+      <span class="ic"><img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_priest_voidtendrils.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_flashoflight.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/spell_shadow_mindtwisting.jpg">
+        <img src="https://assets.rpglogs.com/img/warcraft/abilities/ability_priest_halo.jpg"></span></div>
+  </div>
+</section>
+
+<!-- ══════════════ SCREEN 4 — HASTE ══════════════ -->
+<section class="screen" id="s-haste">
+  <nav class="nav solid">
+    <div class="wm"><span class="b">S</span>skimmynz</div>
+    <ul>
+      <li><a href="#">Home</a></li><li><a href="#">Top 100</a></li>
+      <li><a href="#">Guide</a></li><li><a href="#" class="on">Haste</a></li><li><a href="#">Addons</a></li>
+    </ul>
+    <div class="right"><span class="livepill"><i></i> Live on Twitch</span><a class="cta" href="#">Import UI</a></div>
+  </nav>
+
+  <div style="padding:38px 48px 0">
+    <div class="eyebrow"><span class="dash"></span> Calculator · Patch 5.4.8</div>
+    <h1 style="font-family:var(--disp);font-size:58px;text-transform:uppercase;line-height:1">Haste Breakpoints</h1>
+    <div style="margin-top:10px;font-size:14px;color:var(--ash)">Type your rating — every DoT tick threshold updates instantly.</div>
+  </div>
+
+  <div class="hwrap">
+    <div class="hleft">
+      <div class="emberglow" style="width:420px;height:420px;background:rgba(255,106,26,.28);left:-60px;top:-90px"></div>
+      <div class="arc">
+        <div class="val"><div class="n">50.05<span>%</span></div><div class="l">Effective haste</div></div>
+      </div>
+      <div class="hinput"><span class="k">Haste rating</span><span class="v">18,234</span></div>
+      <div class="hrow">
+        <div class="hg"><div class="k">Race</div><div class="r">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/race_goblin_male.jpg">
+          <img class="on" src="https://wow.zamimg.com/images/wow/icons/large/race_troll_male.jpg"></div></div>
+        <div class="hg"><div class="k">Raid buffs</div><div class="r">
+          <img class="on" src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_powerinfusion.jpg">
+          <img class="on" src="https://wow.zamimg.com/images/wow/icons/large/spell_nature_bloodlust.jpg">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg">
+          <img class="on" src="https://wow.zamimg.com/images/wow/icons/large/racial_troll_berserk.jpg"></div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="bpcards">
+        <div class="bpc max">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_shadowwordpain.jpg">
+          <div><h4>Shadow Word: Pain</h4><div class="m">6 base ticks · 9 with your haste</div>
+            <div class="tr"><i style="width:100%"></i></div></div>
+          <div class="rt"><div class="p mx">+3</div><div class="s">maximum reached</div></div>
+        </div>
+        <div class="bpc max">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/spell_holy_stoicism.jpg">
+          <div><h4>Vampiric Touch</h4><div class="m">5 base ticks · 8 with your haste</div>
+            <div class="tr"><i style="width:100%"></i></div></div>
+          <div class="rt"><div class="p mx">+3</div><div class="s">maximum reached</div></div>
+        </div>
+        <div class="bpc">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_devouringplague.jpg">
+          <div><h4>Devouring Plague</h4><div class="m">6 base ticks · 8 with your haste</div>
+            <div class="tr"><i style="width:74%"></i></div></div>
+          <div class="rt"><div class="p">+708</div><div class="s">rating to +3 ticks</div></div>
+        </div>
+        <div class="bpc">
+          <img src="https://wow.zamimg.com/images/wow/icons/large/spell_shadow_siphonmana.jpg">
+          <div><h4>Mind Flay</h4><div class="m">3 base ticks · 5 with your haste</div>
+            <div class="tr"><i style="width:86%"></i></div></div>
+          <div class="rt"><div class="p">+259</div><div class="s">rating to +3 ticks</div></div>
+        </div>
+      </div>
+      <div class="note3">⚡ You're at the GCD floor (50.00%) — extra haste still adds ticks, but won't speed up your casts.</div>
+      <div class="bpc" style="margin-top:14px;grid-template-columns:52px 1fr 160px">
+        <img src="https://wow.zamimg.com/images/wow/icons/large/inv_legendary_chimeraoffear.jpg">
+        <div><h4>Track it in-game</h4><div class="m">DoT tick WeakAura — turns gold when a spell hits max ticks.</div></div>
+        <a class="bigbtn" style="padding:12px 20px;font-size:13.5px" href="#">Import →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
